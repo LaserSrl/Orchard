@@ -9,4 +9,4 @@ Features:
 		Name: Laser Developer Tools
 		Description: Laser Developer Utility
 		Category: Developer
-		Dependencies: Orchard.Caching, Laser.Orchard.StartupConfig, Laser.Orchard.JQueryPlugins
+		Dependencies: Orchard.Caching, Orchard.Tokens, Laser.Orchard.StartupConfig, Laser.Orchard.JQueryPlugins
