@@ -182,6 +182,7 @@
     <Compile Include="ViewModels\DynamicProjectionVM.cs" />
     <Compile Include="ViewModels\ContentTypePermissionVM.cs" />
     <Compile Include="ViewModels\UploadFileVM.cs" />
+    <None Include="Views\DynamicProjectionDisplay\AjaxList.cshtml" />
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>

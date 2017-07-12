@@ -1,11 +1,13 @@
 ﻿using Laser.Orchard.ContentExtension.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
 
 
 namespace Laser.Orchard.ContentExtension.Navigation {
+    [OrchardFeature("Laser.Orchard.ContentExtension.DynamicProjection")]
     public class DynamicProjectionProvider : INavigationProvider {
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
