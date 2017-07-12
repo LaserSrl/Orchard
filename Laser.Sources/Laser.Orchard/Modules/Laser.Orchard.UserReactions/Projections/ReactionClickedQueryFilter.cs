@@ -1,17 +1,9 @@
-﻿using Orchard.ContentManagement;
-using Orchard.Data;
+﻿using Laser.Orchard.StartupConfig.Projections;
 using Orchard.Localization;
 using Orchard.Projections.Descriptors.Filter;
-using Orchard.Projections.Services;
-using OrchardProjections=Orchard.Projections;
-using Orchard.Users.Models;
-using NHibernate.Transform;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Web;
-using Laser.Orchard.StartupConfig.Projections;
+using OrchardProjections = Orchard.Projections;
 
 namespace Laser.Orchard.UserReactions.Projections {
     public class ReactionClickedQueryFilter : OrchardProjections.Services.IFilterProvider {
@@ -48,15 +40,20 @@ namespace Laser.Orchard.UserReactions.Projections {
             int tokenizedValue = (string.IsNullOrWhiteSpace(aux))? 0 : Convert.ToInt32(aux);
             // il content picker field ha la precedenza
             int contentId = (contentPickerValue > 0)? contentPickerValue :  tokenizedValue;
-            string subquery = string.Format(@"select contact.Id as contactId
+            string subquery = @"select contact.Id as contactId
                 from Laser.Orchard.CommunicationGateway.Models.CommunicationContactPartRecord as contact, 
                 Laser.Orchard.UserReactions.Models.UserReactionsClickRecord as click
                 where click.UserPartRecord.Id = contact.UserPartRecord_Id
-                and click.UserReactionsTypesRecord.TypeName='{0}'
-                and click.ContentItemRecordId={1}
+                and click.UserReactionsTypesRecord.TypeName = :typename
+                and click.ContentItemRecordId = :contentId
                 group by contact.Id 
-                having mod(count(contact.Id) , 2) = 1", reaction.Replace("'", "''"), contentId);
-            context.Query.Where(a => a.Named("ci"), x => x.InSubquery("Id", subquery));
+                having mod(count(contact.Id) , 2) = 1";
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("typename", reaction);
+            parameters.Add("contentId", contentId);
+
+            context.Query.Where(a => a.Named("ci"), x => x.InSubquery("Id", subquery, parameters));
         }
     }
 }
