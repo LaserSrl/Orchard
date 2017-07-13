@@ -69,13 +69,33 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
@@ -97,6 +117,8 @@
     <Content Include="Styles\fonts\HandelGotD-Bold.svg" />
     <Content Include="Styles\fonts\lg.svg" />
     <Content Include="Styles\fonts\slick.svg" />
+    <Content Include="Styles\images\748029 - england fl.png" />
+    <Content Include="Styles\images\748049 - flag italy.png" />
     <Content Include="Styles\images\ajax-loader.gif" />
     <Content Include="Styles\images\favicon_laser.gif" />
     <Content Include="Styles\images\footer-shadow.png" />
@@ -117,10 +139,10 @@
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Views\Parts.CommentForm-BlogPost.cshtml" />
+    <Content Include="Views\Parts\CommentForm-BlogPost.cshtml" />
     <Content Include="Views\EditorTemplates\Parts.Comment.cshtml" />
-    <Content Include="Views\Parts.ListOfComments-BlogPost.cshtml" />
-    <Content Include="Views\Parts.Comment.cshtml" />
+    <Content Include="Views\Parts\ListOfComments-BlogPost.cshtml" />
+    <Content Include="Views\Parts\Comment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\fonts\fontawesome-webfont.eot" />
@@ -186,18 +208,18 @@
     <Content Include="Views\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.ContainerWidget.cshtml" />
+    <Content Include="Views\Parts\ContainerWidget.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ImmagineTesto.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Title-HomePage.cshtml">
+    <Content Include="Views\Parts\Title-HomePage.cshtml">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Title-Page.cshtml" />
+    <Content Include="Views\Parts\Title-Page.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ElencoProdotti.cshtml" />
@@ -206,24 +228,24 @@
     <Content Include="Views\ElencoPersone.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.MenuWidget-Navigation.cshtml" />
+    <Content Include="Views\Parts\MenuWidget-Navigation.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.MenuWidget-MenuWidget-AfterContent.cshtml">
+    <Content Include="Views\Parts\MenuWidget-MenuWidget-AfterContent.cshtml">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Title-ShowcasePage.cshtml" />
+    <Content Include="Views\Parts\Title-ShowcasePage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\DettagliKrake.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Title-ContattiPage.cshtml" />
+    <Content Include="Views\Parts\Title-ContattiPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Map-MapWidget.cshtml">
+    <Content Include="Views\Parts\Map-MapWidget.cshtml">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>
@@ -234,19 +256,19 @@
     <Content Include="Views\DettaglioSedi.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Title-Blog.cshtml" />
+    <Content Include="Views\Parts\Title-Blog.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Blogs.BlogPost.List.cshtml" />
+    <Content Include="Views\Parts\Blogs.BlogPost.List.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Title-BlogPost.cshtml" />
+    <Content Include="Views\Parts\Title-BlogPost.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\DettaglioSediFooter.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.MenuWidget-QuadThird.cshtml" />
+    <Content Include="Views\Parts\MenuWidget-QuadThird.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\FasciaBusiness.cshtml" />
@@ -255,7 +277,7 @@
     <Content Include="Views\ElencoProdottiHome.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Title-Prodotto.cshtml">
+    <Content Include="Views\Parts\Title-Prodotto.cshtml">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>
@@ -263,7 +285,7 @@
     <Content Include="Views\FasciaKrake.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Blogs.RecentBlogPosts-AfterContent.cshtml" />
+    <Content Include="Views\Parts\Blogs.RecentBlogPosts-AfterContent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\FasciaSocieta.cshtml" />
@@ -283,7 +305,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.ContactForm-AfterContentContattiPage.cshtml" />
+    <Content Include="Views\Parts\ContactForm-AfterContentContattiPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Message.cshtml" />
@@ -307,10 +329,10 @@
     <Content Include="Views\LogOn.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Title-PaginaGenerica.cshtml" />
+    <Content Include="Views\Parts\Title-PaginaGenerica.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Title-OffertaLavoro.cshtml">
+    <Content Include="Views\Parts\Title-OffertaLavoro.cshtml">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>
@@ -348,16 +370,16 @@
     <Content Include="Views\Home\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Title.cshtml" />
+    <Content Include="Views\Parts\Title.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Title.Default.cshtml" />
+    <Content Include="Views\Parts\Title.Default.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Body.Default.cshtml" />
+    <Content Include="Views\Parts\Body.Default.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Title-Persona.cshtml" />
+    <Content Include="Views\Parts\Title-Persona.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Content.Detail.cshtml" />
@@ -384,7 +406,20 @@
     <Content Include="Views\User.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts.Questionnaire.FrontEnd.Edit.cshtml" />
+    <Content Include="Views\Parts\Questionnaire.FrontEnd.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+    <Content Include="Views\Parts\CulturePicker.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Modules\Laser.Orchard.CulturePicker\Laser.Orchard.CulturePicker.csproj">
+      <Project>{2896dd3e-a55b-493f-9483-a107aa54c930}</Project>
+      <Name>Laser.Orchard.CulturePicker</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\images\1499974076_142-mini-country-flags-16x16px.zip" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
