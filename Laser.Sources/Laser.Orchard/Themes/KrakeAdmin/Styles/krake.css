@@ -315,9 +315,11 @@ select:not(.selector):not(.ui-datepicker-month):not(.ui-datepicker-year):not(.ca
     min-width: 10px;
 }
 
+/* Commentato in quanto si applica a troppi elementi causando spesso anomalie grafiche.
 .bulk-actions > button {
     float: right;
 }
+*/
 
 /*ie fix*/
 select::-ms-expand {
@@ -628,7 +630,8 @@ div.settings span.tokenized-popup {
 }
 
 #media-library-toolbar {
-    height: 50px;
+    height: auto;
+    padding-bottom: 10px;
 }
 
 .group {
