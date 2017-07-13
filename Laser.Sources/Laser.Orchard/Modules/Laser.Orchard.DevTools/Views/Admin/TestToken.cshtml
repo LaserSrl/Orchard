@@ -1,0 +1,48 @@
+﻿<fieldset>
+    <legend>@T("Test Token")</legend>
+    <div>
+        <label for="ContentItemId">@T("ContentItem Id:")</label>
+        @Html.TextBox("ContentItemId")
+        <label for="ContentItemId">@T("LastVersion:")</label>
+        @Html.CheckBox("LastVersion")
+        <br />
+        <br />
+        <label for="Token">@T("Token to test:")</label>
+        @Html.TextBox("Token", null, new { @class = "text medium tokenized" })
+        <div>
+            <br />
+            <br />
+            <button id="StartTest" class="primaryAction" type="button">@T("Test")</button>
+        </div>
+        <br />
+        <br/>
+        <textarea id="Log" rows="4" cols="550" >
+            </textarea>
+
+    </div>
+
+
+    @Display.TokenHint()
+</fieldset>
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        //<![CDATA[
+        $(document).ready(function () {
+            $('#StartTest').click(function () {
+                $.ajax(
+                   {
+                       url: "@Url.Action("TestTokenExecute", "Admin", new { area = "Laser.Orchard.DevTools" })",
+                       success: function (result) {
+                           $("#Log").val($("#Token").val() + " => " + result +"\n" + $("#Log").val());
+                       },
+                       type: "GET",
+                       data: { contentItemId: $("#ContentItemId").val(), token: $("#Token").val(), lastVersion: $("#LastVersion").is(':checked') },
+                       complete: function () {
+                       }
+                   });
+            });
+        });
+        //]]>
+    </script>
+}
