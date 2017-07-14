@@ -65,7 +65,7 @@ namespace Laser.Orchard.Twitter.Models {
                     string tmp = this.Retrieve(r => r.AccountList);
                     return (tmp ?? "").Split(',').Select(Int32.Parse).ToArray();
                 }
-                catch (Exception ex) {
+                catch (Exception) {
                     return new Int32[] { };
                 }
             }

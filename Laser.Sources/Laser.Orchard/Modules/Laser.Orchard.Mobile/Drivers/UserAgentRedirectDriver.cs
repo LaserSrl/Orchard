@@ -9,12 +9,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Xml.Linq;
+using Orchard.Data;
 
 namespace Laser.Orchard.Mobile.Drivers {
-    public class UserAgentRedirectDriver : ContentPartDriver<UserAgentRedirectPart> {
+    public class UserAgentRedirectDriver : ContentPartCloningDriver<UserAgentRedirectPart> {
         private readonly IUserAgentRedirectServices _userAgentRedirectServices;
-        public UserAgentRedirectDriver(IUserAgentRedirectServices userAgentRedirectServices) {
+        private readonly IRepository<AppStoreRedirectRecord> _appStoreRedirectRepository;
+        public UserAgentRedirectDriver(IUserAgentRedirectServices userAgentRedirectServices, IRepository<AppStoreRedirectRecord> appStoreRedirectRepository) {
             _userAgentRedirectServices = userAgentRedirectServices;
+            _appStoreRedirectRepository = appStoreRedirectRepository;
         }
 
         protected override string Prefix {
@@ -74,18 +77,14 @@ namespace Laser.Orchard.Mobile.Drivers {
 
         #region [ Import/Export ]
         protected override void Exporting(UserAgentRedirectPart part, ExportContentContext context) {
-
             var root = context.Element(part.PartDefinition.Name);
-            XElement partElement = new XElement("Part");
             root.SetAttributeValue("AppName", part.AppName);
             root.SetAttributeValue("AutoRedirect", part.AutoRedirect);
-            root.SetAttributeValue("AutoRedirect", part.AutoRedirect);
-            root.Add(partElement);
             foreach (var q in part.Stores) {
-                XElement question = new XElement("Stores");
-                question.SetAttributeValue("AppStoreKey", q.AppStoreKey);
-                question.SetAttributeValue("RedirectUrl", q.RedirectUrl);
-                root.Add(question);
+                XElement store = new XElement("Stores");
+                store.SetAttributeValue("AppStoreKey", q.AppStoreKey);
+                store.SetAttributeValue("RedirectUrl", q.RedirectUrl);
+                root.Add(store);
             }
         }
 
@@ -108,5 +107,19 @@ namespace Laser.Orchard.Mobile.Drivers {
                     part.ContentItem, editModel); //aggiorno
         }
         #endregion
+
+        protected override void Cloning(UserAgentRedirectPart originalPart, UserAgentRedirectPart clonePart, CloneContentContext context) {
+            clonePart.AutoRedirect = originalPart.AutoRedirect;
+            clonePart.AppName = originalPart.AppName;
+            foreach (var record in originalPart.Stores) {
+                //clone the records
+                var newRecord = new AppStoreRedirectRecord() {
+                    UserAgentRedirectPartRecord = clonePart.Record,
+                    AppStoreKey = record.AppStoreKey,
+                    RedirectUrl = record.RedirectUrl
+                };
+                _appStoreRedirectRepository.Create(newRecord);
+            }
+        }
     }
 }

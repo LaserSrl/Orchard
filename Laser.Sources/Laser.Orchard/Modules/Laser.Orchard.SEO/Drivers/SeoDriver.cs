@@ -9,12 +9,12 @@ using Orchard.Localization.Services;
 using Laser.Orchard.StartupConfig.Localization;
 using Laser.Orchard.SEO.ViewModels;
 using Laser.Orchard.SEO.Services;
-
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.SEO.Drivers {
 
 
-    public class SeoDriver : ContentPartDriver<SeoPart> {
+    public class SeoDriver : ContentPartCloningDriver<SeoPart> {
 
 
         private readonly IWorkContextAccessor _workContextAccessor;
@@ -61,7 +61,7 @@ namespace Laser.Orchard.SEO.Drivers {
             if (!string.IsNullOrWhiteSpace(metaRobots)) {
                 resourceManager.SetMeta(new MetaEntry {
                     Name = "robots",
-                    Content = metaRobots.Substring(0, metaRobots.Length-1) //remove trailing comma
+                    Content = metaRobots.Substring(0, metaRobots.Length - 1) //remove trailing comma
                 });
             }
 
@@ -101,10 +101,110 @@ namespace Laser.Orchard.SEO.Drivers {
         /// POST Editor.
         /// </summary>
         protected override DriverResult Editor(SeoPart part, IUpdateModel updater, dynamic shapeHelper) {
-            var vm = new SeoPartViewModel();
+            var vm = new SeoPartViewModel(_seoServices);
             updater.TryUpdateModel(vm, Prefix, null, null);
-            vm.UpdatePart(part, _seoServices);
+            vm.UpdatePart(part);
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Cloning(SeoPart originalPart, SeoPart clonePart, CloneContentContext context) {
+            clonePart.TitleOverride = originalPart.TitleOverride;
+            clonePart.Keywords = originalPart.Keywords;
+            clonePart.Description = originalPart.Description;
+            clonePart.RobotsNoIndex = originalPart.RobotsNoIndex;
+            clonePart.RobotsNoFollow = originalPart.RobotsNoFollow;
+            clonePart.RobotsNoSnippet = originalPart.RobotsNoSnippet;
+            clonePart.RobotsNoOdp = originalPart.RobotsNoOdp;
+            clonePart.RobotsNoArchive = originalPart.RobotsNoArchive;
+            clonePart.RobotsUnavailableAfter = originalPart.RobotsUnavailableAfter;
+            clonePart.RobotsUnavailableAfterDate = originalPart.RobotsUnavailableAfterDate;
+            clonePart.RobotsNoImageIndex = originalPart.RobotsNoImageIndex;
+            clonePart.GoogleNoSiteLinkSearchBox = originalPart.GoogleNoSiteLinkSearchBox;
+            clonePart.GoogleNoTranslate = originalPart.GoogleNoTranslate;
+        }
+        protected override void Importing(SeoPart part, ImportContentContext context) {
+            var importedTitleOverride = context.Attribute(part.PartDefinition.Name, "TitleOverride");
+            if (importedTitleOverride != null) {
+                part.TitleOverride = importedTitleOverride;
+            }
+
+            var importedKeywords = context.Attribute(part.PartDefinition.Name, "Keywords");
+            if (importedKeywords != null) {
+                part.Keywords = importedKeywords;
+            }
+
+            var importedDescription = context.Attribute(part.PartDefinition.Name, "Description");
+            if (importedDescription != null) {
+                part.Description = importedDescription;
+            }
+
+            var importedRobotsNoIndex = context.Attribute(part.PartDefinition.Name, "RobotsNoIndex");
+            if (importedRobotsNoIndex != null) {
+                part.RobotsNoIndex = Convert.ToBoolean(importedRobotsNoIndex);
+            }
+
+            var importedRobotsNoFollow = context.Attribute(part.PartDefinition.Name, "RobotsNoFollow");
+            if (importedRobotsNoFollow != null) {
+                part.RobotsNoFollow = Convert.ToBoolean(importedRobotsNoFollow);
+            }
+
+            var importedRobotsNoSnippet = context.Attribute(part.PartDefinition.Name, "RobotsNoSnippet");
+            if (importedRobotsNoSnippet != null) {
+                part.RobotsNoSnippet = Convert.ToBoolean(importedRobotsNoSnippet);
+            }
+
+            var importedRobotsNoOdp = context.Attribute(part.PartDefinition.Name, "RobotsNoOdp");
+            if (importedRobotsNoOdp != null) {
+                part.RobotsNoOdp = Convert.ToBoolean(importedRobotsNoOdp);
+            }
+
+            var importedRobotsNoArchive = context.Attribute(part.PartDefinition.Name, "RobotsNoArchive");
+            if (importedRobotsNoArchive != null) {
+                part.RobotsNoArchive = Convert.ToBoolean(importedRobotsNoArchive);
+            }
+
+            var importedRobotsUnavailableAfter = context.Attribute(part.PartDefinition.Name, "RobotsUnavailableAfter");
+            if (importedRobotsUnavailableAfter != null) {
+                part.RobotsUnavailableAfter = Convert.ToBoolean(importedRobotsUnavailableAfter);
+            }
+
+            var importedRobotsUnavailableAfterDate = context.Attribute(part.PartDefinition.Name, "RobotsUnavailableAfterDate");
+            if (importedRobotsUnavailableAfterDate != null) {
+                part.RobotsUnavailableAfterDate = DateTime.Parse(importedRobotsUnavailableAfterDate);
+            }
+
+            var importedRobotsNoImageIndex = context.Attribute(part.PartDefinition.Name, "RobotsNoImageIndex");
+            if (importedRobotsNoImageIndex != null) {
+                part.RobotsNoImageIndex = Convert.ToBoolean(importedRobotsNoImageIndex);
+            }
+
+            var importedGoogleNoSiteLinkSearchBox = context.Attribute(part.PartDefinition.Name, "GoogleNoSiteLinkSearchBox");
+            if (importedGoogleNoSiteLinkSearchBox != null) {
+                part.GoogleNoSiteLinkSearchBox = Convert.ToBoolean(importedGoogleNoSiteLinkSearchBox);
+            }
+
+            var importedGoogleNoTranslate = context.Attribute(part.PartDefinition.Name, "GoogleNoTranslate");
+            if (importedGoogleNoTranslate != null) {
+                part.GoogleNoTranslate = Convert.ToBoolean(importedGoogleNoTranslate);
+            }
+
+        }
+
+        protected override void Exporting(SeoPart part, ExportContentContext context) 
+        {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("TitleOverride", part.TitleOverride);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Keywords", part.Keywords);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Description", part.Description);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("RobotsNoIndex", part.RobotsNoIndex);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("RobotsNoFollow", part.RobotsNoFollow);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("RobotsNoSnippet", part.RobotsNoSnippet);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("RobotsNoOdp", part.RobotsNoOdp);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("RobotsNoArchive", part.RobotsNoArchive);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("RobotsUnavailableAfter", part.RobotsUnavailableAfter);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("RobotsUnavailableAfterDate", part.RobotsUnavailableAfterDate);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("RobotsNoImageIndex", part.RobotsNoImageIndex);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("GoogleNoSiteLinkSearchBox", part.GoogleNoSiteLinkSearchBox);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("GoogleNoTranslate", part.GoogleNoTranslate);
         }
 
 

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Laser.Orchard.CommunicationGateway</RootNamespace>
     <AssemblyName>Laser.Orchard.CommunicationGateway</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -24,6 +24,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,56 +48,81 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=3.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Orchard.Sources\lib\nhibernate\NHibernate.dll</HintPath>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Orchard.ContentPicker">
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NHibernate.4.0.1.4000\lib\net40\NHibernate.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Orchard.Autoroute, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Autoroute\bin\Orchard.Autoroute.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.ContentPicker, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.ContentPicker\bin\Orchard.ContentPicker.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Core, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Orchard.Core, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Fields, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Orchard.Fields, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Fields\bin\Orchard.Fields.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Framework, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Orchard.Framework, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Localization, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Orchard.Localization, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Localization\bin\Orchard.Localization.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.MediaLibrary">
+    <Reference Include="Orchard.MediaLibrary, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.MediaLibrary\bin\Orchard.MediaLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Modules, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Orchard.Modules, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Modules\bin\Orchard.Modules.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Projections, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Orchard.Projections, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Projections\bin\Orchard.Projections.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.PublishLater">
+    <Reference Include="Orchard.PublishLater, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.PublishLater\bin\Orchard.PublishLater.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Tags">
+    <Reference Include="Orchard.Tags, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tags\bin\Orchard.Tags.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Taxonomies, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Orchard.Taxonomies, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Taxonomies\bin\Orchard.Taxonomies.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Users">
+    <Reference Include="Orchard.Tokens, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tokens\bin\Orchard.Tokens.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Users, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -104,15 +130,47 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
-    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Orchard.Sources\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
@@ -126,40 +184,17 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
-      <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
-      <Name>Laser.Orchard.Commons</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Laser.Orchard.OpenAuthentication\Laser.Orchard.OpenAuthentication.csproj">
-      <Project>{9ce00190-3abe-41e2-966f-76a9b017eb65}</Project>
-      <Name>Laser.Orchard.OpenAuthentication</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Laser.Orchard.Policy\Laser.Orchard.Policy.csproj">
-      <Project>{09a8fbda-b443-4f01-bc64-8115ac31abb3}</Project>
-      <Name>Laser.Orchard.Policy</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Laser.Orchard.Queries\Laser.Orchard.Queries.csproj">
-      <Project>{d494b57f-2ae6-460f-9785-565376409afc}</Project>
-      <Name>Laser.Orchard.Queries</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Laser.Orchard.ShortLinks\Laser.orchard.ShortLinks.csproj">
-      <Project>{ec3ac4a2-7368-4609-999b-29965418372c}</Project>
-      <Name>Laser.orchard.ShortLinks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
-      <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>
-      <Name>Laser.Orchard.StartupConfig</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Controllers\AdvertisingAdminController.cs" />
+    <Compile Include="Controllers\AdvertisingExternalController.cs" />
     <Compile Include="Controllers\ContactsAdminController.cs" />
+    <Compile Include="Controllers\DeliveryReportController.cs" />
     <Compile Include="Drivers\CommunicationAdvertisingPartDriver.cs" />
     <Compile Include="Drivers\CommunicationCampaignPartDriver.cs" />
     <Compile Include="Drivers\CommunicationContactDriver.cs" />
     <Compile Include="Drivers\EmailContactPartDriver.cs" />
     <Compile Include="Drivers\QueryFilterDriver.cs" />
     <Compile Include="Drivers\SmsContactPartDriver.cs" />
+    <Compile Include="Events\ICommunicationEventHandler.cs" />
     <Compile Include="Features\CommunicationFeature.cs" />
     <Compile Include="Handlers\CommunicationAdvertisingPartHandler.cs" />
     <Compile Include="Handlers\CommunicationCampaignPartHandler.cs" />
@@ -175,19 +210,28 @@
     <Compile Include="Models\CommunicationAdvertisingPart.cs" />
     <Compile Include="Models\CommunicationCampaignPart.cs" />
     <Compile Include="Models\CommunicationContactPart.cs" />
+    <Compile Include="Models\CommunicationDeliveryReportRecord.cs" />
     <Compile Include="Models\CommunicationEmailRecord.cs" />
+    <Compile Include="Models\CommunicationRetryRecord.cs" />
     <Compile Include="Models\CommunicationSmsRecord.cs" />
     <Compile Include="Models\EmailContactPart.cs" />
     <Compile Include="Models\QueryFilterPart.cs" />
     <Compile Include="Models\SmsContactPart.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Projections\PhonePrefixFilter.cs" />
+    <Compile Include="Projections\PhoneNumberFilter.cs" />
+    <Compile Include="Projections\EmailFilter.cs" />
+    <Compile Include="Projections\ExcludeMasterContact.cs" />
+    <Compile Include="Routes.cs" />
     <Compile Include="Security\AdvertisingEventHandler.cs" />
     <Compile Include="Services\ExportContactService.cs" />
     <Compile Include="Services\ICommunicationService.cs" />
+    <Compile Include="Tokens\UserContactToken.cs" />
     <Compile Include="Utils\DownloadFileContentResult.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utils\ImportUtil.cs" />
+    <Compile Include="ViewModels\AdvertisingVM.cs" />
     <Compile Include="ViewModels\CommunicationContactPartVM.cs" />
     <Compile Include="ViewModels\ContentIndexVM.cs" />
     <Compile Include="ViewModels\FilesListVM.cs" />
@@ -208,6 +252,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
+    <Content Include="packages.config" />
     <None Include="Views\CampaignAdmin\index.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\QueryFilter.cshtml" />
     <Content Include="Views\ContactsAdmin\index.cshtml" />
@@ -238,8 +283,39 @@
     <Content Include="Views\Fields\MediaPickerField-CommunicationContact-AdminFilter.cshtml" />
     <Content Include="Views\Parts\FavoriteCulturePart-CommunicationContact-AdminFilter.cshtml" />
     <Content Include="Views\Fields\InputField-CommunicationContact-AdminFilter.cshtml" />
+    <Content Include="Views\Fields\ContentPicker-CommunicationAdvertising-CommunicationAdvertisingPart-ContentLinked.cshtml" />
+    <Content Include="Views\Fields\Link-CommunicationAdvertising-CommunicationAdvertisingPart-UrlLinked.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
+      <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
+      <Name>Laser.Orchard.Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.OpenAuthentication\Laser.Orchard.OpenAuthentication.csproj">
+      <Project>{9ce00190-3abe-41e2-966f-76a9b017eb65}</Project>
+      <Name>Laser.Orchard.OpenAuthentication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.Policy\Laser.Orchard.Policy.csproj">
+      <Project>{09a8fbda-b443-4f01-bc64-8115ac31abb3}</Project>
+      <Name>Laser.Orchard.Policy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.Queries\Laser.Orchard.Queries.csproj">
+      <Project>{d494b57f-2ae6-460f-9785-565376409afc}</Project>
+      <Name>Laser.Orchard.Queries</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.ShortLinks\Laser.Orchard.ShortLinks.csproj">
+      <Project>{ec3ac4a2-7368-4609-999b-29965418372c}</Project>
+      <Name>Laser.Orchard.ShortLinks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
+      <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>
+      <Name>Laser.Orchard.StartupConfig</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.UserProfiler\Laser.Orchard.UserProfiler.csproj">
+      <Project>{22dd309c-74f3-4e57-843c-ed46a7122758}</Project>
+      <Name>Laser.Orchard.UserProfiler</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

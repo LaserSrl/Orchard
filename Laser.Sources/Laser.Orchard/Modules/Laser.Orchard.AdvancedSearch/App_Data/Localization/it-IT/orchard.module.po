@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -220,6 +220,10 @@ msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
 msgid "Untranslated in {0}"
 msgstr "Non tradotto in {0}"
 
+msgctxt "~/Modules/Laser.Orchard.AdvancedSearch/Views/Admin/List.cshtml"
+msgid "User name or e-mail"
+msgstr "Nome utente o e-mail"
+
 msgctxt "Laser.Orchard.AdvancedSearch.ContentAdminMenu"
 msgid "Advanced Search"
 msgstr "Ricerca Avanzata"
@@ -339,4 +343,8 @@ msgstr "Il contenuto è stato creato."
 msgctxt "Laser.Orchard.AdvancedSearch.Controllers.AdminController"
 msgid "Your content has been saved."
 msgstr "Il contenuto è stato salvato."
+
+msgctxt "Laser.Orchard.AdvancedSearch.Navigation.ContentAdminMenu"
+msgid "Content"
+msgstr "Contenuto"
 

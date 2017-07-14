@@ -23,7 +23,11 @@ namespace Laser.Orchard.Vimeo.Services {
         VimeoSettingsPartViewModel GetSettingsVM();
         void UpdateSettings(VimeoSettingsPartViewModel vm);
 
+        void ConsolidateTokensList(VimeoSettingsPartViewModel vm);
+        void CommitTokensUpdate(VimeoSettingsPartViewModel vm);
+
         bool TokenIsValid(VimeoSettingsPartViewModel vm);
+        string TokensAreValid(VimeoSettingsPartViewModel vm);
 
         bool GroupIsValid(VimeoSettingsPartViewModel vm);
         bool AlbumIsValid(VimeoSettingsPartViewModel vm);
@@ -47,10 +51,10 @@ namespace Laser.Orchard.Vimeo.Services {
 
 #if DEBUG
         //these methods here don't need to be exposed, but they are easier to test and debug if they may be called directly.
-        bool TokenIsValid(string aToken);
-        bool GroupIsValid(string gName, string aToken);
-        bool AlbumIsValid(string aName, string aToken);
-        bool ChannelIsValid(string cName, string aToken);
+        bool TokenIsValid(string aToken, bool shouldUpdateRateLimits);
+        //bool GroupIsValid(string gName, string aToken);
+        //bool AlbumIsValid(string aName, string aToken);
+        //bool ChannelIsValid(string cName, string aToken);
 
         VimeoUploadQuota CheckQuota();
         Int64 UsedQuota();

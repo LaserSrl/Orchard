@@ -9,10 +9,10 @@ using System;
 namespace Laser.Orchard.StartupConfig.Services {
     [OrchardFeature("Laser.Orchard.StartupConfig.RoleExtension")]
     public class RoleExtension : IRoleExtension {
-        private readonly ISessionLocator _sessionLocator;
+        private readonly ITransactionManager _transactionManager;
 
-        public RoleExtension(ISessionLocator isessionlocator) {
-            _sessionLocator = isessionlocator;
+        public RoleExtension(ITransactionManager transactionManager) {
+            _transactionManager = transactionManager;
         }
      
         public IList<UserPartRecord> GetUsersByRoles(List<RoleRecord> rolelist) {//List<RoleRecord> listroles) {
@@ -29,7 +29,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                                 "r.Name <> 'ExcludeRole' " +
                                "and ur.Role_id in (" + System.String.Join(",", Array.ConvertAll(rolelist.ToArray(), i => i.Id.ToString())) + ")";
                                
-           var users  = _sessionLocator.For(typeof(UserPartRecord))
+           var users  = _transactionManager.GetSession()
             .CreateSQLQuery(query )
             .AddEntity(typeof(UserPartRecord))
             .List<UserPartRecord>();

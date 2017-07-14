@@ -8,6 +8,7 @@ namespace Laser.Orchard.OpenAuthentication.Models {
     }
 
     public class UserProvidersPart : ContentPart, IUserProviders {
+
         private readonly LazyField<IList<UserProviderEntry>> _providerEntries = new LazyField<IList<UserProviderEntry>>();
 
         public LazyField<IList<UserProviderEntry>> ProviderEntriesField { get { return _providerEntries; } }

@@ -1,0 +1,22 @@
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.ContentManagement.Records;
+@using Orchard.Data;
+@using System.Linq;
+@functions{
+    string retString = "NoMatch"; //possible outcomes: Match,NoMatch
+}
+@{
+    try {
+        dynamic invito = Model.ContentItem;
+        int creatorId = (int)(invito.CommonPart.Creator.Value);
+        dynamic creator = Model.OrchardServices.ContentManager.Get(creatorId);
+        string creatorMail = creator.UserPart.Email;
+        if(invito.SchedaInvito.Email.Value == creatorMail) {
+            retString = "Match";
+        }
+    }
+    catch { //nasconde all'utente eventuali errori e restituisce NoMatch
+    }
+}
+@retString

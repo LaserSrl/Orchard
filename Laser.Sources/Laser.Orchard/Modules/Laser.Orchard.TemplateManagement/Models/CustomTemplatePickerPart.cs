@@ -8,6 +8,7 @@ using Orchard.ContentManagement.Utilities;
 
 namespace Laser.Orchard.TemplateManagement.Models {
     public class CustomTemplatePickerPart : ContentPart<CustomTemplatePickerPartRecord> {
+
         internal LazyField<TemplatePart> SelectedTemplateField = new LazyField<TemplatePart>();
 
         public TemplatePart SelectedTemplate {

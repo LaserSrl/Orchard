@@ -51,9 +51,12 @@ namespace Laser.Orchard.Translator.Controllers
         {
             using (ZipFile zip = new ZipFile())
             {
+                var filename = "ExportTranslations_" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".zip";
+
                 Response.Clear();
                 Response.BufferOutput = false;
                 Response.ContentType = "application/zip";
+                Response.AppendHeader("content-disposition", "attachment; filename=" + filename);
 
                 var messagesToExport = _translatorServices.GetTranslations().Where(m => m.TranslatedMessage != null
                                                                                      && m.TranslatedMessage != string.Empty);

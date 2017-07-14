@@ -15,6 +15,7 @@ using Orchard.Core.Contents.Controllers;
 using Orchard.UI.Notify;
 using Orchard.DisplayManagement;
 using Orchard.UI.Navigation;
+using OMvc = Orchard.Mvc;
 
 namespace Laser.Orchard.NewsLetters.Controllers {
     [Admin]
@@ -126,7 +127,7 @@ namespace Laser.Orchard.NewsLetters.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
-        [FormValueRequired("submit.Delete")]
+        [OMvc.FormValueRequired("submit.Delete")]
         public ActionResult EditDeletePOST(int Id, int newsletterId) {
             //if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't delete newsletter")))
             //    return new HttpUnauthorizedResult();
@@ -143,7 +144,7 @@ namespace Laser.Orchard.NewsLetters.Controllers {
 
 
         [HttpPost, ActionName("Edit")]
-        [FormValueRequired("submit.Save")]
+        [OMvc.FormValueRequired("submit.Save")]
         public ActionResult EditPOST(int Id, int newsletterId) {
             var newsletter = _newslServices.GetNewsletterEdition(Id, VersionOptions.DraftRequired);
 

@@ -12,10 +12,11 @@ using Orchard.Tasks.Scheduling;
 using System;
 using System.Globalization;
 using Orchard.Localization.Services;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.Questionnaires.Drivers {
 
-    public class GamePartDriver : ContentPartDriver<GamePart> {
+    public class GamePartDriver : ContentPartCloningDriver<GamePart> {
         private readonly IOrchardServices _orchardServices;
         private readonly IDateLocalization _dateLocalization;
 
@@ -26,7 +27,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
         }
 
         public GamePartDriver(IOrchardServices orchardServices, IDateLocalization dateLocalization,
-            IScheduledTaskManager taskManager, IDateServices dateServices,
+            IScheduledTaskManager taskManager, IDateLocalizationServices dateServices,
             IQuestionnairesServices questionnairesServices) {
             _orchardServices = orchardServices;
             _dateLocalization = dateLocalization;
@@ -36,19 +37,22 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             var viewModel = new GamePartVM();
 
             DateTime? tmpGameDate = _dateLocalization.ReadDateLocalized(part.GameDate);
-            Mapper.CreateMap<GamePart, GamePartVM>()
-                .ForMember(dest => dest.GameDate, opt => opt.Ignore());
-            Mapper.Map(part, viewModel);
-            viewModel.GameDate = _dateLocalization.WriteDateLocalized(tmpGameDate);
+            Mapper.Initialize(cfg => {
+                cfg.CreateMap<GamePart, GamePartVM>().ForMember(dest => dest.GameDate, opt => opt.Ignore());
+            });
+            Mapper.Map<GamePart, GamePartVM>(part, viewModel);
+            viewModel.GameDate = _dateLocalization.WriteDateLocalized(tmpGameDate,true);
             return ContentShape("Parts_GamePart_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/GamePart_Edit", Model: viewModel, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(GamePart part, IUpdateModel updater, dynamic shapeHelper) {
             var viewModel = new GamePartVM();
             if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
-                Mapper.CreateMap<GamePartVM, GamePart>()
+                Mapper.Initialize(cfg => {
+                    cfg.CreateMap<GamePartVM, GamePart>()
                     .ForMember(dest => dest.GameDate, opt => opt.Ignore());
-                Mapper.Map(viewModel, part);
+                });
+                Mapper.Map<GamePartVM, GamePart>(viewModel, part);
                 if (!String.IsNullOrWhiteSpace(viewModel.GameDate)) {
                     part.GameDate = _dateLocalization.StringToDatetime(viewModel.GameDate, "") ?? DateTime.Now;
                 }
@@ -69,6 +73,8 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             part.RandomResponse = Boolean.Parse(root.Attribute("RandomResponse").Value);
             part.RankingAndroidIdentifier = root.Attribute("RankingAndroidIdentifier").Value;
             part.RankingIOSIdentifier = root.Attribute("RankingIOSIdentifier").Value;
+            part.State = Int32.Parse(root.Attribute("State").Value);
+            //workflowfired non serve per l'import
         }
 
         protected override void Exporting(GamePart part, ExportContentContext context) {
@@ -82,7 +88,24 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             root.SetAttributeValue("QuestionsSortedRandomlyNumber", part.QuestionsSortedRandomlyNumber);
             root.SetAttributeValue("RandomResponse", part.RandomResponse);
             root.SetAttributeValue("RankingAndroidIdentifier", part.RankingAndroidIdentifier);
-            root.SetAttributeValue("RankingIOSIdentifier",      part.RankingIOSIdentifier);
+            root.SetAttributeValue("RankingIOSIdentifier", part.RankingIOSIdentifier);
+            root.SetAttributeValue("State", part.State);
+            //workflowfired non serve per l'import
+        }
+
+        protected override void Cloning(GamePart originalPart, GamePart clonePart, CloneContentContext context) {
+            clonePart.AbstractText = originalPart.AbstractText;
+            clonePart.GameDate = originalPart.GameDate;
+            clonePart.RankingIOSIdentifier = originalPart.RankingIOSIdentifier;
+            clonePart.RankingAndroidIdentifier = originalPart.RankingAndroidIdentifier;
+            clonePart.MyOrder = originalPart.MyOrder;
+            //worflowFired is set in the QuestionnaireServices
+            clonePart.QuestionsSortedRandomlyNumber = originalPart.QuestionsSortedRandomlyNumber;
+            clonePart.RandomResponse = originalPart.RandomResponse;
+            clonePart.AnswerPoint = originalPart.AnswerPoint;
+            clonePart.AnswerTime = originalPart.AnswerTime;
+            //State is set in the Handler
+            clonePart.GameType = originalPart.GameType;
         }
     }
 }

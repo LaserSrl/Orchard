@@ -37,7 +37,8 @@ namespace Laser.Orchard.CulturePicker.Handlers {
                         }
                     }
                     part.ToBeTranslated = false;
-                } catch (Exception ex) {
+                }
+                catch { 
 
                 }
             }

@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -111,6 +111,10 @@ msgstr "La chiave pubblica assegnata da Braintree durante la registrazione del n
 msgctxt "Laser.Orchard.Braintree.Handlers.BraintreeSiteSettingsHandler"
 msgid "Braintree PayPal"
 msgstr "Braintree PayPal"
+
+msgctxt "Laser.Orchard.Braintree.Services.BraintreePosService"
+msgid "An SDK is available for BrainTree."
+msgstr "Braintree ha una sua SDK."
 
 msgctxt "Laser.Orchard.Braintree.Services.MissingSettingsBanner"
 msgid "The <a href=\"{0}\">Braintree PayPal</a> settings need to be configured."

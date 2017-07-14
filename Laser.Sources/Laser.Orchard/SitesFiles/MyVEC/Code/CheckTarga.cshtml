@@ -1,0 +1,39 @@
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.ContentManagement.Records;
+@using Orchard.Data;
+@using System.Linq;
+@functions{
+    string retString = "Error"; //possible outcomes: "Identical","Cancelled","Changed","Error"
+    Orchard.Workflows.Models.WorkflowContext wfContext = null;
+}
+@{
+    try {
+        wfContext = Model.Tokens["Workflow"];
+        dynamic invito = Model.ContentItem;
+        dynamic prenotazione = null;
+        string oldTarga = "";
+        string newTarga = Convert.ToString(wfContext.GetState("Targa"));
+        if(invito.SchedaInvito.Prenotazioneparcheggio.Ids.Length > 0) {
+            prenotazione = Model.OrchardServices.ContentManager.Get(invito.SchedaInvito.Prenotazioneparcheggio.Ids[0]);
+            oldTarga = prenotazione.Prenotazioneparcheggio.Targa.Value??"";
+        }
+        if (oldTarga.CompareTo(newTarga) == 0) {
+            retString = "Identical";
+        }
+        else {
+            if(newTarga == "") {
+                retString = "Cancelled";
+            }
+            else {
+                retString = "Changed";
+            }
+            wfContext.SetState("OldTarga", oldTarga);
+            wfContext.SetState("NewTarga", newTarga);
+        }
+    }
+    catch (Exception ex) { 
+        wfContext.SetState("ErrorMessage", ex.Message);
+    }
+}
+@retString

@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -17,12 +17,20 @@ msgid "Share bar display style"
 msgstr "Stile di visualizzazione della barra di condivisione"
 
 msgctxt "~/Modules/Laser.Orchard.Sharing/Views/EditorTemplates/Parts/Share.Settings.cshtml"
+msgid "AddThis PubId code"
+msgstr "AddThis codice PubId"
+
+msgctxt "~/Modules/Laser.Orchard.Sharing/Views/EditorTemplates/Parts/Share.Settings.cshtml"
 msgid "AddThis service account"
 msgstr "Account del servizio AddThis"
 
 msgctxt "~/Modules/Laser.Orchard.Sharing/Views/EditorTemplates/Parts/Share.Settings.cshtml"
 msgid "Content sharing settings"
 msgstr "Impostazioni di condivisione del contenuto"
+
+msgctxt "~/Modules/Laser.Orchard.Sharing/Views/EditorTemplates/Parts/Share.Settings.cshtml"
+msgid "PubId is the code that identify your AddThis account, you can find it on https://www.addthis.com/dashboard#dashboard-analytics/ in the GET YOUR CODE tab"
+msgstr "PubId è il codice che identifica l'account di AddThis, si può trovare all'indirizzo https://www.addthis.com/dashboard#dashboard-analytics/ nella pagina "GET YOUR CODE""
 
 msgctxt "Laser.Orchard.Sharing.Drivers.ShareBarSettingsPartDriver"
 msgid "Content sharing settings updated successfully"

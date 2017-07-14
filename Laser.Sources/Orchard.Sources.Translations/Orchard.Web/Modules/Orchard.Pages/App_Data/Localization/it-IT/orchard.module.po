@@ -1,15 +1,23 @@
+#. "Name"
+#: "~/Modules/Orchard.Pages/Module.txt"
 msgctxt "~/Modules/Orchard.Pages/Module.txt"
 msgid "Pages"
 msgstr "Pagine"
 
+#. "Author"
+#: "~/Modules/Orchard.Pages/Module.txt"
 msgctxt "~/Modules/Orchard.Pages/Module.txt"
 msgid "The Orchard Team"
 msgstr "Il Team di Orchard"
 
+#. "Website"
+#: "~/Modules/Orchard.Pages/Module.txt"
 msgctxt "~/Modules/Orchard.Pages/Module.txt"
 msgid "http://orchardproject.net"
 msgstr "http://orchardproject.net"
 
+#. "Description"
+#: "~/Modules/Orchard.Pages/Module.txt"
 msgctxt "~/Modules/Orchard.Pages/Module.txt"
 msgid "Introduces a preconfigured page content type."
 msgstr "Introduce un Tipo di Contenuto preconfigurato per gestire le pagine."

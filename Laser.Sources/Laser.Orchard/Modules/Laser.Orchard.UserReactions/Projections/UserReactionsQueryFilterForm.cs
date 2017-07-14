@@ -41,40 +41,38 @@ namespace Laser.Orchard.UserReactions.Projections {
             _resourceManager = resourceManager;
         }
 
-
         public void Describe(DescribeContext context) {
-
             context.Form("ReactionsFilterForm", shape => {
                 var f = _shapeFactory.Form(                    
                     Id: "ReactionsFilterForm",
 
                      _Reaction: _shapeFactory.FieldSet(
-                            Id: "reaction",
-                            _Reaction: _shapeFactory.TextBox(
+                        Id: "reaction",
+                        _Reaction: _shapeFactory.TextBox(
                             Name: "Reaction",
                             Title: T("Reactions types"),
                             Classes: new[] { "tokenized" }
-                            )
-                        ),
+                        )
+                    ),
 
                     _ReactionTitle: _shapeFactory.Markup(
-                        Value: "<fieldset><legend>Reactions list available:</legend>"),
+                        Value: "<fieldset><legend>" + T("List of available reactions") + ":</legend>"
+                    ),
 
                     _ReactionsList: _shapeFactory.List(
-                    Id: "reactionslist"
+                        Id: "reactionslist"
                     ),
 
                      _ReactionPanel: _shapeFactory.Markup(
-                        Value: " </fieldset>"),
+                        Value: " </fieldset>"
+                    ),
 
                     _Operator: _shapeFactory.SelectList(
                         Id: "operator", Name: "Operator",
                         Title: T("Operator"),
                         Size: 1,
                         Multiple: false
-                        ),
-
-
+                    ),
 
                     _FieldSetSingle: _shapeFactory.FieldSet(
                         Id: "fieldset-single",
@@ -82,9 +80,8 @@ namespace Laser.Orchard.UserReactions.Projections {
                             Id: "value", Name: "Value",
                             Title: T("Value"),
                             Classes: new[] { "tokenized" }
-                            )
-                        ),
-
+                        )
+                    ),
 
                     _FieldSetMin: _shapeFactory.FieldSet(
                         Id: "fieldset-min",
@@ -94,7 +91,6 @@ namespace Laser.Orchard.UserReactions.Projections {
                             Classes: new[] { "tokenized" }
                             )
                         ),
-
 
                     _FieldSetMax: _shapeFactory.FieldSet(
                         Id: "fieldset-max",
@@ -106,13 +102,11 @@ namespace Laser.Orchard.UserReactions.Projections {
                         )
                 );
 
-                Dictionary<string, string> reactionType = GetTypesReactions();
-
-                foreach (var item in reactionType) {
-                    f._ReactionsList.Add(item.Value.ToString(), item.Key.ToString());
+                var reactionTypes = _reactionsService.GetTypesTableFiltered();
+                foreach (var item in reactionTypes) {
+                    f._ReactionsList.Add(item.TypeName);
                 }
 
-               // _resourceManager.Value.Require("script", "jQuery");
                 _resourceManager.Value.Include("script", "~/Modules/Orchard.Projections/Scripts/numeric-editor-filter.js", "~/Modules/Orchard.Projections/Scripts/numeric-editor-filter.js");
 
                 f._Operator.Add(new SelectListItem { Value = Convert.ToString(UserReactionsFieldOperator.Equals), Text = T("Is equal to").Text });
@@ -126,35 +120,5 @@ namespace Laser.Orchard.UserReactions.Projections {
                 return f;
             });
         }
-
-
-
-
-        ////Loading UserReactions
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <returns></returns>
-        public Dictionary<string, string> GetTypesReactions() {
-
-            Dictionary<string, string> retVal = new Dictionary<string, string>();
-            var reactionSettings = _orchardServices.WorkContext.CurrentSite.As<UserReactionsSettingsPart>();
-            var userRT = new UserReactionsTypes();
-
-            userRT.UserReactionsType = _reactionsService.GetTypesTable().Select(r => new UserReactionsTypeVM {
-                Id = r.Id,
-                TypeName = r.TypeName,
-
-            }).ToList();
-
-            foreach (UserReactionsTypeVM retval in userRT.UserReactionsType) {
-                retVal.Add(retval.Id.ToString(), retval.TypeName);
-            }
-
-            return retVal;
-        }
-
-
-
     }
 }

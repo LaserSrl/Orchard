@@ -7,6 +7,7 @@ using Orchard.ContentManagement.Records;
 
 namespace Laser.Orchard.Policy.Models {
     public class UserPolicyPart : ContentPart<UserPolicyPartRecord> {
+
         public IEnumerable<UserPolicyAnswersRecord> UserPolicyAnswers {
             get {
                 return Record.UserPolicyAnswers.OrderByDescending(o=>o.PolicyTextInfoPartRecord.Priority).Select(r => r);
@@ -15,6 +16,7 @@ namespace Laser.Orchard.Policy.Models {
     }
 
     public class UserPolicyPartRecord : ContentPartRecord {
+
         public UserPolicyPartRecord() {
             UserPolicyAnswers = new List<UserPolicyAnswersRecord>();
         }

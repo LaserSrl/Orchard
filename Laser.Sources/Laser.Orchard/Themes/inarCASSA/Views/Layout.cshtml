@@ -103,7 +103,9 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12 col-sm-4 logo-header">
-            <img src="@(themeBasePath + "/styles/img/logoquerstionario.png")" alt="logo" class="img-responsive"/>
+            <a href="~/">
+                <img src="@(themeBasePath + "/styles/img/logoquerstionario.png")" alt="logo" class="img-responsive"/>
+            </a>
         </div>
         <div class="col-xs-12 col-sm-8">
             <div class="header-box">
@@ -112,7 +114,14 @@
         </div>
     </div>
 </div>
-@if (campagnaNonAttiva) {
+@if (WorkContext.CurrentUser != null) {
+    <div style="text-align:right;padding-top:0px">
+        @Html.ActionLink(T("Change Password").Text, "ChangePassword", new { Controller = "Account", Area = "Orchard.Users" })
+        <text>&nbsp;&nbsp;&nbsp;</text>
+        @Html.ActionLink(T("Dashboard").Text, "Index", new {Area = "Dashboard", Controller = "Admin"})
+        <text>&nbsp;</text>
+    </div>
+}@if (campagnaNonAttiva) {
         <div class="space-10"></div>
         <div class="text-center bg-pink">
                 @T("No data found.")

@@ -103,7 +103,7 @@ namespace Laser.Orchard.PaymentCartaSi.Services {
             string bUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl;
             var hp = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
             string aPath = hp.Action(aName, cName, new { Area = areaName });
-            int cut = aPath.IndexOf(sName) - 1;
+            int cut = aPath.ToUpperInvariant().IndexOf(sName.ToUpperInvariant()) - 1;
             return bUrl + aPath.Substring(cut);
         }
 #if DEBUG

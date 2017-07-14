@@ -70,7 +70,7 @@ namespace Laser.Orchard.StartupConfig.Security {
                         permission = GetGroupVariation(context.Permission); // output is like PublishGroup_{0}
 
                         var typeDefinition = context.Content.ContentItem.TypeDefinition;
-                        if (typeDefinition.Settings.GetModel<ContentTypeSettings>().Creatable) {
+                        if (typeDefinition.Settings.GetModel<ContentTypeSettings>().Securable) {
                             if (permission != null) {
                                 context.Adjusted = true;
                                 context.Permission = DynamicGroupsPermissions.CreateDynamicGroupPermission(permission, typeDefinition);

@@ -1,10 +1,13 @@
-﻿using Laser.Orchard.Mobile.Models;
+﻿using Laser.Orchard.CommunicationGateway.Models;
+using Laser.Orchard.Mobile.Models;
 using Laser.Orchard.Mobile.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.Data;
 using Orchard.Logging;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,10 +18,12 @@ using System.Xml.Serialization;
 namespace Laser.Orchard.Mobile.Controllers {
     public class TransferDeliveryReportController : Controller {
         private readonly IContentManager _contentManager;
+        private readonly IRepository<CommunicationDeliveryReportRecord> _deliveryReportRepository;
 
-        public TransferDeliveryReportController(IContentManager contentManager) {
+        public TransferDeliveryReportController(IContentManager contentManager, IRepository<CommunicationDeliveryReportRecord> deliveryReportRepository) {
             Log = NullLogger.Instance;
             _contentManager = contentManager;
+            _deliveryReportRepository = deliveryReportRepository;
         }
 
 
@@ -63,17 +68,34 @@ namespace Laser.Orchard.Mobile.Controllers {
                         Log.Error("Testo Sms: " + report.TestoSms);
                         Log.Error("Stato Sms: " + report.Stato);
 
-                        if (!report.MessageIdentifier.StartsWith("Orchard_")) return Content("OK");
+                        if (!report.MessageIdentifier.StartsWith("Orchard_")) {
+                            return Content("OK");
+                        }
 
                         var messageId = 0;
 
                         if (int.TryParse(report.MessageIdentifier.Split('_')[1], out messageId)) {
                             var smsPart = _contentManager.Get<SmsGatewayPart>(messageId);
+
                             if (report.Stato == "DELIVERED" || report.Stato == "ACCEPTED") {
                                 smsPart.SmsDeliveredOrAcceptedNumber += 1;
                             } else {
                                 smsPart.SmsRejectedOrExpiredNumber += 1;
                             }
+
+                            CommunicationDeliveryReportRecord deliveryReport = new CommunicationDeliveryReportRecord();
+                            deliveryReport.CommunicationAdvertisingPartRecord_Id = messageId;
+                            deliveryReport.ExternalId = smsPart.ExternalId;
+                            deliveryReport.RequestDate = Convert.ToDateTime(report.RequestDate, new CultureInfo("it-IT"));
+                            deliveryReport.SubmittedDate = Convert.ToDateTime(report.SubMittedDate, new CultureInfo("it-IT"));
+                            deliveryReport.Status = report.Stato;
+                            deliveryReport.Recipient = report.To;
+                            deliveryReport.Context = report.DriverId;
+                            deliveryReport.Medium = "SMS";
+                            
+                            _deliveryReportRepository.Create(deliveryReport);
+                            _deliveryReportRepository.Flush();
+
                         } else {
                             strResp = "KO";
                         }

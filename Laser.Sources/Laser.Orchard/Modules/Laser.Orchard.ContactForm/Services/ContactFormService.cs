@@ -19,6 +19,7 @@ using Orchard.Messaging.Services;
 using Orchard.UI.Notify;
 using Laser.Orchard.ContactForm.Models;
 using Laser.Orchard.TemplateManagement.Services;
+using Orchard.Email.Services;
 
 namespace Laser.Orchard.ContactForm.Services {
     public class ContactFormService : IContactFormService {
@@ -29,7 +30,7 @@ namespace Laser.Orchard.ContactForm.Services {
         private readonly IRepository<ContactFormRecord> _contactFormRepository;
         private readonly ITemplateService _templateServices;
         private readonly IContentManager _contentManager;
-        private readonly IMessageManager _messageManager;
+        private readonly ISmtpChannel _messageManager;
         private readonly IStorageProvider _storageProvider;
 
         private string validationError = "";
@@ -37,7 +38,7 @@ namespace Laser.Orchard.ContactForm.Services {
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
-        public ContactFormService(IOrchardServices orchardServices, INotifier notifier, IRepository<ContactFormRecord> contactFormRepository, ITemplateService templateServices, IContentManager contentManager, IMessageManager messageManager, IMediaLibraryService mediaLibraryService, IStorageProvider storageProvider) {
+        public ContactFormService(IOrchardServices orchardServices, INotifier notifier, IRepository<ContactFormRecord> contactFormRepository, ITemplateService templateServices, IContentManager contentManager, ISmtpChannel messageManager, IMediaLibraryService mediaLibraryService, IStorageProvider storageProvider) {
             _notifier = notifier;
             _orchardServices = orchardServices;
             _contactFormRepository = contactFormRepository;
@@ -120,15 +121,16 @@ namespace Laser.Orchard.ContactForm.Services {
                                 if (mediaid != -1 && !attachFiles) {
                                     body += "<div><a href=\"" + host + mediaData.MediaUrl + "\">" + T("Attachment") + "</a></div>";
                                 }
-                                IEnumerable<string> recipient = Array.ConvertAll(contactFormSettings.SpamEmail.Split(';'), x => x.Trim());
-                                var data = new Dictionary<string, string>();
+                                var data = new Dictionary<string, object>();
+                                data.Add("Recipients", sendTo);
+                                data.Add("ReplyTo", email);
                                 data.Add("Subject", subject);
                                 data.Add("Body", body);
                                 if (mediaid != -1 && attachFiles) {
-                                    data.Add("Attachment", _orchardServices.WorkContext.HttpContext.Server.MapPath(mediaData.MediaUrl));
+                                    data.Add("Attachments", new string[] { _orchardServices.WorkContext.HttpContext.Server.MapPath(mediaData.MediaUrl) });
                                 }
 
-                                _messageManager.Send(recipient, "ActionEmail", "email", data);
+                                _messageManager.Process(data);
 
                                 string spamMessage = string.Format(T("Your message was flagged as spam. If you feel this was in error contact us directly at: {0}").Text, sendTo);
                                 _notifier.Information(T(spamMessage));
@@ -172,15 +174,16 @@ namespace Laser.Orchard.ContactForm.Services {
                                 // Nel template pertanto Model, diventa Model.Content
                                 templatectx.Model = model;
                                 var body = _templateServices.ParseTemplate(template, templatectx);
-                                IEnumerable<string> recipient = Array.ConvertAll(sendTo.Split(';'), x => x.Trim());
-                                var data = new Dictionary<string, string>();
+                                var data = new Dictionary<string, object>();
+                                data.Add("Recipients", sendTo);
+                                data.Add("ReplyTo", email);
                                 data.Add("Subject", mailSubject);
                                 data.Add("Body", body);
                                 if (mediaid != -1 && attachFiles) {
-                                    data.Add("Attachment", _orchardServices.WorkContext.HttpContext.Server.MapPath(mediaData.MediaUrl));
+                                    data.Add("Attachments", new string[] { _orchardServices.WorkContext.HttpContext.Server.MapPath(mediaData.MediaUrl) });
                                 }
 
-                                _messageManager.Send(recipient, "ActionEmail", "email", data);
+                                _messageManager.Process(data);
 
                             } else {
 
@@ -193,15 +196,16 @@ namespace Laser.Orchard.ContactForm.Services {
                                 if (mediaid != -1 && !attachFiles) {
                                     body += "<div><a href=\"" + host + mediaData.MediaUrl + "\">" + T("Attachment") + "</a></div>";
                                 }
-                                IEnumerable<string> recipient = Array.ConvertAll(sendTo.Split(';'), x => x.Trim());
-                                var data = new Dictionary<string, string>();
+                                var data = new Dictionary<string, object>();
+                                data.Add("Recipients", sendTo);
+                                data.Add("ReplyTo", email);
                                 data.Add("Subject", subject);
                                 data.Add("Body", body);
                                 if (mediaid != -1 && attachFiles) {
-                                    data.Add("Attachment", _orchardServices.WorkContext.HttpContext.Server.MapPath(mediaData.MediaUrl));
+                                    data.Add("Attachments", new string[] { _orchardServices.WorkContext.HttpContext.Server.MapPath(mediaData.MediaUrl) });
                                 }
 
-                                _messageManager.Send(recipient, "ActionEmail", "email", data);
+                                _messageManager.Process(data);
                             }
 
                             Logger.Debug(T("Contact form message sent to {0} at {1}").Text, sendTo, DateTime.Now.ToLongDateString());

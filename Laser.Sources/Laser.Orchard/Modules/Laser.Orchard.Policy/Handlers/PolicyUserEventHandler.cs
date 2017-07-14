@@ -1,19 +1,18 @@
-﻿using Laser.Orchard.StartupConfig.Services;
+﻿using System;
+using System.Web;
+using Laser.Orchard.Policy.Services;
+using Laser.Orchard.StartupConfig.Services;
 using Orchard;
-using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Users.Events;
-using System;
-using Laser.Orchard.Policy.Services;
-using System.Web;
 
 namespace Laser.Orchard.Policy.Handlers {
-    public class LoyalzooUserEventHandler : IUserEventHandler {
+    public class PolicyUserEventHandler : IUserEventHandler {
         private readonly IPolicyServices _policyService;
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IOrchardServices _orchardServices;
 
-        public LoyalzooUserEventHandler(IPolicyServices policyService, IControllerContextAccessor controllerContextAccessor, IOrchardServices orchardServices) {
+        public PolicyUserEventHandler(IPolicyServices policyService, IControllerContextAccessor controllerContextAccessor, IOrchardServices orchardServices) {
             _policyService = policyService;
             _controllerContextAccessor = controllerContextAccessor;
             _orchardServices = orchardServices;
@@ -54,6 +53,13 @@ namespace Laser.Orchard.Policy.Handlers {
 
         public void ConfirmedEmail(IUser user) {
         }
+
+        public void LoggingIn(string userNameOrEmail, string password) {
+        }
+
+        public void LogInFailed(string userNameOrEmail, string password) {
+        }
+
         #endregion
     }
 }

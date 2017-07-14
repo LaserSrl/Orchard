@@ -72,7 +72,7 @@
     //});
 
     $(".check-all").change(function () {
-        $(this).parents("table.items").find(":checkbox").prop('checked', $(this).prop("checked"));
+        $("input[type=checkbox]:not(:disabled)").prop('checked', $(this).prop("checked"))
     });
 })(jQuery);
 

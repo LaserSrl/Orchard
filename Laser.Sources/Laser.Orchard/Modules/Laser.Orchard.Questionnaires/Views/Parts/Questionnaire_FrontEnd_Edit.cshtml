@@ -68,7 +68,7 @@
         }
         function ConvertConditionToJava(textToConvert) {
             var numberPattern = /(\d+)/g;
-            return textToConvert.toString().replace(numberPattern, "VerifyAnswer(" + '$1' + ")").replace("and", "&&").replace("or", "||");
+            return textToConvert.toString().replace(numberPattern, "VerifyAnswer(" + '$1' + ")").replace(/and/ig, "&&").replace(/or/ig, "||");
         }
 
     </script>

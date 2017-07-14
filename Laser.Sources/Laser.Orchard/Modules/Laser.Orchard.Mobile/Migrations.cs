@@ -163,7 +163,10 @@ namespace Laser.Orchard.Mobile {
         }
 
         public int UpdateFrom12() {
-
+            SchemaBuilder.CreateTable("MobileContactPartRecord",
+                 table => table
+                     .ContentPartRecord()
+              );
             ContentDefinitionManager.AlterTypeDefinition(
             "CommunicationAdvertising",
             type => type
@@ -182,10 +185,7 @@ namespace Laser.Orchard.Mobile {
             return 14;
         }
         public int UpdateFrom14() {
-            SchemaBuilder.CreateTable("MobileContactPartRecord",
-                             table => table
-                                 .ContentPartRecord()
-                );
+
             return 15;
         }
          public int UpdateFrom15() {
@@ -276,6 +276,63 @@ namespace Laser.Orchard.Mobile {
                 _utilsServices.EnableFeature("Laser.Orchard.PushGateway");
             }
             return 26;
+        }
+        public int UpdateFrom26() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                        .AddColumn<string>("AndroidPushNotificationIcon")
+                        );
+            return 27;
+        }
+        public int UpdateFrom27() {
+            SchemaBuilder.AlterTable("MobilePushPartRecord", table => table
+                        .AddColumn<string>("RecipientList", col=> col.Unlimited())
+                        );
+            SchemaBuilder.AlterTable("MobilePushPartRecord", table => table
+                        .AddColumn<bool>("TestPushToDevice")
+                        );
+            SchemaBuilder.AlterTable("MobilePushPartRecord", table => table
+                        .AddColumn<bool>("UseRecipientList")
+                        );
+            return 28;
+        }
+        public int UpdateFrom28() {
+            SchemaBuilder.AlterTable("SentRecord", table => table
+                .AddColumn<string>("Outcome")
+            );
+            return 29;
+        }
+        public int UpdateFrom29() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                       .AddColumn<int>("PushSendBufferSize")
+                       );
+            return 30;
+        }
+        public int UpdateFrom30() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                       .AddColumn<bool>("CommitSentOnly")
+                       );
+            return 31;
+        }
+        public int UpdateFrom31() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                .AddColumn<int>("DelayMinutesBeforeRetry", col => col.WithDefault(5))
+            );
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                .AddColumn<int>("MaxNumRetry", col => col.WithDefault(3))
+            );
+            return 32;
+        }
+        public int UpdateFrom32() {
+            SchemaBuilder.AlterTable("SentRecord", table => table
+                .AddColumn<bool>("Repeatable", col => col.WithDefault(false))
+            );
+            return 33;
+        }
+        public int UpdateFrom33() {
+            SchemaBuilder.AlterTable("PushMobileSettingsPartRecord", table => table
+                .AddColumn<int>("MaxPushPerIteration", col => col.WithDefault(1000))
+            );
+            return 34;
         }
     }
 }

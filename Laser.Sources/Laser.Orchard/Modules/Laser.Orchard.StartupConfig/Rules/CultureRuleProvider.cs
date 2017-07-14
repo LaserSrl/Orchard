@@ -6,9 +6,10 @@ using Orchard;
 using Orchard.Localization.Services;
 using Orchard.Mvc;
 using Orchard.Widgets.Services;
+using Orchard.Conditions.Services;
 
 namespace Laser.Orchard.StartupConfig.Rules {
-    public class CultureRuleProvider : IRuleProvider {
+    public class CultureRuleProvider : IConditionProvider {
         private readonly ICultureManager _cultureManager;
         private readonly IWorkContextAccessor _workContextAccessor;
 
@@ -18,22 +19,22 @@ namespace Laser.Orchard.StartupConfig.Rules {
             _workContextAccessor = workContextAccessor;
         }
 
-        public void Process(RuleContext ruleContext) {
-            if (!String.Equals(ruleContext.FunctionName, "lang", StringComparison.OrdinalIgnoreCase)) {
+        public void Evaluate(ConditionEvaluationContext evaluationContext) {
+            if (!String.Equals(evaluationContext.FunctionName, "lang", StringComparison.OrdinalIgnoreCase)) {
                 return;
             }
 
-            var culture = ruleContext.Arguments.Cast<String>();
+            var culture = evaluationContext.Arguments.Cast<String>();
             var userCulture = _cultureManager.GetCurrentCulture(_workContextAccessor.GetContext().HttpContext).ToLower();
 
 
             var matches = culture.Any(c => c.ToLower() == userCulture.ToLower());
             if (matches) {
-                ruleContext.Result = true;
+                evaluationContext.Result = true;
                 return;
             }
 
-            ruleContext.Result = false;
+            evaluationContext.Result = false;
             return;
 
         }

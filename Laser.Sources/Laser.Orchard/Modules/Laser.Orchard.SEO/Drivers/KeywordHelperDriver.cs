@@ -9,10 +9,11 @@ using System.Linq;
 using System.Web;
 using System.Reflection;
 using System.IO;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.SEO.Drivers {
     [OrchardFeature("Laser.Orchard.KeywordHelper")]
-    public class KeywordHelperDriver : ContentPartDriver<KeywordHelperPart> {
+    public class KeywordHelperDriver : ContentPartCloningDriver<KeywordHelperPart> {
 
         public KeywordHelperDriver() {
 
@@ -73,5 +74,23 @@ namespace Laser.Orchard.SEO.Drivers {
             }
             return Editor(part,shapeHelper);
         }
+
+        protected override void Cloning(KeywordHelperPart originalPart, KeywordHelperPart clonePart, CloneContentContext context) {
+            clonePart.Keywords = originalPart.Keywords;
+        }
+
+        protected override void Importing(KeywordHelperPart part, ImportContentContext context) {
+            var importedKeywords = context.Attribute(part.PartDefinition.Name, "Keywords");
+            if (importedKeywords != null) {
+                part.Keywords = importedKeywords;
+            }
+        }
+
+        protected override void Exporting(KeywordHelperPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Keywords", part.Keywords);
+        }
+
+
+
     }
 }

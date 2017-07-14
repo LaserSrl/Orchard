@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -191,6 +191,10 @@ msgstr "Il formato da usare per visualizzare gli eventi."
 msgctxt "~/Modules/Laser.Orchard.Events/Views/EditorTemplates/Parts/Calendar.cshtml"
 msgid "When using pagination, this is the number of items per page. If 0, the default value in the site settings will be used."
 msgstr "Quando si utilizza la paginazione, questo è il numero di oggetti per pagina. Se vale 0, verrà usato il valore inserito nelle impostazioni del sito."
+
+msgctxt "Laser.Orchard.Events.Drivers.ActivityPartDriver"
+msgid "The repeat end date is required."
+msgstr "La data di fine ripetizione è obbligatoria."
 
 msgctxt "Laser.Orchard.Events.Drivers.ActivityPartDriver"
 msgid "The starting date and ending date of the event are required."

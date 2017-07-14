@@ -73,5 +73,10 @@ namespace Laser.Orchard.Faq.DataMigrations {
             ContentDefinitionManager.AlterPartDefinition("FaqWidgetAjaxPart", cfg => cfg.Attachable());
             return 3;
         }
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterTypeDefinition("Faq", type => type.Listable());
+            ContentDefinitionManager.AlterTypeDefinition("FaqType", type => type.Listable());
+            return 4;
+        }
     }
 }

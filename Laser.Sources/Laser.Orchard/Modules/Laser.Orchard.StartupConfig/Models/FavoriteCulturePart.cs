@@ -12,6 +12,8 @@ namespace Laser.Orchard.StartupConfig.Models {
             get { return this.Retrieve<int>(x => x.Culture_Id); }
             set { this.Store<int>(x => x.Culture_Id, value); }
         }
+
+        public string Culture { set; get; }
     }
 
     public class FavoriteCulturePartRecord : ContentPartVersionRecord {

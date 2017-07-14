@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.Mvc.Routes;
 using Orchard.WebApi.Routes;
-using System.Web.Http;
-using System.Web.Routing;
-using System.Web.Mvc;
 
 namespace Laser.Orchard.Fidelity.Routes {
     public class Routes : IHttpRouteProvider {

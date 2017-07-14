@@ -1,0 +1,40 @@
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.ContentManagement.Records;
+@using Orchard.Projections.Models;
+@using Orchard.Projections.Services;
+@using Orchard.Data;
+@using System.Linq;
+@functions{
+    Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
+    string retString = "Error"; //possible outcomes: "Error","Ok"
+    dynamic visita = null;
+    dynamic ci = null;
+    string msg = "";
+}
+@{
+    visita = Model.ContentItem;
+    string visitaId = string.Format("{{{0}}}", visita.Id);
+    _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
+    var fieldsQuery = _fieldIndexPartRecord.Table
+        .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "SchedaInvito.Visita." && r.Value == visitaId))
+        .Select(x => x.ContentItemRecord.Id);
+    var calEventsIds = fieldsQuery.ToList();
+    foreach(var idInvito in calEventsIds) {
+        ci = ((dynamic)Model.OrchardServices.ContentManager.Get(idInvito));
+        // verifico che l'item noon sia stato eliminato
+        if(ci != null) {
+			if (ci.ActivityPart.DateTimeStart != visita.ActivityPart.DateTimeStart){
+				ci.ActivityPart.DateTimeStart = visita.ActivityPart.DateTimeStart;
+            }
+			if (ci.ActivityPart.DateTimeEnd != visita.ActivityPart.DateTimeEnd){
+				ci.ActivityPart.DateTimeEnd = visita.ActivityPart.DateTimeEnd;
+            }
+			if (ci.ActivityPart.AllDay != visita.ActivityPart.AllDay){
+				ci.ActivityPart.AllDay = visita.ActivityPart.AllDay;
+            }
+        }
+    }
+    retString = "Ok";
+}
+@retString

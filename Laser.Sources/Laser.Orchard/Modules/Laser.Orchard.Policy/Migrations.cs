@@ -68,5 +68,13 @@ namespace Laser.Orchard.Policy {
                 );
             return 3;
         }
+
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterTypeDefinition("PolicyText", content => content
+               .Listable()
+               );
+
+            return 4;
+        }
     }
 }

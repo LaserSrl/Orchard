@@ -22,7 +22,7 @@ namespace Laser.Orchard.StartupConfig.Handlers {
              _groupsServices=groupsServices;
         }
          private void SetUpCustomPart(ActivatedContentContext content, UsersGroupsPart part) {
-             part._userGroups.Loader(x => {
+             part._userGroups.Loader(() => {
                  if (String.IsNullOrWhiteSpace(part.UserGroup)) return null;
                  return _groupsServices.GetGroups(part.UserGroup.Split(',').Select(s => Convert.ToInt32(s)).ToArray());
              });

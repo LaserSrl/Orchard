@@ -30,8 +30,7 @@ namespace Laser.Orchard.StartupConfig.Services {
             List<MaintenanceVM> ListMaintenanceVM = new List<MaintenanceVM>();
             foreach (var y in listofcontentitems) {
                 MaintenanceVM MaintenanceVM = new MaintenanceVM();
-                Mapper.CreateMap<MaintenancePart, MaintenanceVM>();
-                Mapper.Map(y.As<MaintenancePart>(), MaintenanceVM);
+                Mapper.Map<MaintenancePart, MaintenanceVM>(y.As<MaintenancePart>(), MaintenanceVM);
                 ListMaintenanceVM.Add(MaintenanceVM);
             }
             return ListMaintenanceVM;
@@ -41,8 +40,7 @@ namespace Laser.Orchard.StartupConfig.Services {
             List<MaintenanceVM> ListMaintenanceVM = new List<MaintenanceVM>();
             foreach (var y in listofcontentitems) {
                 MaintenanceVM MaintenanceVM = new MaintenanceVM();
-                Mapper.CreateMap<MaintenancePart, MaintenanceVM>();
-                Mapper.Map(y.As<MaintenancePart>(), MaintenanceVM);
+                Mapper.Map<MaintenancePart, MaintenanceVM>(y.As<MaintenancePart>(), MaintenanceVM);
                 MaintenanceVM.IDcontentitem = y.Id;
                 MaintenanceVM.Published = y.HasPublished();
                 ListMaintenanceVM.Add(MaintenanceVM);

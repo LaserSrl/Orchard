@@ -1,6 +1,8 @@
 ﻿@using Laser.Orchard.TaskScheduler.ViewModels;
 @using Laser.Orchard.TaskScheduler;
 @using Laser.Orchard.Commons.Helpers;
+@using System.Globalization;
+@using Orchard.Localization.Services;
 
 @model Laser.Orchard.TaskScheduler.ViewModels.IndexViewModel
 
@@ -8,6 +10,9 @@
     Script.Require("jQUery_NestedModels").AtHead();
 }
 @using (Html.BeginFormAntiForgeryPost()) {
+    Dictionary<string, object> properties = new Dictionary<string, object>();
+    properties.Add("culture", new CultureInfo(WorkContext.CurrentCulture));
+    properties.Add("_dateServices", (IDateLocalizationServices)WorkContext.Resolve<IDateLocalizationServices>());
     <fieldset>
 
         <legend>@T("Existing scheduled tasks")</legend>
@@ -17,7 +22,7 @@
             @Html.EditorFor(m => m.allTasks)
         </div>
         <div id="addButton">
-            @Html.LinkToAddNestedForm(m => m.allTasks, "<i class=\"fa fa-plus\" style=\"color: green\"></i> " + T(" Add new tasks").Text, "#allScheduledTasks", ".j_scheduledtasks")
+            @Html.LinkToAddNestedForm(m => m.allTasks, "<i class=\"fa fa-plus\" style=\"color: green\"></i> " + T(" Add new tasks").Text, "#allScheduledTasks", ".j_scheduledtasks", DefaultPropertyValues: properties)
         </div>
 
         <button id="saveSchedulers" type="submit" name="submit.SaveSchedulers" value="yes please">@T("Save")</button>
@@ -27,10 +32,10 @@
 
 
 @using (Script.Foot()) {
-    @Display.DatePickerLocalization()
-    @Display.TimePickerLocalization()
+    @Display.CalendarsPickerLocalization()
+    @Display.TimeEntryLocalization()
 
-    
+
     <script type="text/javascript">
         function FlagForSchedulingEvent(aid) {
             var id = "schedule_" + aid.toString();

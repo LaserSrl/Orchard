@@ -22,14 +22,15 @@ namespace Orchard.Captcha.Drivers {
         //POST
         protected override DriverResult Editor(CaptchaSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
 
-            return ContentShape("Parts_Captcha_SiteSettings", () => {
+            return ContentShape("Parts_Captcha_SiteSettings", () => 
+            {
                 if (updater != null) {
                     if (!updater.TryUpdateModel(part, Prefix, null, null)) {
                         updater.AddModelError("CaptchaSettingsError", T("Captcha settings not saved"));
                     }
                 }
                 return shapeHelper.EditorTemplate(TemplateName: "Parts.Captcha.SiteSettings", Model: part, Prefix: Prefix);
-            }).OnGroup("re-captcha");
+            }).OnGroup("ReCaptcha");
         }
     }
 }

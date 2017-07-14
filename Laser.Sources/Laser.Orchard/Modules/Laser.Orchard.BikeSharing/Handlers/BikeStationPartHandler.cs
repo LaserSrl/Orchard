@@ -5,6 +5,7 @@ using System.Web;
 using Laser.Orchard.BikeSharing.Models;
 using Laser.Orchard.BikeSharing.Services;
 using Orchard.ContentManagement.Handlers;
+using Laser.Orchard.BikeSharing.ViewModels;
 
 namespace Laser.Orchard.BikeSharing.Handlers {
     public class BikeStationPartHandler : ContentHandler {
@@ -23,10 +24,12 @@ namespace Laser.Orchard.BikeSharing.Handlers {
             if (bikeSharingPart == null) {
                 return;
             }
-            bikeSharingPart._bikeStation.Loader(x => {
-                return _bikeServices.GetStationInfo(bikeSharingPart.BikeStationUName);
-            });
-
+            //Loader(Func<T, T>) is obsolete as of Orchard 1.10
+            //bikeSharingPart._bikeStation.Loader(x => {
+            //    return _bikeServices.GetStationInfo(bikeSharingPart.BikeStationUName);
+            //});
+            
+            bikeSharingPart._bikeStation.Loader(() => _bikeServices.GetStationInfo(bikeSharingPart.BikeStationUName));
         }
 
     }

@@ -9,4 +9,4 @@ Features:
     Laser.Orchard.AdvancedSearch:
         Description: Description for feature Laser.Orchard.AdvancedSearch.
 		Category: Search
-		Dependencies: Contents, Orchard.Localization, Orchard.Taxonomies, Orchard.Users, Orchard.JQuery,Laser.Orchard.jQueryPlugins
+		Dependencies: Contents, Orchard.Localization, Orchard.Taxonomies, Orchard.Users, Orchard.Resources, Laser.Orchard.jQueryPlugins, Laser.Orchard.StartupConfig

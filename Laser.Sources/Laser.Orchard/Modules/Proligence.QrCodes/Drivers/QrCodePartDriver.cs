@@ -2,9 +2,9 @@ namespace Proligence.QrCodes.Drivers
 {
     using Orchard.ContentManagement;
     using Orchard.ContentManagement.Drivers;
+    using Orchard.ContentManagement.Handlers;
     using Orchard.Localization;
     using Orchard.UI.Notify;
-
     using Proligence.QrCodes.Models;
     using Proligence.QrCodes.Settings;
 
@@ -52,6 +52,31 @@ namespace Proligence.QrCodes.Drivers
             }
             return Editor(part, shapeHelper);
         }
+
+        protected override void Importing(QrCodePart part, ImportContentContext context) {
+            var importedValue = context.Attribute(part.PartDefinition.Name, "Value");
+            if (importedValue != null) {
+                part.Value = importedValue;
+            }
+
+            var importedSize = context.Attribute(part.PartDefinition.Name, "Size");
+            if (importedSize != null) {
+                part.Size = int.Parse(importedSize);
+            }
+
+            var importedActualValue = context.Attribute(part.PartDefinition.Name, "ActualValue");
+            if (importedActualValue != null) {
+                part.ActualValue = importedActualValue;
+            }
+        }
+
+        protected override void Exporting(QrCodePart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Value", part.Value);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Size", part.Size);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ActualValue", part.ActualValue);
+        }
+
+
 
     }
 }

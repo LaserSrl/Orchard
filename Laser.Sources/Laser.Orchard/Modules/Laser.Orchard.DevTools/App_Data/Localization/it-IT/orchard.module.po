@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -7,6 +7,14 @@
 # > msgctxt  "{ contesto del messaggio }"
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/CustomHqlQuery.cshtml"
+msgid "Cutom HQL query"
+msgstr "Query HQL custom"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Custom HQL query"
+msgstr "Query HQL custom"
 
 msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
 msgid "DeviceList"
@@ -21,6 +29,10 @@ msgid "Get my CsrfToken"
 msgstr "Ottieni il tuo CsrfToken"
 
 msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Payment list"
+msgstr "Lista pagamenti"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
 msgid "Ranking List"
 msgstr "Classifiche"
 
@@ -33,8 +45,20 @@ msgid "Show Cached Data"
 msgstr "Mostra dati in cache"
 
 msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Show Error Log"
+msgstr "Log di Errore"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Show Info Log"
+msgstr "Log di Info"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
 msgid "Show Log"
 msgstr "Mostra Log"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Show Razor"
+msgstr "Visualizza Razor"
 
 msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
 msgid "Show scheduled task"
@@ -63,6 +87,10 @@ msgstr "Elimina Cache"
 msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/ShowCachedData.cshtml"
 msgid "Remove FileSystem"
 msgstr "Elimina da filesystem"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/ShowRazor.cshtml"
+msgid "Clean Razor"
+msgstr "Pulisci i Razor"
 
 msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/ShowScheduledTask.cshtml"
 msgid "Remove"

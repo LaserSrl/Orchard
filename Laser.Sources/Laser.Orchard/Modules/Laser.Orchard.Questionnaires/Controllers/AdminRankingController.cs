@@ -24,13 +24,13 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         //un bottone per mandarmi una mail
         private readonly IQuestionnairesServices _questionnairesServices;
         private readonly IRepository<RankingPartRecord> _repoRanking;
-        private readonly ISessionLocator _sessionLocator;
+        private readonly ITransactionManager _transactionManager;
         public AdminRankingController(IOrchardServices orchardServices, IQuestionnairesServices questionnairesServices, 
-            IRepository<RankingPartRecord> repoRanking, ISessionLocator sessionLocator) {
+            IRepository<RankingPartRecord> repoRanking, ITransactionManager transactionManager) {
             _orchardServices = orchardServices;
             _questionnairesServices = questionnairesServices;
             _repoRanking = repoRanking;
-            _sessionLocator = sessionLocator;
+            _transactionManager = transactionManager;
         }
 
         [Admin]
@@ -44,8 +44,9 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner))
                 return new HttpUnauthorizedResult();
             var query = _orchardServices.ContentManager.Query();
-            var list = query.ForPart<GamePart>().List();
-            var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>().List();
+            // la condizione Id > 0 nelle due righe seguenti serve solo a forzare la join con le tabelle GamePartRecord e RankingPartRecord rispettivamente, perché la clausola ForPart non è sufficiente (fa solo scansione in memoria)
+            var list = query.ForPart<GamePart>().Where<GamePartRecord>(x => x.Id > 0).List();
+            var listranking = _orchardServices.ContentManager.Query().ForPart<RankingPart>().Where<RankingPartRecord>(x => x.Id > 0).List();
             List<DisplaRankingTemplateVM> listaAllRank = new List<DisplaRankingTemplateVM>();
             foreach (GamePart gp in list) {
 
@@ -179,7 +180,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             }
             List<RankingTemplateVM> lRanka = _questionnairesServices.QueryForRanking(ID, devString, pagerParameters.Page.Value, pagerParameters.PageSize.Value, Ascending);
 
-            var session = _sessionLocator.For(typeof(RankingPartRecord));
+            var session = _transactionManager.GetSession();//_sessionLocator.For(typeof(RankingPartRecord));
             string queryString = "SELECT COUNT(DISTINCT Identifier) "
                 + "FROM Laser.Orchard.Questionnaires.Models.RankingPartRecord as rpr "
                 + "WHERE rpr.ContentIdentifier=" + ID + " ";

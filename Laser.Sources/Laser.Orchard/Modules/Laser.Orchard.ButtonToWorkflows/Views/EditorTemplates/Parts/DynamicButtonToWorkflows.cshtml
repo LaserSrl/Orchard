@@ -1,0 +1,30 @@
+﻿@using Laser.Orchard.ButtonToWorkflows.Models;
+@using Laser.Orchard.ButtonToWorkflows.Services;
+
+@model List<DynamicButtonToWorkflowsRecord>
+
+@{ 
+    IDynamicButtonToWorkflowsService _dbtfServices;
+    WorkContext.TryResolve<IDynamicButtonToWorkflowsService>(out _dbtfServices);
+}
+
+<div style="float:right">
+    @{
+        for (Int32 i = 0; i < Model.Count; i++) {
+            var isAuthorized = (Authorizer.Authorize(_dbtfServices.GetButtonPermission(Model[i].ButtonName)));
+
+            if (isAuthorized) {
+                @Html.Raw("&nbsp;")
+                <button type="submit" name="submit.Save" value="@Html.Raw("submit.DynamicCustomButton." + Model[i].ButtonText)">
+                    @T(Model[i].ButtonText)
+                </button>
+            }
+
+            @Html.HiddenFor(m => m[i].ButtonName)
+            @Html.HiddenFor(m => m[i].ButtonText)
+            @Html.HiddenFor(m => m[i].ButtonDescription)
+            @Html.HiddenFor(m => m[i].ButtonMessage)
+            @Html.HiddenFor(m => m[i].ButtonAsync)
+        }
+    }
+</div>

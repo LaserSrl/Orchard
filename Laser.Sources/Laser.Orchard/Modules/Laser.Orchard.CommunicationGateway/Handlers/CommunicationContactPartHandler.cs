@@ -37,19 +37,21 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
             Filters.Add(new ActivatingFilter<FavoriteCulturePart>("CommunicationContact"));
 
             #region sync user profile
-            OnCreated<UserPart>((context, part) => UpdateProfile(context.ContentItem));
+
+            // OnCreated<UserPart>((context, part) => UpdateProfile(context.ContentItem));
             OnUpdated<UserPart>((context, part) => UpdateProfile(context.ContentItem));
             OnRemoved<UserPart>((context, part) => { _communicationService.UnboundFromUser(part); });
-            OnRemoved<CommunicationContactPart>((context, part) => { 
+            OnRemoved<CommunicationContactPart>((context, part) => {
                 _communicationService.RemoveMailsAndSms(part.Id);
                 _contactEventHandler.ContactRemoved(part.Id);
             });
-            #endregion
+
+            #endregion sync user profile
         }
 
         protected void LazyLoadEmailHandlers(LoadContentContext context, EmailContactPart part) {
             // Add handlers that will load content for id's just-in-time
-            part.EmailEntries.Loader(x => OnEmailLoader(context));
+            part.EmailEntries.Loader(() => OnEmailLoader(context));
         }
 
         private IList<CommunicationEmailRecord> OnEmailLoader(LoadContentContext context) {
@@ -70,10 +72,9 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                     .ToList();
         }
 
-
         protected void LazyLoadSmsHandlers(LoadContentContext context, SmsContactPart part) {
             // Add handlers that will load content for id's just-in-time
-            part.SmsEntries.Loader(x => OnSmsLoader(context));
+            part.SmsEntries.Loader(() => OnSmsLoader(context));
         }
 
         private IList<CommunicationSmsRecord> OnSmsLoader(LoadContentContext context) {

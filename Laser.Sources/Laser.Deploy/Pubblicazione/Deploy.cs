@@ -107,6 +107,13 @@ namespace Pubblicazione {
 
         private ProjectClass ReadProject(string pathsoluzion, Dictionary<string, string> MyelencoLibrerie, Dictionary<string, string> MyelencoModuli, Dictionary<string, string> MyelencoTemi) {
             //this.tbOrchardDev.Text = Properties.Settings.Default.BasePlatformRootPath;
+            var excludeProjectsList = new string[0];
+            try {
+                var aux = Directory.GetParent(deploypath).FullName;
+                excludeProjectsList = File.ReadAllLines(Path.Combine(aux, "projects.excludelist.txt"));
+            } catch {
+                // non esclude nessun progetto
+            }
             string Content;
             try {
                 Content = File.ReadAllText(pathsoluzion);
@@ -118,15 +125,13 @@ namespace Pubblicazione {
                 , RegexOptions.Compiled);
             var matches = projReg.Matches(Content).Cast<Match>();
             var Projects = matches.Select(x => x.Groups[2].Value).ToList();
+            Projects = Projects.Except(excludeProjectsList).ToList();
             for (int i = 0; i < Projects.Count; ++i) {
                 if (!Path.IsPathRooted(Projects[i]))
                     Projects[i] = Path.Combine(Path.GetDirectoryName(pathsoluzion),
                         Projects[i]);
                 Projects[i] = Path.GetFullPath(Projects[i]);
                 if (!Projects[i].EndsWith(".Tests.csproj")) { //Esclude i progetti di test che per convenzione sono nella subfolder Tests del modulo e hanno nome che termina con .Tests.csproj
-                    if (Projects[i].Contains(basepath) && Projects[i].Contains(@"\Modules\"))
-                        MyelencoModuli.Add(Projects[i].Split('\\').LastOrDefault().Replace(".csproj", ""), Projects[i].Remove(Projects[i].LastIndexOf('\\') + 1));
-
                     if (Projects[i].Contains(basepath) && Projects[i].Contains(@"\Themes\")) {
                         if (!Projects[i].EndsWith(@"\Themes\Themes.csproj")) {
                             MyelencoTemi.Add(Projects[i].Split('\\').LastOrDefault().Replace(".csproj", ""), Projects[i].Remove(Projects[i].LastIndexOf('\\') + 1));
@@ -136,9 +141,14 @@ namespace Pubblicazione {
                             MyelencoTemi.Add("TheThemeMachine", Path.Combine(basepath, "Orchard.Sources\\src\\Orchard.Web\\Themes\\TheThemeMachine\\"));
                         }
                     }
-
-                    if (Projects[i].Contains(basepath) && Projects[i].Contains(@"\Libraries\"))
+                    else if (Projects[i].Contains(basepath) && Projects[i].Contains(@"\Libraries\"))
                         MyelencoLibrerie.Add(Projects[i].Split('\\').LastOrDefault().Replace(".csproj", ""), Projects[i].Remove(Projects[i].LastIndexOf('\\') + 1));
+                    else if (Projects[i].Contains(basepath) && Projects[i].EndsWith(@"SitesFiles\SitesFiles.csproj")) {
+                        // do nothing => exclude this project
+                    }
+                    else //if (Projects[i].Contains(basepath) && Projects[i].Contains(@"\Modules\"))
+                        MyelencoModuli.Add(Projects[i].Split('\\').LastOrDefault().Replace(".csproj", ""), Projects[i].Remove(Projects[i].LastIndexOf('\\') + 1));
+
                 }
             }
 
@@ -207,8 +217,22 @@ namespace Pubblicazione {
             // this.TheprogressBar.Maximum = (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count) * 2;
             // this.TheprogressBar.Step = 1;
             if (Directory.Exists(deploypath) && this.chkDeleteFolder.Checked) {
-                Directory.Delete(deploypath, true);
-                Thread.Sleep(1);
+                try {
+                    Directory.Delete(deploypath, true);
+                } catch {
+                    // eventuali errori sono gestiti qui di seguito
+                }
+                int deleteLoopCount = 0;
+                while(Directory.Exists(deploypath) && deleteLoopCount < 20) {
+                    Thread.Sleep(100);
+                    deleteLoopCount++;
+                }
+                if (Directory.Exists(deploypath)) {
+                    Action action2 = () => Mylog.AppendText("Unable to delete output folder. Aborted.\r\n");
+                    Mylog.Invoke(action2);
+                    EndTask(e);
+                    return;
+                }
             }
             Directory.CreateDirectory(deploypath);
             //foreach (var a in this.clbLibrary.CheckedItems) {
@@ -219,7 +243,7 @@ namespace Pubblicazione {
             progressstep++;
             bw.ReportProgress(100 * progressstep / totaleprogress);
             Thread.Sleep(100);
-            if (e.Argument == "btnFullDeploy") {
+            if (e.Argument.ToString() == "btnFullDeploy") {
                 ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\App_Data\Localization", "*.*"), Path.Combine(deploypath, @"App_Data\Localization"));
                 progressstep++;
                 bw.ReportProgress(100 * progressstep / totaleprogress);
@@ -262,20 +286,26 @@ namespace Pubblicazione {
                 bw.ReportProgress(100 * progressstep / totaleprogress);
                 Thread.Sleep(100);
                 foreach (var additionalFile in additionalFiles) {
-                    ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Modules", additionalFile), deploypath, ExclusionFileOptions.None);
-                    ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes", additionalFile), deploypath, ExclusionFileOptions.None);
+                    ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Modules", additionalFile), Path.Combine(deploypath, "Modules"), ExclusionFileOptions.None);
+                    ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes", additionalFile), Path.Combine(deploypath, "Themes"), ExclusionFileOptions.None);
                     progressstep++;
                     bw.ReportProgress(100 * progressstep / totaleprogress);
                     Thread.Sleep(100);
                 }
+                // eccezione per StartupConfig
+                File.Copy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Modules\Laser.Orchard.StartupConfig\bin\System.Web.Helpers.dll"), Path.Combine(deploypath, @"Modules\Laser.Orchard.StartupConfig\bin\System.Web.Helpers.dll"));
             } else {
-                if (e.Argument == "btnAll") {
+                if (e.Argument.ToString() == "btnAll") {
                     foreach (var a in this.clbModules.CheckedItems) {
                         DirectoryInfo parentDir = Directory.GetParent(elencoModuli[a.ToString()]);
                         ProcessXcopy(parentDir.FullName + @"\*.*", deploypath + @"\Modules\" + a.ToString());
                         ProcessXcopy(parentDir.FullName + @"\*.recipe.xml", deploypath + @"\Modules\" + a.ToString(), ExclusionFileOptions.None);
                         foreach (var additionalFile in additionalFiles) {
                             ProcessXcopy(Path.Combine(parentDir.FullName, additionalFile), Path.Combine(deploypath, "Modules", a.ToString()), ExclusionFileOptions.None);
+                        }
+                        if(a.ToString() == "Laser.Orchard.StartupConfig") {
+                            // eccezione per StartupConfig
+                            File.Copy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Modules\Laser.Orchard.StartupConfig\bin\System.Web.Helpers.dll"), Path.Combine(deploypath, @"Modules\Laser.Orchard.StartupConfig\bin\System.Web.Helpers.dll"));
                         }
                         progressstep++;
                         bw.ReportProgress(100 * progressstep / totaleprogress);
@@ -302,8 +332,8 @@ namespace Pubblicazione {
                         Thread.Sleep(100);
                     }
                     if (this.clbThemesOrchard.CheckedItems.Count > 0) { // se ho scelto almeno un tema Orchard, allora devo copiare anche \Themes\bin\*.*
-                        File.Copy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes\web.config"), Path.Combine(deploypath, @"Themes\web.config"));
                         ProcessXcopy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes\bin", "*.*"), Path.Combine(deploypath, @"Themes\bin"));
+                        File.Copy(Path.Combine(basepath, @"Orchard.Sources\src\Orchard.Web\Themes\web.config"), Path.Combine(deploypath, @"Themes\web.config"));
                     }
                     foreach (var a in this.clbThemesOrchard.CheckedItems) {
                         ProcessXcopy(Path.Combine(elencoTemiOrchard[a.ToString()], "*.*"), Path.Combine(deploypath, @"Themes", a.ToString()));
@@ -329,7 +359,11 @@ namespace Pubblicazione {
             //       this.OperazioneTerminata.Visible = true;
 
             //          this.btnAll.Enabled = true;
+            EndTask(e);
+        }
 
+        private void EndTask(DoWorkEventArgs e) {
+            Action action = null;
             switch (e.Argument.ToString()) {
                 case "btnFullDeploy":
                     action = () => btnFullDeploy.Enabled = true;
@@ -350,7 +384,6 @@ namespace Pubblicazione {
             action = () => OperazioneTerminata.Visible = true;
             OperazioneTerminata.Invoke(action);
         }
-
         private void Form1_Load(object sender, EventArgs e) {
             Initialize();
             bw.WorkerReportsProgress = true;

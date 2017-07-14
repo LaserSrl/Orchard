@@ -5,7 +5,7 @@
     string sName = WorkContext.CurrentSite.SiteName;
     string bUrl = WorkContext.CurrentSite.BaseUrl;
     string aPath = Url.Action(aName, "Transactions", new { Area = area });
-    int cut = aPath.IndexOf(sName) - 1;
+    int cut = aPath.ToUpperInvariant().IndexOf(sName.ToUpperInvariant()) - 1;
     string fUrl = bUrl + aPath.Substring(cut);
     @fUrl
 }

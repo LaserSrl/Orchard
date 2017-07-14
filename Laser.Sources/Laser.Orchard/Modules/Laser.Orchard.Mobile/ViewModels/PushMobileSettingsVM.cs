@@ -2,7 +2,6 @@
 using System.IO;
 using System.Web.Hosting;
 using System.Web.Mvc;
-using System.Web;
 using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.Mobile.ViewModels {
@@ -16,12 +15,18 @@ namespace Laser.Orchard.Mobile.ViewModels {
         public string AndroidApiKey { get; set; }
         public string AndroidApiKeyDevelopment { get; set; }
         public string AndroidPushServiceUrl { get; set; }
+        public string AndroidPushNotificationIcon { get; set; }
         public string WindowsEndPoint { get; set; }
         public string WindowsAppPackageName { get; set; }
         public string WindowsAppSecurityIdentifier { get; set; }
         public string AppleCertificateTenant { get; set; }
         public bool ShowTestOptions { get; set; }
         public string TaxonomyName { get; set; }
+        public int PushSendBufferSize { get; set; }
+        public bool CommitSentOnly { get; set; }
+        public int DelayMinutesBeforeRetry { get; set; }
+        public int MaxNumRetry { get; set; }
+        public int MaxPushPerIteration { get; set; }
         public SelectList ListOfTaxonomies { get; set; }
 
         public SelectList ListOfCertificates {

@@ -440,7 +440,6 @@ namespace Laser.Orchard.Commons.Services {
                 try {
                     formatted = ((float)o).ToString(CultureInfo.InvariantCulture);
                 } catch {
-                    BigInteger a;
                     NumberFormatInfo nfi = new NumberFormatInfo();
                     nfi.NumberGroupSeparator = "";
                     nfi.NumberDecimalSeparator = ",";

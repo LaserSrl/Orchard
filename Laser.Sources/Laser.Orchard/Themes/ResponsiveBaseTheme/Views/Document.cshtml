@@ -6,7 +6,7 @@
     var title = @WorkContext.CurrentSite.SiteName;
     var subthemePath = "~/Themes/ResponsiveBaseTheme/Styles/" + tenantName + "/";
 
-    Style.Include("http://fonts.googleapis.com/css?family=Lobster&subset=latin");
+    Style.Include("https://fonts.googleapis.com/css?family=Lobster&subset=latin");
 }
 @{
     if (!(File.Exists(Server.MapPath(subthemePath + "site-style.css"))) || tenantName.ToLower() == "default") {

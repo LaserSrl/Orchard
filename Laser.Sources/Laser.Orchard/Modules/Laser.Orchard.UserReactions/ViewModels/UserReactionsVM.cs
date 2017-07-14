@@ -8,13 +8,13 @@ namespace Laser.Orchard.UserReactions.ViewModels {
     public class UserReactionsTotalRec 
     {
         public UserReactionsTotalRec() {
-            UserReactionsTotalRecord = new List<UserReactionsVM>();
+            UserReactionsTotals = new List<UserReactionsVM>();
         }
 
-        public List<UserReactionsVM> UserReactionsTotalRecord { get; set; }
+        public List<UserReactionsVM> UserReactionsTotals { get; set; }
     }
 
-    public class UserReactionsVM {
+        public class UserReactionsVM {
         public int Id { get; set; }
         public string TypeName { get; set; }
         public int Quantity { get; set; }

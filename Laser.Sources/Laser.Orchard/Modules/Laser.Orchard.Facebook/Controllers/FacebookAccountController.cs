@@ -35,7 +35,7 @@ namespace Laser.Orchard.Facebook.Controllers {
         private readonly string contentType = "SocialFacebookAccount";
         private readonly dynamic TestPermission = Permissions.ManageFacebookAccount;
         private readonly INotifier _notifier;
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public FacebookAccountController(
              ShellSettings shellSettings,

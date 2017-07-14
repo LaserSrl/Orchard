@@ -1,0 +1,21 @@
+﻿@{
+    //Possible outcomes UserReportLoadedAssigned, UserContestLoadedAssigned, DoNothing, Error
+    string retString = "DoNothing";
+    var wfContext = Model.Tokens["Workflow"];
+    try {
+        if (Model.ContentItem.PublishExtensionPart.PublishExtensionStatus.Value == "Created") {
+            Model.ContentItem.PublishExtensionPart.PublishExtensionStatus.Value = "Loaded";
+            if (Model.ContentItem.ContentType == "UserReport") {
+                retString = ("UserReportLoadedAssigned");
+            }
+            else {
+                retString = ("UserContestLoadedAssigned");
+            }
+        }
+    } catch (Exception ex) {
+        retString = "Error";
+        wfContext.SetState("ErrorMessage", ex.Message);
+    }
+    
+}
+@retString

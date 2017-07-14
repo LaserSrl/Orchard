@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -27,6 +27,18 @@ msgstr "Email"
 msgctxt "~/Modules/Laser.Orchard.MailCommunication/Views/EditorTemplates/Parts/MailCommunicationActions_Edit.cshtml"
 msgid "Approved"
 msgstr "Approvato"
+
+msgctxt "~/Modules/Laser.Orchard.MailCommunication/Views/EditorTemplates/Parts/MailCommunicationActions_Edit.cshtml"
+msgid "Enter recipients manually"
+msgstr "Inserire lista dei destinatari manualmente"
+
+msgctxt "~/Modules/Laser.Orchard.MailCommunication/Views/EditorTemplates/Parts/MailCommunicationActions_Edit.cshtml"
+msgid "Enter username or e-mail of the contacts to which to deliver this email. One recipient for each line."
+msgstr "Inserire il nome utente o la mail dei contatti ai quali si desidera inviare questa mail. Un destinatario per riga."
+
+msgctxt "~/Modules/Laser.Orchard.MailCommunication/Views/EditorTemplates/Parts/MailCommunicationActions_Edit.cshtml"
+msgid "Manual recipients:"
+msgstr "Lista destinatari manuale:"
 
 msgctxt "~/Modules/Laser.Orchard.MailCommunication/Views/EditorTemplates/Parts/MailCommunicationActions_Edit.cshtml"
 msgid "Message already sent."
@@ -227,6 +239,10 @@ msgstr "Clicca per non ricevere più mail di uso commerciale"
 msgctxt "Laser.Orchard.MailCommunication.Handlers.MailerScheduledTaskHandler"
 msgid "Error parsing mail template."
 msgstr "Errore durante la compilazione del template."
+
+msgctxt "Laser.Orchard.MailCommunication.Handlers.MailerScheduledTaskHandler"
+msgid "No recipients selected."
+msgstr "Nessun destinatario selezionato."
 
 msgctxt "Laser.Orchard.MailCommunication.Handlers.MailerSiteSettingsHandler"
 msgid "Mailer"

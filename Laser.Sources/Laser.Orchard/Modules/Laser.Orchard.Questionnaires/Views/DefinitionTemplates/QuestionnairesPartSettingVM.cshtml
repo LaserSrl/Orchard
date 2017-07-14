@@ -1,5 +1,6 @@
 ﻿@model Laser.Orchard.Questionnaires.Settings.QuestionnairesPartSettingVM
 
+@Display.TokenHint()
     <h2>@T("Settings - Questionnaire Part")</h2>
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.QuestionsLimitsNumber)" >@T("Limit the number of questions") </label>
@@ -29,6 +30,11 @@
         <label for="@Html.FieldIdFor(m => m.ShowCorrectResponseFlag)" class="forcheckbox">@T("Show Correct Response Option") </label>
         <span class="hint">@T("Default is false. If selected a Correct Response Option will be visible in back office")</span>
     </div>
+</fieldset>
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.QuestionnaireContext)" >@T("Questionnaire Context") </label>
+    @Html.TextBoxFor(m => m.QuestionnaireContext, new { @class = "text medium tokenized" })
+    <span class="hint">@T("The Context this questionnaire refers to (eg. a commercial campaign name). It is usually usefull '{Content.DisplayText}'.")</span>
 </fieldset>
  <h2>@T("Settings - Questionnaire Part - Images")</h2>
 <fieldset>

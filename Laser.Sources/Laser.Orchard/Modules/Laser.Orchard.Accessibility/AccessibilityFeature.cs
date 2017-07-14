@@ -30,15 +30,15 @@ namespace Laser.Orchard.Accessibility
 
                 if (cacheSettings != null)
                 {
-                    string vary = cacheSettings.VaryCookieStringParameters ?? "";
-                    List<string> coockieList = vary.Split(',').ToList();
+                    string vary = cacheSettings.VaryByRequestCookies ?? "";
+                    List<string> cookieList = vary.Split(',').ToList();
                     
-                    if (coockieList.Contains(Utils.AccessibilityCookieName))
+                    if (cookieList.Contains(Utils.AccessibilityCookieName))
                     {
-                        coockieList.Remove(Utils.AccessibilityCookieName);
-                        vary = string.Join(",", coockieList);
-                        cacheSettings.VaryCookieStringParameters = vary;
-                        _signals.Trigger(CacheSettingsPart.CacheKey);
+                        cookieList.Remove(Utils.AccessibilityCookieName);
+                        vary = string.Join(",", cookieList);
+                        cacheSettings.VaryByRequestCookies = vary;
+                        _signals.Trigger(CacheSettings.CacheKey);
                     }
                 }
 
@@ -61,16 +61,16 @@ namespace Laser.Orchard.Accessibility
 
                 if (cacheSettings != null)
                 {
-                    string vary = cacheSettings.VaryCookieStringParameters ?? "";
+                    string vary = cacheSettings.VaryByRequestCookies ?? "";
                     char[] separators = { ',' };
-                    List<string> coockieList = vary.Split(separators, System.StringSplitOptions.RemoveEmptyEntries).ToList();
+                    List<string> cookieList = vary.Split(separators, System.StringSplitOptions.RemoveEmptyEntries).ToList();
 
-                    if (coockieList.Contains(Utils.AccessibilityCookieName) == false)
+                    if (cookieList.Contains(Utils.AccessibilityCookieName) == false)
                     {
-                        coockieList.Add(Utils.AccessibilityCookieName);
-                        vary = string.Join(",", coockieList);
-                        cacheSettings.VaryCookieStringParameters = vary;
-                        _signals.Trigger(CacheSettingsPart.CacheKey);
+                        cookieList.Add(Utils.AccessibilityCookieName);
+                        vary = string.Join(",", cookieList);
+                        cacheSettings.VaryByRequestCookies = vary;
+                        _signals.Trigger(CacheSettings.CacheKey);
                     }
                 }
 

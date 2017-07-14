@@ -1,4 +1,5 @@
-﻿using Laser.Orchard.StartupConfig.Services;
+﻿using Laser.Orchard.StartupConfig.RazorCodeExecution.Services;
+using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Orchard;
@@ -17,10 +18,6 @@ using Orchard.Security;
 using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
-using RazorEngine.Compilation;
-using RazorEngine.Compilation.ReferenceResolver;
-using RazorEngine.Configuration;
-using RazorEngine.Templating;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -31,6 +28,7 @@ using System.Web.Http;
 using OrchardCore = Orchard.Core;
 
 namespace Laser.Orchard.ContentExtension.Controllers {
+
     [Obsolete("Replaced by ContentItemController")]
     [WebApiKeyFilter(false)]
     public class ContentController : ApiController {
@@ -47,6 +45,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         private readonly IContentExtensionsServices _contentExtensionsServices;
         private readonly ILocalizedStringManager _localizedStringManager;
         private readonly IUtilsServices _utilsServices;
+        private readonly IRazorTemplateManager _razorTemplateManager;
         public Localizer T { get; set; }
 
         public ContentController(
@@ -61,7 +60,8 @@ namespace Laser.Orchard.ContentExtension.Controllers {
            IUtilsServices utilsServices,
            IContentDefinitionManager contentDefinitionManager,
             ITaxonomyService taxonomyService,
-           ILocalizedStringManager localizedStringManager
+           ILocalizedStringManager localizedStringManager,
+            IRazorTemplateManager razorTemplateManager
            ) {
             _localizedStringManager = localizedStringManager;
             _taxonomyService = taxonomyService;
@@ -77,6 +77,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             _cultureManager = cultureManager;
             _utilsServices = utilsServices;
             Logger = NullLogger.Instance;
+            _razorTemplateManager = razorTemplateManager;
         }
 
         /// <summary>
@@ -87,12 +88,11 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         /// <param name="Language"></param>
         /// <returns></returns>
         public dynamic Get(string ContentType, string Language = "it-IT") {
-            
             //var currentUser = _authenticationService.GetAuthenticatedUser();
             //if (currentUser == null){
             //       return (_utilsServices.GetResponse(ResponseType.InvalidUser));// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
             //}
-           var aa= _contentDefinitionManager.ListTypeDefinitions().Where(x=>x.DisplayName.Contains("eport"));
+            var aa = _contentDefinitionManager.ListTypeDefinitions().Where(x => x.DisplayName.Contains("eport"));
             ContentTypeDefinition contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(ContentType);
             var eObj = new ExpandoObject() as IDictionary<string, Object>;
 
@@ -148,6 +148,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                         re.Values = elements;
                         re.Setting = new ResponseSetting { Type = "Taxonomie", Required = Convert.ToBoolean(singleField.Settings["TaxonomyFieldSettings.Required"]), SingleChoice = Convert.ToBoolean(singleField.Settings["TaxonomyFieldSettings.SingleChoice"]) };
                         eObj.Add(ctpd.PartDefinition.Name + "." + singleField.Name, re);
+
                         #endregion Tassonomia in Lingua
                     }
                     else
@@ -178,6 +179,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         }
 
         #region private class/method for get
+
         private void AnnullaNonFoglie(ElementDetail myelement) {
             if (myelement.Children.Count > 0)
                 myelement.Value = null;
@@ -198,6 +200,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             public string Type { get; set; }
             public bool Required { get; set; }
             public bool SingleChoice { get; set; }
+
             public ResponseSetting() {
                 Required = false;
                 SingleChoice = false;
@@ -224,7 +227,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                         return myterm;
                     else {
                         var foundinchildren = FindTaxoVM(myterm.Children, idToFind);
-                        if (foundinchildren!=null)
+                        if (foundinchildren != null)
                             return FindTaxoVM(myterm.Children, idToFind);
                     }
                 }
@@ -233,7 +236,9 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             else
                 return null;
         }
+
         #endregion private class/method for get
+
         /// <summary>
         /// test in feedler
         /// User-Agent: Fiddler
@@ -281,7 +286,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             }
             catch {
             }
-            ContentItem NewOrModifiedContent; 
+            ContentItem NewOrModifiedContent;
             Response rsp = new Response();
             string validateMessage = "";
             if (IdContentToModify > 0) {
@@ -289,7 +294,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                 //if (NewOrModifiedContent==null){
                 //    var pippo = _orchardServices.ContentManager.GetAllVersions(IdContentToModify);
                 //}
-              //  endif IdContentToModify).Where(x=>x.VersionRecord.Id>);
+                //  endif IdContentToModify).Where(x=>x.VersionRecord.Id>);
                 if (!_orchardServices.Authorizer.Authorize(OrchardCore.Contents.Permissions.EditContent, NewOrModifiedContent)) {
                     return _utilsServices.GetResponse(ResponseType.UnAuthorized);
                 }
@@ -303,8 +308,6 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                 _orchardServices.ContentManager.Create(NewOrModifiedContent, VersionOptions.Draft);// se non faccio il create poi non vengono salvati i field
                 validateMessage = ValidateMessage(NewOrModifiedContent, "Created");
             }
-           
-            
 
             if (string.IsNullOrEmpty(validateMessage)) {
                 rsp = _contentExtensionsServices.StoreInspectExpando(eObj, NewOrModifiedContent);
@@ -375,19 +378,17 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             if (!System.IO.Directory.Exists(validate_folder))
                 System.IO.Directory.CreateDirectory(validate_folder);
             string myfile = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSettings.Name + @"\Validation\" + ci.ContentType + postfix + ".cshtml";
-            if (System.IO.File.Exists(myfile)) {
-                string mytemplate = File.ReadAllText(myfile);
-                if (!string.IsNullOrEmpty(mytemplate)) {
-                    var config = new TemplateServiceConfiguration();
-                    string result = "";
-                    using (var service = RazorEngineService.Create(config)) {
-                        result = service.RunCompile(mytemplate, "htmlRawTemplatea", null, (Object)ci);
-                    }
-                    string resultnobr = result.Replace("\r\n", "").Replace(" ", "");
-                    if (!string.IsNullOrEmpty(resultnobr)) {
-                        return result;
-                    }
-                }
+            var model = new RazorModelContext {
+                OrchardServices = _orchardServices,
+                ContentItem = ci,
+                Tokens = new Dictionary<string, object>(),
+                T = T
+            };
+
+            string result = _razorTemplateManager.RunFile(myfile, model);
+            string resultnobr = result.Replace("\r\n", "").Replace(" ", "");
+            if (!string.IsNullOrEmpty(resultnobr)) {
+                return result;
             }
             return null;
         }
@@ -406,7 +407,6 @@ namespace Laser.Orchard.ContentExtension.Controllers {
     }
 
     //internal class MyIReferenceResolver : IReferenceResolver {
-
     //    //public string FindLoaded(IEnumerable<string> refs, string find) {
     //    //    return refs.First(r => r.EndsWith(System.IO.Path.DirectorySeparatorChar + find));
     //    //}

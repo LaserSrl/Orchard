@@ -7,9 +7,10 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
 using System;
 using System.Globalization;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.Events.Drivers {
-    public class ActivityPartDriver : ContentPartDriver<ActivityPart> {
+    public class ActivityPartDriver : ContentPartCloningDriver<ActivityPart> {
         public Localizer T { get; set; }
 
         private readonly IDateLocalization _dataLocalization;
@@ -19,7 +20,8 @@ namespace Laser.Orchard.Events.Drivers {
             _dataLocalization = dataLocalization;
         }
 
-        protected override string Prefix {
+        protected override string Prefix
+        {
             get { return "Activity"; }
         }
 
@@ -49,21 +51,39 @@ namespace Laser.Orchard.Events.Drivers {
             DateTime? localDateRepeatEnd = _dataLocalization.ReadDateLocalized(part.RepeatEndDate);
             ActivityViewModel activityVM = new ActivityViewModel();
 
-            Mapper.CreateMap<ActivityPart, ActivityViewModel>()
-                .ForMember(dest => dest.DateStart, opt => opt.Ignore())
-                .ForMember(dest => dest.DateEnd, opt => opt.Ignore())
-                .ForMember(dest => dest.TimeStart, opt => opt.Ignore())
-                .ForMember(dest => dest.TimeEnd, opt => opt.Ignore())
-                .ForMember(dest => dest.RepeatEndDate, opt => opt.Ignore())
-                .ForMember(dest => dest.Monday, opt => opt.Ignore())
-                .ForMember(dest => dest.Tuesday, opt => opt.Ignore())
-                .ForMember(dest => dest.Wednesday, opt => opt.Ignore())
-                .ForMember(dest => dest.Thursday, opt => opt.Ignore())
-                .ForMember(dest => dest.Friday, opt => opt.Ignore())
-                .ForMember(dest => dest.Saturday, opt => opt.Ignore())
-                .ForMember(dest => dest.Sunday, opt => opt.Ignore())
-                .ForMember(dest => dest.RepeatByDayNumber, opt => opt.Ignore())
-                .ForMember(dest => dest.Settings, opt => opt.Ignore());
+            //Mapper.CreateMap<ActivityPart, ActivityViewModel>()
+            //    .ForMember(dest => dest.DateStart, opt => opt.Ignore())
+            //    .ForMember(dest => dest.DateEnd, opt => opt.Ignore())
+            //    .ForMember(dest => dest.TimeStart, opt => opt.Ignore())
+            //    .ForMember(dest => dest.TimeEnd, opt => opt.Ignore())
+            //    .ForMember(dest => dest.RepeatEndDate, opt => opt.Ignore())
+            //    .ForMember(dest => dest.Monday, opt => opt.Ignore())
+            //    .ForMember(dest => dest.Tuesday, opt => opt.Ignore())
+            //    .ForMember(dest => dest.Wednesday, opt => opt.Ignore())
+            //    .ForMember(dest => dest.Thursday, opt => opt.Ignore())
+            //    .ForMember(dest => dest.Friday, opt => opt.Ignore())
+            //    .ForMember(dest => dest.Saturday, opt => opt.Ignore())
+            //    .ForMember(dest => dest.Sunday, opt => opt.Ignore())
+            //    .ForMember(dest => dest.RepeatByDayNumber, opt => opt.Ignore())
+            //    .ForMember(dest => dest.Settings, opt => opt.Ignore());
+            //Automapper has changed its static API since v4.2
+            Mapper.Initialize(cfg => {
+                cfg.CreateMap<ActivityPart, ActivityViewModel>()
+                    .ForMember(dest => dest.DateStart, opt => opt.Ignore())
+                    .ForMember(dest => dest.DateEnd, opt => opt.Ignore())
+                    .ForMember(dest => dest.TimeStart, opt => opt.Ignore())
+                    .ForMember(dest => dest.TimeEnd, opt => opt.Ignore())
+                    .ForMember(dest => dest.RepeatEndDate, opt => opt.Ignore())
+                    .ForMember(dest => dest.Monday, opt => opt.Ignore())
+                    .ForMember(dest => dest.Tuesday, opt => opt.Ignore())
+                    .ForMember(dest => dest.Wednesday, opt => opt.Ignore())
+                    .ForMember(dest => dest.Thursday, opt => opt.Ignore())
+                    .ForMember(dest => dest.Friday, opt => opt.Ignore())
+                    .ForMember(dest => dest.Saturday, opt => opt.Ignore())
+                    .ForMember(dest => dest.Sunday, opt => opt.Ignore())
+                    .ForMember(dest => dest.RepeatByDayNumber, opt => opt.Ignore())
+                    .ForMember(dest => dest.Settings, opt => opt.Ignore());
+            });
 
             Mapper.Map(part, activityVM);
 
@@ -81,7 +101,8 @@ namespace Laser.Orchard.Events.Drivers {
                 activityVM.Friday = part.RepeatDetails.Contains(DayOfWeek.Friday.ToString());
                 activityVM.Saturday = part.RepeatDetails.Contains(DayOfWeek.Saturday.ToString());
                 activityVM.Sunday = part.RepeatDetails.Contains(DayOfWeek.Sunday.ToString());
-            } else {
+            }
+            else {
                 activityVM.Monday = false;
                 activityVM.Tuesday = false;
                 activityVM.Wednesday = false;
@@ -114,11 +135,22 @@ namespace Laser.Orchard.Events.Drivers {
             ActivityViewModel activityVM = new ActivityViewModel();
 
             if (updater.TryUpdateModel(activityVM, Prefix, null, null)) {
-                Mapper.CreateMap<ActivityViewModel, ActivityPart>()
+                //Mapper.CreateMap<ActivityViewModel, ActivityPart>()
+                //    .ForMember(dest => dest.DateTimeStart, opt => opt.Ignore())
+                //    .ForMember(dest => dest.DateTimeEnd, opt => opt.Ignore())
+                //    .ForMember(dest => dest.RepeatEndDate, opt => opt.Ignore())
+                //    .ForMember(dest => dest.RepeatDetails, opt => opt.Ignore());
+                //Automapper has changed its static API since v4.2
+                Mapper.Initialize(cfg => {
+                    cfg.CreateMap<ActivityViewModel, ActivityPart>()
                     .ForMember(dest => dest.DateTimeStart, opt => opt.Ignore())
                     .ForMember(dest => dest.DateTimeEnd, opt => opt.Ignore())
                     .ForMember(dest => dest.RepeatEndDate, opt => opt.Ignore())
-                    .ForMember(dest => dest.RepeatDetails, opt => opt.Ignore());
+                    .ForMember(dest => dest.RepeatDetails, opt => opt.Ignore())
+                    //ContentPart has a Settings property, that would clash with the Settings property from ActivityViewModel
+                    .ForMember(dest => dest.Settings, opt => opt.Ignore());
+                });
+
                 Mapper.Map(activityVM, part);
 
                 if (!partSettings.UseRecurrences) part.Repeat = false;
@@ -128,13 +160,20 @@ namespace Laser.Orchard.Events.Drivers {
                     if (activityVM.AllDay) {
                         part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, "");
                         part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, "");
-                    } else {
+                    }
+                    else {
                         part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, activityVM.TimeStart);
                         part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, activityVM.TimeEnd);
                     }
+                }
+                else
+                    updater.AddModelError(Prefix + "DateRequiredError", T("The starting date and ending date of the event are required."));
 
+                if (part.Repeat) {
                     part.RepeatEndDate = _dataLocalization.StringToDatetime(activityVM.RepeatEndDate, "");
-
+                    if (part.RepeatEnd && part.RepeatEndDate == null){
+                        updater.AddModelError(Prefix + "DateRepeateRequiredError", T("The repeat end date is required."));
+                    }
                     string repeatDetails = "";
                     if (activityVM.RepeatType == "W") {
                         if (activityVM.Monday)
@@ -151,7 +190,8 @@ namespace Laser.Orchard.Events.Drivers {
                             repeatDetails += DayOfWeek.Saturday + ",";
                         if (activityVM.Sunday)
                             repeatDetails += DayOfWeek.Sunday + ",";
-                    } else if (activityVM.RepeatType == "M") {
+                    }
+                    else if (activityVM.RepeatType == "M") {
                         if (activityVM.RepeatByDayNumber)
                             repeatDetails = "DayNum";
                         else
@@ -161,8 +201,7 @@ namespace Laser.Orchard.Events.Drivers {
                         repeatDetails = repeatDetails.Substring(0, repeatDetails.Length - 1);
                     }
                     part.RepeatDetails = repeatDetails;
-                } else
-                    updater.AddModelError("DateRequiredError", T("The starting date and ending date of the event are required."));
+                }
             }
 
             return Editor(part, shapeHelper);
@@ -170,15 +209,42 @@ namespace Laser.Orchard.Events.Drivers {
 
         protected override void Importing(ActivityPart part, global::Orchard.ContentManagement.Handlers.ImportContentContext context) {
             var root = context.Data.Element(part.PartDefinition.Name);
-            part.AllDay = Boolean.Parse(root.Attribute("AllDay").Value);
-            part.DateTimeEnd = root.Attribute("DateTimeEnd").Value != null ? DateTime.Parse(root.Attribute("DateTimeEnd").Value, CultureInfo.InvariantCulture) : (DateTime?)null;
-            part.DateTimeStart = root.Attribute("DateTimeStart").Value != null ? DateTime.Parse(root.Attribute("DateTimeStart").Value, CultureInfo.InvariantCulture) : (DateTime?)null;
-            part.Repeat = Boolean.Parse(root.Attribute("Repeat").Value);
-            part.RepeatDetails = root.Attribute("RepeatDetails").Value;
-            part.RepeatEnd = Boolean.Parse(root.Attribute("RepeatEnd").Value);
-            part.RepeatEndDate = root.Attribute("RepeatEndDate").Value != null ? DateTime.Parse(root.Attribute("RepeatEndDate").Value, CultureInfo.InvariantCulture) : (DateTime?)null;
-            part.RepeatType = root.Attribute("RepeatType").Value;
-            part.RepeatValue = int.Parse(root.Attribute("RepeatValue").Value, CultureInfo.InvariantCulture);
+            var AllDay = root.Attribute("AllDay");
+            if (AllDay != null) {
+                part.AllDay = Convert.ToBoolean(AllDay.Value);
+            }
+            var DateTimeEnd = root.Attribute("DateTimeEnd");
+            if (DateTimeEnd != null) {
+                part.DateTimeEnd = Convert.ToDateTime(DateTimeEnd.Value);
+            }
+            var DateTimeStart = root.Attribute("DateTimeStart");
+            if (DateTimeStart != null) {
+                part.DateTimeStart = Convert.ToDateTime(DateTimeStart.Value);
+            }
+            var Repeat = root.Attribute("Repeat");
+            if (Repeat != null) {
+                part.Repeat = Convert.ToBoolean(Repeat.Value);
+            }
+            var RepeatDetails = root.Attribute("RepeatDetails");
+            if (RepeatDetails != null) {
+                part.RepeatDetails = RepeatDetails.Value;
+            }
+            var RepeatEnd = root.Attribute("RepeatEnd");
+            if (RepeatEnd != null) {
+                part.RepeatEnd = Convert.ToBoolean(RepeatEnd.Value);
+            }
+            var RepeatEndDate = root.Attribute("RepeatEndDate");
+            if (RepeatEndDate != null) {
+                part.RepeatEndDate = Convert.ToDateTime(RepeatEndDate.Value);
+            }
+            var RepeatType = root.Attribute("RepeatType");
+            if (RepeatType != null) {
+                part.RepeatType = RepeatType.Value;
+            }
+            var RepeatValue = root.Attribute("RepeatValue");
+            if (RepeatValue != null) {
+                part.RepeatValue = Convert.ToInt32(RepeatValue.Value);
+            }
         }
 
         protected override void Exporting(ActivityPart part, global::Orchard.ContentManagement.Handlers.ExportContentContext context) {
@@ -192,7 +258,18 @@ namespace Laser.Orchard.Events.Drivers {
             root.SetAttributeValue("RepeatEndDate", part.RepeatEndDate.HasValue ? part.RepeatEndDate.Value.ToString(CultureInfo.InvariantCulture) : null);
             root.SetAttributeValue("RepeatType", part.RepeatType);
             root.SetAttributeValue("RepeatValue", part.RepeatValue);
+        }
 
+        protected override void Cloning(ActivityPart originalPart, ActivityPart clonePart, CloneContentContext context) {
+            clonePart.DateTimeStart = originalPart.DateTimeStart;
+            clonePart.DateTimeEnd = originalPart.DateTimeEnd;
+            clonePart.AllDay = originalPart.AllDay;
+            clonePart.Repeat = originalPart.Repeat;
+            clonePart.RepeatType = originalPart.RepeatType;
+            clonePart.RepeatValue = originalPart.RepeatValue;
+            clonePart.RepeatDetails = originalPart.RepeatDetails;
+            clonePart.RepeatEnd = originalPart.RepeatEnd;
+            clonePart.RepeatEndDate = originalPart.RepeatEndDate;
         }
     }
 }

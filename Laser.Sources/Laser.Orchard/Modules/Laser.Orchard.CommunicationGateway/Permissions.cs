@@ -16,6 +16,7 @@ namespace Laser.Orchard.CommunicationGateway {
         public static readonly Permission PublishOwnCommunicationAdv = new Permission { Description = "Publish Own Comunication Messages", Name = "PublishOwnCommunicationAdv", ImpliedBy = new[] { PublishCommunicationAdv,ManageCampaigns, ManageCommunicationAdv } };
         public static readonly Permission AccessExportContacts = new Permission { Description = "Access contacts export files", Name = "AccessExportContacts" };
         public static readonly Permission AccessImportContacts = new Permission { Description = "Access contacts import logs", Name = "AccessImportContacts" };
+        public static readonly Permission ShowContacts = new Permission { Description = "Show Communication Contacts", Name = "ShowCommunicationContacts", ImpliedBy = new[] { ManageContact, AccessExportContacts, AccessImportContacts } };
 
         public virtual Feature Feature { get; set; }
 
@@ -30,7 +31,8 @@ namespace Laser.Orchard.CommunicationGateway {
                 ManageOwnContact,
                 PublishOwnCommunicationAdv,
                 PublishCommunicationAdv,
-                AccessExportContacts
+                AccessExportContacts,
+                ShowContacts
             };
         }
 

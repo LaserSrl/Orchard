@@ -1,4 +1,9 @@
-﻿using Laser.Orchard.Policy.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Web.Mvc;
+using Laser.Orchard.Policy.Models;
 using Laser.Orchard.Policy.Services;
 using Laser.Orchard.StartupConfig.Services;
 using Orchard;
@@ -7,15 +12,10 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using Orchard.OutputCache.Filters;
+using Orchard.OutputCache;
 
 namespace Laser.Orchard.Policy.Drivers {
-    public class PolicyPartDriver : ContentPartDriver<PolicyPart>, ICachingEventHandler {
+    public class PolicyPartDriver : ContentPartCloningDriver<PolicyPart>, ICachingEventHandler {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IControllerContextAccessor _controllerContextAccessor;
@@ -85,8 +85,17 @@ namespace Laser.Orchard.Policy.Drivers {
             }
             return Editor(part, shapeHelper);
         }
+
+
+
         #region [ Import/Export ]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="part"></param>
+        /// <param name="context"></param>
         protected override void Exporting(PolicyPart part, ExportContentContext context) {
+
             var root = context.Element(part.PartDefinition.Name);
             root.SetAttributeValue("IncludePendingPolicy", part.IncludePendingPolicy);
 
@@ -111,9 +120,17 @@ namespace Laser.Orchard.Policy.Drivers {
             root.SetAttributeValue("PolicyTextReferencesCsv", String.Join(",", PolicyTextReferencesIdentities.ToArray()));
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="part"></param>
+        /// <param name="context"></param>
         protected override void Importing(PolicyPart part, ImportContentContext context) {
+            
             var root = context.Data.Element(part.PartDefinition.Name);
             var includePendingPolicy = IncludePendingPolicyOptions.Yes;
+           
             List<string> policyTextReferencesList = new List<string>();
             var policyTextReferencesIdentities = root.Attribute("PolicyTextReferencesCsv").Value;
 
@@ -136,13 +153,13 @@ namespace Laser.Orchard.Policy.Drivers {
         #endregion
 
         /// <summary>
-        /// Called by OutpuCache after the default cache key has been defined
+        /// Called by OutputCache after the default cache key has been defined.
         /// </summary>
-        /// <param name="key">default cache key such as defined in Orchard.OutpuCache</param>
-        /// <returns>The new cache key</returns>
-        public StringBuilder InflatingCacheKey(StringBuilder key) {
+        /// <param name="key">Default cache key such as defined in Orchard.OutputCache.</param>
+        public void KeyGenerated(StringBuilder key) {
             var part = _currentContentAccessor.CurrentContentItem.As<PolicyPart>();
-            if (part == null) return key;
+            if (part == null) return;
+
             if (part.HasPendingPolicies ?? false) {
                 _additionalCacheKey = "policy-not-accepted;";
             } else {
@@ -150,7 +167,11 @@ namespace Laser.Orchard.Policy.Drivers {
             }
 
             key.Append(_additionalCacheKey);
-            return key;
+        }
+
+        protected override void Cloning(PolicyPart originalPart, PolicyPart clonePart, CloneContentContext context) {
+            clonePart.IncludePendingPolicy = originalPart.IncludePendingPolicy;
+            clonePart.PolicyTextReferencesCsv = originalPart.PolicyTextReferencesCsv;
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Laser.Orchard.Vimeo.Models {
     public class VimeoSettingsPartRecord : ContentPartRecord {
-        public virtual string AccessToken { get; set; }
+        //public virtual string AccessToken { get; set; }
         public virtual string ChannelName { get; set; }
         public virtual string GroupName { get; set; }
         public virtual string AlbumName { get; set; }
@@ -31,10 +31,10 @@ namespace Laser.Orchard.Vimeo.Models {
         public virtual string AccountType { get; set; }
         public virtual DateTime? LastTimeAccountTypeWasChecked { get; set; }
         public virtual string UserId { get; set; }
-        //Limits on API calls
-        public virtual int RateLimitLimit { get; set; }
-        public virtual int RateLimitRemaining { get; set; }
-        public virtual DateTime? RateLimitReset { get; set; }
+        ////Limits on API calls
+        //public virtual int RateLimitLimit { get; set; }
+        //public virtual int RateLimitRemaining { get; set; }
+        //public virtual DateTime? RateLimitReset { get; set; }
         //cache quota
         public virtual Int64 UploadQuotaSpaceFree { get; set; }
         public virtual Int64 UploadQuotaSpaceMax { get; set; }

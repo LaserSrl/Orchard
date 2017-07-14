@@ -82,6 +82,12 @@ namespace Laser.Orchard.Fidelity.Handlers
         public void ConfirmedEmail(IUser user)
         {
         }
+
+        public void LoggingIn(string userNameOrEmail, string password) {
+        }
+
+        public void LogInFailed(string userNameOrEmail, string password) {
+        }
         #endregion
     }
 }

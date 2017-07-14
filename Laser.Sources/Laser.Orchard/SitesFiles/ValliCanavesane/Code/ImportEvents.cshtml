@@ -209,6 +209,7 @@
         }
         //Autoroute
         newCalEvent.As<AutoroutePart>().DisplayAlias = _autorouteService.GenerateAlias(newCalEvent.As<AutoroutePart>());
+		_autorouteService.ProcessPath(newCalEvent.As<AutoroutePart>());
         _autorouteService.PublishAlias(newCalEvent.As<AutoroutePart>());
         //Activity Part
         newCalEvent.As<ActivityPart>().DateTimeEnd = translatableEvents[""].endTime;
@@ -426,10 +427,16 @@
                                     foreach (XmlElement se in occ) {
                                         if (se.Name.Equals("StartEnd", StringComparison.InvariantCultureIgnoreCase)) {
                                             foreach (XmlElement time in se) {
+												
+												string startEndTime = time.InnerText;
+												if (startEndTime.Contains("+")) {
+													startEndTime = startEndTime.Substring(0, startEndTime.IndexOf('+'));
+												}
+												
                                                 if (time.Name.Equals("StartDateTime", StringComparison.InvariantCultureIgnoreCase)) {
-                                                    translatableEvents[langAttribute].startTime = DateTime.Parse(time.InnerText);
+                                                    translatableEvents[langAttribute].startTime = DateTime.Parse(startEndTime);
                                                 } else if (time.Name.Equals("EndDateTime", StringComparison.InvariantCultureIgnoreCase)) {
-                                                    translatableEvents[langAttribute].endTime = DateTime.Parse(time.InnerText);
+                                                    translatableEvents[langAttribute].endTime = DateTime.Parse(startEndTime);
                                                 }
                                             }
                                         }

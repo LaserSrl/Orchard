@@ -16,7 +16,7 @@ using Orchard.Environment.Extensions;
 namespace Laser.Orchard.MailCommunication.Drivers {
 
     [OrchardFeature("Laser.Orchard.MailCommunication")]
-    public class MailCommunicationPartDriver : ContentPartDriver<MailCommunicationPart> {
+    public class MailCommunicationPartDriver : ContentPartCloningDriver<MailCommunicationPart> {
         private readonly IContentManager _contentManager;
         private readonly IOrchardServices _orchardServices;
         private readonly ITemplateService _templateService;
@@ -75,11 +75,54 @@ namespace Laser.Orchard.MailCommunication.Drivers {
             return new CombinedResult(shapes);
         }
 
-        //TODO: Importing/Exporting 
         protected override void Importing(MailCommunicationPart part, ImportContentContext context) {
+            part.MailMessageSent = false;
+            part.SendOnNextPublish = false;
+
+            var importedSendToTestEmail = context.Attribute(part.PartDefinition.Name, "SendToTestEmail");
+            if (importedSendToTestEmail != null) {
+                part.SendToTestEmail = bool.Parse(importedSendToTestEmail);
+            }
+
+            var importedEmailForTest = context.Attribute(part.PartDefinition.Name, "EmailForTest");
+            if (importedEmailForTest != null) {
+                part.EmailForTest =importedEmailForTest;
+            }
+
+            part.SentMailsNumber = 0;
+
+            var importedRecipientList = context.Attribute(part.PartDefinition.Name, "RecipientList");
+            if (importedRecipientList != null) {
+                part.RecipientList = importedRecipientList;
+            }
+
+            var importedUseRecipientList = context.Attribute(part.PartDefinition.Name, "UseRecipientList");
+            if (importedUseRecipientList != null) {
+                part.UseRecipientList = bool.Parse(importedUseRecipientList);
+            }
         }
 
         protected override void Exporting(MailCommunicationPart part, ExportContentContext context) {
+            //MailMessageSent non serve per l'import
+            //SendOnNextPublish non serve per l'import
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SendToTestEmail", part.SendToTestEmail);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("EmailForTest", part.EmailForTest);
+            //RecipientsNumber non serve per l'import
+            //SentMailsNumber non serve per l'import
+            context.Element(part.PartDefinition.Name).SetAttributeValue("RecipientList", part.RecipientList);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("UseRecipientList", part.UseRecipientList);
+        }
+
+        protected override void Cloning(MailCommunicationPart originalPart, MailCommunicationPart clonePart, CloneContentContext context) {
+            //do not clone MailMessageSent so that we can send it in the cloned part
+            clonePart.MailMessageSent = false;
+            clonePart.SendOnNextPublish = false;
+            clonePart.SendToTestEmail = originalPart.SendToTestEmail;
+            clonePart.EmailForTest = originalPart.EmailForTest;
+            //do not clone RecipientsNumber because that is computed by the handler
+            //do not clone SentMailsNumber because that is computed by the handler
+            clonePart.UseRecipientList = originalPart.UseRecipientList;
+            clonePart.RecipientList = originalPart.RecipientList;
         }
     }
 }

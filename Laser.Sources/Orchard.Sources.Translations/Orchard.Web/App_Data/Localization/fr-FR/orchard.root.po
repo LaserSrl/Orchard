@@ -113,6 +113,11 @@ msgctxt "Orchard.Commands.Builtin.HelpCommand"
 msgid "Command {0} doesn't exist"
 msgstr "La commande {0} n'existe pas."
 
+#: "Orchard.Data.Migration.DataMigrationManager"
+msgctxt "Orchard.Data.Migration.DataMigrationManager"
+msgid "Error while running migration version {0} for {1}."
+msgstr "Erreur lors de l'exécution de la migration de la version {0} pour {1}."
+
 #: "Orchard.Data.Migration.DataMigrationNotificationProvider"
 msgctxt "Orchard.Data.Migration.DataMigrationNotificationProvider"
 msgid "Some features need to be upgraded: {0}"
@@ -127,6 +132,11 @@ msgstr "Erreur durant l'exécution de la migration de données: vous devez spéc
 msgctxt "Orchard.Data.Migration.Interpreters.MySqlCommandInterpreter"
 msgid "Error while executing data migration: you need to specify the field's type in order to change its properties"
 msgstr "Erreur durant l'exécution de la migration de données : vous devez spécifier le type du champ avant de pouvoir changer ses propriétés"
+
+#: "Orchard.Data.Migration.Schema.SchemaBuilder"
+msgctxt "Orchard.Data.Migration.Schema.SchemaBuilder"
+msgid "An unexpected error occured while executing the SQL statement: {0}"
+msgstr "Une erreur inattendue s'est produite pendant l'exécution de l'instruction SQL : {0}"
 
 #: "Orchard.DisplayManagement.Implementation.DefaultDisplayManager"
 msgctxt "Orchard.DisplayManagement.Implementation.DefaultDisplayManager"
@@ -165,8 +175,10 @@ msgstr "La référence d'assembly « {0} » pour le projet « {1} » ne peut pas
 
 #: "Orchard.Environment.Extensions.Compilers.DefaultExtensionCompiler"
 msgctxt "Orchard.Environment.Extensions.Compilers.DefaultExtensionCompiler"
-msgid "Error compiling module \"{0}\" from file \"{1}\":\r\n{2}"
-msgstr "Une erreur s'est produite pendant la compilation du module '{0}' à partir du fichier '{1}':\r\n{2}"
+msgid "Error compiling module \"{0}\" from file \"{1}\":\r\n"
+"{2}"
+msgstr "Une erreur s'est produite pendant la compilation du module '{0}' à partir du fichier '{1}':\r\n"
+"{2}"
 
 #: "Orchard.Environment.Extensions.Folders.ExtensionHarvester"
 msgctxt "Orchard.Environment.Extensions.Folders.ExtensionHarvester"
@@ -187,6 +199,11 @@ msgstr "Impossible d'obtenir l'état de la fonctionnalité {0}"
 msgctxt "Orchard.Environment.Features.FeatureManager"
 msgid "Found {0} states for feature {1}"
 msgstr "{0} état(s) ont été trouvés pour la fonctionnalité {1}"
+
+#: "Orchard.Environment.ShellBuilders.CompositionStrategy"
+msgctxt "Orchard.Environment.ShellBuilders.CompositionStrategy"
+msgid "The feature '{0}' was listed as a dependency of '{1}' of extension '{2}', but this feature could not be found. Please update your manifest file or install the module providing the missing feature."
+msgstr "La fonctionnalité '{0}' a été listée comme une dépendance de '{1}' de l'extension '{2}', mais cette fonctionnalité n'a pas pu être trouvée. Veuillez s'il vous plaît mettre à jour votre fichier manifeste ou installer le module fournissant la fonctionnalité manquante."
 
 #: "Orchard.Events.DefaultOrchardEventBus"
 msgctxt "Orchard.Events.DefaultOrchardEventBus"
@@ -283,6 +300,11 @@ msgctxt "Orchard.Mvc.DataAnnotations.LocalizedStringLengthAttribute"
 msgid "The field {0} must be a string with a maximum length of {1}."
 msgstr "Le champ {0} doit être une chaîne d'une longueur maximale de {1}."
 
+#: "Orchard.Recipes.Services.RecipeBuilder"
+msgctxt "Orchard.Recipes.Services.RecipeBuilder"
+msgid "Exported from Orchard"
+msgstr "Exporté depuis Orchard"
+
 #: "Orchard.Security.Authorizer"
 msgctxt "Orchard.Security.Authorizer"
 msgid "{0}. Anonymous users do not have {1} permission."
@@ -297,19 +319,4 @@ msgstr "{0}. L'utilisateur en cours, {2}, n'a pas la permission {1}."
 msgctxt "Orchard.UI.Admin.AdminFilter"
 msgid "Can't access the admin"
 msgstr "L'interface d'administration est inaccessible."
-
-#. "Hello world"
-msgctxt "Orchard.Tests.UI.Notify.NotifierTests"
-msgid "Hello world"
-msgstr "Bonjour tout le monde"
-
-#. "More Info"
-msgctxt "Orchard.Tests.UI.Notify.NotifierTests"
-msgid "More Info"
-msgstr "Plus d'infos"
-
-#. "Boom"
-msgctxt "Orchard.Tests.UI.Notify.NotifierTests"
-msgid "Boom"
-msgstr "Boum"
 

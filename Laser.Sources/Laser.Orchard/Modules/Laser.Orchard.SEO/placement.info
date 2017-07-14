@@ -4,6 +4,7 @@
   <Place Parts_KeywordHelper_Edit="Content:1.1"/>
   <Place Parts_Favicon_FaviconSettings="Content:5"/>
   <Match DisplayType="Detail">
+    <Place Parts_SEO="Content:5"/>
     <Place Parts_Keywordhelper="-"/>
   </Match>
 </Placement>

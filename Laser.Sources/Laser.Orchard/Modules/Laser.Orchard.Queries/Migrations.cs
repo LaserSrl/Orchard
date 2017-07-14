@@ -61,5 +61,33 @@ namespace Laser.Orchard.Queries {
          p => p.Attachable(false));
             return 2;
         }
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterPartDefinition(
+                "QueryUserFilterExtensionPart",
+                 b => b
+                    .Attachable(false)
+                    .WithField("OneShotQuery", cfg => cfg.OfType("BooleanField")
+                        .WithSetting("BooleanFieldSettings.Hint", "If checked, the query will be shown in a separate group")
+                        .WithSetting("BooleanFieldSettings.DefaultValue", "false")
+                    )
+            );
+            return 3;
+        }
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterPartDefinition(
+              "MyCustomQueryPart",
+               b => b
+                  .Attachable(false)
+                  .WithField("QueryString", cfg => cfg
+                    .OfType("TextField")
+                    .WithDisplayName("Text of HQL Query")
+                    .WithSetting("TextFieldSettings.Flavor", "TextArea")
+                    .WithSetting("TextFieldSettings.Required", "true")
+                    .WithSetting("TextFieldSettings.Hint", "Insert a HQL query")
+                    )
+                  .WithField("Options", cfg => cfg.OfType("TextField").WithDisplayName("Options"))
+           );
+            return 4;
+        }
     }
 }

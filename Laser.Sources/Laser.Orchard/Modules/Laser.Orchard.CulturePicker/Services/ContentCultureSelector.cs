@@ -59,8 +59,10 @@ namespace Laser.Orchard.CulturePicker.Services {
             if (AdminFilter.IsApplied(context.Request.RequestContext)) { // I am in admin context so I have to use defualt site culture
                 return new CultureSelectorResult { Priority = SelectorPriority, CultureName = _orchardServices.WorkContext.CurrentSite.SiteCulture };
             }
-            if (context.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "blogpost" && relativePath.IndexOf("/archive") > -1) {
-                relativePath = relativePath.Substring(0, relativePath.IndexOf("/archive")); // prendo sull'url che definisce il blog
+            if (context.Request != null && context.Request.RequestContext.RouteData != null && context.Request.RequestContext.RouteData.Values["controller"] != null) {
+                if (context.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "blogpost" && relativePath.IndexOf("/archive") > -1) {
+                    relativePath = relativePath.Substring(0, relativePath.IndexOf("/archive")); // prendo sull'url che definisce il blog
+                }
             }
             RouteValueDictionary routeValueDictionary = _aliasService.Get(relativePath);
 

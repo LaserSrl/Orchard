@@ -2,11 +2,9 @@
 @using Orchard.ContentManagement;
 @using Orchard.Core.Common.Models
 @{
+    Script.Require("jQuery").AtHead();
+    Style.Include("Laser.Orchard.Faq.css").AtHead();
     IEnumerable<FaqTypePartRecord> types = Model.FaqTypes;
-}
-
-@{
-    Style.Include("Laser.Orchard.Faq.css");
 }
 
 
@@ -16,7 +14,6 @@
 }
 else
 {
-    Script.Require("jQuery");
     <div class="faq_widget_ajax">
         <div class="faq_widget_ajax_header">
             <span>Choose a FAQ type: </span>

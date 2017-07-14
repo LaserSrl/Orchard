@@ -132,7 +132,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                         try {
                             _extendedUsersGroupsRepository.Create(groupRecordToCreate);
                             _extendedUsersGroupsRepository.Flush();
-                        } catch (Exception ex) {
+                        } catch {
                             inErrorGroups.Add(groupRecordToCreate.GroupName);
                         }
                     }

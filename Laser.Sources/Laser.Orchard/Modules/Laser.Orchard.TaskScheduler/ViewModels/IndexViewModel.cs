@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Orchard;
+using Orchard.Localization.Services;
 
 namespace Laser.Orchard.TaskScheduler.ViewModels {
     public class IndexViewModel {
@@ -13,8 +15,8 @@ namespace Laser.Orchard.TaskScheduler.ViewModels {
             allTasks = new List<ScheduledTaskViewModel>();
         }
 
-        public IndexViewModel(List<ScheduledTaskPart> parts) {
-            allTasks = parts.Select(p => new ScheduledTaskViewModel(p)).ToList();
+        public IndexViewModel(List<ScheduledTaskPart> parts, IOrchardServices orchardServices, IDateLocalizationServices dateServices) {
+            allTasks = parts.Select(p => new ScheduledTaskViewModel(p, orchardServices, dateServices)).ToList();
 
         }
     }

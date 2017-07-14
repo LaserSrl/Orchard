@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using System.Linq;
 using System.Web;
 using Orchard.ContentManagement;
-
+using Orchard.Core.Common.ViewModels;
 
 namespace Laser.Orchard.Questionnaires.ViewModels {
 
@@ -22,6 +22,28 @@ namespace Laser.Orchard.Questionnaires.ViewModels {
 
         [Required]
         public string GameDate { get; set; }
+        public DateTimeEditor GameDateEditor
+        {
+            get
+            {
+                if ((GameDate?.IndexOf(' ') > 0))
+                return new DateTimeEditor {
+                    Date = GameDate.Split(' ')[0],
+                    Time = GameDate.Split(' ')[1],
+                    ShowDate = true,
+                    ShowTime = true
+                };
+                else
+                    return new DateTimeEditor {
+                        ShowDate = true,
+                        ShowTime = true
+                    };
+            }
+            set
+            {
+                GameDate = value.Date+" "+value.Time;
+            }
+        }
 
         [Required]
         public string RankingIOSIdentifier { get; set; }

@@ -21,6 +21,7 @@ namespace Laser.Orchard.StartupConfig.Models {
             get { return this.Retrieve(r => r.MaintenanceNotify); }
             set { this.Store(r => r.MaintenanceNotify, value); }
         }
+
         public string Selected_Tenant {
             get { return this.Retrieve(r => r.Selected_Tenant); }
             set { this.Store(r => r.Selected_Tenant, value); }

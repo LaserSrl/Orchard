@@ -10,11 +10,12 @@ using System.Web.Mvc;
 using System.Linq;
 using System.Collections.Generic;
 using Orchard.Environment.Configuration;
+using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.StartupConfig.Drivers {
 
     [OrchardFeature("Laser.Orchard.StartupConfig.Maintenance")]
-    public class MaintenancePartDriver : ContentPartDriver<MaintenancePart> {
+    public class MaintenancePartDriver : ContentPartCloningDriver<MaintenancePart> {
        // public Localizer T { get; set; }
         private readonly IMaintenanceService _maintenance;
         private readonly ShellSettings _shellSettings;
@@ -29,8 +30,7 @@ namespace Laser.Orchard.StartupConfig.Drivers {
         //GET
         protected override DriverResult Editor(MaintenancePart part, dynamic shapeHelper) {
             MaintenanceVM MaintenanceVM = new MaintenanceVM();
-            Mapper.CreateMap<MaintenancePart, MaintenanceVM>();
-            Mapper.Map(part, MaintenanceVM);
+            Mapper.Map<MaintenancePart, MaintenanceVM>(part, MaintenanceVM);
             List<string> AllTenantName = new List<string>();
             AllTenantName.Add("All Tenant");
             AllTenantName.AddRange(_maintenance.GetAllTenantName());
@@ -51,8 +51,7 @@ namespace Laser.Orchard.StartupConfig.Drivers {
         protected override DriverResult Editor(MaintenancePart part, IUpdateModel updater, dynamic shapeHelper) {
             MaintenanceVM MaintenanceVM = new MaintenanceVM();
             if (updater.TryUpdateModel(MaintenanceVM, Prefix, null, null)) {
-                Mapper.CreateMap<MaintenanceVM, MaintenancePart>();
-                Mapper.Map( MaintenanceVM,part);
+                Mapper.Map<MaintenanceVM, MaintenancePart>( MaintenanceVM,part);
                 part.Selected_Tenant=string.Join(",",MaintenanceVM.Selected_TenantVM);
             }
             else {
@@ -64,6 +63,18 @@ namespace Laser.Orchard.StartupConfig.Drivers {
                 //  _notifier.Add(NotifyType.Error, T("Error on update google analytics"));
             }
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Cloning(MaintenancePart originalPart, MaintenancePart clonePart, CloneContentContext context) {
+            clonePart.MaintenanceNotifyType = originalPart.MaintenanceNotifyType;
+            clonePart.MaintenanceNotify = originalPart.MaintenanceNotify;
+            clonePart.Selected_Tenant = originalPart.Selected_Tenant;
+        }
+        protected override void Importing(MaintenancePart part, ImportContentContext context) {
+            // si è deciso di non esportare e importare nulla
+        }
+        protected override void Exporting(MaintenancePart part, ExportContentContext context) {
+            // si è deciso di non esportare e importare nulla
         }
     }
 }

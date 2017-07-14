@@ -4,6 +4,7 @@ using Laser.Orchard.SEO.ViewModels;
 using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Extensions;
 
 
@@ -48,6 +49,14 @@ namespace Laser.Orchard.SEO.Drivers {
             return Editor(part, shapeHelper);
         }
 
-
+        protected override void Exporting(FaviconSettingsPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("FaviconUrl", part.FaviconUrl);
+        }
+        protected override void Importing(FaviconSettingsPart part, ImportContentContext context) {
+            var importedFaviconUrl = context.Attribute(part.PartDefinition.Name, "FaviconUrl");
+            if (importedFaviconUrl != null) {
+                part.FaviconUrl = importedFaviconUrl;
+            }
+        }
     }
 }

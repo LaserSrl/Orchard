@@ -16,7 +16,7 @@
     @{foreach (var item in part) {
           var quantità = "(" + item.Quantity + ")";
           var itemName = " " + _reactionService.GetReactionEnumTranslations((ReactionsNames)Enum.Parse(typeof(ReactionsNames), item.TypeName));
-          string attCSS = string.Format("icon-{0}", item.TypeName.ToLowerInvariant());
+          string attCSS = string.Format("reaction-icon-{0}", item.TypeName.ToLowerInvariant());
           var id = @item.TypeId;
     
         <div class="reaction-container" id="@id">

@@ -16,6 +16,7 @@ using Orchard.Data;
 namespace Laser.Orchard.Queries.Services {
     public interface IQueryPickerService : IDependency {
         List<QueryPart> GetUserDefinedQueries();
+        List<QueryPart> GetOneShotQueries();
         IHqlQuery GetCombinedContentQuery(int[] queryIds, Dictionary<string, object> tokens = null, string[] contentTypesToFilter = null);
     }
 
@@ -44,11 +45,17 @@ namespace Laser.Orchard.Queries.Services {
 
         public List<QueryPart> GetUserDefinedQueries() {
             var availableQueries = _services.ContentManager.Query().ForType("Query").Join<TitlePartRecord>().OrderBy(x => x.Title).List()
-                .Where(x => ((dynamic)x).QueryUserFilterExtensionPart.UserQuery.Value == true)
+                .Where(x => ((dynamic)x).QueryUserFilterExtensionPart.UserQuery.Value == true && (((dynamic)x).QueryUserFilterExtensionPart.OneShotQuery.Value ?? false) == false)
                 .Select(x => x.As<QueryPart>());
             return availableQueries.ToList();
         }
 
+        public List<QueryPart> GetOneShotQueries() {
+            var availableQueries = _services.ContentManager.Query().ForType("Query").Join<TitlePartRecord>().OrderBy(x => x.Title).List()
+                .Where(x => ((dynamic)x).QueryUserFilterExtensionPart.UserQuery.Value == true && ((dynamic)x).QueryUserFilterExtensionPart.OneShotQuery.Value == true)
+                .Select(x => x.As<QueryPart>());
+            return availableQueries.ToList();
+        }
         public IHqlQuery GetCombinedContentQuery(int[] queryIds, Dictionary<string, object> tokens = null, string[] contentTypesToFilter = null) {
             var availableFilters = DescribeFilters().ToList();
 

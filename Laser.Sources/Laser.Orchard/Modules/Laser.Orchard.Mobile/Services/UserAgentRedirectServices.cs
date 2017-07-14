@@ -24,18 +24,22 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         public UserAgentRedirectEdit BuildEditModelForUserAgentRedirectPart(UserAgentRedirectPart part) {
-            Mapper.CreateMap<AppStoreRedirectRecord, AppStoreEdit>();
-            Mapper.CreateMap<UserAgentRedirectPart, UserAgentRedirectEdit>()
-                .ForMember(dest => dest.Stores, opt => opt.MapFrom(src => src.Stores));
+            Mapper.Initialize(cfg => {
+                cfg.CreateMap<AppStoreRedirectRecord, AppStoreEdit>();
+                cfg.CreateMap<UserAgentRedirectPart, UserAgentRedirectEdit>()
+                    .ForMember(dest => dest.Stores, opt => opt.MapFrom(src => src.Stores));
+            });
             var viewModel = Mapper.Map<UserAgentRedirectEdit>(part);
             return (viewModel);
         }
 
 
         public void Update(ContentItem content, UserAgentRedirectEdit editModel) {
-            Mapper.CreateMap<AppStoreEdit, AppStoreRedirectRecord>();
-            Mapper.CreateMap<UserAgentRedirectEdit, UserAgentRedirectPart>()
-                .ForMember(dest => dest.Stores, opt => opt.Ignore());
+            Mapper.Initialize(cfg => {
+                cfg.CreateMap<AppStoreEdit, AppStoreRedirectRecord>();
+                cfg.CreateMap<UserAgentRedirectEdit, UserAgentRedirectPart>()
+                    .ForMember(dest => dest.Stores, opt => opt.Ignore());
+            });
             var part = content.As<UserAgentRedirectPart>();
             Mapper.Map(editModel, part);
             var partRecord = part.Record;

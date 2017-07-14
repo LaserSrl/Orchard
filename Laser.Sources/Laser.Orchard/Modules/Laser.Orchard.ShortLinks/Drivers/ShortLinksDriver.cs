@@ -3,6 +3,7 @@ using Laser.Orchard.ShortLinks.Services;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +57,27 @@ namespace Laser.Orchard.ShortLinks.Drivers {
            
             return Editor(part, shapeHelper);
         }
+
+
+        protected override void Importing(ShortLinksPart part, ImportContentContext context) 
+        {
+            var importedUrl = context.Attribute(part.PartDefinition.Name, "Url");
+            if (importedUrl != null) {
+                part.Url = importedUrl;
+            }
+
+            var importedFullLink = context.Attribute(part.PartDefinition.Name, "FullLink");
+            if (importedFullLink != null) {
+                part.FullLink = importedFullLink;
+            }
+        }
+
+        protected override void Exporting(ShortLinksPart part, ExportContentContext context) 
+        {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Url", part.Url);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("FullLink", part.FullLink);
+        }
+
 
     }
 

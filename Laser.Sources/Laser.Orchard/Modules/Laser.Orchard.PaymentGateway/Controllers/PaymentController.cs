@@ -11,12 +11,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.Logging;
 
 namespace Laser.Orchard.PaymentGateway.Controllers {
     public class PaymentController : Controller {
-        private readonly IRepository<PaymentRecord> _repository;
-        private readonly IOrchardServices _orchardServices;
-        private readonly IEnumerable<IPosService> _posServices;
         /// <summary>
         /// This class is a default implementation of the pos services, used as basically a placeholder when calling some methods, since abstract classes
         /// cannot be directly instantiated.
@@ -45,8 +43,12 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
             }
 
         }
+        private readonly IRepository<PaymentRecord> _repository;
+        private readonly IOrchardServices _orchardServices;
+        private readonly IEnumerable<IPosService> _posServices;
         private readonly PosServiceEmpty _posServiceEmpty;
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public PaymentController(IRepository<PaymentRecord> repository, IOrchardServices orchardServices, IEnumerable<IPosService> posServices) {
             _repository = repository;
@@ -54,6 +56,7 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
             _posServices = posServices;
             _posServiceEmpty = new PosServiceEmpty(orchardServices, repository, null);
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
         /// <summary>
         /// This controller starts the web flow for payments, and creates the associated record
@@ -62,9 +65,10 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         /// <param name="amount">Amount of payment</param>
         /// <param name="currency">Currency used</param>
         /// <param name="itemId">Optional, the Id of a ContentItem associated with the payment</param>
+        /// <param name="newPaymentGuid">Guid to be associated with this payment. No previous payment should have this value.</param>
         /// <returns>A page proposing the paymet options</returns>
         [Themed]
-        public ActionResult Pay(string reason, decimal amount, string currency, int itemId = 0) {
+        public ActionResult Pay(string reason, decimal amount, string currency, int itemId = 0, string newPaymentGuid = null) {
             ContentItem item = null;
             if (itemId > 0) {
                 item = _orchardServices.ContentManager.Get(itemId);
@@ -79,29 +83,48 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
                 PosList = _posServices.ToList(),
                 ContentItem = item
             };
-            model.Record = _posServiceEmpty.StartPayment(model.Record);
+            try {
+                model.Record = _posServiceEmpty.StartPayment(model.Record, newPaymentGuid);
+            }
+            catch(Exception ex) {
+                Logger.Error(ex, "Error starting payment.");
+                return new HttpUnauthorizedResult();
+            }
             return View("Pay", model);
         }
         /// <summary>
         /// This controller shows information about a specific payment
         /// </summary>
         /// <param name="paymentId">An Id corresponding to the record that contains the payment information</param>
+        /// <param name="guid">The Guid corresponding to the payment. The check on this value is performed only for anonymous users.</param>
         /// <returns>A page reporting the information for the payment</returns>
         [Themed]
-        public ActionResult Info(int paymentId) {
+        public ActionResult Info(int paymentId, string guid = "") {
             int currentUserId = -1; // utente inesistente
             var user = _orchardServices.WorkContext.CurrentUser;
             if (user != null) {
                 currentUserId = user.Id;
             }
             var payment = _repository.Get(paymentId);
-            if ((_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner) == false)
-                && (payment.UserId != currentUserId)) {
+            var unauthorized = false;
+            if (currentUserId == -1) {
+                // user anonimo
+                if (guid != payment.Guid) {
+                    unauthorized = true;
+                }
+            }
+            else {
+                // user autenticato
+                if ((_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner) == false)
+                    && (payment.UserId != currentUserId)) {
+                    unauthorized = true;
+                }
+            }
+            if (unauthorized) {
                 return new HttpUnauthorizedResult();
             }
             return View("Info", payment);
         }
-
 
         /// <summary>
         /// This method tells whether a given payment has been terminated. The payment is identified by either its Id or its Guid.

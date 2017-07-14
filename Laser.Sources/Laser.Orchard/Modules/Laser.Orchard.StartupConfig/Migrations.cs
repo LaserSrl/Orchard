@@ -1,9 +1,13 @@
 ﻿using Laser.Orchard.StartupConfig.Models;
 using Laser.Orchard.StartupConfig.Services;
+using Orchard.Autoroute.Models;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
+using Orchard.Core.Navigation.Models;
+using Orchard.Core.Title.Models;
 using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
+using Orchard.Projections.Models;
 using System.Data;
 
 namespace Laser.Orchard.StartupConfig {
@@ -42,7 +46,26 @@ namespace Laser.Orchard.StartupConfig {
                 part.Attachable(false));
             return 3;
         }
-
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterPartDefinition("AuthenticationRequiredPart", b => b
+                .Attachable()
+            );
+            return 4;
+        }
+        public int UpdateFrom4() {
+            ContentDefinitionManager.AlterTypeDefinition("AuthenticatedProjection", cfg => cfg
+                .WithPart("CommonPart")
+                .WithPart(typeof(TitlePart).Name)
+                .WithPart(typeof(AutoroutePart).Name)
+                .WithPart(typeof(MenuPart).Name)
+                .WithPart(typeof(ProjectionPart).Name)
+                .WithPart(typeof(AdminMenuPart).Name)
+                .WithPart(typeof(AuthenticationRequiredPart).Name)
+                .Creatable(true)
+                .Draftable(false)
+                );
+            return 5;
+        }
     }
 
     [OrchardFeature("Laser.Orchard.StartupConfig.PermissionExtension")]

@@ -10,31 +10,40 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
+using Orchard.Localization.Services;
+using System.Globalization;
+using Laser.Orchard.StartupConfig.Localization;
 
 namespace Laser.Orchard.TaskScheduler.Services {
-    public class ScheduledTaskService : IScheduledTaskService {
 
+    public class ScheduledTaskService : IScheduledTaskService {
         private readonly IRepository<LaserTaskSchedulerRecord> _repoLaserTaskScheduler;
         private readonly IOrchardServices _orchardServices;
         private readonly IScheduledTaskManager _taskManager;
         private readonly IRepository<ScheduledTaskRecord> _repoTasks;
-
+        private readonly IDateLocalizationServices _dateServices;
+        private readonly IDateLocalization _dateLocalization;
 
         public ScheduledTaskService(IRepository<LaserTaskSchedulerRecord> repoLaserTaskScheduler,
             IOrchardServices orchardServices,
             IScheduledTaskManager taskManager,
-            IRepository<ScheduledTaskRecord> repoTasks) {
+            IRepository<ScheduledTaskRecord> repoTasks,
+            IDateLocalizationServices dateServices,
+            IDateLocalization dateLocalization) {
             _repoLaserTaskScheduler = repoLaserTaskScheduler;
             _orchardServices = orchardServices;
             _taskManager = taskManager;
             _repoTasks = repoTasks;
+            _dateServices = dateServices;
+            _dateLocalization = dateLocalization;
         }
+
         /// <summary>
         /// Get all the scheulers from the db
         /// </summary>
         /// <returns>A list of task schedulers found in the db</returns>
         public List<ScheduledTaskPart> GetAllTasks() {
-            List<ScheduledTaskPart> parts = _orchardServices.ContentManager.Query().ForPart<ScheduledTaskPart>().List().ToList();
+            List<ScheduledTaskPart> parts = _orchardServices.ContentManager.Query("ScheduledTask").ForPart<ScheduledTaskPart>().List().ToList();
             foreach (ScheduledTaskPart pa in parts.Where(p => p.RunningTaskId != 0)) {
                 //check whether the task is still running. It might have been stopped by someone or something
                 if (_repoTasks.Get(pa.RunningTaskId) == null) {
@@ -53,26 +62,24 @@ namespace Laser.Orchard.TaskScheduler.Services {
         /// <returns>The list of view models</returns>
         public List<ScheduledTaskViewModel> GetTaskViewModelsFromForm(NameValueCollection formData) {
             var keys = formData.AllKeys.Where(k => k.IndexOf("allTasks[") == 0).ToArray();
-
             List<ScheduledTaskViewModel> vmsForTasks = new List<ScheduledTaskViewModel>();
-            int nVms = keys.Length / 9; //this is the number of fields we get from the views, and should be the number of fields in the ScheduledTaskViewModel
-
-            //note: here we are using the name of the properties and fields in the strings:
-            //if those are changed for any reason, the strings in this method should reflect that
+            int nVms = keys.Where(x => x.EndsWith("].Id")).Count();
             for (int i = 0; i < nVms; i++) {
-                //get the number to use as index for the keys. It may not correspond to i in the case where
-                //some schedulers have been deleted
-                string kk = keys[i * 9];
+                string kk = (keys.Where(x => x.EndsWith("].Id"))).ToArray()[i];
+            
                 int index = int.Parse(kk.Split(new string[] { "[", "]" }, StringSplitOptions.RemoveEmptyEntries)[1]);
                 string thisObject = String.Format("allTasks[{0}].", index);
                 DateTime? inputDate;
                 try {
-                    inputDate = String.IsNullOrWhiteSpace(formData[thisObject + "ScheduledStartUTC"]) ? (DateTime?)null :
-                        Convert.ToDateTime(formData[thisObject + "ScheduledStartUTC"]);
-                } catch (Exception) {
+                    string formDate = formData[thisObject + "ScheduledStartUTCEditor.Date"];
+                    string formTime = formData[thisObject + "ScheduledStartUTCEditor.Time"];
+                    //inputDate = _dateServices.ConvertFromLocalizedString(formDate, formTime);
+                    inputDate = _dateLocalization.StringToDatetime(formDate, formTime);
+                }
+                catch (Exception) {
                     inputDate = null;
                 }
-                vmsForTasks.Add(new ScheduledTaskViewModel {
+                vmsForTasks.Add(new ScheduledTaskViewModel(_orchardServices, _dateServices) {
                     Id = int.Parse(formData[thisObject + "Id"]),
                     SignalName = formData[thisObject + "SignalName"],
                     ScheduledStartUTC = inputDate,
@@ -106,18 +113,21 @@ namespace Laser.Orchard.TaskScheduler.Services {
                         //the task is definitely not running, so we may safely remove the scheduler
                         _orchardServices.ContentManager.Remove(_orchardServices.ContentManager.Get(vm.Id));
                         //(note that a handler is invoked to clean up the repositor)
-                    } else {
+                    }
+                    else {
                         //update the part
                         ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.Get<ScheduledTaskPart>(vm.Id);
                         vm.UpdatePart(part);
                     }
-                } else {
+                }
+                else {
                     //we have to create a new record
                     if (!vm.Delete) {
                         //we only create it if it was not also deleted already
-                        ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.New<ScheduledTaskPart>("ScheduledTaskPart");
+                        ScheduledTaskPart part = (ScheduledTaskPart)_orchardServices.ContentManager.New<ScheduledTaskPart>("ScheduledTask");
                         vm.UpdatePart(part);
                         _orchardServices.ContentManager.Create(part);
+                        vm.Id = part.Id;
                     }
                 }
             }
@@ -138,8 +148,8 @@ namespace Laser.Orchard.TaskScheduler.Services {
             }
             _taskManager.CreateTask(taskTypeStr, part.ScheduledStartUTC ?? DateTime.UtcNow, ci);
             part.RunningTaskId = _repoTasks.Get(str => str.TaskType.Equals(taskTypeStr)).Id;
-            
         }
+
         /// <summary>
         /// Unschedule an existing task based on the view model
         /// </summary>
@@ -152,7 +162,8 @@ namespace Laser.Orchard.TaskScheduler.Services {
                 var str = _repoTasks.Get(tId);
                 if (str != null) {
                     _repoTasks.Delete(str);
-                } else {
+                }
+                else {
                     //tId might have changed since the moment we got the information into the view models
                     //e.g. if the task is periodic, it will generate a new Id and update it.
                     //let's check here if there are tasks with the part id in the TaskType
@@ -168,9 +179,8 @@ namespace Laser.Orchard.TaskScheduler.Services {
                     }
                 }
             }
-            
-            part.RunningTaskId = 0;
 
+            part.RunningTaskId = 0;
         }
 
         /// <summary>
@@ -179,32 +189,44 @@ namespace Laser.Orchard.TaskScheduler.Services {
         /// <param name="part">The part containing the scheduling information</param>
         /// <returns>A <type>DateTime</type> object containing the moment when the task whoudl be scheduled next.</returns>
         public DateTime ComputeNextScheduledTime(ScheduledTaskPart part) {
-            DateTime result = DateTime.UtcNow;
-            switch (part.PeriodicityUnit) {
-                case TimeUnits.Seconds:
-                    result = result.AddSeconds(part.PeriodicityTime);
-                    break;
-                case TimeUnits.Minutes:
-                    result = result.AddMinutes(part.PeriodicityTime);
-                    break;
-                case TimeUnits.Hours:
-                    result = result.AddHours(part.PeriodicityTime);
-                    break;
-                case TimeUnits.Days:
-                    result = result.AddDays(part.PeriodicityTime);
-                    break;
-                case TimeUnits.Weeks:
-                    result = result.AddDays(7 * part.PeriodicityTime);
-                    break;
-                case TimeUnits.Months:
-                    result = result.AddMonths(part.PeriodicityTime);
-                    break;
-                case TimeUnits.Years:
-                    result = result.AddYears(part.PeriodicityTime);
-                    break;
-                default:
-                    break;
+            DateTime result = part.ScheduledStartUTC == null ? DateTime.UtcNow : part.ScheduledStartUTC.Value;
+            // incrementa la start date in base alla periodicità fino a raggiungere una start date futura
+            // la periodicità è sicuramente > 0 come verificato nell'handler, quindi il ciclo seguente non è infinito
+            while (result <= DateTime.UtcNow) {
+                switch (part.PeriodicityUnit) {
+                    case TimeUnits.Seconds:
+                        result = result.AddSeconds(part.PeriodicityTime);
+                        break;
+
+                    case TimeUnits.Minutes:
+                        result = result.AddMinutes(part.PeriodicityTime);
+                        break;
+
+                    case TimeUnits.Hours:
+                        result = result.AddHours(part.PeriodicityTime);
+                        break;
+
+                    case TimeUnits.Days:
+                        result = result.AddDays(part.PeriodicityTime);
+                        break;
+
+                    case TimeUnits.Weeks:
+                        result = result.AddDays(7 * part.PeriodicityTime);
+                        break;
+
+                    case TimeUnits.Months:
+                        result = result.AddMonths(part.PeriodicityTime);
+                        break;
+
+                    case TimeUnits.Years:
+                        result = result.AddYears(part.PeriodicityTime);
+                        break;
+
+                    default:
+                        break;
+                }
             }
+            part.ScheduledStartUTC = result;
             return result;
         }
     }

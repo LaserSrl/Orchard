@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using Orchard.Core.Common.ViewModels;
 using Orchard.Core.Contents.ViewModels;
 
 namespace Laser.Orchard.AdvancedSearch.ViewModels {
@@ -21,7 +22,39 @@ namespace Laser.Orchard.AdvancedSearch.ViewModels {
         public string SelectedStatus { get; set; }
 
         public string SelectedFromDate { get; set; }
+        public DateTimeEditor SelectedFromDateEditor
+        {
+            get
+            {
+                return new DateTimeEditor {
+                    Date = SelectedFromDate,
+                    Time = "",
+                    ShowDate = true,
+                    ShowTime = false
+                };
+            }
+            set
+            {
+                SelectedFromDate = value.Date;
+            }
+        }
         public string SelectedToDate { get; set; }
+        public DateTimeEditor SelectedToDateEditor
+        {
+            get
+            {
+                return new DateTimeEditor {
+                    Date = SelectedToDate,
+                    Time = "",
+                    ShowDate = true,
+                    ShowTime = false
+                };
+            }
+            set
+            {
+                SelectedToDate = value.Date;
+            }
+        }
 
         //[DataType(DataType.Date)]
         //public DateTime? SelectedFromDate { get;  }

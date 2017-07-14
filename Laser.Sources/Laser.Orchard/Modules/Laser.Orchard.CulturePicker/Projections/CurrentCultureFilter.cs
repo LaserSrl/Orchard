@@ -47,10 +47,14 @@ namespace Laser.Orchard.CulturePicker.Projections
 
         public void ApplyFilter(dynamic context)
         {
-            string currentCulture = _workContextAccessor.GetContext().CurrentCulture;
-            int currentCultureId = _cultureManager.GetCultureByName(currentCulture).Id;
             string siteCulture = _workContextAccessor.GetContext().CurrentSite.SiteCulture;
             int siteCultureId = _cultureManager.GetCultureByName(siteCulture).Id;
+            string currentCulture = _workContextAccessor.GetContext().CurrentCulture;
+            var currentCultureRecord = _cultureManager.GetCultureByName(currentCulture);
+            int currentCultureId = siteCultureId;
+            if (currentCultureRecord != null) {
+                currentCultureId = currentCultureRecord.Id;
+            }
 
             var query = (IHqlQuery)context.Query;
             if (currentCultureId == siteCultureId)

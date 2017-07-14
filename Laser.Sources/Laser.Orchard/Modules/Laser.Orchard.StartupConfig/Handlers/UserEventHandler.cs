@@ -71,6 +71,14 @@ namespace Laser.Orchard.StartupConfig.Handlers {
 
         }
 
+        public void LoggingIn(string userNameOrEmail, string password) {
+            //TODO: Workflowing event. makes sense?
+        }
+
+        public void LogInFailed(string userNameOrEmail, string password) {
+            //TODO: Workflowing event. makes sense?
+        }
+
         public void SentChallengeEmail(global::Orchard.Security.IUser user) {
             var content = user.ContentItem;
             _workflowManager.TriggerEvent("OnUserEvent", content, () => new Dictionary<string, object> { { "Content", content }, { "Action", "SentChallengeEmail" } });

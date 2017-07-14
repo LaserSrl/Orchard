@@ -7,14 +7,16 @@ using System;
 
 namespace Laser.Orchard.Maps.Models
 {
-    [Obsolete("Replaced with 'MapVersionRecord' to enable versioning of this content")]
-    public class MapRecord : ContentPartRecord
-    {
-        public virtual float Latitude { get; set; }
-        public virtual float Longitude { get; set; }
-        public virtual string LocationInfo { get; set; }
-        public virtual string LocationAddress { get; set; }
-    }
+    #region Obsolete code
+    //[Obsolete("Replaced with 'MapVersionRecord' to enable versioning of this content")]
+    //public class MapRecord : ContentPartRecord
+    //{
+    //    public virtual float Latitude { get; set; }
+    //    public virtual float Longitude { get; set; }
+    //    public virtual string LocationInfo { get; set; }
+    //    public virtual string LocationAddress { get; set; }
+    //}
+    #endregion
 
     public class MapVersionRecord : ContentPartVersionRecord {
         public virtual float Latitude { get; set; }

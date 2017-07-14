@@ -75,7 +75,6 @@ namespace Laser.Orchard.ContactForm {
             _utilServices.EnableFeature("Laser.Orchard.TemplateManagement.Parsers.Razor");
 
             _utilServices.EnableFeature("Laser.Orchard.StartupConfig");
-            _utilServices.EnableFeature("Laser.Orchard.StartupConfig.MailExtensions");
 
             return 4;
         }

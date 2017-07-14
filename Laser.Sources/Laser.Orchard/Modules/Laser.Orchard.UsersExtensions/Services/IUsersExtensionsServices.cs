@@ -20,6 +20,7 @@ using Orchard.Users.Events;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
@@ -199,9 +200,14 @@ namespace Laser.Orchard.UsersExtensions.Services {
                 long phoneNumberComplete = 0;
                 if (long.TryParse(String.Concat(internationalPrefix.Trim(), phoneNumber.Trim()), out phoneNumberComplete)) {
                     //return _smsServices.SendSms(new long[] { phoneNumberComplete }, user.UserName + "\r\n" + url);
-                    var smsHqlList = new List<SmsHQL>();
-                    smsHqlList.Add(new SmsHQL { SmsPrefix = "", SmsNumber = phoneNumberComplete.ToString(), Id = 0, Title = "" });
-                    return _smsServices.SendSms(smsHqlList, user.UserName + "\r\n" + url);
+
+                    Hashtable hs = new Hashtable();
+                    hs.Add("SmsContactNumber", phoneNumberComplete);
+
+                    List<Hashtable> listaDestinatari = new List<Hashtable>();
+                    listaDestinatari.Add(hs);
+
+                    return _smsServices.SendSms(listaDestinatari, user.UserName + "\r\n" + url);
                 }
             }
 

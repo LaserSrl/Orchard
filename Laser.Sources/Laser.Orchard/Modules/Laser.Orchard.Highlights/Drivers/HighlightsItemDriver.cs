@@ -7,13 +7,12 @@ using Orchard.ContentManagement.Drivers;
 using System.Collections.Generic;
 using Orchard.ContentManagement.Handlers;
 using System;
-using System.Collections.Generic;
 using Orchard.DisplayManagement;
 using Laser.Orchard.Highlights.ViewModels;
 
 namespace Laser.Orchard.Highlights.Drivers {
 
-    public class HighlightsItemDriver : ContentPartDriver<HighlightsItemPart> {
+    public class HighlightsItemDriver : ContentPartCloningDriver<HighlightsItemPart> {
 
         private readonly IHighlightsService _HighlightsService;
         private readonly IWorkContextAccessor _workContext;
@@ -34,18 +33,19 @@ namespace Laser.Orchard.Highlights.Drivers {
 
         }
 
-        protected override string Prefix {
+        protected override string Prefix
+        {
             get { return "HighlightsItem"; }
         }
 
         protected override DriverResult Display(HighlightsItemPart part, String displayType, dynamic shapeHelper) {
             ViewsInfos viewInfos = _HighlightsService.ChooseView(part);
-            var dict = new Dictionary<string, object> { 
+            var dict = new Dictionary<string, object> {
                 { "HighlightsItem", _HighlightsService.MapContentToHighlightsItemViewModel(part) },
                 { "DisplayTemplate", displayType }
             };
             var args = Arguments.From(dict.Values, dict.Keys);
-            
+
             return ContentShape(
                 viewInfos.ResultShapeName,
                 () => _shapeFactory.Create(viewInfos.ResultShapeName, args));
@@ -148,9 +148,7 @@ namespace Laser.Orchard.Highlights.Drivers {
                 context.Element(part.PartDefinition.Name).SetAttributeValue("LinkUrl", part.LinkUrl);
             }
 
-            if (part.Video != null) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("Video", part.Video);
-            }
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Video", part.Video);
 
             if (part.Sottotitolo != null) {
                 context.Element(part.PartDefinition.Name).SetAttributeValue("Sottotitolo", part.Sottotitolo);
@@ -160,15 +158,19 @@ namespace Laser.Orchard.Highlights.Drivers {
                 context.Element(part.PartDefinition.Name).SetAttributeValue("TitleSize", part.TitleSize);
             }
 
-            if (part.ItemOrder != null) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("ItemOrder", part.ItemOrder);
-            }
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ItemOrder", part.ItemOrder);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("LinkTarget", part.LinkTarget);
+        }
 
-            if (part.LinkTarget != null) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("LinkTarget", part.LinkTarget);
-            }
-
-
+        protected override void Cloning(HighlightsItemPart originalPart, HighlightsItemPart clonePart, CloneContentContext context) {
+            clonePart.Video = originalPart.Video;
+            clonePart.Sottotitolo = originalPart.Sottotitolo;
+            clonePart.TitleSize = originalPart.TitleSize;
+            clonePart.HighlightsGroupPartRecordId = originalPart.HighlightsGroupPartRecordId;
+            clonePart.LinkUrl = originalPart.LinkUrl;
+            clonePart.LinkTarget = originalPart.LinkTarget;
+            clonePart.LinkText = originalPart.LinkText;
+            clonePart.ItemOrder = originalPart.ItemOrder;
         }
     }
 }

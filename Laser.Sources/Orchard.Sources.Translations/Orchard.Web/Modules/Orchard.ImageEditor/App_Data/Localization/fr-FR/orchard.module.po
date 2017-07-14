@@ -1,20 +1,30 @@
+#. "Name"
+#: "~/Modules/Orchard.ImageEditor/Module.txt"
 msgctxt "~/Modules/Orchard.ImageEditor/Module.txt"
 msgid "Image Editor"
 msgstr "Editeur d'image"
 
+#. "Author"
+#: "~/Modules/Orchard.ImageEditor/Module.txt"
 msgctxt "~/Modules/Orchard.ImageEditor/Module.txt"
 msgid "The Orchard Team"
 msgstr "L'équipe Orchard"
 
+#. "Website"
+#: "~/Modules/Orchard.ImageEditor/Module.txt"
 msgctxt "~/Modules/Orchard.ImageEditor/Module.txt"
 msgid "http://orchardproject.net"
 msgstr "http://orchardproject.net"
 
+#. "Description"
 #. "Orchard.ImageEditor.Description"
+#: "~/Modules/Orchard.ImageEditor/Module.txt"
 msgctxt "~/Modules/Orchard.ImageEditor/Module.txt"
 msgid "Adds a client side image editor for Media Library"
 msgstr "Ajoute un éditeur client side pour la librairie de médias"
 
+#. "Orchard.ImageEditor.Category"
+#: "~/Modules/Orchard.ImageEditor/Module.txt"
 msgctxt "~/Modules/Orchard.ImageEditor/Module.txt"
 msgid "Media"
 msgstr "Médias"
@@ -191,6 +201,51 @@ msgstr "Appliquer"
 
 #: "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.ResizeOptions.cshtml"
 msgctxt "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.ResizeOptions.cshtml"
+msgid "Cancel"
+msgstr "Annuler"
+
+#: "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.Rotate.cshtml"
+msgctxt "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.Rotate.cshtml"
+msgid "Rotate"
+msgstr "Rotation"
+
+#: "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.RotateOptions.cshtml"
+msgctxt "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.RotateOptions.cshtml"
+msgid "Angle"
+msgstr "Angle"
+
+#: "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.RotateOptions.cshtml"
+msgctxt "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.RotateOptions.cshtml"
+msgid "None"
+msgstr "Aucune"
+
+#: "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.RotateOptions.cshtml"
+msgctxt "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.RotateOptions.cshtml"
+msgid "90 deg. CW"
+msgstr "90 degrés à droite"
+
+#: "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.RotateOptions.cshtml"
+msgctxt "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.RotateOptions.cshtml"
+msgid "90 deg. CCW"
+msgstr "90 degrés à gauche"
+
+#: "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.RotateOptions.cshtml"
+msgctxt "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.RotateOptions.cshtml"
+msgid "180 deg."
+msgstr "180 degrés"
+
+#: "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.RotateOptions.cshtml"
+msgctxt "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.RotateOptions.cshtml"
+msgid "Rotation angle."
+msgstr "Angle de rotation."
+
+#: "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.RotateOptions.cshtml"
+msgctxt "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.RotateOptions.cshtml"
+msgid "Apply"
+msgstr "Appliquer"
+
+#: "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.RotateOptions.cshtml"
+msgctxt "~/Modules/Orchard.ImageEditor/Views/Parts/Image.Editor.RotateOptions.cshtml"
 msgid "Cancel"
 msgstr "Annuler"
 

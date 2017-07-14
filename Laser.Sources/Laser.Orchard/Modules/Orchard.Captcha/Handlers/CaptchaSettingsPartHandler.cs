@@ -24,7 +24,7 @@ namespace Orchard.Captcha.Handlers
         {
             if (context.ContentItem.ContentType != "Site") return;
             base.GetItemMetadata(context);
-            context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("Re-Captcha")));
+            context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("ReCaptcha")));
         }
     }
 }

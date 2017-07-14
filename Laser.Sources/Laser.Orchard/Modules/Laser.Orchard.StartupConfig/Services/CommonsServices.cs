@@ -73,7 +73,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                 parametri = element.Attribute("par").Value;
                 validateByUtc = DateTime.Parse(element.Attribute("utc").Value, CultureInfo.InvariantCulture);
                 return _clock.UtcNow <= validateByUtc;
-            } catch (Exception ex) {
+            } catch {
                 return false;
             }
         }

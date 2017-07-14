@@ -50,6 +50,15 @@
                         </div>
                         <div class="metadata">
                             <ul class="pageStatus">
+                                @{
+                                    dynamic publishLater = contentIndexVM.ContentItem.Parts.FirstOrDefault(x => x.PartDefinition.Name == "PublishLaterPart");
+                                }
+                                @if (publishLater != null) {
+                                    if(publishLater.ScheduledPublishUtc.Value != null) {
+                                        <text><li>@T("Scheduled"): @string.Format("{0}", publishLater.ScheduledPublishUtc.Value)&nbsp;&vert;&nbsp;</li></text>
+                                    }
+                                }
+
                                 @*                                          @if  ((bool)contentIndexVM.Option){
                                 <li> @T("Published")&nbsp;&vert;&nbsp;
                                 </li>

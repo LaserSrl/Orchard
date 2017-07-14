@@ -16,7 +16,7 @@
   </Match>
 
   <Match ContentType="BlogPost">
-    <Place Fields_MediaLibraryPicker-Gallery="Content:1" Fields_TaxonomyField_Localized="-" />
+    <Place Fields_MediaLibraryPicker-Gallery="Content:1" Fields_TaxonomyField="-" />
     <Match DisplayType="Summary">
       <Place Parts_Comments_Count="-" />
     </Match>

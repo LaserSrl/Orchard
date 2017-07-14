@@ -40,11 +40,11 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         private readonly dynamic TestPermission = Permissions.ManageContact;
         private readonly ICommunicationService _communicationService;
         private readonly IScheduledTaskManager _taskManager;
-        private readonly ISessionLocator _session;
+        private readonly ITransactionManager _transactionManager;
         private readonly INotifier _notifier;
         private readonly ShellSettings _shellSettings;
         private readonly IUserService _userService;
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
         private readonly string _contactsImportRelativePath;
 
         public ContactsAdminController(
@@ -52,7 +52,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             INotifier notifier,
             IContentManager contentManager,
             ICommunicationService communicationService,
-            ISessionLocator session,
+            ITransactionManager transactionManager,
             IScheduledTaskManager taskManager,
             ShellSettings shellSettings,
             IUserService userService
@@ -63,7 +63,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             T = NullLocalizer.Instance;
             _communicationService = communicationService;
             _taskManager = taskManager;
-            _session = session;
+            _transactionManager = transactionManager;
             _shellSettings = shellSettings;
             _userService = userService;
             _contactsImportRelativePath = string.Format("~/App_Data/Sites/{0}/Import/Contacts", _shellSettings.Name);
@@ -116,24 +116,19 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
             ContentItem content;
             if (id == 0) {
                 var newContent = _contentManager.New(contentType);
-
-                if (draftable) {
-                    _contentManager.Create(newContent, VersionOptions.Draft);
-                } else {
-                    _contentManager.Create(newContent);
-                }
-
+                // crea sempre in draft per poter pubblicare dopo la valorizzazione dei campi, 
+                // in modo da aggiornare i dati nelle tabelle fieldIndexRecord
+                _contentManager.Create(newContent, VersionOptions.Draft);
                 content = newContent;
             } else {
-                if (draftable) {
-                    content = _contentManager.Get(id, VersionOptions.DraftRequired);
-                } else {
-                    content = _contentManager.Get(id);
-                }
+                content = _contentManager.Get(id);
                 // verifica che il contact non sia legato a un utente
                 if (content.As<CommunicationContactPart>().UserIdentifier != 0) {
                     return new HttpUnauthorizedResult();
                 }
+                // forza published a false per poter pubblicare dopo la valorizzazione dei campi, 
+                // in modo da aggiornare i dati nelle tabelle fieldIndexRecord
+                content.VersionRecord.Published = false;
             }
 
             var model = _contentManager.UpdateEditor(content, this);
@@ -146,7 +141,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                 _orchardServices.TransactionManager.Cancel();
                 return View(model);
             } else {
-                if (draftable) {
+                if (!draftable) {
                     _contentManager.Publish(content);
                 }
             }
@@ -212,7 +207,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                         if (search.ThirdPartyAuthorization.HasValue) myQueryMail += "and EmailRecord.AutorizzatoTerzeParti = :tpuse ";
                         myQueryMail += "order by cir.Id";
 
-                        var mailQueryToExecute = _session.For(null).CreateQuery(myQueryMail);
+                        var mailQueryToExecute = _transactionManager.GetSession().CreateQuery(myQueryMail);
                         if (!string.IsNullOrEmpty(search.Expression)) mailQueryToExecute.SetParameter("mail", expression);
                         if (search.CommercialUseAuthorization.HasValue) mailQueryToExecute.SetParameter("commuse", search.CommercialUseAuthorization.Value, NHibernateUtil.Boolean);
                         if (search.ThirdPartyAuthorization.HasValue) mailQueryToExecute.SetParameter("tpuse", search.ThirdPartyAuthorization.Value, NHibernateUtil.Boolean);
@@ -250,7 +245,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                         if (search.ThirdPartyAuthorization.HasValue) myQuerySms += "and SmsRecord.AutorizzatoTerzeParti = :tpuse ";
                         myQuerySms += "order by cir.Id";
 
-                        var smsQueryToExecute = _session.For(null).CreateQuery(myQuerySms);
+                        var smsQueryToExecute = _transactionManager.GetSession().CreateQuery(myQuerySms);
                         if (!string.IsNullOrEmpty(search.Expression)) smsQueryToExecute.SetParameter("sms", expression);
                         if (search.CommercialUseAuthorization.HasValue) smsQueryToExecute.SetParameter("commuse", search.CommercialUseAuthorization.Value, NHibernateUtil.Boolean);
                         if (search.ThirdPartyAuthorization.HasValue) smsQueryToExecute.SetParameter("tpuse", search.ThirdPartyAuthorization.Value, NHibernateUtil.Boolean);

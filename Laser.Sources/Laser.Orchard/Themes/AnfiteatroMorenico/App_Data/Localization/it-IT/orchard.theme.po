@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -195,6 +195,10 @@ msgstr "Logo E015"
 msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
 msgid "Logo Regione Piemonte"
 msgstr "Logo Regione Piemonte"
+
+msgctxt "~/Themes/AnfiteatroMorenico/Views/Layout.cshtml"
+msgid "Logo Turismo Torino"
+msgstr "Logo Turismo Torino"
 
 msgctxt "~/Themes/AnfiteatroMorenico/Views/MenuItemLink.cshtml"
 msgid "Go to page {0}"

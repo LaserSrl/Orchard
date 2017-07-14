@@ -2,6 +2,7 @@
 @using Laser.Orchard.Commons.Helpers;
 @using Laser.Orchard.TaskScheduler;
 @using Orchard;
+@using System.Globalization;
 
 @model Laser.Orchard.TaskScheduler.ViewModels.ScheduledTaskViewModel
 
@@ -47,18 +48,18 @@
         @moreDetails
     </a>
 
-    <div id="collapse_@appId" class="collapse">
+    <div id="collapse_@appId"  style="display:none">
         <label for="@Html.FieldIdFor(m => m.ScheduledStartUTC)">@T("Start Date")</label>
-        @Html.TextBoxFor(m => m.ScheduledStartUTC, new { @class = "text", @title = @T("Invalid dates will be ignored") })
+        @Html.EditorFor(m => m.ScheduledStartUTCEditor)
 
         <label>@T("Periodicity")</label>
             @Html.TextBoxFor(m => m.PeriodicityTime, new {
-            @title = T("Amount of time that should pass between repetitions of the task (integer)").ToString(),
-            @id = "time_" + @appId,
-            @class = "text small",
-            @pattern = "[0-9]*{1,}",
-            @required = "required"
-        })
+           @title = T("Amount of time that should pass between repetitions of the task (integer)").ToString(),
+           @id = "time_" + @appId,
+           @class = "text small",
+           @pattern = "[0-9]*{1,}",
+           @required = "required"
+       })
 
         @Html.DropDownListFor(m => m.PeriodicityUnit, new SelectList(Enum.GetValues(typeof(TimeUnits))), new {
             @title = @T("The time units for the repetitions of the task.")
@@ -80,28 +81,36 @@
         <br />
         @Html.LinkToRemoveNestedForm("<i class=\"fa fa-times\" style=\"color: red\"></i> " + T(" Remove this task").ToString(), ".j_scheduledtasks", "input.ph-mark-for-delete")
         </text>
+    } else {
+        <text>
+        <br />
+        @T("The task is scheduled for execution. Unschedule it before removing it.")
+        </text>
     }
 
-
+    <hr style="margin-top:0.5em; margin-bottom:0.5em;"/>
     <script type="text/javascript">
-        $(function () {
-            $('#@Html.FieldIdFor(m => m.ScheduledStartUTC)').datetimepicker({ 'showTimepicker': true, showAnim: "", changeYear: true, changeMonth: true });
-            })
-    </script>
 
-    <script type="text/javascript">
         $(function () {
             $('#collapseButton_@appId').click(function () {
-                if ($('#collapse_@appId').attr("aria-expanded") === "true") {
+                if ($('#collapse_@appId').is(":visible")) {
                     this.innerHTML = "@moreDetails";
-                } else {
-                    this.innerHTML = "@fewDetails";
+                    $('#collapse_@appId').hide(400);
                 }
+                else {
+                    this.innerHTML = "@fewDetails";
+                    $('#collapse_@appId').show(400);
+                }
+                $('html, body').animate({
+                    scrollTop: $($(this).attr('href')).offset().top
+                }, 500);
+                return false;
             });
-        }());
+        });
     </script>
-    
-    <hr style="margin-top:0.5em; margin-bottom:0.5em;"/>
-
 </div>
+
+
+
+
 

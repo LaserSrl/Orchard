@@ -85,7 +85,8 @@ namespace Laser.Orchard.Translator.Controllers
             //list = list.Select(dir => dir.Remove(0, dir.LastIndexOf(Path.DirectorySeparatorChar) + 1)).ToList();
             //list = list.Where(dir => elementsToTranslate.Any(x => x == dir)).ToList();
             //list.Sort((x, y) => string.Compare(x, y));
-            var list = elementsToTranslate;
+
+            var list = elementsToTranslate.Where(x => !String.IsNullOrWhiteSpace(x)).ToList();
             list.Sort((x, y) => string.Compare(x, y)); 
             List<TranslationTreeNodeViewModel> treeList = new List<TranslationTreeNodeViewModel>();
             foreach (var item in list)

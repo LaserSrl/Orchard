@@ -50,7 +50,7 @@ namespace Laser.Orchard.Commons.Helpers {
                     foreach (var dic in DefaultPropertyValues) {
                         nestedObject.GetType().GetProperty(dic.Key).SetValue(nestedObject, dic.Value, null);
                     }
-                } catch (Exception ex) { }
+                } catch (Exception) { }
             }  // save the field prefix name so we can reset it when we're doing
             string oldPrefix = htmlHelper.ViewData.TemplateInfo.HtmlFieldPrefix;
             // if the prefix isn't empty, then prepare to append to it by appending another delimiter

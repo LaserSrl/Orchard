@@ -6,15 +6,22 @@
     </label>
     @{
         string classS = "text large";
-        if (Model.Settings.Tokenized){
+        if (Model.Settings.Tokenized) {
             classS += " tokenized";
         }
         object tbAttributes;
-        if (Model.IsEditAuthorized){
-            tbAttributes = new {@class = classS};
-        } else {
-            tbAttributes = new {@class = classS, disabled = true};
+        if (Model.IsEditAuthorized) {
+            tbAttributes = new { @class = classS };
+        }
+        else {
+            tbAttributes = new { @class = classS, disabled = true };
         }
     }
-    @Html.TextBoxFor(m=>m.Value, @tbAttributes)
+     
+    @if ((Model.Value??"").IndexOf("\n")>-1) {
+        @Html.TextAreaFor(m => m.Value, @tbAttributes)
+    }
+    else {
+        @Html.TextBoxFor(m => m.Value, @tbAttributes)
+    }
 </fieldset>
