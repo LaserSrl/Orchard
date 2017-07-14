@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Orchard>
   <Recipe>
-    <Name>SetupDemoContents</Name>
+    <Name>SetupDemoContentsFashion</Name>
     <Author>Laser srl</Author>
     <WebSite>www.laser-group.com</WebSite>
     <Version>1.0</Version>
@@ -10,6 +10,24 @@
     <IsSetupRecipe>false</IsSetupRecipe>
   </Recipe>
   <Content>
+    <MenuItem Id="/Identifier=061be955c9724a00a38a4454c7765c51" Status="Published">
+      <CommonPart />
+      <IdentityPart Identifier="061be955c9724a00a38a4454c7765c51" />
+      <MenuItemPart Url="~/products/new-arrivals" />
+      <MenuPart Menu="/Identifier=cbb7f6fc7fd644ddac5aaa2c5c4511a2" MenuText="New Arrivals" MenuPosition="3" />
+    </MenuItem>
+    <MenuItem Id="/Identifier=5c2461e14f4646d7aee538672ac28566" Status="Published">
+      <CommonPart />
+      <IdentityPart Identifier="5c2461e14f4646d7aee538672ac28566" />
+      <MenuItemPart Url="~/" />
+      <MenuPart Menu="/Identifier=cbb7f6fc7fd644ddac5aaa2c5c4511a2" MenuText="Summer Store" MenuPosition="2" />
+    </MenuItem>
+    <MenuItem Id="/Identifier=83071159194a45df865337e7ddce1964" Status="Published">
+      <CommonPart />
+      <IdentityPart Identifier="83071159194a45df865337e7ddce1964" />
+      <MenuItemPart Url="~/" />
+      <MenuPart Menu="/Identifier=cbb7f6fc7fd644ddac5aaa2c5c4511a2" MenuText="Latest Watches" MenuPosition="4" />
+    </MenuItem>
     <CustomTemplate Id="/Identifier=0431b7da7ee04c70a07263c6c1c9a420" Status="Published">
       <BooleanField.ForEmailCommunication Value="true" />
       <NumericField.Creator Value="2" />

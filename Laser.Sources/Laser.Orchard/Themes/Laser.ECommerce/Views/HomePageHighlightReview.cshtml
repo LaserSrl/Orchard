@@ -28,9 +28,10 @@
     var targetUrlField = fields.Where(fi => fi is LinkField && fi.Name == "TargetUrl")
         .FirstOrDefault() as LinkField;
     var targetUrl = targetUrlField == null ? string.Empty : targetUrlField.Value;
+    targetUrl = string.IsNullOrWhiteSpace(targetUrl) ? "#" : targetUrl;
 
     var picturesField = fields.Where(fi => fi is MediaLibraryPickerField && fi.Name == "Picture")
-        .FirstOrDefault() as MediaLibraryPickerField;
+.FirstOrDefault() as MediaLibraryPickerField;
     var pictures = picturesField == null ? new MediaPart[0] : picturesField.MediaParts.ToArray();
     pictureUrl = pictures.Any() ? pictures[0].MediaUrl : "";
 }

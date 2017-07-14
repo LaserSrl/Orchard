@@ -24,6 +24,8 @@
     var endTimeField = fields.Where(fi => fi is DateTimeField && fi.Name == "EndDate")
         .FirstOrDefault() as DateTimeField;
     var endTime = endTimeField == null ? (DateTime?)null : endTimeField.DateTime;
+    var rightNow = DateTime.Now;
+    endTime = endTime.HasValue && endTime.Value > rightNow ? endTime : null;
 
     var titleOne = TextFieldValue("TitleOne");
     var titleTwo = TextFieldValue("TitleTwo");
@@ -34,8 +36,9 @@
     var targetUrlField = fields.Where(fi => fi is LinkField && fi.Name == "TargetUrl")
         .FirstOrDefault() as LinkField;
     var targetUrl = targetUrlField == null ? "#" : targetUrlField.Value;
-    textTwo = targetUrlField == null ? 
-        textTwo : string.IsNullOrWhiteSpace(targetUrlField.Text) ? 
+    targetUrl = string.IsNullOrWhiteSpace(targetUrl) ? "#" : targetUrl;
+    textTwo = targetUrlField == null ?
+        textTwo : string.IsNullOrWhiteSpace(targetUrlField.Text) ?
             textTwo : targetUrlField.Text;
 
     var picturesField = fields.Where(fi => fi is MediaLibraryPickerField && fi.Name == "Picture")
@@ -65,7 +68,7 @@
                 <h4>@textThree</h4>
                 @if (endTime.HasValue) {
                     Script.Include("jquery.countdown.js", "jquery.countdown.min.js");
-                    var rightNow = DateTime.Now;
+                    
                     <div class="timer_wrap">
                         <div id="counter_@guid" class="counter_timer"> </div>
                     </div>

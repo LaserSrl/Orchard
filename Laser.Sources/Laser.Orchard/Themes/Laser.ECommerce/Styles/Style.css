@@ -680,6 +680,10 @@ ul.multi-column-dropdown h6 {
 .color-quality ul li a.gray span {
     background: #ff00ff;
 }
+
+li.home_categories_category_label > a {
+    padding: 0.5em 0.2em;
+}
 /*-- //banner-bottom --*/
 /*-- home-highlight-group --*/
 .home-highlight-group h2,.new-products h3,.top-brands h3,.ecommerce_related_contents h3,.team h3,.mail h3,.ship h3{

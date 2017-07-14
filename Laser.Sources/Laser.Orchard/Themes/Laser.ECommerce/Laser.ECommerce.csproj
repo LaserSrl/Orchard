@@ -118,6 +118,7 @@
     <Content Include="Recipes\SetupProjections.recipe.xml" />
     <Content Include="Recipes\SetupTaxonomies.recipe.xml" />
     <Content Include="Recipes\SetupWidgets.recipe.xml" />
+    <Content Include="Recipes\SetupWineDemo.recipe.xml" />
     <Content Include="Scripts\easyResponsiveTabs.js" />
     <Content Include="Scripts\easyResponsiveTabs.min.js">
       <DependentUpon>easyResponsiveTabs.js</DependentUpon>

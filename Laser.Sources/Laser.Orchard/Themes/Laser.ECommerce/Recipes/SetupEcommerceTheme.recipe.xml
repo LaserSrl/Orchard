@@ -97,7 +97,7 @@
     <OpenAuthenticationSettingsPart AutoRegistrationEnabled="true" />
     <RegistrationSettingsPart EnableLostPassword="false" NotificationsRecipients="" NotifyModeration="false" UsersAreModerated="false" UsersCanRegister="true" UsersMustValidateEmail="false" ValidateEmailContactEMail="" ValidateEmailRegisteredWebsite="" />
     <SiteSettingsPart SupportedCultures="en-US" MaxPagedCount="0" MaxPageSize="6" PageSize="6" SiteCulture="en-US" />
-    <StripeSettingsPart PublishableKey="pk_test_vXURuMWJ03SIxl20PUfg5vOm" SecretKey="sk_test_kF1MLzhUTM18hCiSJl1eKzhq" Currency="USD" />
+    <StripeSettingsPart PublishableKey="pk_test_vXURuMWJ03SIxl20PUfg5vOm" SecretKey="sk_test_kF1MLzhUTM18hCiSJl1eKzhq" Currency="EUR" />
     <ThemeSiteSettingsPart CurrentThemeName="Laser.ECommerce" />
   </Settings>
   <ContentDefinition>
@@ -131,6 +131,17 @@
         <NewsletterDefinitionPart />
         <TitlePart />
       </NewsletterDefinition>
+      <Page ContentTypeSettings.Creatable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search" ContentTypeLayoutSettings.Placeable="False" DisplayName="Page">
+        <AutoroutePart AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-page&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;}]" AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
+        <CommonPart DateEditorSettings.ShowDateEditor="True" OwnerEditorSettings.ShowOwnerEditor="True" />
+        <LayoutPart LayoutTypePartSettings.IsTemplate="False" />
+        <LocalizationPart />
+        <MenuPart />
+        <Page />
+        <PublishLaterPart />
+        <TagsPart />
+        <TitlePart />
+      </Page>
       <Product ContentTypeSettings.Creatable="True" TypeIndexing.Indexes="" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="False" ContentTypeSettings.Securable="False" ContentTypeLayoutSettings.Placeable="False" DisplayName="Product">
         <AutoroutePart AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-product&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;}]" AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <BodyPart BodyTypePartSettings.Flavor="Html" />
