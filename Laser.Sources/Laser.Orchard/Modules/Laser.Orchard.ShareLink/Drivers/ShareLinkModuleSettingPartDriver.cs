@@ -31,11 +31,13 @@ namespace Laser.Orchard.ShareLink.Drivers {
             return ContentShape("Parts_ShareLinkModuleSetting", () => {
                 var viewModel = new ShareLinkModuleSettingVM();
                 var getpart = _orchardServices.WorkContext.CurrentSite.As<ShareLinkModuleSettingPart>();
+                viewModel.SharedBody = getpart.SharedBody;
                 viewModel.SharedText = getpart.SharedText;
                 viewModel.SharedLink = getpart.SharedLink;
                 viewModel.SharedImage = getpart.SharedImage;
                 if (updater != null) {
                     if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
+                        part.SharedBody = viewModel.SharedBody;
                         part.SharedText = viewModel.SharedText;
                         part.SharedLink = viewModel.SharedLink;
                         part.SharedImage = viewModel.SharedImage;

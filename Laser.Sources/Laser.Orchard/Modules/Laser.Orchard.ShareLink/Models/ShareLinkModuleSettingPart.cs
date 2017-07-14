@@ -4,6 +4,10 @@ using Orchard.ContentManagement.Records;
 namespace Laser.Orchard.ShareLink.Models {
 
     public class ShareLinkModuleSettingPart : ContentPart<ShareLinkModuleSettingPartRecord> {
+        public string SharedBody {
+            get { return this.Retrieve(r => r.SharedBody); }
+            set { this.Store(r => r.SharedBody, value); }
+        }
 
         public string SharedLink {
             get { return this.Retrieve(r => r.SharedLink); }
@@ -22,6 +26,7 @@ namespace Laser.Orchard.ShareLink.Models {
     }
 
     public class ShareLinkModuleSettingPartRecord : ContentPartRecord {
+        public virtual string SharedBody { get; set; }
         public virtual string SharedLink { get; set; }
         public virtual string SharedText { get; set; }
         public virtual string SharedImage { get; set; }
