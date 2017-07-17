@@ -252,7 +252,8 @@
     <Content Include="Views\NavigationTaxonomyMenuLink.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\DemoMedia.zip" />
+    <Content Include="Assets\FashionDemoMedia.zip" />
+    <Content Include="Assets\DemoShopWineMedia.zip" />
     <None Include="bundleconfig.json" />
     <Content Include="Views\Banner.cshtml" />
     <Content Include="Views\Fields.MediaLibraryPicker-Banner.cshtml" />
