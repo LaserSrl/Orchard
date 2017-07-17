@@ -1,7 +1,10 @@
 ﻿using Laser.Orchard.Commons.Attributes;
 using Laser.Orchard.Policy.Models;
 using Laser.Orchard.Policy.Services;
+using Laser.Orchard.StartupConfig.Services;
+using Laser.Orchard.StartupConfig.ViewModels;
 using Laser.Orchard.UsersExtensions.Services;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Orchard;
 using System;
@@ -18,11 +21,18 @@ namespace Laser.Orchard.UsersExtensions.Filters {
     /// has not accepted the required policies
     /// </summary>
     public class PolicyApiFilterAttribute : ActionFilterAttribute {
-        
-        public PolicyApiFilterAttribute() { }
+
+        IDictionary<string, Func<IEnumerable<PolicyTextInfoPart>, IPolicyServices, string>> ResponseDictionary;
+
+        public PolicyApiFilterAttribute() {
+            ResponseDictionary = new Dictionary<string, Func<IEnumerable<PolicyTextInfoPart>, IPolicyServices, string>>() {
+                { "LMNV", (parts, service) => service.PoliciesLMNVSerialization(parts) },
+                { "PureJson", (parts, service) => service.PoliciesPureJsonSerialization(parts) }
+            };
+        }
 
         public override void OnActionExecuting(HttpActionContext actionContext) {
-            bool isAdminService = actionContext
+            var isAdminService = actionContext
                 .ActionDescriptor
                 .GetCustomAttributes<AdminServiceAttribute>(false)
                 .Any();
@@ -30,15 +40,16 @@ namespace Laser.Orchard.UsersExtensions.Filters {
             var _workContext = actionContext.ControllerContext.GetWorkContext();
             var _userExtensionServices = _workContext.Resolve<IUsersExtensionsServices>();
             var _policyService = _workContext.Resolve<IPolicyServices>();
+            var _utilsServices = _workContext.Resolve<IUtilsServices>();
             var currentUser = _workContext.CurrentUser;
-            
+
             if (currentUser != null &&
                 _userExtensionServices != null &&
                 _policyService != null &&
                 !isAdminService) {
 
                 var language = _workContext.CurrentCulture;
-                IEnumerable<PolicyTextInfoPart> neededPolicies = _userExtensionServices
+                var neededPolicies = _userExtensionServices
                     .GetUserLinkedPolicies(language);
 
                 if (neededPolicies.Any()) {
@@ -54,13 +65,32 @@ namespace Laser.Orchard.UsersExtensions.Filters {
                         .Except(userPolicyIds);
 
                     if (missingPolicyIds.Any()) {
-                        string data = _policyService
-                            .PoliciesLMNVSerialization(neededPolicies
-                                .Where(po => missingPolicyIds.Contains(po.Id)));
+                        var outputFormat = _workContext.HttpContext.Request
+                            .Headers["OutputFormat"];
+                        outputFormat = string.IsNullOrWhiteSpace(outputFormat) ? "LMNV" : outputFormat;
+
+                        var requiredPolicies = neededPolicies
+                            .Where(po => missingPolicyIds.Contains(po.Id));
+                        Response response;
+                        Func<IEnumerable<PolicyTextInfoPart>, IPolicyServices, string> dataFunc;
+                        if (ResponseDictionary.TryGetValue(outputFormat, out dataFunc)) {
+                            response = _utilsServices
+                                .GetResponse(ResponseType.MissingPolicies, "",
+                                    JsonConvert.DeserializeObject(dataFunc(requiredPolicies, _policyService)));
+                        } else if (actionContext.ActionDescriptor.ReturnType == typeof(System.Web.Mvc.JsonResult)) {
+                            response = _utilsServices
+                                .GetResponse(ResponseType.MissingPolicies, "",
+                                    JsonConvert.DeserializeObject(ResponseDictionary["PureJson"](requiredPolicies, _policyService)));
+                        } else {
+                            //This case should not ever happen
+                            response = _utilsServices.GetResponse(ResponseType.None, "Unknown error.");
+                        }
+
+
                         actionContext.Response = actionContext
                             .ControllerContext
                             .Request
-                            .CreateResponse(HttpStatusCode.OK, JObject.Parse(data), "application/json");
+                            .CreateResponse(HttpStatusCode.OK, response, "application/json");
                     }
 
                 }
