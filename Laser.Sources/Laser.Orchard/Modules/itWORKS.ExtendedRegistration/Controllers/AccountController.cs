@@ -85,8 +85,11 @@ namespace itWORKS.ExtendedRegistration.Controllers
         }
 
         [HttpPost]
-        public ActionResult Register(string userName, string email, string password, string confirmPassword)
+        public ActionResult Register(string userName, string email, string password, string confirmPassword,string returnUrl=null)
         {
+            if (string.IsNullOrEmpty(returnUrl)) {
+                returnUrl = Request.QueryString["ReturnUrl"];
+            }
             // ensure users can register
             var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
             if (!registrationSettings.UsersCanRegister)
@@ -138,6 +141,11 @@ namespace itWORKS.ExtendedRegistration.Controllers
                     }
 
                     _authenticationService.SignIn(user, false /* createPersistentCookie */);
+                  
+                   
+                    if (!string.IsNullOrEmpty(returnUrl)){
+                        return this.RedirectLocal(returnUrl);
+                    }
                     return Redirect("~/");
                 }
 

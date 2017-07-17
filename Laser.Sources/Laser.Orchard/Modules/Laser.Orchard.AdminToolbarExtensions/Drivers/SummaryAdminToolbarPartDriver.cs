@@ -57,15 +57,17 @@ namespace Laser.Orchard.AdminToolbarExtensions.Drivers {
                         foreach (var str in myQsKeys) {
                             //extract the values passed as parameters, and put them in a separate array
                             int ind = str.IndexOf("=");
-                            myQsValues[i] = str.Substring(ind + 1);
-                            myQsKeys[i++] = str.Substring(0, ind);
+                            if (ind >= 0) {
+                                myQsValues[i] = str.Substring(ind + 1);
+                                myQsKeys[i] = str.Substring(0, ind);
+                            }
+                            i++;
                         }
                         i = 0;
                         foreach (var str in myQsKeys) {
                             if (qs.Get(str) == null) {
                                 qs.Add(str, myQsValues[i]);
-                            }
-                            else {
+                            } else {
                                 qs[str] = myQsValues[i];
                             }
                             i++;

@@ -73,6 +73,7 @@
 	}
 	
 	foreach(XmlNode child_node in mydoc.SelectNodes("/root/ExternalShows/ExternalShow/DescriptionText")){
+        child_node["protected"].InnerText = "";
 		child_node.InnerText = child_node.InnerText.Replace("\u2028", " ");
 		child_node.InnerText = rgxVcDateOrari.Replace(child_node.InnerText, "<div>$1<ul><li>$2</li></ul></div>");
 		child_node.InnerText = rgxVc.Replace(child_node.InnerText, "");
