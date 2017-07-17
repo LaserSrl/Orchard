@@ -129,12 +129,14 @@
     <Compile Include="Models\ShareLinkModuleSettingPart.cs" />
     <Compile Include="PartSettings\ShareLinkPartSettingVM.cs" />
     <Compile Include="Servicies\ShareLinkService.cs" />
+    <Compile Include="ViewModels\OpenGraphVM.cs" />
     <Compile Include="ViewModels\OptionList.cs" />
     <Compile Include="ViewModels\ShareLinkModuleSettingVM.cs" />
     <Compile Include="ViewModels\ShareLinkVM.cs" />
     <Content Include="packages.config" />
     <None Include="Views\DefinitionTemplates\ShareLinkPartSettingVM.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\ShareLinkModuleSetting.cshtml" />
+    <Content Include="Views\Parts\ShareLink_Detail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
