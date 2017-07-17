@@ -130,7 +130,7 @@ button:hover, .button:hover, a.button:hover {
     color: #fff !important;
 }
 
-select, textarea, input.text, input.textMedium, input.text-medium, input.text-small, input.text-box {
+select, textarea, input.text, input.textMedium, input.text-medium, input.text-small, input.text-box, .ui-autocomplete-input {
     color: #555 !important;
     height: 30px;
     margin-bottom: -3px;
@@ -311,14 +311,15 @@ select:not(.selector):not(.ui-datepicker-month):not(.ui-datepicker-year):not(.ca
     min-width: 300px;
 }
 
-.bulk-actions > #filterResults, #orderResults, #filterCultures{
+.bulk-actions > #filterResults, #filterCultures{
     min-width: 10px;
 }
 
+/* Commentato in quanto si applica a troppi elementi causando spesso anomalie grafiche.
 .bulk-actions > button {
     float: right;
-    margin-top: 10px;
 }
+*/
 
 /*ie fix*/
 select::-ms-expand {
@@ -620,12 +621,17 @@ legend {
     width: 10px;
 }
 
+div.settings span.tokenized-popup {
+    margin-top: -6px;
+}
+
 #maplocation {
     margin-left: 90px;
 }
 
 #media-library-toolbar {
-    height: 50px;
+    height: auto;
+    padding-bottom: 10px;
 }
 
 .group {
@@ -693,6 +699,10 @@ input[type="number"]:focus {
 
 #media-library-main-navigation {
     height: 100%;
+}
+
+#media-library-main-selection-actions button {
+    margin: 2px 0 2px 0;
 }
 
 #site a, #site a:visited, #site a:active {
@@ -1341,21 +1351,27 @@ fieldset {
     text-decoration: underline;
 }
 
-.switch-for-switchable.summary-switched .summary-view {
-    background: rgba(0, 0, 0, 0) url("Images/summary-view-on.png") no-repeat scroll left top;
+.switch-for-switchable.summary-switched .summary-view, .switch-for-switchable.detail-switched .summary-view {
     border: 1px solid #f4f4f4;
     border-radius: 3px;
-    margin-right: 10px;
+    margin-right: 5px;
     cursor: pointer;
     padding: 10px;
 }
 
-.switch-for-switchable .detail-view {
-    background: rgba(0, 0, 0, 0) url("Images/detail-view.png") no-repeat scroll left top;
+.switch-for-switchable.summary-switched .detail-view, .switch-for-switchable.detail-switched .detail-view {
     border: 1px solid #f4f4f4;
     border-radius: 3px;
     cursor: pointer;
     padding: 10px;
+}
+
+.switch-for-switchable.summary-switched .detail-view {
+    background: rgba(0, 0, 0, 0) url("Images/detail-view.png") no-repeat scroll left top;
+}
+
+.switch-for-switchable.detail-switched .summary-view {
+    background: rgba(0, 0, 0, 0) url("Images/summary-view-on.png") no-repeat scroll left top;
 }
 
 .sections .primary {
@@ -1376,8 +1392,9 @@ input[type="file"] {
 }
 
 .manage-export {
-    padding-top: 27px;
+    padding-top: 58px;
     position: absolute;
+    margin-left: -4px;
 }
 
 .radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
@@ -1500,4 +1517,37 @@ html.dashboard #content {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
    
+}
+
+/*settings vimeo*/
+#VideoSettings #Whitelist{
+margin-top: 20px;
+}
+
+#VideoSettings #License, #VideoSettings #ReviewLink, #VideoSettings #Locale{
+margin-bottom: 20px;
+}
+
+/*advanced search*/
+input#AdvancedOptions_SelectedToDateEditor_Date, input#AdvancedOptions_SelectedFromDateEditor_Date{
+    min-width: 100px;
+}
+
+#onlyWithMedia{
+    padding-left: 180px;
+}
+
+
+div#appliedFilters {
+    padding: 12px;
+}
+
+/*taxonomy*/
+.taxonomy-wrapper span.expando-glyph-container {
+    bottom: -4px;
+}
+
+.bulk-actions > button[name="submit.BulkEdit"] {
+    float: initial;
+    margin-top: 0px;
 }
