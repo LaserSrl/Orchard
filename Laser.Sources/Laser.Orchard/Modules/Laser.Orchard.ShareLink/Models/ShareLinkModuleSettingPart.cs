@@ -23,6 +23,11 @@ namespace Laser.Orchard.ShareLink.Models {
             get { return this.Retrieve(r => r.SharedImage); }
             set { this.Store(r => r.SharedImage, value); }
         }
+
+        public string Fb_App {
+            get { return this.Retrieve(r => r.Fb_App); }
+            set { this.Store(r => r.Fb_App, value); }
+        }
     }
 
     public class ShareLinkModuleSettingPartRecord : ContentPartRecord {
@@ -30,5 +35,6 @@ namespace Laser.Orchard.ShareLink.Models {
         public virtual string SharedLink { get; set; }
         public virtual string SharedText { get; set; }
         public virtual string SharedImage { get; set; }
+        public virtual string Fb_App { get; set; }
     }
 }

@@ -61,6 +61,10 @@ namespace Laser.Orchard.ShareLink.Drivers {
             var description = part.SharedBody ?? "";
             if (description.Length > 290)
                 description = TruncateAtWord(part.SharedBody ?? "", 290) + " ...";
+            var getpart = _orchardServices.WorkContext.CurrentSite.As<ShareLinkModuleSettingPart>();
+            string fbappid="";
+            if (getpart != null)
+                fbappid = getpart.Fb_App;
 
             var openGraphVM = new OpenGraphVM {
                 Title = part.SharedText,
@@ -68,7 +72,7 @@ namespace Laser.Orchard.ShareLink.Drivers {
                 Url = urlHelper.ItemDisplayUrl(part.ContentItem),
                 Site_name = _orchardServices.WorkContext.CurrentSite.SiteName,
                 Description = description,
-                Fbapp_id = "DA CONFIGURARE COME CREARLO", //Your page will appear in the "Likes and Interests" section of the user's profile, and you have the ability to publish updates to the user
+                Fbapp_id = fbappid, //Your page will appear in the "Likes and Interests" section of the user's profile, and you have the ability to publish updates to the user
                 #region Twitter
                 TwitterTitle = part.SharedText,
                 TwitterDescription = part.SharedBody,

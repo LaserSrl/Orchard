@@ -53,5 +53,19 @@ namespace Laser.Orchard.ShareLink {
             );
             return 6;
         }
+        public int UpdateFrom6() {
+
+            return 7;
+        }
+        public int UpdateFrom7() {
+            SchemaBuilder.AlterTable("ShareLinkModuleSettingPartRecord", table => table
+       
+             .AddColumn<string>("Fb_App")
+            );
+
+            return 8;
+        }
+
+
     }
 }
