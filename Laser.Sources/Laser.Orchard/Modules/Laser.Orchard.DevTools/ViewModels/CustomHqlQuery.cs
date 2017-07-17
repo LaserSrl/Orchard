@@ -8,6 +8,7 @@ namespace Laser.Orchard.DevTools.ViewModels {
     public class CustomHqlQuery {
         public string HqlQuery { get; set; }
         public IEnumerable Results { get; set; }
+        public IEnumerable Aliases { get; set; }
 
         public CustomHqlQuery() {
             Results = new List<object>();
