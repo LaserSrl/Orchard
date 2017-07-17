@@ -1392,8 +1392,9 @@ input[type="file"] {
 }
 
 .manage-export {
-    padding-top: 27px;
+    padding-top: 58px;
     position: absolute;
+    margin-left: -4px;
 }
 
 .radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
