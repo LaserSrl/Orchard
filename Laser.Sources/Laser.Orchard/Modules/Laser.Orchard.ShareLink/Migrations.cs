@@ -42,30 +42,17 @@ namespace Laser.Orchard.ShareLink {
             return 4;
         }
         public int UpdateFrom4() { // da togliere
-            return 5;
-        }
-        public int UpdateFrom5() {
             SchemaBuilder.AlterTable("ShareLinkPartRecord", table => table
                 .AddColumn<string>("SharedBody")
             );
             SchemaBuilder.AlterTable("ShareLinkModuleSettingPartRecord", table => table
                 .AddColumn<string>("SharedBody")
             );
-            return 6;
-        }
-        public int UpdateFrom6() {
-
-            return 7;
-        }
-        public int UpdateFrom7() {
             SchemaBuilder.AlterTable("ShareLinkModuleSettingPartRecord", table => table
-       
-             .AddColumn<string>("Fb_App")
-            );
-
-            return 8;
+ .AddColumn<string>("Fb_App")
+);
+            return 5;
         }
-
 
     }
 }
