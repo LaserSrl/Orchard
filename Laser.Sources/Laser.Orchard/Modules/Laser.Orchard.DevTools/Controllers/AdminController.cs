@@ -316,6 +316,7 @@ namespace Laser.Orchard.DevTools.Controllers {
                 }
                 model.Results = result;
             }
+            model.Aliases = hql.ReturnAliases;
             //model.Results = hql.SetResultTransformer(Transformers.AliasToEntityMap)
             //    .List() as IList<object>;
             return View("CustomHqlQuery", model);
