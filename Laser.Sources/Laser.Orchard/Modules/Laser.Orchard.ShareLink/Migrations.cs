@@ -41,7 +41,7 @@ namespace Laser.Orchard.ShareLink {
             );
             return 4;
         }
-        public int UpdateFrom4() { // da togliere
+        public int UpdateFrom4() { 
             SchemaBuilder.AlterTable("ShareLinkPartRecord", table => table
                 .AddColumn<string>("SharedBody")
             );
