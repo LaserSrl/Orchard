@@ -102,9 +102,7 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
                     try {
                         defFileName= Path.GetFileName(key);
                     }
-                    catch (Exception ex) {
-                       
-                    }
+                    catch { }
                     if (string.IsNullOrEmpty(defFileName))
                         defFileName = key;
                     defFileName = System.IO.Path.GetTempPath() + defFileName + ".cshtml";

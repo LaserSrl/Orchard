@@ -157,7 +157,6 @@ namespace Laser.Orchard.UsersExtensions.Services {
         public string GetRegistrationPoliciesLogic(string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string lang = null, string complexBehaviour = "") {
             var sb = new StringBuilder();
             var _filterContentFieldsParts = mfilter.ToLower().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            XElement dump;
             XElement projectionDump = null;
             // il dump dell'oggetto principale non filtra per field
             ObjectDumper dumper;

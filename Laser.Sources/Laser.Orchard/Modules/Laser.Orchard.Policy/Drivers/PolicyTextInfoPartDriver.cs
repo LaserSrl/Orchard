@@ -75,20 +75,15 @@ namespace Laser.Orchard.Policy.Drivers {
             var priority = 0;
             var userHaveToAccept = false;
 
-            Enum.TryParse<PolicyTypeOptions>(root.Attribute("PolicyType").Value, out policyType);
-            
-            Int32.TryParse(root.Attribute("Priority").Value, out priority);
-            
-            bool.TryParse(root.Attribute("UserHaveToAccept").Value, out userHaveToAccept);
-            
-            if(policyType!=null)
+            if(Enum.TryParse<PolicyTypeOptions>(root.Attribute("PolicyType").Value, out policyType)) {
                 part.PolicyType = policyType;
-
-            if(priority!=null)
+            }
+            if(Int32.TryParse(root.Attribute("Priority").Value, out priority)) {
                 part.Priority = priority;
-
-            if(userHaveToAccept!=null)
+            }
+            if(bool.TryParse(root.Attribute("UserHaveToAccept").Value, out userHaveToAccept)) {
                 part.UserHaveToAccept = userHaveToAccept;
+            }
         }
         #endregion
 
