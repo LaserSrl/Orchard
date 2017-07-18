@@ -4,17 +4,17 @@
     var openGraphVM = Model.OpenGraphVM;
     //OpenGraph & facebook
     using (Script.Head()) {
-        if (!string.IsNullOrEmpty(openGraphVM.Title)) { @Html.Raw("<meta property=\"og:title\" content=\"" + openGraphVM.Title + "\" />");
+        if (!string.IsNullOrEmpty(openGraphVM.Title)) { @Html.Raw("<meta property=\"og:title\" content=\"" + openGraphVM.Title.Replace("/","'") + "\" />");
         }
-        if (!string.IsNullOrEmpty(openGraphVM.Type)) { @Html.Raw("<meta property=\"og:type\" content=\"" + openGraphVM.Type + "\" />");
+        if (!string.IsNullOrEmpty(openGraphVM.Type)) { @Html.Raw("<meta property=\"og:type\" content=\"" + openGraphVM.Type.Replace("/", "'") + "\" />");
         }
         if (!string.IsNullOrEmpty(openGraphVM.Image)) { @Html.Raw("<meta property=\"og:image\" content=\"" + openGraphVM.Image + "\" />");
         }
         if (!string.IsNullOrEmpty(openGraphVM.Url)) { @Html.Raw("<meta property=\"og:url\"  content=\"" + openGraphVM.Url + "\" />");
         }
-        if (!string.IsNullOrEmpty(openGraphVM.Site_name)) { @Html.Raw("<meta property=\"og:site_name\" content=\"" + openGraphVM.Site_name + "\" />");
+        if (!string.IsNullOrEmpty(openGraphVM.Site_name)) { @Html.Raw("<meta property=\"og:site_name\" content=\"" + openGraphVM.Site_name.Replace("/", "'") + "\" />");
         }
-        if (!string.IsNullOrEmpty(openGraphVM.Description)) {  @Html.Raw("<meta property=\"og:description\" content=\"" + openGraphVM.Description + "\" />");
+        if (!string.IsNullOrEmpty(openGraphVM.Description)) {  @Html.Raw("<meta property=\"og:description\" content=\"" + openGraphVM.Description.Replace("/", "'") + "\" />");
         }
         if (!string.IsNullOrEmpty(openGraphVM.Fbapp_id)) { @Html.Raw("<meta property=\"fb:app_id\" content=\"" + openGraphVM.Fbapp_id + "\" />");
         }

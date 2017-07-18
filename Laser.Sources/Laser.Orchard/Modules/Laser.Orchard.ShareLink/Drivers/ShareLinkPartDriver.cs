@@ -47,40 +47,38 @@ namespace Laser.Orchard.ShareLink.Drivers {
         }
         protected override DriverResult Display(ShareLinkPart part, string displayType, dynamic shapeHelper) {
 
-            //Determine if we're on an admin page
-            bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-            if (isAdmin) {
-                if ((displayType == "Detail") || (displayType == "Summary")) {
-                }
+            ////Determine if we're on an admin page
+            //bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            //if (isAdmin) {
+            if (displayType == "Detail") {
+                _sharelinkservice.FillPart(part);
+                var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                var description = part.SharedBody ?? "";
+                if (description.Length > 290)
+                    description = TruncateAtWord(part.SharedBody ?? "", 290) + " ...";
+                var getpart = _orchardServices.WorkContext.CurrentSite.As<ShareLinkModuleSettingPart>();
+                string fbappid = "";
+                if (getpart != null)
+                    fbappid = getpart.Fb_App;
+
+                var openGraphVM = new OpenGraphVM {
+                    Title = part.SharedText,
+                    Image = part.SharedImage,
+                    Url = _orchardServices.WorkContext.CurrentSite.BaseUrl+ urlHelper.ItemDisplayUrl(part.ContentItem),
+                    Site_name = _orchardServices.WorkContext.CurrentSite.SiteName,
+                    Description = description,
+                    Fbapp_id = fbappid, //Your page will appear in the "Likes and Interests" section of the user's profile, and you have the ability to publish updates to the user
+                    #region Twitter
+                    TwitterTitle = part.SharedText,
+                    TwitterDescription = part.SharedBody,
+                    TwitterImage = part.SharedImage
+                    #endregion
+                };
+                return ContentShape("Parts_ShareLink_Detail",
+                           () => shapeHelper.Parts_ShareLink_Detail(OpenGraphVM: openGraphVM));
             }
-            _sharelinkservice.FillPart(part);
-
-
-            var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-
-            var description = part.SharedBody ?? "";
-            if (description.Length > 290)
-                description = TruncateAtWord(part.SharedBody ?? "", 290) + " ...";
-            var getpart = _orchardServices.WorkContext.CurrentSite.As<ShareLinkModuleSettingPart>();
-            string fbappid="";
-            if (getpart != null)
-                fbappid = getpart.Fb_App;
-
-            var openGraphVM = new OpenGraphVM {
-                Title = part.SharedText,
-                Image = part.SharedImage,
-                Url = urlHelper.ItemDisplayUrl(part.ContentItem),
-                Site_name = _orchardServices.WorkContext.CurrentSite.SiteName,
-                Description = description,
-                Fbapp_id = fbappid, //Your page will appear in the "Likes and Interests" section of the user's profile, and you have the ability to publish updates to the user
-                #region Twitter
-                TwitterTitle = part.SharedText,
-                TwitterDescription = part.SharedBody,
-                TwitterImage = part.SharedImage
-                #endregion
-            };
-            return ContentShape("Parts_ShareLink_Detail",
-                       () => shapeHelper.Parts_ShareLink_Detail(OpenGraphVM: openGraphVM));
+            //}
+            return null;
         }
 
 

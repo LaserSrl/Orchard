@@ -28,7 +28,7 @@
     }
     @if (Model.ShowSharedBody) {
         <div class="editor-label">@Html.LabelFor(m => m.SharedBody, T("Description - OpenGraph"))</div>
-        <div class="editor-label">@Html.TextBoxFor(m => m.SharedBody, new { @class = "text large" })</div>
+        <div class="editor-label">@Html.TextBoxFor(m => m.SharedBody, new { @class = "text large", rows = "5" })</div>
     }
     else {
         @Html.HiddenFor(m => m.SharedBody)

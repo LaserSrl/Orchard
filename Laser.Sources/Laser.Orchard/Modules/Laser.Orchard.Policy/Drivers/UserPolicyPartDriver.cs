@@ -15,7 +15,8 @@ namespace Laser.Orchard.Policy.Drivers {
         private const string CONTROLLER_ACTION = "account/register";
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private string currentControllerAction {
-            get { //MVC 4
+            get
+            { //MVC 4
                 return (_controllerContextAccessor.Context.RouteData.Values["controller"] + "/" + _controllerContextAccessor.Context.RouteData.Values["action"]).ToLowerInvariant();
             }
         }
@@ -81,37 +82,24 @@ namespace Laser.Orchard.Policy.Drivers {
             if (importedUserPolicyAnswers != null) {
 
                 foreach (UserPolicyAnswersRecord rec in part.UserPolicyAnswers) {
-                    
-                    if(Convert.ToInt32(root.Element("Id").Value)!=null)
+
+                    if (root.Element("Id").Value != null)
                         rec.Id = Convert.ToInt32(root.Element("Id").Value);
 
-                    if(Convert.ToDateTime(root.Element("AnswerDate").Value)!=null)
+                    if (root.Element("AnswerDate").Value != null)
                         rec.AnswerDate = Convert.ToDateTime(root.Element("AnswerDate").Value);
 
-                    if(Convert.ToBoolean(root.Element("Accepted").Value)!=null)
+                    if (root.Element("Accepted").Value != null)
                         rec.Accepted = Convert.ToBoolean(root.Element("Accepted").Value);
 
-                    if(Convert.ToBoolean(root.Element("PolicyTextInfoPartRecord").Parent.Element("UserHaveToAccept").Value)!=null)
+                    if (root.Element("PolicyTextInfoPartRecord").Parent.Element("UserHaveToAccept").Value != null)
                         rec.PolicyTextInfoPartRecord.UserHaveToAccept = Convert.ToBoolean(root.Element("PolicyTextInfoPartRecord").Parent.Element("UserHaveToAccept").Value);
-                    
-                    if(Convert.ToInt32(root.Element("PolicyTextInfoPartRecord").Parent.Element("Priority").Value)!=null)
+
+                    if (root.Element("PolicyTextInfoPartRecord").Parent.Element("Priority").Value != null)
                         rec.PolicyTextInfoPartRecord.Priority = Convert.ToInt32(root.Element("PolicyTextInfoPartRecord").Parent.Element("Priority").Value);
-                    
-                    if((PolicyTypeOptions)Enum.Parse(typeof(PolicyTypeOptions), root.Element("PolicyTextInfoPartRecord").Parent.Element("PolicyType").Value)!=null)
-                        rec.PolicyTextInfoPartRecord.PolicyType = (PolicyTypeOptions)Enum.Parse(typeof(PolicyTypeOptions), root.Element("PolicyTextInfoPartRecord").Parent.Element("PolicyType").Value);
+                    rec.PolicyTextInfoPartRecord.PolicyType = (PolicyTypeOptions)Enum.Parse(typeof(PolicyTypeOptions), root.Element("PolicyTextInfoPartRecord").Parent.Element("PolicyType").Value);
                 }
             }
-
         }
-
-
-
-
     }
-
 }
-
-
-       
-
-  
