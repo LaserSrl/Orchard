@@ -5,6 +5,7 @@
     title = string.IsNullOrWhiteSpace(title) ? T("Related Contents").Text : title;
 
     var _contentManager = WorkContext.Resolve<IContentManager>();
+    var guid = Guid.NewGuid().ToString();
 }
 @if (contentItems.Any()) {
     var items = contentItems.ToList();
@@ -14,7 +15,7 @@
     <div class="ecommerce_related_contents">
         <div class="container">
             <h3>@title</h3>
-            <ul id="related-content-slider">
+            <ul id="related-content-slider_@guid">
                 @foreach (var item in items) {
                     var itemShape = _contentManager.BuildDisplay(item, "Summary");
                     <li>
@@ -26,7 +27,7 @@
             </ul>
             <script type="text/javascript">
                 $(window).load(function () {
-                    $("#related-content-slider").flexisel({
+                    $("#related-content-slider_@guid").flexisel({
                         visibleItems: 4,
                         animationSpeed: 1000,
                         autoPlay: true,
