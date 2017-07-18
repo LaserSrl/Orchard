@@ -12,6 +12,8 @@ using System.Web;
 namespace Laser.Orchard.HiddenFields.Settings {
     public class HiddenStringFieldsSettingsEvents : ContentDefinitionEditorEventsBase {
 
+        private readonly IContentManager _contentManager;
+
         public override IEnumerable<TemplateViewModel> PartFieldEditor(
             ContentPartFieldDefinition definition){
 
@@ -35,6 +37,8 @@ namespace Laser.Orchard.HiddenFields.Settings {
                 if (updateModel.TryUpdateModel(model, "HiddenStringFieldSettingsEventsViewModel", null, null)) {
                     builder.WithSetting("HiddenStringFieldSettings.Tokenized", model.Settings.Tokenized.ToString());
                     builder.WithSetting("HiddenStringFieldSettings.TemplateString", model.Settings.TemplateString);
+
+                    
 
                     yield return DefinitionTemplate(model);
                 }
