@@ -18,9 +18,9 @@
 <script language="javascript" type="text/javascript">
     //$("#@chartContainerId").Reporting();
     (function(){
-        var s1 = @Html.Raw(Model.Series1);
+        var s1 = @Html.Raw(dataReportViewerViewModel.JsonData);
         $('#@chartId').jqplot([s1], {
-            seriesColors: laserOrchardReportingColors,
+            seriesColors: @Html.Raw(dataReportViewerViewModel.ColorsArray),
             seriesDefaults: {
                 // Make this a pie chart.
                 renderer: jQuery.jqplot.PieRenderer,
