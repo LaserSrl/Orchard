@@ -246,7 +246,7 @@ namespace Laser.Orchard.Reporting.Services {
             return reportLst;
         }
         public IEnumerable<DataReportViewerPart> GetReports() {
-            return contentManager.Query<DataReportViewerPart>().List();
+            return contentManager.Query<DataReportViewerPart>().Where<DataReportViewerPartRecord>(x => true).List();
         }
         public Dictionary<int, Permission> GetReportPermissions() {
             if (_reportPermissions == null) {
