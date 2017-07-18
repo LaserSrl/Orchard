@@ -69,50 +69,53 @@ namespace Laser.Orchard.Reporting.Drivers
                     count = reportManger.GetCount(report, part.ContentItem);
                 }
 
+                // colors
+                List<string> colors = new List<string>();
+                string[] palette = ColorsSettings.ChartColors;
+                if(part.Record.ColorStyle == (int)ColorStyleValues.Light) {
+                    palette = ColorsSettings.ChartColorsLight;
+                }
+                else if (part.Record.ColorStyle == (int)ColorStyleValues.Dark) {
+                    palette = ColorsSettings.ChartColorsDark;
+                }
+                if (part.Record.StartColor == 0) {
+                    colors.AddRange(palette);
+                } else {
+                    colors.AddRange(palette.Skip(part.Record.StartColor));
+                    colors.AddRange(palette.Take(part.Record.StartColor));
+                }
+
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
                 var model = new DataReportViewerViewModel
                 {
                     TotalCount = count,
                     ReportTitle = part.Record.Report.Title,
-                    JsonData = serializer.Serialize(reportData.Select(c=> new {Label = c.Label, Value = c.AggregationValue}).ToArray()),
+                    JsonData = serializer.Serialize(reportData.Select(c => new object[] { c.Label, c.AggregationValue }).ToArray()),
                     Data = reportData.ToList(),
                     ChartCssClass = part.Record.ChartTagCssClass,
                     ContainerCssClass = part.Record.ContainerTagCssClass,
+                    ColorsArray = serializer.Serialize(colors),
                     HtmlId = part.Record.Id
                 };
 
                 if (report.ChartType == (int)ChartTypes.PieChart)
                 {
                     return ContentShape("Parts_DataReportViewer_PieChart",
-                         () => shapeHelper.Parts_DataReportViewer_PieChart(
-                             Model: model,
-                             Series1: serializer.Serialize(reportData.Select(c => new object[] { c.Label, c.AggregationValue }).ToArray())
-                             ));
+                         () => shapeHelper.Parts_DataReportViewer_PieChart(Model: model));
                 }
                 else if (report.ChartType == (int)ChartTypes.SimpleList)
                 {
                     return ContentShape("Parts_DataReportViewer_SimpleList",
-                         () => shapeHelper.Parts_DataReportViewer_SimpleList(
-                             Model: model
-                             ));
+                         () => shapeHelper.Parts_DataReportViewer_SimpleList(Model: model));
                 } else if (report.ChartType == (int)ChartTypes.Donut) {
                     return ContentShape("Parts_DataReportViewer_Donut",
-                         () => shapeHelper.Parts_DataReportViewer_Donut(
-                             Model: model,
-                             Series1: serializer.Serialize(reportData.Select(c => new object[] { c.Label, c.AggregationValue }).ToArray())
-                             ));
+                         () => shapeHelper.Parts_DataReportViewer_Donut(Model: model));
                 } else if (report.ChartType == (int)ChartTypes.Histogram) {
                     return ContentShape("Parts_DataReportViewer_Histogram",
-                         () => shapeHelper.Parts_DataReportViewer_Histogram(
-                             Model: model,
-                             Series1: serializer.Serialize(reportData.Select(c => new object[] { c.Label, c.AggregationValue }).ToArray())
-                             ));
+                         () => shapeHelper.Parts_DataReportViewer_Histogram(Model: model));
                 } else if (report.ChartType == (int)ChartTypes.LineChart) {
                     return ContentShape("Parts_DataReportViewer_LineChart",
-                         () => shapeHelper.Parts_DataReportViewer_LineChart(
-                             Model: model,
-                             Series1: serializer.Serialize(reportData.Select(c => new object[] { c.Label, c.AggregationValue }).ToArray())
-                             ));
+                         () => shapeHelper.Parts_DataReportViewer_LineChart(Model: model));
                 } else {
                     return ContentShape("Parts_DataReportViewer",
                           () => shapeHelper.Parts_DataReportViewer_Summary(
@@ -143,6 +146,8 @@ namespace Laser.Orchard.Reporting.Drivers
                 part.Record.Report = new ReportRecord { Id = model.ReportId.Value };
                 part.Record.ChartTagCssClass = model.ChartTagCssClass;
                 part.Record.ContainerTagCssClass = model.ContainerCssClass;
+                part.Record.ColorStyle = (int)(model.ColorStyle);
+                part.Record.StartColor = (int)(model.StartColor);
             }
 
             return this.Editor(part, shapeHelper);
@@ -170,6 +175,8 @@ namespace Laser.Orchard.Reporting.Drivers
 
                 model.ChartTagCssClass = record.ChartTagCssClass;
                 model.ContainerCssClass = record.ContainerTagCssClass;
+                model.ColorStyle = (ColorStyleValues)(record.ColorStyle);
+                model.StartColor = (ChartColorNames)(record.StartColor);
             }
 
             var reports = this.reportRepository.Table.ToList();
@@ -191,6 +198,8 @@ namespace Laser.Orchard.Reporting.Drivers
             if(part.Record != null) {
                 root.SetAttributeValue("ContainerTagCssClass", part.Record.ContainerTagCssClass);
                 root.SetAttributeValue("ChartTagCssClass", part.Record.ChartTagCssClass);
+                root.SetAttributeValue("ColorStyle", part.Record.ColorStyle);
+                root.SetAttributeValue("StartColor", part.Record.StartColor);
                 XElement report = new XElement("Report");
                 var reportRecord = part.Record.Report;
                 report.SetAttributeValue("Name", reportRecord.Name ?? "");
@@ -214,6 +223,14 @@ namespace Laser.Orchard.Reporting.Drivers
             var chartTagCssClass = root.Attribute("ChartTagCssClass");
             if (chartTagCssClass != null) {
                 part.Record.ChartTagCssClass = chartTagCssClass.Value;
+            }
+            var colorStyle = root.Attribute("ColorStyle");
+            if (colorStyle != null) {
+                part.Record.ColorStyle = Convert.ToInt32(colorStyle.Value);
+            }
+            var startColor = root.Attribute("StartColor");
+            if (startColor != null) {
+                part.Record.StartColor = Convert.ToInt32(startColor.Value);
             }
             var report = root.Element("Report");
             if(report != null) {
