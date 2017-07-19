@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using HtmlAgilityPack;
 using Laser.Orchard.ShareLink.Models;
 using Laser.Orchard.ShareLink.PartSettings;
 using Orchard;
@@ -18,7 +19,7 @@ namespace Laser.Orchard.ShareLink.Servicies {
         void FillPart(ShareLinkPart part);
     }
 
-    public class ShareLinkService : IShareLinkService{
+    public class ShareLinkService : IShareLinkService {
         private readonly IOrchardServices _orchardServices;
         private readonly ITokenizer _tokenizer;
         public ShareLinkService(IOrchardServices orchardServicies, ITokenizer tokenizer) {
@@ -26,6 +27,11 @@ namespace Laser.Orchard.ShareLink.Servicies {
             _tokenizer = tokenizer;
         }
 
+        private string RemoveHtmlTag(string text) {
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(text);
+            return (htmlDoc.DocumentNode.InnerText);
+        }
         public void FillPart(ShareLinkPart part) {
             var moduleSetting = _orchardServices.WorkContext.CurrentSite.As<ShareLinkModuleSettingPart>();
             var partSetting = part.Settings.GetModel<ShareLinkPartSettingVM>();
@@ -39,6 +45,8 @@ namespace Laser.Orchard.ShareLink.Servicies {
                         part.SharedBody = _tokenizer.Replace(moduleSetting.SharedBody, tokens);
                     }
                 }
+                var s=HttpUtility.HtmlDecode(part.SharedBody);
+                part.SharedBody = RemoveHtmlTag(s);
             }
 
             if ((!partSetting.ShowTextChoise) || part.SharedText == "") {
