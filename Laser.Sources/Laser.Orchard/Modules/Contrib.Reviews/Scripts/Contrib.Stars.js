@@ -8,8 +8,9 @@
                     return _this;
                 }
 
-                var clearVote = $("<span class=\"stars-clear\">x</span>");
-                $(".stars-clear").on(
+                var clearVote = $("#stars-clear-btn");
+                $("#stars-clear-btn").hide();
+                $("#stars-clear-btn").on(
                         "click",
                         function (e) {
                             var _clear_this = $(this);
@@ -51,11 +52,14 @@
                     );
 
                 function addClearVoteUI(fromHere) {
-                    fromHere.find(".stars-current-result").first().append(clearVote);
+                    //fromHere.find(".stars-current-result").first().append(clearVote);
+                    $("#stars-clear-btn").show();
                 }
 
                 function removeClearVoteUI(fromHere) {
-                    fromHere.closest(".stars-current-result").first().children(".stars-clear").removeClass("mousey").removeClass("active").remove();
+                    $("#stars-clear-btn").removeClass("mousey").removeClass("active");
+                    $("#stars-clear-btn").hide();
+                    //fromHere.closest(".stars-current-result").first().children(".stars-clear").removeClass("mousey").removeClass("active").remove();
                 }
 
                 _this

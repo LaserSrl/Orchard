@@ -55,6 +55,7 @@
         else{
         <span class="star-5 a-star">@(Model.ContentPart.Rating.CurrentVotingResult.Value > 4 ? T("*").ToString() : T("-").ToString())</span>
         }
+        <span id="stars-clear-btn" class="stars-clear" @*style="display:none;"*@>x</span>
     </div>
     @if (Request.IsAuthenticated) {
         using (Html.BeginFormAntiForgeryPost(Url.Action("Apply", "Rate", new { area = "Contrib.Reviews" }), FormMethod.Post, new {@class = "rate"})) {
