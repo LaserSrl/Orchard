@@ -28,3 +28,22 @@
 .questionnaire-container ul {
     list-style-type: none;
 }
+
+.ul-cultures {
+    width: 100%;
+    text-align: center;
+}
+
+.ul-cultures li {
+    list-style: none;
+    display: inline-block;
+    width: 32px;
+    height: 24px;
+}
+
+.ul-cultures li.it {
+    background: url('images/748049 - flag italy.png');
+}
+.ul-cultures li.en {
+    background: url('images/748029 - england fl.png');
+}

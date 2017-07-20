@@ -121,7 +121,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\chart.settings.js" />
     <Content Include="Scripts\chosen\chosen.jquery.js" />
     <Content Include="Scripts\chosen\chosen.jquery.min.js" />
     <Content Include="Scripts\chosen\chosen.proto.js" />
@@ -240,6 +239,7 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\AggregateMethods.cs" />
     <Compile Include="Models\ChartTypes.cs" />
+    <Compile Include="Models\ColorsSettings.cs" />
     <Compile Include="Models\DataReportViewerPart.cs" />
     <Compile Include="Models\ReportItem.cs" />
     <Compile Include="Models\ReportRecord.cs" />
