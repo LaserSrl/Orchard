@@ -9,10 +9,12 @@
     Script.Require("jQuery");
     Script.Require("jQueryUI_Core").AtHead();
     Script.Require("jQueryUI_Autocomplete").AtHead();
+    Script.Require("Bootstrap").AtHead();
     Style.Require("jQuery_Autocomplete").AtHead();
     Style.Require("AdvancedSearch").AtHead();
     Style.Require("FontAwesome430").AtHead();
     Style.Require("Accordion").AtHead();
+    Style.Require("Bootstrap").AtHead();
     var typeDisplayName = Model.TypeDisplayName;
     var pageTitle = T("Manage Content");
     var createLinkText = T("Create New Content");
@@ -62,7 +64,8 @@
             });
 
             function close_accordion_section() {
-                $('.accordion .accordion-section-title').removeClass('active');
+                var conpnl = $('.accordion .accordion-section-title');
+                conpnl.removeClass('active');
                 //  $('.accordion .accordion-section-content').slideUp(300).removeClass('open');
             }
 
@@ -80,7 +83,8 @@
                     // Add active class to section title
                     $(this).addClass('active');
                     // Open up the hidden content panel
-                    $('.accordion ' + currentAttrValue).slideDown(300).addClass('open');
+                    var conpnl = $('.accordion ' + currentAttrValue);
+                    conpnl.slideDown(300).addClass('open');
                 }
 
                 e.preventDefault();
@@ -221,7 +225,7 @@
                                 @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
                                 @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
                             </select>
-                            <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
+                            <button type="submit" id="applyManageContentBtn" name="submit.BulkEdit" value="yes">@T("Apply")</button>
                         </div>
                     </div>
                 </div>
@@ -426,7 +430,7 @@
                                 }
                             </select>
                         </div>
-                        <div class="col-xs-12 col-md-4">
+                        <div class="col-xs-12 col-md-2">
                             <label for="dateFromResults" class="bulk-filter">@T("Date From")</label>
                             @Html.EditorFor(m => AdvancedOptions.SelectedFromDateEditor, new { id = "dateFromResults"})
                             @*@Html.TextBox("AdvancedOptions.SelectedFromDate", (string)(Model.AdvancedOptions.SelectedFromDate != null ? Model.AdvancedOptions.SelectedFromDate.ToString() : ""), new { id = "dateFromResults" })*@
@@ -436,7 +440,7 @@
                             @Html.EditorFor(m => AdvancedOptions.SelectedToDateEditor, new { id = "dateToResults" })
                             @*@Html.TextBox("AdvancedOptions.SelectedToDate", (string)(Model.AdvancedOptions.SelectedToDate != null ? Model.AdvancedOptions.SelectedToDate.ToString() : ""), new { id = "dateToResults" })*@
                         </div>
-                        <div class="col-xs-12 col-md-2">
+                        <div class="col-xs-12 col-md-4" id="onlyWithMedia">
                             <label for="hasMediaResults" class="bulk-filter">@T("Only with media")</label>
                             @Html.CheckBox("AdvancedOptions.HasMedia", (bool)Model.AdvancedOptions.HasMedia, new { id = "hasMediaResults" })
                         </div>

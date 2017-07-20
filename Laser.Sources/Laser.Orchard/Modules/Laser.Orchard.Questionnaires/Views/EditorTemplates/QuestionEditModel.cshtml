@@ -14,35 +14,7 @@
         @*Question zone*@
         <tr>
             <td class="leftside">
-                @{var divanteprima = "Anteprima" + Html.Raw(Html.FieldIdFor(x => x.AllFiles));
-                  var imginserite = 0;
-                    <div id="@divanteprima" class="hlist-container">
-                        <ul>
-                            @if (Model.AllFiles != null && Model.AllFiles.Split(',').Count() > 0) {
-                                foreach (int ciId in Model.AllFiles.Split(',').Select(int.Parse).ToList()) {
-                                    MediaPart mediaPart = ((ContentItem)contentManager.Get(ciId)).As<MediaPart>();
-                                    imginserite++; 
-                                <li>
-                                    <img alt="@mediaPart.AlternateText" src="@Display.ResizeMediaUrl(Width: 100, Height: 100, Mode: "crop", Alignment: "middlecenter", Path: mediaPart.MediaUrl)" />
-                                    <a href="#" onclick="javascript:if(confirm('@T("Remove the image?")')){$('#@Html.FieldIdFor(x => x.AllFiles)').val(removeValue($('#@Html.FieldIdFor(x => x.AllFiles)').val(),@mediaPart.Id,','));$(this).closest('li').remove();return(false);}">@T("Remove")</a>
-                                </li>
-                                }
-                            }
-                        </ul>
-
-                    </div>
-                }
-                <span>
-                    @Html.HiddenFor(x => x.AllFiles)</span>
-
-                @if ((bool)TempData["EnableQuestionImage"] == true) {
-                    <span class="button add "onclick="javascript:AddMedia(this, '@Html.FieldIdFor(x => x.AllFiles)', @TempData["QuestionImageLimitNumber"])">@T("Add Picture")</span>
-                }
-                @if (partSettings.AllowSections) {
-                    <span class="quest_label">@T("Section")</span>
-                    @Html.TextBoxFor(x => x.Section, new { @placeholder = T("Type a section name") })
-                }
-                <br />
+             
                 @{
                     <span class="quest_label">@T("Question type")</span>
                     var qTypes = new List<string>();
@@ -68,6 +40,37 @@
                 <input type="hidden" class = "j_iddomanda" value="@qid"  />
                 @Html.HiddenFor(x => x.Position, new { @class = "position-field" })
                 @Html.HiddenFor(x => x.Delete, new { @class = "mark-for-delete" })
+
+                @{var divanteprima = "Anteprima" + Html.Raw(Html.FieldIdFor(x => x.AllFiles));
+                    var imginserite = 0;
+                    <div id="@divanteprima" class="hlist-container">
+                        <ul>
+                            @if (Model.AllFiles != null && Model.AllFiles.Split(',').Count() > 0) {
+                                foreach (int ciId in Model.AllFiles.Split(',').Select(int.Parse).ToList()) {
+                                    MediaPart mediaPart = ((ContentItem)contentManager.Get(ciId)).As<MediaPart>();
+                                    imginserite++;
+                                    <li>
+                                        <img alt="@mediaPart.AlternateText" src="@Display.ResizeMediaUrl(Width: 100, Height: 100, Mode: "crop", Alignment: "middlecenter", Path: mediaPart.MediaUrl)" />
+                                        <a href="#" onclick="javascript:if(confirm('@T("Remove the image?")')){$('#@Html.FieldIdFor(x => x.AllFiles)').val(removeValue($('#@Html.FieldIdFor(x => x.AllFiles)').val(),@mediaPart.Id,','));$(this).closest('li').remove();return(false);}">@T("Remove")</a>
+                                    </li>
+                                }
+                            }
+                        </ul>
+
+                    </div>
+                }
+                <span>
+                    @Html.HiddenFor(x => x.AllFiles)
+                </span>
+
+                @if ((bool)TempData["EnableQuestionImage"] == true) {
+                    <span class="button add " onclick="javascript:AddMedia(this, '@Html.FieldIdFor(x => x.AllFiles)', @TempData["QuestionImageLimitNumber"])">@T("Add Picture")</span>
+                }
+                @if (partSettings.AllowSections) {
+                    <span class="quest_label">@T("Section")</span>
+                    @Html.TextBoxFor(x => x.Section, new { @placeholder = T("Type a section name") })
+                }
+                <br />
             </td>
             <td>
                 <span class="quest_label">@T("Question text")</span>
@@ -87,14 +90,14 @@
                 @Html.LinkToRemoveNestedForm(T("Remove").Text, ".j_question", "input.mark-for-delete", "ScriviMenuTab();TestQuestionNumber();")
                 <br />
                 @{
-                    string styleanswer = "block";
+                    string styleanswer = "inline";
                     if ((int)Model.Answers.Count >= (int)TempData["AnswersLimitsNumber"] && (int)TempData["AnswersLimitsNumber"] > 0) {
                         styleanswer = "none";
                     }
                    
                 }
                 <span class="addanswer" style="display:@styleanswer">
-                    <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x => x.Answers, T("Add Answer").Text, "#" + answerBlock, ".answer", "answer", null, "RefreshAnswerPostions('#" + answerBlock + "')")
+                    <i class="fa fa-plus" style="color: green">&nbsp;</i>@Html.LinkToAddNestedForm(x => x.Answers, T("Add Answer").Text, "#" + answerBlock, ".answer", "answer", null, "RefreshAnswerPostions('#" + answerBlock + "')")
                     <br />
                 </span>
             </td>
