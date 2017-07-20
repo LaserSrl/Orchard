@@ -13,15 +13,15 @@
                 var fields = row as System.Collections.Hashtable;
                 if (isHeader) {
                     <tr>
-                        @foreach (var col in fields.Keys) {
+                        @foreach (var col in Model.Aliases) {
                             <td style="border:solid 1px red;padding:5px;color:red;font-weight:700">@col</td>
                         }
                     </tr>
                     isHeader = false;
                 }
                 <tr>
-                    @foreach (var col in fields.Values) {
-                        <td style="border:solid 1px black;padding:5px">@col</td>
+                    @foreach (var col in Model.Aliases) {
+                        <td style="border:solid 1px black;padding:5px">@fields[col]</td>
                     }
                 </tr>
             }
