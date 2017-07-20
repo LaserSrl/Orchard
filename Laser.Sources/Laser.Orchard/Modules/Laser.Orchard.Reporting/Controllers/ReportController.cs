@@ -423,6 +423,15 @@ namespace Laser.Orchard.Reporting.Controllers {
             }
             return View(model);
         }
+        public ActionResult DashboardList(DashboardListViewModel model) {
+            var list = reportManager.GetDashboardListForCurrentUser(model.TitleFilter);
+            model.PagerParameters.Page = model.page;
+            Pager pager = new Pager(services.WorkContext.CurrentSite, model.PagerParameters);
+            var pagerShape = services.New.Pager(pager).TotalItemCount(list.Count());
+            model.Pager = pagerShape;
+            model.Dashboards = list.Skip(pager.GetStartIndex()).Take(pager.PageSize);
+            return View(model);
+        }
         private string EncodeGroupByCategoryAndGroupByType(string category, string type)
         {
             return string.Format(CultureInfo.InvariantCulture, "{0}__{1}", category, type);

@@ -15,6 +15,7 @@
 <script language="javascript" type="text/javascript">
     (function(){
         var s1 = @Html.Raw(dataReportViewerViewModel.JsonData);
+        //$.jqplot.config.enablePlugins = true;
         $('#@chartId').jqplot([s1], {
             // Turns on animatino for all series in this plot.
             animate: true,
@@ -25,7 +26,8 @@
                 renderer: $.jqplot.BarRenderer,
                 rendererOptions: {
                     varyBarColor: true
-                }
+                },
+                pointLabels: { show: true }
             },
             axes: {
                 xaxis: {
