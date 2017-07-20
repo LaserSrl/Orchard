@@ -8,6 +8,7 @@ using Orchard.Localization;
 using System;
 using System.Globalization;
 using Orchard.ContentManagement.Handlers;
+using Orchard;
 
 namespace Laser.Orchard.Events.Drivers {
     public class ActivityPartDriver : ContentPartCloningDriver<ActivityPart> {
@@ -157,20 +158,28 @@ namespace Laser.Orchard.Events.Drivers {
 
                 if (!String.IsNullOrWhiteSpace(activityVM.DateStart) && !String.IsNullOrWhiteSpace(activityVM.DateEnd) &&
                     (activityVM.AllDay || (!activityVM.AllDay && !String.IsNullOrWhiteSpace(activityVM.TimeStart) && !String.IsNullOrWhiteSpace(activityVM.TimeEnd)))) {
-                    if (activityVM.AllDay) {
-                        part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, "");
-                        part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, "");
-                    }
-                    else {
-                        part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, activityVM.TimeStart);
-                        part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, activityVM.TimeEnd);
-                    }
+                    try{
+                        if (activityVM.AllDay) {
+                            part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, "");
+                            part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, "");
+                        } else {
+                            part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, activityVM.TimeStart);
+                            part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, activityVM.TimeEnd);
+                        }
+                    }catch(OrchardException ex) {
+                        updater.AddModelError(Prefix + "DateFormatError", T("The starting date or ending date are not valid."));
+                    }                  
                 }
                 else
                     updater.AddModelError(Prefix + "DateRequiredError", T("The starting date and ending date of the event are required."));
 
                 if (part.Repeat) {
-                    part.RepeatEndDate = _dataLocalization.StringToDatetime(activityVM.RepeatEndDate, "");
+                    try{
+                        part.RepeatEndDate = _dataLocalization.StringToDatetime(activityVM.RepeatEndDate, "");
+                    } catch (OrchardException ex) {
+                        updater.AddModelError(Prefix + "DateRepeateFormatError", T("The repeat date is not valid."));
+                    }
+
                     if (part.RepeatEnd && part.RepeatEndDate == null){
                         updater.AddModelError(Prefix + "DateRepeateRequiredError", T("The repeat end date is required."));
                     }
