@@ -15,4 +15,8 @@
   </Match>
 -->
   <Place Parts_Common_Metadata="-" Fields_MediaLibraryPicker__TermPart-Icon="-" Fields_Enumeration__TermPart-TipoUnivoco="-"/>
+  <Place Parts_Activity="-" />
+  <Match DisplayType="Summary">
+    <Place Parts_ActivityDisplay="-" />
+  </Match>
 </Placement>

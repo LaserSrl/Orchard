@@ -17,16 +17,16 @@
 </fieldset>
 <fieldset>
     <div class="checkbox-and-label">
+        <label for="@Html.FieldIdFor(m => m.EmailRecipe)">@T("Email address") </label>
         @Html.TextBoxFor(m => m.EmailRecipe)
-        <label for="@Html.FieldIdFor(m => m.EmailRecipe)" >@T("Email address") </label>
         <span class="hint">@T("The Email with ranking will be sent at this address")</span>
     </div>
 </fieldset>
 
 <fieldset>
     <div class="checkbox-and-label">
+        <label for="@Html.FieldIdFor(m => m.Template)">@T("Select template") </label>
        @Html.DropDownListFor(m => m.Template, new System.Web.Mvc.SelectList(Model.ListTemplate, "Id", "Name", (int)Model.Template))
-        <label for="@Html.FieldIdFor(m => m.Template)" >@T("Select template") </label>
         <span class="hint">@T("Select template to use in email message")</span>
     </div>
 </fieldset>

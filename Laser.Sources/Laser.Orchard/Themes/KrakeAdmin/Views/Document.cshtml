@@ -19,7 +19,7 @@ string siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
 
 //---- include js libraries ----//
 //generic & tools
-Script.Include("bootstrap.min.js").AtHead();
+Script.Require("Bootstrap").AtHead();
 Script.Include("jquery.autosize.min.js").AtHead();
 // specific for krake theme
 Script.Require("jQuery").AtHead();
@@ -37,7 +37,7 @@ Script.Include("main.js").AtHead(); //laser-orchard custom library
 
 //---- include css files ----//
 // generic & utilities
-Style.Include("bootstrap.css").AtHead();
+Style.Require("Bootstrap").AtHead();
 Style.Include("font-awesome.min.css").AtHead();
 Style.Include("iconic-font.min.css").AtHead();
 Style.Include("https://fonts.googleapis.com/css?family=Roboto:400,700,500,300,100,900").AtHead();
