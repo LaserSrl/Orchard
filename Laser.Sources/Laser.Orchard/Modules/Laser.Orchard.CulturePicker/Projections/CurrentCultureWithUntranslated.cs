@@ -1,26 +1,22 @@
-﻿using Laser.Orchard.CulturePicker.Services;
+﻿using System;
+using Laser.Orchard.CulturePicker.Services;
 using Orchard;
 using Orchard.ContentManagement;
-using Orchard.Events;
 using Orchard.Localization;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
-using System;
-using System.Linq;
 
-namespace Laser.Orchard.CulturePicker.Projections
-{
+namespace Laser.Orchard.CulturePicker.Projections {
     public class CurrentCultureWithUntranslatedFilter : IFilterProvider
     {
         private readonly ICultureManager _cultureManager;
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IContentManager _contentManager;
 
-        public CurrentCultureWithUntranslatedFilter(IWorkContextAccessor workContextAccessor, ICultureManager cultureManager, IContentManager contentManager)
+
+        public CurrentCultureWithUntranslatedFilter(IWorkContextAccessor workContextAccessor, ICultureManager cultureManager)
         {
             _workContextAccessor = workContextAccessor;
             _cultureManager = cultureManager;
-            _contentManager = contentManager;
             T = NullLocalizer.Instance;
         }
 
@@ -44,10 +40,13 @@ namespace Laser.Orchard.CulturePicker.Projections
         public void ApplyFilter(dynamic context)
         {
             string currentCulture = _workContextAccessor.GetContext().CurrentCulture;
-            int currentCultureId = _cultureManager.GetCultureByName(currentCulture).Id;
             string siteCulture = _workContextAccessor.GetContext().CurrentSite.SiteCulture;
             int siteCultureId = _cultureManager.GetCultureByName(siteCulture).Id;
-
+            int currentCultureId = siteCultureId;
+            var currentCultureRecord=_cultureManager.GetCultureByName(currentCulture);
+            if (currentCultureRecord != null) {
+                currentCultureId = currentCultureRecord.Id;
+            }
             var query = (IHqlQuery)context.Query;
             if (currentCultureId == siteCultureId)
             {

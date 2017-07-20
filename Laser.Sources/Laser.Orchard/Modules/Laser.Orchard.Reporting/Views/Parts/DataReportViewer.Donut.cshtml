@@ -15,9 +15,9 @@
 </div>
 <script language="javascript" type="text/javascript">
     (function(){
-        var s1 = @Html.Raw(Model.Series1);
+        var s1 = @Html.Raw(dataReportViewerViewModel.JsonData);
         $('#@chartId').jqplot([s1], {
-            seriesColors: laserOrchardReportingColors,
+            seriesColors: @Html.Raw(dataReportViewerViewModel.ColorsArray),
             seriesDefaults: {
                 renderer: jQuery.jqplot.DonutRenderer,
                 rendererOptions: {
