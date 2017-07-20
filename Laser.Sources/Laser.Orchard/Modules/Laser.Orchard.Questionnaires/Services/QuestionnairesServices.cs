@@ -847,7 +847,8 @@ namespace Laser.Orchard.Questionnaires.Services {
                     var answers = queryAnswer.GroupBy(g => g.UserAnswers.AnswerText, StringComparer.InvariantCultureIgnoreCase)
                                                     .Select(s => new AnswerStatsViewModel {
                                                         Answer = s.Key,
-                                                        Count = s.Count()
+                                                        Count = s.Count(),
+                                                        LastDate = s.OrderByDescending(x => x.UserAnswers.AnswerDate).FirstOrDefault() != null ? s.OrderByDescending(x => x.UserAnswers.AnswerDate).FirstOrDefault().UserAnswers.AnswerDate : DateTime.MinValue
                                                     });
 
                     question.Answers.AddRange(answers.OrderBy(o => o.Answer));
