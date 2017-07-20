@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Laser.Orchard.Reporting.ViewModels.EditDataReportViewerViewModel
+@{
     IEnumerable<SelectListItem> reports = Model.Reports;
 }
 <div>
@@ -16,5 +17,14 @@
         <label>@T("ChartTag Css Class")</label>
         <input type="text" value="@Model.ChartTagCssClass" id="DataReportViewerPart.ChartTagCssClass" name="DataReportViewerPart.ChartTagCssClass" />
         <br />
+
+        <label>@T("Color Style")</label>
+        @Html.EnumDropDownListFor(m => m.ColorStyle)
+        <br />
+
+        <label>@T("Start Color")</label>
+        @Html.EnumDropDownListFor(m => m.StartColor)
+        <br />
+
     </fieldset>
 </div>

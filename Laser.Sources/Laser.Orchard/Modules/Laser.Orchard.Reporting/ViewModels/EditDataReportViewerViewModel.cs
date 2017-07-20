@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Laser.Orchard.Reporting.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -25,5 +26,7 @@ namespace Laser.Orchard.Reporting.ViewModels
 
         public string ContainerCssClass { get; set; }
         public string ChartTagCssClass { get; set; }
+        public ColorStyleValues ColorStyle { get; set; }
+        public ChartColorNames StartColor { get; set; }
     }
 }
