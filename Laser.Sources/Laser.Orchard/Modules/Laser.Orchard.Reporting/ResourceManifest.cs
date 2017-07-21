@@ -18,7 +18,6 @@ namespace Laser.Orchard.Reporting
             builder.Add().DefineScript("donutRendererjqplot").SetUrl("plugins/jqplot.donutRenderer.js").SetDependencies("jqplot");
             builder.Add().DefineScript("Reporting").SetUrl("Reporting.js").SetDependencies("jqplot").SetDependencies("JQuery");
             builder.Add().DefineScript("Chosen").SetUrl("chosen/chosen.jquery.js").SetDependencies("jQuery");
-            builder.Add().DefineScript("chart.settings").SetUrl("chart.settings.js");
         }
     }
 }

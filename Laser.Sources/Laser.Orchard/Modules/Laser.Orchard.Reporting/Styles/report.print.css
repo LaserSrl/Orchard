@@ -1,6 +1,7 @@
 ﻿div.headerbar {display: none}
 div#messages {display: none}
 div#local-navigation {display:none}
+div#menubar.menubar-inverse {display:none}
 p.breadcrumb {display:none}
 fieldset:after {visibility:hidden}
 div#content.group {padding:0;margin:0}
