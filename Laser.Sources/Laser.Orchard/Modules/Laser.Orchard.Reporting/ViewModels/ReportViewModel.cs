@@ -41,14 +41,6 @@ namespace Laser.Orchard.Reporting.ViewModels
             }
         }
 
-        public Collection<SelectListItem> ChartTypes
-        {
-            get
-            {
-                return this.chartTypes;
-            }
-        }
-
         public int ReportId { get; set; }
         
         [MaxLength(100)]
@@ -62,9 +54,6 @@ namespace Laser.Orchard.Reporting.ViewModels
         [MaxLength(202)]
         [Required]
         public string CategoryAndType { get; set; }
-
-        [Required]
-        public int ChartTypeId { get; set; }
 
         [Required]
         public int AggregateMethod { get; set; }

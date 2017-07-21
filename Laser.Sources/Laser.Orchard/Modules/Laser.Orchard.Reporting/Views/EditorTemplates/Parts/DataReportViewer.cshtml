@@ -10,6 +10,10 @@
         </div>
     </fieldset>
     <fieldset>
+        <label>@T("Chart Type")</label>
+        @Html.EnumDropDownListFor(m => m.ChartType)
+        <br />
+
         <label>@T("Container Css Class")</label>
         <input type="text" value="@Model.ContainerCssClass" id="DataReportViewerPart.ContainerCssClass" name="DataReportViewerPart.ContainerCssClass" />
                <br />

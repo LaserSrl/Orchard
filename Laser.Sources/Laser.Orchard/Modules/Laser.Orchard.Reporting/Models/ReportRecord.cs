@@ -16,7 +16,6 @@ namespace Laser.Orchard.Reporting.Models
 
         [Aggregate]
         public virtual QueryPartRecord Query { get; set; }
-        public virtual int ChartType { get; set; }
         public virtual string State { get; set; }
         public virtual string GroupByCategory { get; set; }
         public virtual string GroupByType { get; set; }

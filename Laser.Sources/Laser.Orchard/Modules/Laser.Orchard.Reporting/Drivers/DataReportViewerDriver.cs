@@ -98,22 +98,22 @@ namespace Laser.Orchard.Reporting.Drivers
                     HtmlId = part.Record.Id
                 };
 
-                if (report.ChartType == (int)ChartTypes.PieChart)
+                if (part.Record.ChartType == (int)ChartTypes.PieChart)
                 {
                     return ContentShape("Parts_DataReportViewer_PieChart",
                          () => shapeHelper.Parts_DataReportViewer_PieChart(Model: model));
                 }
-                else if (report.ChartType == (int)ChartTypes.SimpleList)
+                else if (part.Record.ChartType == (int)ChartTypes.SimpleList)
                 {
                     return ContentShape("Parts_DataReportViewer_SimpleList",
                          () => shapeHelper.Parts_DataReportViewer_SimpleList(Model: model));
-                } else if (report.ChartType == (int)ChartTypes.Donut) {
+                } else if (part.Record.ChartType == (int)ChartTypes.Donut) {
                     return ContentShape("Parts_DataReportViewer_Donut",
                          () => shapeHelper.Parts_DataReportViewer_Donut(Model: model));
-                } else if (report.ChartType == (int)ChartTypes.Histogram) {
+                } else if (part.Record.ChartType == (int)ChartTypes.Histogram) {
                     return ContentShape("Parts_DataReportViewer_Histogram",
                          () => shapeHelper.Parts_DataReportViewer_Histogram(Model: model));
-                } else if (report.ChartType == (int)ChartTypes.LineChart) {
+                } else if (part.Record.ChartType == (int)ChartTypes.LineChart) {
                     return ContentShape("Parts_DataReportViewer_LineChart",
                          () => shapeHelper.Parts_DataReportViewer_LineChart(Model: model));
                 } else {
@@ -146,6 +146,7 @@ namespace Laser.Orchard.Reporting.Drivers
                 part.Record.Report = new ReportRecord { Id = model.ReportId.Value };
                 part.Record.ChartTagCssClass = model.ChartTagCssClass;
                 part.Record.ContainerTagCssClass = model.ContainerCssClass;
+                part.Record.ChartType = (int)(model.ChartType);
                 part.Record.ColorStyle = (int)(model.ColorStyle);
                 part.Record.StartColor = (int)(model.StartColor);
             }
@@ -172,7 +173,7 @@ namespace Laser.Orchard.Reporting.Drivers
                 {
                     model.ReportId = record.Report.Id;
                 }
-
+                model.ChartType = (ChartTypes)(record.ChartType);
                 model.ChartTagCssClass = record.ChartTagCssClass;
                 model.ContainerCssClass = record.ContainerTagCssClass;
                 model.ColorStyle = (ColorStyleValues)(record.ColorStyle);
@@ -196,6 +197,7 @@ namespace Laser.Orchard.Reporting.Drivers
         protected override void Exporting(DataReportViewerPart part, ExportContentContext context) {
             var root = context.Element(part.PartDefinition.Name);
             if(part.Record != null) {
+                root.SetAttributeValue("ChartType", part.Record.ChartType);
                 root.SetAttributeValue("ContainerTagCssClass", part.Record.ContainerTagCssClass);
                 root.SetAttributeValue("ChartTagCssClass", part.Record.ChartTagCssClass);
                 root.SetAttributeValue("ColorStyle", part.Record.ColorStyle);
@@ -205,7 +207,6 @@ namespace Laser.Orchard.Reporting.Drivers
                 report.SetAttributeValue("Name", reportRecord.Name ?? "");
                 report.SetAttributeValue("Title", reportRecord.Title ?? "");
                 report.SetAttributeValue("State", reportRecord.State ?? "");
-                report.SetAttributeValue("ChartType", reportRecord.ChartType);
                 report.SetAttributeValue("GroupByCategory", reportRecord.GroupByCategory ?? "");
                 report.SetAttributeValue("GroupByType", reportRecord.GroupByType ?? "");
                 report.SetAttributeValue("AggregateMethod", reportRecord.AggregateMethod);
@@ -216,6 +217,10 @@ namespace Laser.Orchard.Reporting.Drivers
         }
         protected override void Importing(DataReportViewerPart part, ImportContentContext context) {
             var root = context.Data.Element(part.PartDefinition.Name);
+            var chartType = root.Attribute("ChartType");
+            if (chartType != null) {
+                part.Record.ChartType = Convert.ToInt32(chartType.Value);
+            }
             var containerTagCssClass = root.Attribute("ContainerTagCssClass");
             if (containerTagCssClass != null) {
                 part.Record.ContainerTagCssClass = containerTagCssClass.Value;
@@ -251,10 +256,6 @@ namespace Laser.Orchard.Reporting.Drivers
                 var state = report.Attribute("State");
                 if (state != null) {
                     reportRecord.State = string.IsNullOrEmpty(state.Value) ? null : state.Value;
-                }
-                var chartType = report.Attribute("ChartType");
-                if (chartType != null) {
-                    reportRecord.ChartType = Convert.ToInt32(chartType.Value);
                 }
                 var groupByCategory = report.Attribute("GroupByCategory");
                 if (groupByCategory != null) {
