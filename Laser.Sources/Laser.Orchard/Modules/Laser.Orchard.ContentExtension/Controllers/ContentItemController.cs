@@ -3,6 +3,7 @@ using Laser.Orchard.StartupConfig.RazorCodeExecution.Services;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
+using Laser.Orchard.UsersExtensions.Filters;
 using Orchard;
 using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Services;
@@ -369,6 +370,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         /// </summary>
         /// <param name="eObj"></param>
         /// <returns></returns>
+        [PolicyApiFilter]
         public Response Post(ExpandoObject eObj) {
             var currentUser = _orchardServices.WorkContext.CurrentUser;
             if (currentUser == null)

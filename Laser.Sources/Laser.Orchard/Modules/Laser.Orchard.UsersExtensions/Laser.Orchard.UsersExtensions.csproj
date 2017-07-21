@@ -155,6 +155,7 @@
     <Compile Include="Controllers\UserUtilityController.cs" />
     <Compile Include="Drivers\UserRegistrationPolicyPartDriver.cs" />
     <Compile Include="Enumerators.cs" />
+    <Compile Include="Filters\PolicyApiFilterAttribute.cs" />
     <Compile Include="Filters\PolicyFilter.cs" />
     <Compile Include="Handlers\FavoriteCulturePartHandler.cs" />
     <Compile Include="Handlers\UserRegistrationPolicyPartHandler.cs" />
