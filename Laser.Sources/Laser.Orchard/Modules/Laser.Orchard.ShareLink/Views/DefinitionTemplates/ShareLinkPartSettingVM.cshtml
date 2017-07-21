@@ -11,6 +11,16 @@
         <span class="hint">@T("Enable user to select a Link")</span>
     </div>
     <div>
+        <label for="@Html.FieldIdFor(m => m.SharedBody)">@T("Description") </label>
+        @Html.TextAreaFor(m => m.SharedBody, new { @class = "text medium tokenized", rows = "5" })
+        <span class="hint">@T("User only for Open Graph - Text to Share")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.ShowBodyChoise)">@T("Show Description Choise") </label>
+        @Html.EditorFor(m => m.ShowBodyChoise)
+        <span class="hint">@T("Enable user to select a Description")</span>
+    </div>
+    <div>
         <label for="@Html.FieldIdFor(m => m.SharedText)" >@T("Text") </label>
         @Html.TextAreaFor(m => m.SharedText, new { @class = "text medium tokenized", rows = "5" })
         <span class="hint">@T("Text to Share")</span>
