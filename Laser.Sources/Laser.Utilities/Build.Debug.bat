@@ -27,12 +27,12 @@ echo [96m Orchard ok[0m
 %LaserPlatformOrchardFolder%\Orchard.Sources\lib\nuget\nuget.exe restore C:\Sviluppo\Laser.Platform.Orchard\Laser.Sources\Laser.Orchard\Laser.Orchard.sln
 echo [96m Compilando Laser ...[0m
 MSBuild /m /nologo /v:q /l:FileLogger,Microsoft.Build.Engine;logfile=%LaserPlatformOrchardFolder%\Laser.Sources\Laser.Utilities\Laser.log  %LaserPlatformOrchardFolder%\Laser.Sources\Laser.Orchard\Laser.Orchard.sln /t:Rebuild /p:Configuration="Debug" /p:Platform="Any CPU"
-echo [96m Laser ok[0m
 if %errorlevel% neq 0 ( 
 	echo [91m Errore Compilando moduli Laser [0m
 	pause 
 	exit /b %errorlevel%
 )
+echo [96m Laser ok[0m
 DEL %LaserPlatformOrchardFolder%\Orchard.Sources\src\Orchard.Web\App_Data\Dependencies\*.* /q
 if %errorlevel% neq 0 ( 
 	echo [91m Errore cancellando folder Dependencies [0m
@@ -40,7 +40,6 @@ if %errorlevel% neq 0 (
 	exit /b %errorlevel%
 )
 echo [96m Done [0m
-set end=%time%
 set end=%time%
 set options="tokens=1-4 delims=:.,"
 for /f %options% %%a in ("%start%") do set start_h=%%a&set /a start_m=100%%b %% 100&set /a start_s=100%%c %% 100&set /a start_ms=100%%d %% 100

@@ -27,18 +27,26 @@ echo [96m Orchard ok[0m
 %LaserPlatformOrchardFolder%\Orchard.Sources\lib\nuget\nuget.exe restore C:\Sviluppo\Laser.Platform.Orchard\Laser.Sources\Laser.Orchard\Laser.Orchard.sln
 echo [96m Compilando Laser ...[0m
 MSBuild /m /nologo /v:q /l:FileLogger,Microsoft.Build.Engine;logfile=%LaserPlatformOrchardFolder%\Laser.Sources\Laser.Utilities\Laser.log  %LaserPlatformOrchardFolder%\Laser.Sources\Laser.Orchard\Laser.Orchard.sln /t:Rebuild /p:Configuration="Release" /p:Platform="Any CPU"
-echo [96m Laser ok[0m
 if %errorlevel% neq 0 ( 
 	echo [91m Errore Compilando moduli Laser [0m
 	pause 
 	exit /b %errorlevel%
 )
+echo [96m Laser ok[0m
 DEL %LaserPlatformOrchardFolder%\Orchard.Sources\src\Orchard.Web\App_Data\Dependencies\*.* /q
 if %errorlevel% neq 0 ( 
 	echo [91m Errore cancellando folder Dependencies [0m
 	pause 
 	exit /b %errorlevel%
 )
+echo [96m Compilando Pubblicazione ...[0m
+MSBuild /m /nologo /v:q /l:FileLogger,Microsoft.Build.Engine;logfile=%LaserPlatformOrchardFolder%\Laser.Sources\Laser.Utilities\Pubblicazione.log  %LaserPlatformOrchardFolder%\Laser.Sources\Laser.Deploy\Pubblicazione.sln /t:Rebuild /p:Configuration="Release" /p:Platform="Any CPU"
+if %errorlevel% neq 0 ( 
+	echo [91m Errore Compilando pubblicazione [0m
+	pause 
+	exit /b %errorlevel%
+)
+echo [96m Pubblicazione ok[0m
 echo [96m Done [0m
 set end=%time%
 set end=%time%
