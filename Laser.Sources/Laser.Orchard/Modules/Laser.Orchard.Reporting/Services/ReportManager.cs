@@ -243,7 +243,7 @@ namespace Laser.Orchard.Reporting.Services {
                     }
                 }
             }
-            return reportLst;
+            return reportLst.OrderBy(x => x.Title);
         }
         public IEnumerable<GenericItem> GetDashboardListForCurrentUser(string titleFilter = "") {
             string filter = (titleFilter ?? "").ToLowerInvariant();
@@ -259,7 +259,7 @@ namespace Laser.Orchard.Reporting.Services {
                     }
                 }
             }
-            return dashboardLst;
+            return dashboardLst.OrderBy(x => x.Title);
         }
         public IEnumerable<DataReportViewerPart> GetReports() {
             // la seguente condizione where è necessaria per ragioni di performance
