@@ -208,6 +208,7 @@
     <Content Include="Styles\Chosen\chosen.min.css" />
     <Content Include="Styles\jquery.jqplot.css" />
     <Content Include="Styles\jquery.jqplot.min.css" />
+    <Content Include="Styles\report.print.css" />
     <Content Include="Styles\reporting.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

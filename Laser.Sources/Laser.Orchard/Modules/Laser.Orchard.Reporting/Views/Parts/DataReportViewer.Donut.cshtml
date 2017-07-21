@@ -6,7 +6,7 @@
     string chartId = "chart" + dataReportViewerViewModel.HtmlId; //Model.ContentItem.Id.ToString();
     string chartClass = string.IsNullOrEmpty(dataReportViewerViewModel.ChartCssClass) ? "default-chart" : dataReportViewerViewModel.ChartCssClass;
 }
-<div class="@dataReportViewerViewModel.ContainerCssClass" id="@chartContainerId">
+<div class="chart-container @dataReportViewerViewModel.ContainerCssClass" id="@chartContainerId">
     <h3>@dataReportViewerViewModel.ReportTitle</h3>
     <div class="chart @chartClass" id="@chartId" style="height:300px; width:400px;"></div>
     @if (dataReportViewerViewModel.Data.Count == 0) {

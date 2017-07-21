@@ -1,0 +1,8 @@
+﻿div.headerbar {display: none}
+div#messages {display: none}
+div#local-navigation {display:none}
+p.breadcrumb {display:none}
+fieldset:after {visibility:hidden}
+div#content.group {padding:0;margin:0}
+#btnRefresh, #btnPrint { display: none}
+div.chart-container {page-break-inside:avoid}
