@@ -25,14 +25,14 @@ namespace KrakeAdmin.Filters {
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
-            if (isAdminKrakePiker(filterContext.RouteData)) {
+            if (isAdminKrakePicker(filterContext.RouteData)) {
                 CaptureResponse(filterContext);
             }
         }
 
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {                 
-            if (isAdminKrakePiker(filterContext.RouteData)) {
+            if (isAdminKrakePicker(filterContext.RouteData)) {
                 _resourceManager.Require("stylesheet", ResourceManifest.Site).AtHead();
                 _resourceManager.Require("stylesheet", ResourceManifest.KrakeAdmin).AtHead();
                 _resourceManager.Require("stylesheet", ResourceManifest.Krake).AtHead();
@@ -46,13 +46,20 @@ namespace KrakeAdmin.Filters {
             }
         }
 
-        public bool isAdminKrakePiker(RouteData route) {
+        public bool isAdminKrakePicker(RouteData route) {
             var themeName = _siteThemeService.GetSiteTheme();
-            bool isPikerContent = route.Values["area"].Equals("Orchard.ContentPicker");
+            bool isActionIndex = String.Equals(route.Values["action"].ToString(), "index", StringComparison.OrdinalIgnoreCase);
+            bool isKrakeTheme = themeName.Id.Equals("KrakeAdmin") || themeName.Id.Equals("KrakeDefaultTheme");
+
+            //advanced search
+            bool isPickerContent = route.Values["area"].Equals("Orchard.ContentPicker");
             bool isAdmin = route.Values["controller"].Equals("admin");
-            bool isActionIndex = route.Values["action"].Equals("index");
-            bool isKrakeTheme = themeName.Id.Equals("KrakeAdmin");
-            return isActionIndex && isAdmin && isPikerContent && isKrakeTheme;
+            
+            //simple search
+            bool isSearchContent = route.Values["area"].Equals("Orchard.Search");
+            bool isContentPiker = route.Values["controller"].Equals("ContentPicker");
+
+            return isActionIndex && isKrakeTheme && (isAdmin && isPickerContent || isSearchContent && isContentPiker);
         }
 
         private void CaptureResponse(ControllerContext filterContext) {

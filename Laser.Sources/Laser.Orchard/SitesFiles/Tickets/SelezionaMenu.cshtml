@@ -1,0 +1,49 @@
+@using System.IO;
+@using System.Collections.Generic;
+@using System.Linq;
+@using Orchard;
+@using Orchard.Data;
+@using Orchard.Security;
+@using Orchard.ContentManagement;
+@using Orchard.Users.Models;
+@using Orchard.Utility.Extensions;
+@using Orchard.Projections.Models;
+@using Orchard.Projections.Services;
+@using System.Web.Mvc;
+@using Orchard.Mvc.Html;
+@using Orchard.Workflows;
+@using Orchard.Logging;
+@using Orchard.ContentManagement.Handlers;
+@{
+    string result = "Redirect";
+    IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
+    //var myUrlHelper = new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
+    var myUrlHelper = new UrlHelper(Model.OrchardServices.WorkContext.HttpContext.Request.RequestContext);
+    Orchard.Workflows.Models.WorkflowContext wfCtx = null;
+    _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
+    wfCtx = Model.Tokens["Workflow"];
+    IContentManager _contentManager;
+    _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+    dynamic ci = Model.ContentItem;
+    string esercizioId = ci.Id.ToString();// string.Format("{{{0}}}", ci.Id);
+    int menuId = _fieldIndexPartRecord.Table
+.Where(f =>
+   f.StringFieldIndexRecords.Any(r =>
+       r.PropertyName == "Menudelgiorno.RelatedEsercizioCommerciale." && r.Value == esercizioId)
+)
+.Select(x => x.ContentItemRecord.Id).FirstOrDefault();
+    var GetMenu = _contentManager.Get(menuId);
+    //(IContent)(_contentManager.Query(VersionOptions.Latest).ForType("Menudelgiorno").Where(x=>x.Menudelgiorno.RelatedEsercizioCommerciale.Value==ci.Id).List().ToList());
+    if (GetMenu == null) {
+        GetMenu = _contentManager.New("Menudelgiorno");
+        _contentManager.Create(GetMenu, VersionOptions.DraftRequired);
+        ((dynamic)GetMenu).Menudelgiorno.RelatedEsercizioCommerciale.Value = esercizioId;
+        ((dynamic)GetMenu).TitlePart.Title = "Menu - "+((dynamic)ci).TitlePart.Title;
+        ((dynamic)GetMenu).AutoroutePart.DisplayAlias = "Menu" + esercizioId;
+        _contentManager.Publish(GetMenu);
+        result = "MenuCreato";
+    }
+    else {
+        Model.Tokens["Workflow"].SetState("RedirectUrl", myUrlHelper.ItemEditUrl(GetMenu));
+    }
+}@result

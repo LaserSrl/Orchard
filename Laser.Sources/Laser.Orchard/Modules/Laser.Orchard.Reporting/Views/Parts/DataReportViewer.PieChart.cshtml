@@ -1,0 +1,36 @@
+﻿@using Laser.Orchard.Reporting.ViewModels;
+@{
+    DataReportViewerViewModel dataReportViewerViewModel = Model.Model;
+    var data = dataReportViewerViewModel.JsonData;
+    string chartContainerId = "chartContainer" + dataReportViewerViewModel.HtmlId; // Model.ContentItem.Id.ToString();
+    string chartId = "chart" + dataReportViewerViewModel.HtmlId; //Model.ContentItem.Id.ToString();
+    string chartClass = string.IsNullOrEmpty(dataReportViewerViewModel.ChartCssClass) ? "default-chart" : dataReportViewerViewModel.ChartCssClass;
+}
+<div class="@dataReportViewerViewModel.ContainerCssClass" id="@chartContainerId">
+    <input name="reportData" type="hidden" value="@data" />
+    <h3>@dataReportViewerViewModel.ReportTitle</h3>
+    <div class="chart @chartClass"  id="@chartId" style="height:300px; width:400px;"></div>
+    @if (dataReportViewerViewModel.Data.Count == 0)
+    {
+        <h3>@T("There is no data")</h3>
+    }
+</div>
+<script language="javascript" type="text/javascript">
+    //$("#@chartContainerId").Reporting();
+    (function(){
+        var s1 = @Html.Raw(dataReportViewerViewModel.JsonData);
+        $('#@chartId').jqplot([s1], {
+            seriesColors: @Html.Raw(dataReportViewerViewModel.ColorsArray),
+            seriesDefaults: {
+                // Make this a pie chart.
+                renderer: jQuery.jqplot.PieRenderer,
+                rendererOptions: {
+                    // Put data labels on the pie slices.
+                    // By default, labels show the percentage of the slice.
+                    showDataLabels: true
+                }
+            },
+            legend: { show: true, location: 'e' }
+        });
+    })();
+</script>

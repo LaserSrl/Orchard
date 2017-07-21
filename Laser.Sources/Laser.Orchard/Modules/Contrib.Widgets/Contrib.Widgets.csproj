@@ -169,6 +169,9 @@
     <Compile Include="Services\IWidgetManager.cs" />
     <Compile Include="Services\ILayerManager.cs" />
     <Compile Include="Services\WidgetManager.cs" />
+    <Compile Include="Settings\WidgetsContainerEvents.cs" />
+    <Compile Include="Settings\WidgetsContainerSettings.cs" />
+    <Compile Include="ViewModels\WidgetsContainerSettingsViewModel.cs" />
     <Compile Include="ViewModels\WidgetsContainerViewModel.cs" />
     <Compile Include="Drivers\WidgetsContainerPartDriver.cs" />
     <Compile Include="Models\WidgetsContainerPart.cs" />
@@ -202,6 +205,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\WidgetsContainerSettingsViewModel.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

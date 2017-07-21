@@ -80,8 +80,8 @@
 /*Statistiche*/
 
 .answer {
-    display:inline-block;
-    width:100%;
+    display: inline-block !important;
+    width: 100%;
 }
 
 .answerlist {
@@ -92,4 +92,9 @@
     height: 200px;
     width: 300px;
     float:right;
+}
+
+.line-separator:not(:last-of-type) {
+    height:1px;
+    border-bottom:1px solid #D3D3D3;
 }

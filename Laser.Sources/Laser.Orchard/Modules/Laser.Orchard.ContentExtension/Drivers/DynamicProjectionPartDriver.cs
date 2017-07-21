@@ -1,33 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Web.Mvc;
+using AutoMapper;
 using Laser.Orchard.ContentExtension.Models;
+using Laser.Orchard.ContentExtension.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Localization;
-using Orchard.Security;
-using Orchard.UI.Navigation;
-using Laser.Orchard.ContentExtension.Permissions;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Projections.ViewModels;
-using Orchard.Projections.Services;
-using Orchard.Projections.Models;
 using Orchard.Core.Title.Models;
-using Orchard.Projections.Descriptors.Layout;
-using Orchard.Forms.Services;
-using Laser.Orchard.ContentExtension.ViewModels;
 using Orchard.Data;
-using Orchard.Utility.Extensions;
-using AutoMapper;
-using Orchard.Projections.Descriptors.Property;
-using Orchard.Tokens;
 using Orchard.DisplayManagement;
-using System.Web.Mvc;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Extensions;
+using Orchard.Forms.Services;
+using Orchard.Localization;
+using Orchard.Projections.Descriptors.Layout;
+using Orchard.Projections.Descriptors.Property;
+using Orchard.Projections.Models;
+using Orchard.Projections.Services;
+using Orchard.Projections.ViewModels;
+using Orchard.Security;
+using Orchard.Tokens;
+using Orchard.UI.Navigation;
+using Orchard.Utility.Extensions;
 
 namespace Laser.Orchard.ContentExtension.Drivers {
+    [OrchardFeature("Laser.Orchard.ContentExtension.DynamicProjection")]
     public class DynamicProjectionPartDriver : ContentPartDriver<DynamicProjectionPart> {
 
         private readonly IAuthorizationService _authorizationService;

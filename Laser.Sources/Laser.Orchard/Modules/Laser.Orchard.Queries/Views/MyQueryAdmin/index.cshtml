@@ -7,7 +7,7 @@
 <div class="manage">
     <a class="button primaryAction" href="@Url.Action("CreateOneShot", "UserQueryAdmin", new { area = "Laser.Orchard.Queries", id = 0 })" title="@T("Create New One Shot Query")">@T("Create New One Shot Query")</a>
     <a class="button primaryAction" href="@Url.Action("Create", "UserQueryAdmin", new { area = "Laser.Orchard.Queries", id = 0 })" title="@T("Create New UserQuery")">@T("Create New UserQuery")</a>
-    <a class="button primaryAction" href="@Url.Action("Edit", "MyQueryAdmin", new { area = "Laser.Orchard.Queries", id = 0 })" title="@T("Create New Query")">@T("Create New Query")</a>
+    <a class="button primaryAction" href="@Url.Action("Edit", "MyQueryAdmin", new { area = "Laser.Orchard.Queries", id = 0 })" title="@T("Create New HQL Query")">@T("Create New HQL Query")</a>
 </div>
 @using (Html.BeginForm("Index", "MyQueryAdmin", FormMethod.Post)) {
     @Html.AntiForgeryToken()
