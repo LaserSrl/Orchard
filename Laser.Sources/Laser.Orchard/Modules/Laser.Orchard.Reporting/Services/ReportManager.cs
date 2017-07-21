@@ -262,17 +262,18 @@ namespace Laser.Orchard.Reporting.Services {
             return dashboardLst;
         }
         public IEnumerable<DataReportViewerPart> GetReports() {
+            // la seguente condizione where è necessaria per ragioni di performance
             return contentManager.Query<DataReportViewerPart>().Where<DataReportViewerPartRecord>(x => true).List();
         }
         public Dictionary<int, Permission> GetReportPermissions() {
             if (_reportPermissions == null) {
-                _reportPermissions = new Security.Permissions(contentManager, _transactionManager).GetReportPermissions();
+                _reportPermissions = new Security.Permissions(contentManager).GetReportPermissions();
             }
             return _reportPermissions;
         }
         public Dictionary<int, Permission> GetDashboardPermissions() {
             if (_dashboardPermissions == null) {
-                _dashboardPermissions = new Security.Permissions(contentManager, _transactionManager).GetDashboardPermissions();
+                _dashboardPermissions = new Security.Permissions(contentManager).GetDashboardPermissions();
             }
             return _dashboardPermissions;
         }
