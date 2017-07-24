@@ -13,7 +13,8 @@ namespace Laser.Orchard.Reporting.Services {
         IEnumerable<AggregationResult> RunReport(ReportRecord report, IContent container);
         IEnumerable<AggregationResult> RunHqlReport(ReportRecord report, IContent container);
         int GetCount(ReportRecord report, IContent container);
-        IEnumerable<ReportItem> GetReportListForCurrentUser(string titleFilter = "");
+        IEnumerable<GenericItem> GetReportListForCurrentUser(string titleFilter = "");
+        IEnumerable<GenericItem> GetDashboardListForCurrentUser(string titleFilter = "");
         IEnumerable<DataReportViewerPart> GetReports();
         Dictionary<int, Permission> GetReportPermissions();
         Dictionary<int, Permission> GetDashboardPermissions();

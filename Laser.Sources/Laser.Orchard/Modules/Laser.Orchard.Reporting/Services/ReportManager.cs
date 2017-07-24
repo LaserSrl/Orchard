@@ -229,10 +229,10 @@ namespace Laser.Orchard.Reporting.Services {
                 yield return contentQuery;
             }
         }
-        public IEnumerable<ReportItem> GetReportListForCurrentUser(string titleFilter = "") {
+        public IEnumerable<GenericItem> GetReportListForCurrentUser(string titleFilter = "") {
             string filter = (titleFilter ?? "").ToLowerInvariant();
-            var reportLst = new List<ReportItem>();
-            var unfilteredList = GetReports().Select(x => new ReportItem {
+            var reportLst = new List<GenericItem>();
+            var unfilteredList = GetReports().Select(x => new GenericItem {
                 Id = x.Id,
                 Title =  (x.Has<TitlePart>() ? x.As<TitlePart>().Title : T("[No Title]").ToString())
             });
@@ -243,20 +243,37 @@ namespace Laser.Orchard.Reporting.Services {
                     }
                 }
             }
-            return reportLst;
+            return reportLst.OrderBy(x => x.Title);
+        }
+        public IEnumerable<GenericItem> GetDashboardListForCurrentUser(string titleFilter = "") {
+            string filter = (titleFilter ?? "").ToLowerInvariant();
+            var dashboardLst = new List<GenericItem>();
+            var unfilteredList = contentManager.Query("DataReportDashboard").List().Select(x => new GenericItem {
+                Id = x.Id,
+                Title = (x.Has<TitlePart>() ? x.As<TitlePart>().Title : T("[No Title]").ToString())
+            });
+            foreach (var dashboard in unfilteredList) {
+                if (dashboard.Title.ToLowerInvariant().Contains(filter)) {
+                    if (_authorizer.Authorize(GetDashboardPermissions()[dashboard.Id])) {
+                        dashboardLst.Add(dashboard);
+                    }
+                }
+            }
+            return dashboardLst.OrderBy(x => x.Title);
         }
         public IEnumerable<DataReportViewerPart> GetReports() {
+            // la seguente condizione where è necessaria per ragioni di performance
             return contentManager.Query<DataReportViewerPart>().Where<DataReportViewerPartRecord>(x => true).List();
         }
         public Dictionary<int, Permission> GetReportPermissions() {
             if (_reportPermissions == null) {
-                _reportPermissions = new Security.Permissions(contentManager, _transactionManager).GetReportPermissions();
+                _reportPermissions = new Security.Permissions(contentManager).GetReportPermissions();
             }
             return _reportPermissions;
         }
         public Dictionary<int, Permission> GetDashboardPermissions() {
             if (_dashboardPermissions == null) {
-                _dashboardPermissions = new Security.Permissions(contentManager, _transactionManager).GetDashboardPermissions();
+                _dashboardPermissions = new Security.Permissions(contentManager).GetDashboardPermissions();
             }
             return _dashboardPermissions;
         }

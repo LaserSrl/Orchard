@@ -24,6 +24,9 @@ namespace Laser.Orchard.Reporting.ViewModels
         [Required]
         public int? ReportId { get; set; }
 
+        [Required]
+        public ChartTypes ChartType { get; set; }
+
         public string ContainerCssClass { get; set; }
         public string ChartTagCssClass { get; set; }
         public ColorStyleValues ColorStyle { get; set; }
