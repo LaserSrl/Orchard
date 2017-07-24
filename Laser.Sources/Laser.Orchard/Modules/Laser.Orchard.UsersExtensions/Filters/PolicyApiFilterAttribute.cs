@@ -26,8 +26,8 @@ namespace Laser.Orchard.UsersExtensions.Filters {
 
         public PolicyApiFilterAttribute() {
             ResponseDictionary = new Dictionary<string, Func<IEnumerable<PolicyTextInfoPart>, IPolicyServices, string>>() {
-                { "LMNV", (parts, service) => service.PoliciesLMNVSerialization(parts) },
-                { "PureJson", (parts, service) => service.PoliciesPureJsonSerialization(parts) }
+                { "LMNV", (parts, service) => service.PoliciesLMNVSerialization(parts) }, //keys should be all caps
+                { "PUREJSON", (parts, service) => service.PoliciesPureJsonSerialization(parts) }
             };
         }
 
@@ -67,7 +67,7 @@ namespace Laser.Orchard.UsersExtensions.Filters {
                     if (missingPolicyIds.Any()) {
                         var outputFormat = _workContext.HttpContext.Request
                             .Headers["OutputFormat"];
-                        outputFormat = string.IsNullOrWhiteSpace(outputFormat) ? "LMNV" : outputFormat.ToUpperInvariant();
+                        outputFormat = string.IsNullOrWhiteSpace(outputFormat) ? "LMNV" : outputFormat.ToUpperInvariant(); //capitalize OutputFOrmat
 
                         var requiredPolicies = neededPolicies
                             .Where(po => missingPolicyIds.Contains(po.Id));
