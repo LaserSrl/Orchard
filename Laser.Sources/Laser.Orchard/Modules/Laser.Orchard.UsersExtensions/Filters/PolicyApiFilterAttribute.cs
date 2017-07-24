@@ -67,7 +67,7 @@ namespace Laser.Orchard.UsersExtensions.Filters {
                     if (missingPolicyIds.Any()) {
                         var outputFormat = _workContext.HttpContext.Request
                             .Headers["OutputFormat"];
-                        outputFormat = string.IsNullOrWhiteSpace(outputFormat) ? "LMNV" : outputFormat;
+                        outputFormat = string.IsNullOrWhiteSpace(outputFormat) ? "LMNV" : outputFormat.ToUpperInvariant();
 
                         var requiredPolicies = neededPolicies
                             .Where(po => missingPolicyIds.Contains(po.Id));
