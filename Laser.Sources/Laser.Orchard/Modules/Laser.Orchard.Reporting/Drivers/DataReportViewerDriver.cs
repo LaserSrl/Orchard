@@ -116,6 +116,9 @@ namespace Laser.Orchard.Reporting.Drivers
                 } else if (part.Record.ChartType == (int)ChartTypes.LineChart) {
                     return ContentShape("Parts_DataReportViewer_LineChart",
                          () => shapeHelper.Parts_DataReportViewer_LineChart(Model: model));
+                } else if (part.Record.ChartType == (int)ChartTypes.HorizontalBars) {
+                    return ContentShape("Parts_DataReportViewer_HorizontalBars",
+                         () => shapeHelper.Parts_DataReportViewer_HorizontalBars(Model: model));
                 } else {
                     return ContentShape("Parts_DataReportViewer",
                           () => shapeHelper.Parts_DataReportViewer_Summary(
