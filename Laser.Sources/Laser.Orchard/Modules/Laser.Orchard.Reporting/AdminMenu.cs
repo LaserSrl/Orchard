@@ -1,20 +1,11 @@
-﻿using Laser.Orchard.Reporting.Models;
-using Orchard.ContentManagement;
-using Orchard.Core.Title.Models;
-using Orchard.Data;
-using Orchard.Localization;
+﻿using Orchard.Localization;
 using Orchard.Projections;
 using Orchard.UI.Navigation;
-using System.Collections.Generic;
 
 namespace Laser.Orchard.Reporting {
     public class AdminMenu : INavigationProvider
     {
-        private readonly IContentManager _contentManager;
-        private readonly ITransactionManager _transactionManager;
-        public AdminMenu(IContentManager contentManager, ITransactionManager transactionManager) {
-            _contentManager = contentManager;
-            _transactionManager = transactionManager;
+        public AdminMenu() {
             T = NullLocalizer.Instance;
         }
         public Localizer T { get; set; }
@@ -22,32 +13,43 @@ namespace Laser.Orchard.Reporting {
 
         public void GetNavigation(NavigationBuilder builder)
         {
-            builder.AddImageSet("Data Reporting").Add(T("Data Reports"), "3",
-                menu =>
-                    menu.Add(T("Data Reports"), "1.0",
-                    q => q.Action("Index", "Report", new { area = "Laser.Orchard.Reporting" }).Permission(Permissions.ManageQueries).LocalNav()), null);
-
-            builder.Add(item => {
-                item.Caption(T("Execute Data Reports"))
-                    .Permission(Security.Permissions.ShowDataReports)
-                    .Position("3.05")
-                    .Action("ShowReports", "Report", new { area = "Laser.Orchard.Reporting" });
-            });
-            builder.Add(item => {
-                item.Caption(T("Data Report Dashboards"))
+            builder.Add(menu => {
+                menu.Caption(T("Charts & Reports"))
                     .Permission(Security.Permissions.ShowDataDashboard)
-                    .Position("3.06");
-                var dashboardPermissions = new Security.Permissions(_contentManager, _transactionManager).GetDashboardPermissions();
-                foreach(var dashboard in GetDashboards()) {
-                    item.Add(T(dashboard.As<TitlePart>().Title), sub => sub
-                        .Action("ShowDashboard", "Report", new { area = "Laser.Orchard.Reporting", Id = dashboard.Id })
-                        .Permission(dashboardPermissions[dashboard.Id])
-                    );
-                }
+                    .Position("3.07");
+                menu.Add(T("Query Report Definition"), "1.0", sub1 => sub1
+                    .Action("Index", "Report", new { area = "Laser.Orchard.Reporting" })
+                    .Permission(Permissions.ManageQueries));
+
+                //var reports = _contentManager.GetContentTypeDefinitions().Where(x => x.Parts.Any(y => y.PartDefinition.Name == "DataReportViewerPart") && x.Settings.Any(z => z.Key == "Stereotype" && z.Value == "Widget") == false);
+                //foreach (var report in reports) {
+                //    menu.Add(sub4 => sub4.Caption(T(" - " + report.DisplayName))
+                //        .Action("List", "Admin", new RouteValueDictionary {
+                //                {"area", "Laser.Orchard.AdvancedSearch"},
+                //                {"model.Id", report.Name}
+                //        }));
+                //}
+
+                //var dashboardType = _contentManager.GetContentTypeDefinitions().Where(x => x.Name == "DataReportDashboard").FirstOrDefault();
+                //menu.Add(T("Dashboard Definitions"), "3.0", sub3 => sub3
+                //    .Action("List", "Admin",
+                //        new RouteValueDictionary {
+                //                {"area", "Laser.Orchard.AdvancedSearch"},
+                //                {"model.Id", dashboardType.Name}
+                //        })
+                //    .Permission(OrchardCoreContents.DynamicPermissions.CreateDynamicPermission(
+                //        OrchardCoreContents.DynamicPermissions.PermissionTemplates["EditOwnContent"],
+                //        dashboardType)));
+
+                menu.Add(sub51 => sub51.Caption(T("Charts"))
+                    .Permission(Security.Permissions.ShowDataReports)
+                    .Action("ShowReports", "Report", new { area = "Laser.Orchard.Reporting" })
+                );
+                menu.Add(sub52 => sub52.Caption(T("Dashboards"))
+                    .Permission(Security.Permissions.ShowDataDashboard)
+                    .Action("DashboardList", "Report", new { area = "Laser.Orchard.Reporting" })
+                );
             });
-        }
-        private IEnumerable<ContentItem> GetDashboards() {
-            return _contentManager.Query().ForType("DataReportDashboard").List();
         }
     }
 }

@@ -5,15 +5,16 @@
     Style.Include("jquery-ui.css");
     Style.Include("jquery.jqplot.css");
     Style.Include("reporting.css");
+    Style.Include("report.print.css").Attributes.Add("media", "print");
     Script.Require("jQueryUI_Widget").AtHead();
     Script.Require("jqplot").AtHead();
     Script.Require("barjqplot").AtHead();
     Script.Require("categoryAxisjqplot").AtHead();
+    Script.Require("pointLabelsjqplot").AtHead();
     Script.Require("piejqplot").AtHead();
     Script.Require("donutRendererjqplot").AtHead();
     Script.Require("Chosen").AtHead();
     Script.Require("Reporting").AtHead();
-    Script.Require("chart.settings").AtHead();
     IContentManager contentManager = null;
     WorkContext.TryResolve<IContentManager>(out contentManager);
 }
@@ -24,7 +25,8 @@
             <legend>@T("Filters")</legend>
             <div>
                 @Display(contentManager.BuildEditor(Model.Filters))
-                <button class="primaryAction" type="button" value="@T("Refresh")" id="btnRefresh">@T("Refresh")</button>
+                <button class="primaryAction" type="button" value="Refresh" id="btnRefresh">@T("Refresh")</button>
+                <button class="primaryAction" type="button" value="Print" id="btnPrint">@T("Print")</button>
             </div>
         </fieldset>
     }
@@ -36,6 +38,7 @@
     <script type="text/javascript">
         $(function () {
             $("#reportFilters button[value='submit.Save']").hide();
+            $("#btnPrint").click(function () { window.print(); });
             var theForm = $("#reportFilters").parent();
             $("#btnRefresh").click(function () {
                 var formData = theForm.serialize();
@@ -49,6 +52,7 @@
         });
     </script>
 } else {
+    <button class="primaryAction" type="button" value="Print" id="btnPrint" onclick="window.print();">@T("Print")</button>
     foreach (var rep in Model.Reports) {
         @Display(BuildDisplay(rep, "Detail"))
     }
