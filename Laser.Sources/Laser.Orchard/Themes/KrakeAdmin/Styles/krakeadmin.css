@@ -9654,3 +9654,9 @@ input#adminfilter {
     margin-top: 3px;
     width: 180px;
 }
+
+/*contact index*/
+#buttonContactSearch{
+    position: relative;
+    z-index: 1;
+}
