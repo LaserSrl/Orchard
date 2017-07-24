@@ -5,7 +5,6 @@ using Orchard.Projections.Models;
 using Laser.Orchard.Reporting.Models;
 using Laser.Orchard.Reporting.ViewModels;
 using System;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using Orchard.ContentManagement;
@@ -138,7 +137,6 @@ namespace Laser.Orchard.Reporting.Controllers {
                 Title = model.Title,
                 Name = model.Name,
                 Query = new QueryPartRecord { Id = model.QueryId.Value },
-                ChartType = model.ChartTypeId,
                 GroupByCategory = groupByDescriptor.Category,
                 GroupByType = groupByDescriptor.Type,
                 AggregateMethod = model.AggregateMethod
@@ -165,7 +163,6 @@ namespace Laser.Orchard.Reporting.Controllers {
                 Title = model.Title,
                 Name = model.Name,
                 Query = new QueryPartRecord { Id = model.QueryId.Value },
-                ChartType = model.ChartTypeId,
                 GroupByCategory = "",
                 GroupByType = "",
                 AggregateMethod = 0
@@ -253,7 +250,6 @@ namespace Laser.Orchard.Reporting.Controllers {
             report.Query = model.QueryId.HasValue ? new QueryPartRecord { Id = model.QueryId.Value } : null;
             report.GroupByCategory = groupByDescriptor.Category;
             report.GroupByType = groupByDescriptor.Type;
-            report.ChartType = model.ChartTypeId;
             report.AggregateMethod = model.AggregateMethod;
 
             this.reportRepository.Update(report);
@@ -288,7 +284,6 @@ namespace Laser.Orchard.Reporting.Controllers {
             report.Query = model.QueryId.HasValue ? new QueryPartRecord { Id = model.QueryId.Value } : null;
             report.GroupByCategory = "";
             report.GroupByType = "";
-            report.ChartType = model.ChartTypeId;
             report.AggregateMethod = 0;
 
             reportRepository.Update(report);
@@ -315,7 +310,6 @@ namespace Laser.Orchard.Reporting.Controllers {
                 CategoryAndType = this.EncodeGroupByCategoryAndGroupByType(report.GroupByCategory, report.GroupByType),
                 Title = report.Title,
                 Name = report.Name,
-                ChartTypeId = report.ChartType,
                 AggregateMethod = report.AggregateMethod,
                 QueryId = report.Query != null ? (int?)report.Query.Id : null
             };
@@ -339,7 +333,6 @@ namespace Laser.Orchard.Reporting.Controllers {
                 ReportId = report.Id,
                 Title = report.Title,
                 Name = report.Name,
-                ChartTypeId = report.ChartType,
                 QueryId = report.Query != null ? (int?)report.Query.Id : null
             };
 
@@ -423,6 +416,15 @@ namespace Laser.Orchard.Reporting.Controllers {
             }
             return View(model);
         }
+        public ActionResult DashboardList(DashboardListViewModel model) {
+            var list = reportManager.GetDashboardListForCurrentUser(model.TitleFilter);
+            model.PagerParameters.Page = model.page;
+            Pager pager = new Pager(services.WorkContext.CurrentSite, model.PagerParameters);
+            var pagerShape = services.New.Pager(pager).TotalItemCount(list.Count());
+            model.Pager = pagerShape;
+            model.Dashboards = list.Skip(pager.GetStartIndex()).Take(pager.PageSize);
+            return View(model);
+        }
         private string EncodeGroupByCategoryAndGroupByType(string category, string type)
         {
             return string.Format(CultureInfo.InvariantCulture, "{0}__{1}", category, type);
@@ -456,8 +458,6 @@ namespace Laser.Orchard.Reporting.Controllers {
                     Value = query.Id.ToString()
                 });
             }
-
-            FillCharts(model.ChartTypes);
 
             // Fill Aggregations
             model.Aggregations.Add(new SelectListItem { Text = T("Count").Text, Value = ((byte)AggregateMethods.Count).ToString(CultureInfo.InvariantCulture) });
@@ -500,14 +500,6 @@ namespace Laser.Orchard.Reporting.Controllers {
                     Value = query.Id.ToString()
                 });
             }
-            FillCharts(model.ChartTypes);
-        }
-        private void FillCharts(Collection<SelectListItem> chartTypes) {
-            chartTypes.Add(new SelectListItem { Text = T("Pie Chart").Text, Value = ((byte)ChartTypes.PieChart).ToString(CultureInfo.InvariantCulture) });
-            chartTypes.Add(new SelectListItem { Text = T("Simple List").Text, Value = ((byte)ChartTypes.SimpleList).ToString(CultureInfo.InvariantCulture) });
-            chartTypes.Add(new SelectListItem { Text = T("Histogram").Text, Value = ((byte)ChartTypes.Histogram).ToString(CultureInfo.InvariantCulture) });
-            chartTypes.Add(new SelectListItem { Text = T("Line Chart").Text, Value = ((byte)ChartTypes.LineChart).ToString(CultureInfo.InvariantCulture) });
-            chartTypes.Add(new SelectListItem { Text = T("Donut Chart").Text, Value = ((byte)ChartTypes.Donut).ToString(CultureInfo.InvariantCulture) });
         }
     }
 }

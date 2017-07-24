@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Laser.Orchard.Reporting.Models
-{
+﻿namespace Laser.Orchard.Reporting.Models {
     public enum ChartTypes
     {
         None = 0,
@@ -12,6 +6,7 @@ namespace Laser.Orchard.Reporting.Models
         SimpleList = 2,
         Histogram = 3,
         LineChart = 4,
-        Donut = 5
+        Donut = 5,
+        HorizontalBars = 6
     }
 }
