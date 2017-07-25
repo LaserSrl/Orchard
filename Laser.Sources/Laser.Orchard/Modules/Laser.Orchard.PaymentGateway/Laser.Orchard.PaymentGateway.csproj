@@ -153,9 +153,11 @@
     <Compile Include="Controllers\PaymentInfoController.cs" />
     <Compile Include="Controllers\PosAdminBaseController.cs" />
     <Compile Include="Drivers\PayButtonPartDriver.cs" />
+    <Compile Include="Handlers\PaymentGatewaySiteSettingsPartHandler.cs" />
     <Compile Include="IPaymentEventHandler.cs" />
     <Compile Include="Models\PayButton.cs" />
     <Compile Include="Models\PayButtonPartSettings.cs" />
+    <Compile Include="Models\PaymentGatewaySiteSettingsPart.cs" />
     <Compile Include="Models\PaymentRecord.cs" />
     <Compile Include="Navigation.cs" />
     <Compile Include="PaymentEventHandler.cs" />
