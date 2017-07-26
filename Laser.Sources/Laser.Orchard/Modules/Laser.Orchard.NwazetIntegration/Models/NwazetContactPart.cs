@@ -68,5 +68,8 @@ namespace Laser.Orchard.NwazetIntegration.Models {
             }
             return false;
         }
+        public override int GetHashCode() {
+            return base.GetHashCode();
+        }
     }
 }

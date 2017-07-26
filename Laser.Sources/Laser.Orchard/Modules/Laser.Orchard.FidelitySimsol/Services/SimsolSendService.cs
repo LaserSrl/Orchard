@@ -359,7 +359,7 @@ namespace Laser.Orchard.FidelitySimsol.Services
                     {
                         campaign.AddData("description", tokenCamp.SelectToken("description").ToString());
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         campaign.AddData("description", "no description");
                     }

@@ -43,7 +43,7 @@ namespace Laser.Orchard.FidelityGateway.Models
             {
                 Data.Add(k, v);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return false;
             }

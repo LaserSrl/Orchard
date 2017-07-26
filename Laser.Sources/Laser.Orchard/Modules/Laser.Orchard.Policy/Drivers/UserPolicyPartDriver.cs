@@ -51,55 +51,57 @@ namespace Laser.Orchard.Policy.Drivers {
         }
 
 
-        protected override void Exporting(UserPolicyPart part, ExportContentContext context) {
+        //protected override void Exporting(UserPolicyPart part, ExportContentContext context) {
 
-            if (part.UserPolicyAnswers != null) {
+        //    if (part.UserPolicyAnswers != null) {
 
-                //context.Element(part.PartDefinition.Name).SetAttributeValue("UserPolicyAnswers", part.UserPolicyAnswers);
-                //var avPolAns = context.Element(part.PartDefinition.Name).Element("UserPolicyAnswers");
+        //        //context.Element(part.PartDefinition.Name).SetAttributeValue("UserPolicyAnswers", part.UserPolicyAnswers);
+        //        //var avPolAns = context.Element(part.PartDefinition.Name).Element("UserPolicyAnswers");
 
-                foreach (UserPolicyAnswersRecord recPolicyAnswers in part.UserPolicyAnswers) {
-                    XElement avPolAns = new XElement("UserPolicyAnswers");
-                    avPolAns.SetAttributeValue("Id", recPolicyAnswers.Id);
-                    avPolAns.SetAttributeValue("AnswerDate", recPolicyAnswers.AnswerDate);
-                    avPolAns.SetAttributeValue("Accepted", recPolicyAnswers.Accepted);
+        //        foreach (UserPolicyAnswersRecord recPolicyAnswers in part.UserPolicyAnswers) {
+        //            XElement avPolAns = new XElement("UserPolicyAnswers");
+        //            avPolAns.SetAttributeValue("Id", recPolicyAnswers.Id);
+        //            avPolAns.SetAttributeValue("AnswerDate", recPolicyAnswers.AnswerDate);
+        //            avPolAns.SetAttributeValue("Accepted", recPolicyAnswers.Accepted);
 
-                    XElement policytextinfo = new XElement("PolicyTextInfoPartRecord");
-                    var a = recPolicyAnswers.PolicyTextInfoPartRecord;
-                    policytextinfo.SetAttributeValue("UserHaveToAccept", a.UserHaveToAccept);
-                    policytextinfo.SetAttributeValue("Priority", a.Priority);
-                    policytextinfo.SetAttributeValue("PolicyType", a.PolicyType);
-                }
-            }
+        //            XElement policytextinfo = new XElement("PolicyTextInfoPartRecord");
+        //            var a = recPolicyAnswers.PolicyTextInfoPartRecord;
+        //            policytextinfo.SetAttributeValue("UserHaveToAccept", a.UserHaveToAccept);
+        //            policytextinfo.SetAttributeValue("Priority", a.Priority);
+        //            policytextinfo.SetAttributeValue("PolicyType", a.PolicyType);
+        //        }
+        //    }
 
-        }
+        //}
 
 
-        protected override void Importing(UserPolicyPart part, ImportContentContext context) {
-            var root = context.Data.Element(part.PartDefinition.Name);
-            var importedUserPolicyAnswers = context.Attribute("UserPolicyAnswers", "UserPolicyAnswers");
+        //protected override void Importing(UserPolicyPart part, ImportContentContext context) {
+        //    var root = context.Data.Element(part.PartDefinition.Name);
+        //    var importedUserPolicyAnswers = context.Attribute("UserPolicyAnswers", "UserPolicyAnswers");
 
-            if (importedUserPolicyAnswers != null) {
+        //    if (importedUserPolicyAnswers != null) {
 
-                foreach (UserPolicyAnswersRecord rec in part.UserPolicyAnswers) {
+        //        foreach (UserPolicyAnswersRecord rec in part.UserPolicyAnswers) {
 
-                    if (root.Element("Id").Value != null)
-                        rec.Id = Convert.ToInt32(root.Element("Id").Value);
+        //            if(Convert.ToInt32(root.Element("Id").Value)!=null)
+        //                rec.Id = Convert.ToInt32(root.Element("Id").Value);
 
-                    if (root.Element("AnswerDate").Value != null)
-                        rec.AnswerDate = Convert.ToDateTime(root.Element("AnswerDate").Value);
+        //            if(Convert.ToDateTime(root.Element("AnswerDate").Value)!=null)
+        //                rec.AnswerDate = Convert.ToDateTime(root.Element("AnswerDate").Value);
 
-                    if (root.Element("Accepted").Value != null)
-                        rec.Accepted = Convert.ToBoolean(root.Element("Accepted").Value);
+        //            if(Convert.ToBoolean(root.Element("Accepted").Value)!=null)
+        //                rec.Accepted = Convert.ToBoolean(root.Element("Accepted").Value);
 
-                    if (root.Element("PolicyTextInfoPartRecord").Parent.Element("UserHaveToAccept").Value != null)
-                        rec.PolicyTextInfoPartRecord.UserHaveToAccept = Convert.ToBoolean(root.Element("PolicyTextInfoPartRecord").Parent.Element("UserHaveToAccept").Value);
+        //            if(Convert.ToBoolean(root.Element("PolicyTextInfoPartRecord").Parent.Element("UserHaveToAccept").Value)!=null)
+        //                rec.PolicyTextInfoPartRecord.UserHaveToAccept = Convert.ToBoolean(root.Element("PolicyTextInfoPartRecord").Parent.Element("UserHaveToAccept").Value);
 
-                    if (root.Element("PolicyTextInfoPartRecord").Parent.Element("Priority").Value != null)
-                        rec.PolicyTextInfoPartRecord.Priority = Convert.ToInt32(root.Element("PolicyTextInfoPartRecord").Parent.Element("Priority").Value);
-                    rec.PolicyTextInfoPartRecord.PolicyType = (PolicyTypeOptions)Enum.Parse(typeof(PolicyTypeOptions), root.Element("PolicyTextInfoPartRecord").Parent.Element("PolicyType").Value);
-                }
-            }
-        }
+        //            if(Convert.ToInt32(root.Element("PolicyTextInfoPartRecord").Parent.Element("Priority").Value)!=null)
+        //                rec.PolicyTextInfoPartRecord.Priority = Convert.ToInt32(root.Element("PolicyTextInfoPartRecord").Parent.Element("Priority").Value);
+                    
+        //            if((PolicyTypeOptions)Enum.Parse(typeof(PolicyTypeOptions), root.Element("PolicyTextInfoPartRecord").Parent.Element("PolicyType").Value)!=null)
+        //                rec.PolicyTextInfoPartRecord.PolicyType = (PolicyTypeOptions)Enum.Parse(typeof(PolicyTypeOptions), root.Element("PolicyTextInfoPartRecord").Parent.Element("PolicyType").Value);
+        //        }
+        //    }
+        //}
     }
 }

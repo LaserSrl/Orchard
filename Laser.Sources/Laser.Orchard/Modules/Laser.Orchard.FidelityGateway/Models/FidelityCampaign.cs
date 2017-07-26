@@ -37,7 +37,7 @@ namespace Laser.Orchard.FidelityGateway.Models
                     return false;
                 }               
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return false;
             }
@@ -50,7 +50,7 @@ namespace Laser.Orchard.FidelityGateway.Models
             {
                 Data.Add(k, v);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return false;
             }
