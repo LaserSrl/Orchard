@@ -16,7 +16,7 @@ namespace Laser.Orchard.ContentExtension.ViewModels {
                 try {
                     string[] filelist = Directory.GetFiles(HostingEnvironment.MapPath(@"~/App_Data/Sites/" + Tenant + @"/Code"));
                     return new SelectList(filelist.Select(x => new SelectListItem { Text = Path.GetFileName(x), Value = Path.GetFileName(x) }), "Value", "Text", Part.Shape);
-                }catch(Exception ex) { return null; }
+                }catch { return null; }
             }
         }
 

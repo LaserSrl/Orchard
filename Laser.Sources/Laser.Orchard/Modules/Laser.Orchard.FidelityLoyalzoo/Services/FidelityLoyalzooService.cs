@@ -26,7 +26,7 @@ namespace Laser.Orchard.FidelityLoyalzoo.Services
                         {
                             otherSettings();
                         }
-                        catch (Exception ex)
+                        catch
                         {
                             //TODO ??
                         }           

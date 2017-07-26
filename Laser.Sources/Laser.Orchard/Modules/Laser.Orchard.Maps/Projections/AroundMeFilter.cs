@@ -85,7 +85,7 @@ namespace Laser.Orchard.Maps.Projections {
                                 return T("Content Items contained in area with center {0} , {1} and distance {2}", lat, lon, dist);
                         }
                     }
-                    catch (Exception ex) { }
+                    catch { }
                 }
 
             return T("Content Items contained in the specified area");
