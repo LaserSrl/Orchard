@@ -248,6 +248,7 @@
     <Compile Include="Projections\OwnerIdForm.cs" />
     <Compile Include="Projections\OwnerNameFilter.cs" />
     <Compile Include="Projections\OwnerStringForm.cs" />
+    <Compile Include="Settings\IdentityPartOnEveryTypeDefinitionHooks.cs" />
     <Compile Include="TaxonomiesExtensions\Drivers\TaxonomyExtensionPartDriver.cs" />
     <Compile Include="Controllers\UsersGroupsSettingsController.cs" />
     <Compile Include="Drivers\UsersGroupsDriver.cs" />
