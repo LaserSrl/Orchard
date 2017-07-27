@@ -1,0 +1,5 @@
+﻿@model Laser.Orchard.StartupConfig.ColorPicker.ColorPickerField
+<fieldset>
+    <label for="@Html.FieldIdFor(m => Model.Value)">@Model.Name</label>
+    <input type="color" id="@Html.FieldIdFor(m => m.Value)" name="@Html.FieldNameFor(m => m.Value)" value="@Model.Value" title="@Model.Value" />
+</fieldset>
