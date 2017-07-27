@@ -43,12 +43,13 @@ namespace Laser.Orchard.CulturePicker.Controllers {
                 AutoroutePart localizedRoutePart;
                 //content may not have localized version and we use "Try" approach
                 if (_localizableContentService.TryFindLocalizedRoute(currentRoutePart.ContentItem, cultureName, out localizedRoutePart)) {
-                    returnUrl = String.IsNullOrWhiteSpace(urlPrefix) ? localizedRoutePart.Path : urlPrefix + "/" + localizedRoutePart.Path;
+                    returnUrl = localizedRoutePart.Path; // String.IsNullOrWhiteSpace(urlPrefix) ? localizedRoutePart.Path : urlPrefix + "/" + localizedRoutePart.Path;
                 }
             }
 
             if (!String.IsNullOrWhiteSpace(urlPrefix) && !returnUrl.StartsWith(urlPrefix)) {
-                returnUrl = urlPrefix + "/" + returnUrl;
+                //returnUrl = urlPrefix + "/" + returnUrl;
+                returnUrl = "~/" + returnUrl;
             }
             _cpServices.SaveCultureCookie(cultureName, Services.WorkContext.HttpContext);
 
@@ -58,7 +59,7 @@ namespace Laser.Orchard.CulturePicker.Controllers {
             if (orchardVersion < new Version(1, 6)) {
                 returnUrl = Url.Encode(returnUrl);
             } else {
-                if (!returnUrl.StartsWith("~/")) {
+                if (!returnUrl.StartsWith("~/") && !returnUrl.StartsWith(urlPrefix)) {
                     returnUrl = "~/" + returnUrl;
                 }
             }
