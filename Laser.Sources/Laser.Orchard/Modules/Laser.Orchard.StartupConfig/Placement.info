@@ -53,4 +53,7 @@
   <Place Parts_UsersGroups="Content:0"/>
   <!-- Permission Extension:End-->
   <Place Parts_Maintenance_Edit="Content:0"/>
+
+  <Place Fields_Custom_ColorPicker_Edit="Content:2.5"/>
+  <Place Fields_Custom_ColorPicker="Content:2.5"/>
 </Placement>
