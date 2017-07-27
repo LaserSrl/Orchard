@@ -14,7 +14,6 @@ using Orchard.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
-using Orchard.ContentManagement.Handlers;
 using Laser.Orchard.ShareLink.Servicies;
 
 namespace Laser.Orchard.ShareLink.Drivers {

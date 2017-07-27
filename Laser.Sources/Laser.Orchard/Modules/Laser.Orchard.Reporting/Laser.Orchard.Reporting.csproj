@@ -34,7 +34,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\..\..\Orchard.Sources\src\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -131,6 +131,7 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -208,6 +209,7 @@
     <Content Include="Styles\Chosen\chosen.min.css" />
     <Content Include="Styles\jquery.jqplot.css" />
     <Content Include="Styles\jquery.jqplot.min.css" />
+    <Content Include="Styles\report.print.css" />
     <Content Include="Styles\reporting.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -229,6 +231,8 @@
     <Content Include="Views\EditorTemplates\Parts\DataReportDashboard.cshtml" />
     <Content Include="Views\Report\ShowDashboard.cshtml" />
     <Content Include="Views\Parts\DataReportViewer.Donut.cshtml" />
+    <Content Include="Views\Report\DashboardList.cshtml" />
+    <Content Include="Views\Parts\DataReportViewer.HorizontalBars.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
@@ -241,7 +245,7 @@
     <Compile Include="Models\ChartTypes.cs" />
     <Compile Include="Models\ColorsSettings.cs" />
     <Compile Include="Models\DataReportViewerPart.cs" />
-    <Compile Include="Models\ReportItem.cs" />
+    <Compile Include="Models\GenericItem.cs" />
     <Compile Include="Models\ReportRecord.cs" />
     <Compile Include="Models\DataReportViewerPartRecord.cs" />
     <Compile Include="Security\Permissions.cs" />
@@ -258,6 +262,7 @@
     <Compile Include="Services\ReportManager.cs" />
     <Compile Include="Settings\DataReportViewerPartSettings.cs" />
     <Compile Include="Settings\DataReportViewerSettingsEvents.cs" />
+    <Compile Include="ViewModels\DashboardListViewModel.cs" />
     <Compile Include="ViewModels\EditDataReportViewerViewModel.cs" />
     <Compile Include="ViewModels\HqlReportViewModel.cs" />
     <Compile Include="ViewModels\ReportDisplayViewModel.cs" />

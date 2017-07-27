@@ -16,7 +16,6 @@ namespace KrakeAdmin.Filters {
         private readonly ISiteThemeService _siteThemeService;
 
         private TextWriter _originalWriter;
-        private Action<ControllerContext> _completeResponse;
         private StringWriter _tempWriter;
 
         public SelectContentCssFilter(IResourceManager resourceManager, ISiteThemeService siteThemeService) {

@@ -88,5 +88,14 @@ namespace Laser.Orchard.Reporting
             );
             return 3;
         }
+        public int UpdateFrom3() {
+            SchemaBuilder.AlterTable("DataReportViewerPartRecord", t => t
+                .AddColumn<int>("ChartType", c => c.NotNull().WithDefault(0))
+            );
+            SchemaBuilder.AlterTable("ReportRecord", t => t
+                .DropColumn("ChartType")
+            );
+            return 4;
+        }
     }
 }
