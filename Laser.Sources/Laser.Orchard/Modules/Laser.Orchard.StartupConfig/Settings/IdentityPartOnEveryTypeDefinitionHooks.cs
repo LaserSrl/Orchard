@@ -32,12 +32,5 @@ namespace Laser.Orchard.StartupConfig.Settings {
             }
             yield return null;
         }
-        //public override void TypeEditorUpdating(ContentTypeDefinitionBuilder builder) {
-        //    if (!builder.Current.Parts.Any(pa =>
-        //            PartsWIthIdentity.Contains(pa.PartDefinition.Name)
-        //        )) {
-        //        builder.WithPart("IdentityPart");
-        //    }
-        //}
     }
 }
