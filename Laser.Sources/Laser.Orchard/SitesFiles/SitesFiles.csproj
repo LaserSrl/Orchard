@@ -36,6 +36,9 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="AppRetailN\Code\CheckCreatedUser.cshtml" />
+    <None Include="AppRetailN\Code\CreaUtenzaKrake.cshtml" />
+    <None Include="AppRetailN\Code\GetCredenziali.cshtml" />
     <None Include="AutoMotoEpoca\Mobile\AME_DEV.p12" />
     <None Include="AutoMotoEpoca\Mobile\AME_PROD.p12" />
     <None Include="common.cshtml" />
