@@ -28,6 +28,8 @@ namespace Laser.Orchard.ShareLink.Servicies {
         }
 
         private string RemoveHtmlTag(string text) {
+            if (string.IsNullOrEmpty(text))
+                return "";
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(text);
             return (htmlDoc.DocumentNode.InnerText);
