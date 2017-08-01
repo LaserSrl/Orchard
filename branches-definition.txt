@@ -1,0 +1,20 @@
+Produzione
+=====================================
+Laser.Sources 		origin/master
+Four2n.MiniProfiler	origin/master
+Nwazet.Commerce		origin/Laser
+Orchard.Sources		Laser.Orchard/Laser/1.10.x
+
+Pre-produzione
+=====================================
+Laser.Sources 		origin/pre
+Four2n.MiniProfiler	origin/master
+Nwazet.Commerce		origin/Laser
+Orchard.Sources		Laser.Orchard/Laser/1.10.x
+
+Test
+=====================================
+Laser.Sources 		origin/dev
+Four2n.MiniProfiler	origin/master
+Nwazet.Commerce		origin/Laser
+Orchard.Sources		Laser.Orchard/Laser/1.10.x
