@@ -1,0 +1,82 @@
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.ContentManagement.Records;
+@using Orchard.Core.Common.Models;
+@using System.Collections.Generic;
+@using System.Linq;
+
+@functions{
+    // Model.ContentItem is a RichiestaProdotto
+    string retString = "Error"; //possible outcomes: Error,NonEvasa,Evasa,Annullata
+    string eMsg = String.Empty;
+    //services
+    IContentManager _contentManager;
+    // methods
+    private string GetIdUserOfStoreAssistants(ContentItem store) {
+        int[] idsDipendenti = ((dynamic)store).Store.StoreAssistants.Ids;
+        List<int> idsUsers = new List<int>();
+        dynamic dipendente = null;
+        foreach(int id in idsDipendenti) {
+            dipendente = _contentManager.Get(id);
+            idsUsers.Add(Convert.ToInt32(dipendente.Dipendente.UserID.Value));
+        }
+        return string.Join(",", idsUsers);
+    }
+}
+@{
+    try {
+        // resolve services
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        // get richiesta
+        dynamic richiesta = Model.ContentItem;
+        // get current user
+        var usr = Model.OrchardServices.WorkContext.CurrentUser;
+        dynamic dUsr = usr.ContentItem;
+        // get store list
+        var storeList = _contentManager.Query("Store").List();
+        // get store mittente
+        dynamic mittente = null;
+        int idMittente = 0;
+        var checkMittente = richiesta.RichiestaProdotto.StoreMittente.Ids;
+        if(checkMittente.Length > 0) {
+            idMittente = checkMittente[0];
+            mittente = _contentManager.Get(idMittente);
+        } else {
+            int idPuntoVendita = dUsr.ProfilePart.PuntoVendita.Ids[0];
+            foreach(var item in storeList) {
+                if (((dynamic)item).Store.PuntoVendita.Ids[0] == idPuntoVendita) {
+                    mittente = item;
+                    break;
+                }
+            }
+            idMittente = mittente.Id;
+            richiesta.RichiestaProdotto.StoreMittente.Ids = new int[] { idMittente };
+        }
+        // get store destinatario
+        int idDestinatario = richiesta.RichiestaProdotto.StoreDestinatario.Ids[0];
+        dynamic destinatario = _contentManager.Get(idDestinatario);
+        // set title of richiesta
+        richiesta.TitlePart.Title = string.Format("{0} - {1} - {2} {3}", mittente.TitlePart.Title, destinatario.TitlePart.Title, dUsr.ProfilePart.Cognome.Value, dUsr.ProfilePart.Nome.Value);
+        // get status
+        string status = richiesta.RichiestaProdotto.Stato.Value;
+        switch (status) {
+            case "Non evasa":
+                retString = "NonEvasa";
+                Model.Tokens["Workflow"].SetState("UserIdToNotify", GetIdUserOfStoreAssistants(destinatario));
+                break;
+            case "Evasa":
+                // get owner of richiesta
+                int idOwner = richiesta.CommonPart.Owner.Id;
+                retString = "Evasa";
+                Model.Tokens["Workflow"].SetState("UserIdToNotify", idOwner.ToString());
+                break;
+            case "Annullata":
+                retString = "Annullata";
+                Model.Tokens["Workflow"].SetState("UserIdToNotify", GetIdUserOfStoreAssistants(destinatario));
+                break;
+        }
+    } catch (Exception ex) {
+        eMsg += string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    }
+    }@retString
