@@ -265,6 +265,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\OpenIdController.cs" />
     <Compile Include="Drivers\UserProviderDisplayPartDriver.cs" />
     <Compile Include="Drivers\UserProvidersPartDriver.cs" />
     <Compile Include="Events\IOpenAuthUserEventHandler.cs" />

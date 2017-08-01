@@ -83,7 +83,21 @@ namespace Laser.Orchard.OpenAuthentication {
                                                                                       {"area", Constants.LocalArea}
                                                                                   },
                                                          new MvcRouteHandler())
-                                                 }
+                                                  
+                                                 },
+                new RouteDescriptor {  Route = new Route(
+                                                         "OpenId/LogOn",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", Constants.LocalArea},
+                                                                                      {"controller", "OpenId"},
+                                                                                      {"action", "LogOn"}
+                                                                                  },
+                                                         new RouteValueDictionary(),
+                                                         new RouteValueDictionary {
+                                                                                      {"area", Constants.LocalArea}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
                          };
         }
     }
