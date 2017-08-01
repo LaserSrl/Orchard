@@ -74,8 +74,8 @@
 
     //TODO: this needs more validation and checks
     private string GenerateUsername(string familyName, string givenName) {
-        string fName = RemoveDiacritics(familyName.Split(null)[0].Trim().ToLowerInvariant());
-        string gName = RemoveDiacritics(givenName.Split(null)[0].Trim().ToLowerInvariant());
+        string fName = RemoveDiacritics(familyName.Replace(" ", "").ToLowerInvariant());
+        string gName = RemoveDiacritics(givenName.Replace(" ", "").ToLowerInvariant());
         string uName = fName + "." + gName;
         if (uName.Length >= 255) {
             uName = fName + "." + gName.First();
@@ -131,12 +131,11 @@
         _userRolesRepository = Model.OrchardServices.WorkContext.Resolve<IRepository<UserRolesPartRecord>>();
         //Get the value of the email field out of the SchedaInvito.
         dynamic item = Model.ContentItem;
-        string email = item.Dipendente.Email.Value;
-        string familyName = item.ProfilePart.Cognome.Value;
-        string givenName = item.ProfilePart.Nome.Value;
+        string email = item.Dipendente.Email.Value.Trim();
+        string familyName = item.Dipendente.Cognome.Value.Trim();
+        string givenName = item.Dipendente.Nome.Value.Trim();
         int userId = Convert.ToInt32(item.Dipendente.UserID.Value);
         item.TitlePart.Title = string.Format("{0} {1}", familyName, givenName);
-        item.ProfilePart.TipoUtente.Value = "dipendente";
 
         // check if the user already exists
         dynamic user = _contentManager.Get(userId);
@@ -165,26 +164,18 @@
         // update user
         user.ProfilePart.Nome.Value = givenName;
         user.ProfilePart.Cognome.Value = familyName;
-        user.ProfilePart.Avatar.Ids = item.ProfilePart.Avatar.Ids;
-        user.ProfilePart.Datadinascita.DateTime = item.ProfilePart.Datadinascita.DateTime;
-        user.ProfilePart.Luogodinascita.Value = item.ProfilePart.Luogodinascita.Value;
-        user.ProfilePart.Nazionedinascita.Value = item.ProfilePart.Nazionedinascita.Value;
-        user.ProfilePart.Indirizzoresidenza.Value = item.ProfilePart.Indirizzoresidenza.Value;
-        user.ProfilePart.Cittaresidenza.Value = item.ProfilePart.Cittaresidenza.Value;
-        user.ProfilePart.Provinciaresidenza.Value = item.ProfilePart.Provinciaresidenza.Value;
-        user.ProfilePart.CAPresidenza.Value = item.ProfilePart.CAPresidenza.Value;
-        user.ProfilePart.Nazioneresidenza.Value = item.ProfilePart.Nazioneresidenza.Value;
-        user.ProfilePart.PuntoVendita.Ids = item.ProfilePart.PuntoVendita.Ids;
-        user.ProfilePart.Telefono.Value = item.ProfilePart.Telefono.Value;
-        user.ProfilePart.Note.Value = item.ProfilePart.Note.Value;
+        user.ProfilePart.PuntoVendita.Ids = item.Dipendente.PuntoVendita.Ids;
         // assign taxo field
         var terms = _taxonomyService.GetTermsForContentItem(item.Id, "Categoria");
         _taxonomyService.UpdateTerms(user, terms, "Categoria");
-        user.ProfilePart.TipoUtente.Value = item.ProfilePart.TipoUtente.Value;
+        user.ProfilePart.TipoUtente.Value = "dipendente";
         user.VersionRecord.Published = false;
         _contentManager.Publish(user);
         _communicationService.UserToContact((IUser)user.UserPart);
-
+        // update dipendente
+        item.Dipendente.Email.Value = email;
+        item.Dipendente.Nome.Value = givenName;
+        item.Dipendente.Cognome.Value = familyName;
         item.Dipendente.UserID.Value = Convert.ToString(user.Id);
         // force publish to update fieldIndexes
         item.VersionRecord.Published = false;

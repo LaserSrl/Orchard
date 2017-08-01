@@ -1,16 +1,17 @@
 @using Orchard;
 @using Orchard.ContentManagement;
-@using Orchard.ContentManagement.Records;
-@using Orchard.Core.Common.Models;
+@using Orchard.Data;
+@using Orchard.Projections.Models;
 @using System.Collections.Generic;
 @using System.Linq;
 
 @functions{
     // Model.ContentItem is a RichiestaProdotto
     string retString = "Error"; //possible outcomes: Error,NonEvasa,Evasa,Annullata
-    string eMsg = String.Empty;
+    string eMsg = "";
     //services
     IContentManager _contentManager;
+    IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
     // methods
     private string GetIdUserOfStoreAssistants(ContentItem store) {
         int[] idsDipendenti = ((dynamic)store).Store.StoreAssistants.Ids;
@@ -27,6 +28,7 @@
     try {
         // resolve services
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         // get richiesta
         dynamic richiesta = Model.ContentItem;
         // get current user
@@ -40,18 +42,14 @@
         var checkMittente = richiesta.RichiestaProdotto.StoreMittente.Ids;
         if(checkMittente.Length > 0) {
             idMittente = checkMittente[0];
-            mittente = _contentManager.Get(idMittente);
         } else {
             int idPuntoVendita = dUsr.ProfilePart.PuntoVendita.Ids[0];
-            foreach(var item in storeList) {
-                if (((dynamic)item).Store.PuntoVendita.Ids[0] == idPuntoVendita) {
-                    mittente = item;
-                    break;
-                }
-            }
-            idMittente = mittente.Id;
+            idMittente = _fieldIndexPartRecord.Table.Where(
+                x => x.StringFieldIndexRecords.Any(y => y.PropertyName == "Store.PuntoVendita." && y.Value == string.Format("{{{0}}}", idPuntoVendita)))
+                .Select(z => z.ContentItemRecord.Id).FirstOrDefault();
             richiesta.RichiestaProdotto.StoreMittente.Ids = new int[] { idMittente };
         }
+        mittente = _contentManager.Get(idMittente);
         // get store destinatario
         int idDestinatario = richiesta.RichiestaProdotto.StoreDestinatario.Ids[0];
         dynamic destinatario = _contentManager.Get(idDestinatario);
@@ -79,4 +77,4 @@
         eMsg += string.Format("\r\n{0}", ex.Message);
         Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
     }
-    }@retString
+}@retString
