@@ -40,6 +40,7 @@
     <None Include="AppRetailN\Code\CreaUtenzaKrake.cshtml" />
     <None Include="AppRetailN\Code\GetCredenziali.cshtml" />
     <None Include="AppRetailN\Code\UnpublishRichiesteProdotto.cshtml" />
+    <None Include="AppRetailN\Code\UnpublishStores.cshtml" />
     <None Include="AppRetailN\Code\UpdateRichiestaProdotto.cshtml" />
     <None Include="AutoMotoEpoca\Mobile\AME_DEV.p12" />
     <None Include="AutoMotoEpoca\Mobile\AME_PROD.p12" />
