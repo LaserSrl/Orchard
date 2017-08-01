@@ -1,8 +1,8 @@
 [
   {
-    "outputFileName": "Scripts/culture.cookies.min.js",
+    "outputFileName": "Scripts/culture.cookie.min.js",
     "inputFiles": [
-      "Scripts/culture.cookies.js"
+      "Scripts/culture.cookie.js"
     ]
   }
 ]

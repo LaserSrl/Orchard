@@ -2,7 +2,6 @@
     <Place Parts_CulturePicker="Content:1" />
     <Match DisplayType="Detail">
       <Place Parts_Localization_ContentTranslations="-"/>
-      <Place Parts_Localization_CultureCookieScripts="Content:after" />
     </Match>
     <Match DisplayType="Summary">
       <Place Parts_Localization_ContentTranslations_Summary="-"/>
