@@ -28,6 +28,7 @@ namespace Laser.Orchard.CulturePicker.Filters {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
+            _resourceManager.Require("script", "jQuery").AtHead();
             _resourceManager.Require("script", "culture.cookie").AtHead();
             var tail = _workContext.Layout.Tail;
             tail.Add(_shapeFactory.CultureCookieScripts(Culture: _workContext.CurrentCulture));

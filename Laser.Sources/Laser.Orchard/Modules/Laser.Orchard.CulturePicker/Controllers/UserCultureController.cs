@@ -56,7 +56,7 @@ namespace Laser.Orchard.CulturePicker.Controllers {
             if (orchardVersion < new Version(1, 6)) {
                 returnUrl = Url.Encode(returnUrl);
             } else {
-                if (!returnUrl.StartsWith("~/") && !returnUrl.StartsWith(urlPrefix)) {
+                if (!returnUrl.StartsWith("~/") && (String.IsNullOrWhiteSpace(urlPrefix) || !returnUrl.StartsWith(urlPrefix))) {
                     returnUrl = "~/" + returnUrl;
                 }
             }
