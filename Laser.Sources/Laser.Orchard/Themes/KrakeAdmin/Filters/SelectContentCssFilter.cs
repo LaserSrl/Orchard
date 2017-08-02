@@ -47,16 +47,16 @@ namespace KrakeAdmin.Filters {
 
         public bool isAdminKrakePicker(RouteData route) {
             var themeName = _siteThemeService.GetSiteTheme();
-            bool isActionIndex = String.Equals(route.Values["action"].ToString(), "index", StringComparison.OrdinalIgnoreCase);
+            bool isActionIndex = route.Values.ContainsKey("action") && String.Equals(route.Values["action"].ToString(), "index", StringComparison.OrdinalIgnoreCase);
             bool isKrakeTheme = themeName.Id.Equals("KrakeAdmin") || themeName.Id.Equals("KrakeDefaultTheme");
 
             //advanced search
-            bool isPickerContent = route.Values["area"].Equals("Orchard.ContentPicker");
-            bool isAdmin = route.Values["controller"].Equals("admin");
+            bool isPickerContent = route.Values.ContainsKey("area") && route.Values["area"].Equals("Orchard.ContentPicker");
+            bool isAdmin = route.Values.ContainsKey("controller") && route.Values["controller"].Equals("admin");
             
             //simple search
-            bool isSearchContent = route.Values["area"].Equals("Orchard.Search");
-            bool isContentPiker = route.Values["controller"].Equals("ContentPicker");
+            bool isSearchContent = route.Values.ContainsKey("area") && route.Values["area"].Equals("Orchard.Search");
+            bool isContentPiker = route.Values.ContainsKey("controller") && route.Values["controller"].Equals("ContentPicker");
 
             return isActionIndex && isKrakeTheme && (isAdmin && isPickerContent || isSearchContent && isContentPiker);
         }
