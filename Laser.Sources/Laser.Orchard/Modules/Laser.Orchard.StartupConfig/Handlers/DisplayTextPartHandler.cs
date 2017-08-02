@@ -1,5 +1,4 @@
 ﻿using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement;
 using System.Collections.Generic;
 using Laser.Orchard.StartupConfig.Models;
 using Orchard.Tokens;
@@ -12,7 +11,7 @@ namespace Laser.Orchard.StartupConfig.Handlers {
             _tokenizer = tokenizer;
         }
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
-            var part = context.ContentItem.Parts.FirstOrDefault(p => p.PartDefinition.Name == "DisplayTextPart"); //   .As<DisplayTextPart>();
+            var part = context.ContentItem.Parts.FirstOrDefault(p => p.PartDefinition.Name == "DisplayTextPart");
             if(part != null) {
                 var settings = part.Settings.GetModel<DisplayTextPartSettings>();
                 var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
