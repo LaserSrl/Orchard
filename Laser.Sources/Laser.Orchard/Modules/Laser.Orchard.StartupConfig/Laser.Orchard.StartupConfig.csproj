@@ -242,7 +242,10 @@
     <Compile Include="Drivers\FavoriteCulturePartDriver.cs" />
     <Compile Include="Drivers\MaintenancePartDriver.cs" />
     <Compile Include="Drivers\PublishExtensionPartDriver.cs" />
+    <Compile Include="Handlers\DisplayTextPartHandler.cs" />
     <Compile Include="Models\AuthenticationRequiredPart.cs" />
+    <Compile Include="Models\DisplayTextPart.cs" />
+    <Compile Include="Models\DisplayTextPartSettings.cs" />
     <Compile Include="Navigation\ContentAdminMenu.cs" />
     <Compile Include="Projections\DefaultHqlExpressionFactoryExtensions.cs" />
     <Compile Include="Projections\OwnerEmailFilter.cs" />
@@ -250,6 +253,7 @@
     <Compile Include="Projections\OwnerIdForm.cs" />
     <Compile Include="Projections\OwnerNameFilter.cs" />
     <Compile Include="Projections\OwnerStringForm.cs" />
+    <Compile Include="Settings\DisplayTextPartSettingsHooks.cs" />
     <Compile Include="TaxonomiesExtensions\Drivers\TaxonomyExtensionPartDriver.cs" />
     <Compile Include="Controllers\UsersGroupsSettingsController.cs" />
     <Compile Include="Drivers\UsersGroupsDriver.cs" />
@@ -391,6 +395,7 @@
     <Content Include="Views\Commands\Execute.cshtml" />
     <Content Include="Views\Fields\Custom.ColorPicker.cshtml" />
     <Content Include="Views\EditorTemplates\Fields\Custom.ColorPicker.cshtml" />
+    <Content Include="Views\DefinitionTemplates\DisplayTextPartSettings.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
