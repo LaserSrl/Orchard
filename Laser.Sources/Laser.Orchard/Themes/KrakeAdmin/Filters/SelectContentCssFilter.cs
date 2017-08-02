@@ -7,20 +7,31 @@ using Orchard.UI.Resources;
 using System.Web.Routing;
 using System.Text.RegularExpressions;
 using System.IO;
-
+using Orchard;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Features;
+using System.Collections.Generic;
+using Orchard.FileSystems.VirtualPath;
+using Orchard.Caching;
+using Orchard.Themes;
+using Orchard.Environment.Extensions.Models;
+using System.Linq;
 
 namespace KrakeAdmin.Filters {
     public class SelectContentCssFilter : FilterProvider, IResultFilter {
 
         private readonly IResourceManager _resourceManager;
-        private readonly ISiteThemeService _siteThemeService;
+        private readonly IFeatureManager _featureManager;
 
         private TextWriter _originalWriter;
         private StringWriter _tempWriter;
 
-        public SelectContentCssFilter(IResourceManager resourceManager, ISiteThemeService siteThemeService) {
+        public SelectContentCssFilter(IResourceManager resourceManager, IOrchardServices orchardServices,
+            IFeatureManager featureManager) {
+
             _resourceManager = resourceManager;
-            _siteThemeService = siteThemeService;
+            _featureManager = featureManager;
+
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
@@ -30,7 +41,7 @@ namespace KrakeAdmin.Filters {
         }
 
 
-        public void OnResultExecuting(ResultExecutingContext filterContext) {                 
+        public void OnResultExecuting(ResultExecutingContext filterContext) {
             if (isAdminKrakePicker(filterContext.RouteData)) {
                 _resourceManager.Require("stylesheet", ResourceManifest.Site).AtHead();
                 _resourceManager.Require("stylesheet", ResourceManifest.KrakeAdmin).AtHead();
@@ -46,14 +57,17 @@ namespace KrakeAdmin.Filters {
         }
 
         public bool isAdminKrakePicker(RouteData route) {
-            var themeName = _siteThemeService.GetSiteTheme();
+            var featureTheme = _featureManager.GetAvailableFeatures().First(f => f.Id.Equals("KrakeAdmin", StringComparison.OrdinalIgnoreCase));
+            bool isKrakeTheme = false;
+            if (featureTheme != null) {
+                isKrakeTheme = true;
+            }
             bool isActionIndex = String.Equals(route.Values["action"].ToString(), "index", StringComparison.OrdinalIgnoreCase);
-            bool isKrakeTheme = themeName.Id.Equals("KrakeAdmin") || themeName.Id.Equals("KrakeDefaultTheme");
 
             //advanced search
             bool isPickerContent = route.Values["area"].Equals("Orchard.ContentPicker");
             bool isAdmin = route.Values["controller"].Equals("admin");
-            
+
             //simple search
             bool isSearchContent = route.Values["area"].Equals("Orchard.Search");
             bool isContentPiker = route.Values["controller"].Equals("ContentPicker");
@@ -70,7 +84,7 @@ namespace KrakeAdmin.Filters {
             Match firstOcc = regex.Match(capturedText);
             var offset = firstOcc.Index + firstOcc.Length;
             capturedText = regex.Replace(capturedText, "", 1, offset);
-       
+
             filterContext.HttpContext.Response.Write(capturedText);
         }
     }
