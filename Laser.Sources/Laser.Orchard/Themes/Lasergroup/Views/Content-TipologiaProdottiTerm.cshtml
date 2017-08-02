@@ -7,7 +7,6 @@
 @using Orchard.Taxonomies.Models
 @{
     var contentItem = (IContent)Model.ContentItem;
-    var autoroute = contentItem.As<AutoroutePart>();
     var term = contentItem.As<TermPart>();
     var localization = contentItem.As<LocalizationPart>();
 
@@ -35,7 +34,7 @@
         }
     }
 
-    if (autoroute == null || term == null) {
+    if (term == null) {
         //redirect to showcase without terms selected
         Response.RedirectToRoute(showcaseRoute);
     } else {
