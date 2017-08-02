@@ -3,10 +3,15 @@
     int page = 0;
     int pageSize = Model.ContentItem.ProjectionPart.Record.Items;
 
-                //var services = WorkContext.Resolve<IProjectionManager>();
-                //var queryId = Model.ContentItem.ProjectionPart.Record.QueryPartRecord.Id;
-                //var queryItems = services.GetContentItems(queryId, (page - 1) * pageSize, pageSize);
+    //var services = WorkContext.Resolve<IProjectionManager>();
+    //var queryId = Model.ContentItem.ProjectionPart.Record.QueryPartRecord.Id;
+    //var queryItems = services.GetContentItems(queryId, (page - 1) * pageSize, pageSize);
 
+    var filterValue = "nofilter";
+    if (WorkContext.HttpContext.Request.QueryString.AllKeys.Contains("termid")) {
+        filterValue = WorkContext.HttpContext.Request.QueryString["termid"];
+    }
+    
 }
 <div class="overflow-hidden">
     <div class="space-40"></div>
@@ -21,7 +26,7 @@
                     <div id="load_posts_loader"></div>
                 </div>         
             </div>
-            <input type="hidden" value="nofilter" id="hiddenFilter" />
+            <input type="hidden" value="@filterValue" id="hiddenFilter" />
             <input type="hidden" value='@T("Show more showcases")' id="textButtonShowShowcase" />
             <input type="hidden" id="currentPage" value="@page">
         </div>
