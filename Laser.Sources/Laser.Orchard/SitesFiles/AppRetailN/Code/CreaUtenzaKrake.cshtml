@@ -135,7 +135,6 @@
         string familyName = item.Dipendente.Cognome.Value.Trim();
         string givenName = item.Dipendente.Nome.Value.Trim();
         int userId = Convert.ToInt32(item.Dipendente.UserID.Value);
-        item.TitlePart.Title = string.Format("{0} {1}", familyName, givenName);
 
         // check if the user already exists
         dynamic user = _contentManager.Get(userId);
