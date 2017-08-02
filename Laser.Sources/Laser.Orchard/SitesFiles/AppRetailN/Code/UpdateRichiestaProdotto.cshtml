@@ -35,7 +35,7 @@
         var usr = Model.OrchardServices.WorkContext.CurrentUser;
         dynamic dUsr = usr.ContentItem;
         // get store list
-        var storeList = _contentManager.Query("Store").List();
+        //var storeList = _contentManager.Query("Store").List();
         // get store mittente
         dynamic mittente = null;
         int idMittente = 0;
@@ -43,10 +43,7 @@
         if(checkMittente.Length > 0) {
             idMittente = checkMittente[0];
         } else {
-            int idPuntoVendita = dUsr.ProfilePart.PuntoVendita.Ids[0];
-            idMittente = _fieldIndexPartRecord.Table.Where(
-                x => x.StringFieldIndexRecords.Any(y => y.PropertyName == "Store.PuntoVendita." && y.Value == string.Format("{{{0}}}", idPuntoVendita)))
-                .Select(z => z.ContentItemRecord.Id).FirstOrDefault();
+            idMittente = dUsr.ProfilePart.Store.Ids[0];
             richiesta.RichiestaProdotto.StoreMittente.Ids = new int[] { idMittente };
         }
         mittente = _contentManager.Get(idMittente);

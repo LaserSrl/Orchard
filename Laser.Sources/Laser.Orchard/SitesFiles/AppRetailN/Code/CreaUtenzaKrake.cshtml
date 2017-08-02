@@ -163,7 +163,7 @@
         // update user
         user.ProfilePart.Nome.Value = givenName;
         user.ProfilePart.Cognome.Value = familyName;
-        user.ProfilePart.PuntoVendita.Ids = item.Dipendente.PuntoVendita.Ids;
+        user.ProfilePart.Store.Ids = item.Dipendente.Store.Ids;
         // assign taxo field
         var terms = _taxonomyService.GetTermsForContentItem(item.Id, "Categoria");
         _taxonomyService.UpdateTerms(user, terms, "Categoria");
