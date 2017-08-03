@@ -228,10 +228,6 @@ namespace Contrib.Widgets.Drivers {
             // recupero i WidgetExPart del Content selezionato come Master (CloneFrom)
             var widgets = _widgetManager.GetWidgets(original.Id, original.IsPublished());
             foreach (var widget in widgets) {
-
-                // recupero il content widget nel ContentItem Master
-                //var widgetPart = _widgetsService.GetWidget(widget.Id);
-
                 // Clono il ContentMaster e recupero la parte WidgetExPart
                 var clonedContentitem = _services.ContentManager.Clone(widget.ContentItem);
 

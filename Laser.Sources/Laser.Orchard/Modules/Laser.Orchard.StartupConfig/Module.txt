@@ -37,7 +37,7 @@ Features:
 		Name: Laser Taxonomies Extensions
 		Description: Make Taxonomies fully integrated with localization
 		Category: Content
-		Dependencies: Orchard.Taxonomies, Orchard.Localization, Contents, Laser.Orchard.StartupConfig
+		Dependencies: Orchard.Taxonomies, Orchard.Localization, Contents, Laser.Orchard.StartupConfig, Orchard.Taxonomies.LocalizationExtensions
 	Laser.Orchard.StartupConfig.PermissionExtension:
 		Name: Laser Permission Extensions
 		Description: Enable Permission and Group Management

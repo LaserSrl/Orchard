@@ -1,0 +1,12 @@
+﻿@{ 
+    var cultureString = Model.Culture;
+}
+@if (!string.IsNullOrWhiteSpace(cultureString)) {
+    <script type="text/javascript">
+        $(window).bind('beforeunload', function () {
+            if (getCultureCookie() != ("currentCulture=" + "@cultureString")) {
+                setCultureCookie("@cultureString");
+            }
+        });
+    </script>
+}
