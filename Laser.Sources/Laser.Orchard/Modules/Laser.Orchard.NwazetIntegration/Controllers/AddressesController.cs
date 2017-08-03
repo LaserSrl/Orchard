@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Laser.Orchard.NwazetIntegration.Services;
 using Laser.Orchard.NwazetIntegration.ViewModels;
@@ -12,6 +10,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Laser.Orchard.NwazetIntegration.Models;
 using Orchard;
+using Laser.Orchard.PaymentGateway.Models;
 
 namespace Laser.Orchard.NwazetIntegration.Controllers {
     public class AddressesController : Controller {
@@ -21,15 +20,18 @@ namespace Laser.Orchard.NwazetIntegration.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly ICurrencyProvider _currencyProvider;
         private readonly INwazetCommunicationService _nwazetCommunicationService;
+        private readonly IPaymentService _paymentService;
         public AddressesController(
             IOrderService orderService
             , IPosServiceIntegration posServiceIntegration
+            , IPaymentService paymentService
             , IShoppingCart shoppingCart
             , IOrchardServices orchardServices
             , ICurrencyProvider currencyProvider
             , INwazetCommunicationService nwazetCommunicationService) {
             _orderService = orderService;
             _posServiceIntegration = posServiceIntegration;
+            _paymentService = paymentService;
             _shoppingCart = shoppingCart;
             _orchardServices = orchardServices;
             _currencyProvider = currencyProvider;
@@ -89,7 +91,14 @@ namespace Laser.Orchard.NwazetIntegration.Controllers {
                         currency);
                     order.LogActivity(OrderPart.Event, "Order created");
                     var reason = string.Format("Purchase Order {0}", _posServiceIntegration.GetOrderNumber(order.Id));
-                    result = RedirectToAction("Pay", "Payment", new { area = "Laser.Orchard.PaymentGateway", reason = reason, amount = order.Total, currency = order.CurrencyCode, itemId = order.Id, newPaymentGuid = paymentGuid });
+                    var payment = new PaymentRecord {
+                        Reason = reason,
+                        Amount = order.Total,
+                        Currency = order.CurrencyCode,
+                        ContentItemId = order.Id
+                    };
+                    var nonce = _paymentService.CreatePaymentNonce(payment);
+                    result = RedirectToAction("Pay", "Payment", new { area = "Laser.Orchard.PaymentGateway", nonce = nonce, newPaymentGuid = paymentGuid });
                     break;
                 default:
                     model.ShippingAddress = new Address();

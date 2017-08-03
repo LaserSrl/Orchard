@@ -232,6 +232,8 @@
     <Compile Include="Activities\TaxonomySetValuesActivity.cs" />
     <Compile Include="Activities\TaxonomySetValuesForm.cs" />
     <Compile Include="Activities\UserEventActivity.cs" />
+    <Compile Include="ColorPicker\ColorPickerField.cs" />
+    <Compile Include="ColorPicker\ColorPickerFieldDriver.cs" />
     <Compile Include="Controllers\CommandsController.cs" />
     <Compile Include="Controllers\MaintenanceAdminController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -387,6 +389,8 @@
     <Content Include="RazorCodeExecution\Snippets\EsempioUserReactionsActivity.cshtml" />
     <Content Include="Views\FileDownloader\Index.cshtml" />
     <Content Include="Views\Commands\Execute.cshtml" />
+    <Content Include="Views\Fields\Custom.ColorPicker.cshtml" />
+    <Content Include="Views\EditorTemplates\Fields\Custom.ColorPicker.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

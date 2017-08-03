@@ -8,8 +8,10 @@ namespace LinkCreator
 {
     class LinkCreator
     {
-        [DllImport("kernel32.dll")]
-        static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
+        class NativeMethods {
+            [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+            public static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
+        }
 
         enum SymbolicLink
         {
@@ -82,7 +84,7 @@ namespace LinkCreator
                     Console.WriteLine("Collegamento a " + itemName + " mancante: lo aggiungo.");
                     Console.WriteLine("1" + destPath + itemName);
                     Console.WriteLine("2" + Path.GetFullPath(item));
-                    CreateSymbolicLink(destPath + itemName, Path.GetFullPath(item), SymbolicLink.Directory);
+                    NativeMethods.CreateSymbolicLink(destPath + itemName, Path.GetFullPath(item), SymbolicLink.Directory);
                     missingItems = true;
                 }
             }
@@ -96,7 +98,7 @@ namespace LinkCreator
                 Console.WriteLine("Collegamento a " + foldername + " mancante: lo aggiungo.");
                 Console.WriteLine("1" + destPath + foldername);
                 Console.WriteLine("2" + Path.GetFullPath(sourcePath + foldername));
-                CreateSymbolicLink(destPath + foldername, Path.GetFullPath(sourcePath + foldername), SymbolicLink.Directory);
+                NativeMethods.CreateSymbolicLink(destPath + foldername, Path.GetFullPath(sourcePath + foldername), SymbolicLink.Directory);
                 return true;
             }
             return false;

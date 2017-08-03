@@ -350,7 +350,7 @@ namespace Laser.Orchard.FidelityGateway.Services
                 {
                     fidelityPart = userList.First();
                 }
-                catch (InvalidOperationException ex)
+                catch (InvalidOperationException)
                 {
                     return null;
                 }
