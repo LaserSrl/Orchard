@@ -849,6 +849,10 @@ msgid "Invalid User"
 msgstr "Utente non valido"
 
 msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
+msgid "It seems you have not yet accepted the required policies"
+msgstr "Sembra che tu non abbia ancora accettato la policy associata."
+
+msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
 msgid "Missing Policies"
 msgstr "Policy Mnacanti"
 
