@@ -5,6 +5,7 @@ using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Data.Migration.Schema;
 using System;
+using Laser.Orchard.ButtonToWorkflows.Models;
 
 namespace Laser.Orchard.AppDirect
 {
@@ -56,8 +57,14 @@ namespace Laser.Orchard.AppDirect
             SchemaBuilder.AlterTable(typeof (AppDirectUserPartRecord).Name, (Action<AlterTableCommand>) (table => table.AddColumn<string>("CompanyWebSite", (Action<AddColumnCommand>) null)));
             SchemaBuilder.AlterTable(typeof (AppDirectUserPartRecord).Name, (Action<AlterTableCommand>) (table => table.AddColumn<string>("OpenIdCreator", (Action<AddColumnCommand>) null)));
             SchemaBuilder.AlterTable(typeof (AppDirectUserPartRecord).Name, (Action<AlterTableCommand>) (table => table.AddColumn<string>("UuidCreator", (Action<AddColumnCommand>) null)));
-      ContentDefinitionManager.AlterPartDefinition( "AppDirectRequestPart", (Action<ContentPartDefinitionBuilder>) (b => MetaDataExtensions.Attachable(b, false).WithField("Request", (Action<ContentPartFieldDefinitionBuilder>) (cfg => cfg.OfType("TextField").WithDisplayName("Json Response").WithSetting("TextFieldSettings.Flavor", "TextArea"))).WithField("Action", (Action<ContentPartFieldDefinitionBuilder>) (x => x.OfType("TextField").WithDisplayName("Action To Execute").WithSetting("TextFieldSettings.Flavor", "TextArea"))).WithField("Edition", (Action<ContentPartFieldDefinitionBuilder>) (x => x.OfType("TextField").WithDisplayName("Edition")))));
+            ContentDefinitionManager.AlterPartDefinition( "AppDirectRequestPart", (Action<ContentPartDefinitionBuilder>) (b => MetaDataExtensions.Attachable(b, false).WithField("Request", (Action<ContentPartFieldDefinitionBuilder>) (cfg => cfg.OfType("TextField").WithDisplayName("Json Response").WithSetting("TextFieldSettings.Flavor", "TextArea"))).WithField("Action", (Action<ContentPartFieldDefinitionBuilder>) (x => x.OfType("TextField").WithDisplayName("Action To Execute").WithSetting("TextFieldSettings.Flavor", "TextArea"))).WithField("Edition", (Action<ContentPartFieldDefinitionBuilder>) (x => x.OfType("TextField").WithDisplayName("Edition")))));
       return 6;
     }
-  }
+        public int UpdateFrom6() {
+            ContentDefinitionManager.AlterTypeDefinition("AppDirectRequest", x => x
+                 .WithPart(typeof(DynamicButtonToWorkflowsPart).Name)
+                );
+            return 7;
+        }
+    }
 }

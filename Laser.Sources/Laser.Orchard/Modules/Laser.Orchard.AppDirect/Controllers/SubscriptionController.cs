@@ -25,6 +25,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using System.Net.Http.Headers;
+using Orchard.Workflows.Services;
 
 namespace Laser.Orchard.AppDirect.Controllers {
     public class SubscriptionController : Controller {
@@ -36,12 +37,19 @@ namespace Laser.Orchard.AppDirect.Controllers {
         private readonly ILogger Logger;
         private readonly IRepository<LogEventsRecord> _repositoryLog;
         private readonly IContentManager _contentManager;
-  
+        private readonly IWorkflowManager _workflowManager;
+
 
         public Localizer T { get; set; }
 
-        public SubscriptionController(IMembershipService membershipService, IAuthenticationService authenticationService, IUserEventHandler userEventHandler, IRepository<LogEventsRecord> repositoryLog, IContentManager contentManager) {
-
+        public SubscriptionController(
+            IMembershipService membershipService, 
+            IAuthenticationService authenticationService, 
+            IUserEventHandler userEventHandler, 
+            IRepository<LogEventsRecord> repositoryLog, 
+            IContentManager contentManager,
+            IWorkflowManager workflowManager) {
+            _workflowManager = workflowManager;
             _membershipService = membershipService;
             _authenticationService = authenticationService;
             _userEventHandler = userEventHandler;
@@ -76,35 +84,52 @@ namespace Laser.Orchard.AppDirect.Controllers {
             return Convert.ToBase64String(new HMACSHA1(Encoding.ASCII.GetBytes(string.Format("{0}&{1}",  ConsumerSecret, (object)""))).ComputeHash(new ASCIIEncoding().GetBytes(GenerateBase(nonce, timeStamp, url))));
         }
 
+
+        private string GetAuthorizationHeaderValue(string Authorization,string key) {
+            var value = "";
+            var pieces=   Authorization.Split(new[] { " oauth_" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string piece in pieces) {
+                if (piece.StartsWith(key + "=")) {
+                    value= piece.Substring(key.Length + 2, piece.LastIndexOf("\"") - (key.Length + 2));
+                    break;
+                }
+            }
+         return value;
+        }
+
         private bool VerifyValidRequest() {
-            if (string.IsNullOrEmpty((Request.Headers["Authorization"] ?? "").ToString()))
+            string authorization = (Request.Headers["Authorization"]?? "").ToString();
+            if (string.IsNullOrEmpty(authorization)) {
+                Logger.Error(T("Authorization Header is empty").ToString());
                 return false;
-           // return true;
-            var oauth_consumer_key = "app-retail-b2c-172476"; 
-var oauth_nonce = "-383666841795120434";
-            var oauth_signature = "QdGA1k3BIalYMGterng1UnCgilY%3D";
-            var oauth_signature_method = "HMAC-SHA1";
-var oauth_timestamp = "1501590001"; 
-var oauth_version = "1.0";
-            OAuthBase oauthBase = new OAuthBase();
-            string normalizedUrl = "";
-            string normalizedRequestParameters = "";
-            //Request.Url
-            var aa=oauthBase.GenerateSignature(Request.Url, ConsumerKey, ConsumerSecret, "", "", "GET", oauth_timestamp, oauth_nonce, out normalizedUrl, out normalizedRequestParameters);
-            //OAuthContext context = new OAuthContextBuilder().FromHttpRequest(request);
-            //OAuthContextSigner signer = new OAuthContextSigner();
-            //SigningContext signingContext = new SigningContext();
-
-            //signingContext.Algorithm = ...; // if a certificate is associated with the consumer (for RSA-SHA1 etc.)
-            //signingContext.ConsumerSecret = ...; // if there is a consumer secret
-
-            //if (signer.ValidateSignature(context, signingContext)) {
-            //    // signature was valid.
-            //}
-
-
-
-            return true;
+            }
+            
+            var oauth_consumer_key = GetAuthorizationHeaderValue(authorization, "consumer_key");
+            var oauth_nonce = GetAuthorizationHeaderValue(authorization, "nonce");
+            var oauth_signature = GetAuthorizationHeaderValue(authorization, "signature");
+            var oauth_timestamp = GetAuthorizationHeaderValue(authorization, "timestamp");
+            if (oauth_consumer_key != ConsumerKey) {
+                Logger.Error(T("Authorization Header {0} have incorrect ConsumerKey", authorization).ToString());
+                return false;
+            }
+            var oauthBase = new OAuthBase();
+            var normalizedUrl = "";
+            var normalizedRequestParameters = "";
+            var uri = Request.Url;
+            // if i use ip then i'm debugging on my pc and i correct uri with the port redirect
+            if (uri.ToString().Contains("185.11.22.191")) {
+                var uriBuilder = new UriBuilder(Request.Url);
+                uriBuilder.Port = 1235;
+                uri = uriBuilder.Uri;
+            }
+            var oauth_signature_Calculated= oauthBase.GenerateSignature(uri, ConsumerKey, ConsumerSecret, "", "", "GET", oauth_timestamp, oauth_nonce, out normalizedUrl, out normalizedRequestParameters);
+            // faccio HttpUtility.decode e non encodo quello calcolato perchè HttpUtility.Encode uso uno standart lowercase mentre java usa lo standard uppercase e quindi le stringhe sarebbero diverse
+            var oauth_signature_decoded = HttpUtility.UrlDecode(oauth_signature);
+            if (oauth_signature_decoded.Equals(oauth_signature_Calculated))
+                return true;
+            else
+                Logger.Error(T("Authorization Header {0} have incorrect oauth_signature", authorization).ToString());
+            return false;
         }
 
         private void WriteEvent(EventType type, string log) {
@@ -116,7 +141,7 @@ var oauth_version = "1.0";
             return new StackTrace().GetFrame(2).GetMethod().Name;
         }
 
-        private bool OpenId(string uri, out string outresponse, string token = "", string tokenSecret = "") {
+        private bool MakeRequestToAppdirect(string uri, out string outresponse, string token = "", string tokenSecret = "") {
             outresponse = "";
             try {
                 OAuthBase oauthBase = new OAuthBase();
@@ -261,18 +286,22 @@ var oauth_version = "1.0";
                 Response.StatusCode = 404;
             }
             string outresponse;
-            if (OpenId(str, out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
-                
-                CreateContentItemRequest(outresponse);
-                //if (!CreateOrLoginUser(json)) {
-
-                //}
+            if (MakeRequestToAppdirect(str, out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
+                var contentitem=CreateContentItemRequest(outresponse);
+                _workflowManager.TriggerEvent("Subscription_Order", contentitem, () => new Dictionary<string, object> { { "Content", contentitem } });
+                Response.StatusCode = 202; //async
+                var data = new { success = "true" };
+                return Json((object)data);
             }
-            var data = new { success = "True" };
-            return Json((object)data, (JsonRequestBehavior)0);
+            else {
+                Logger.Error(T("Can't retrive order {0}", str).ToString());
+                WriteEvent(EventType.Input, "Error Can't retrive order "+str);
+                var data = new { success = "false", errorCode= "INVALID_RESPONSE", message="Can't access order" };
+                return Json((object)data);
+            }
         }
 
-        private void CreateContentItemRequest(string jsonstring) {
+        private ContentItem CreateContentItemRequest(string jsonstring) {
             JObject json = JObject.Parse(jsonstring);
             ContentItem contentItem = _contentManager.New("AppDirectRequest");
             _contentManager.Create(contentItem);
@@ -294,7 +323,7 @@ var oauth_version = "1.0";
             ((dynamic)contentItem).AppDirectRequestPart.Request.Value = jsonstring;
             ((dynamic)contentItem).AppDirectRequestPart.Action.Value = "Create instance.";
             _contentManager.Publish(contentItem);
-        }
+            return contentItem;        }
 
     public ActionResult Edit()
     {
