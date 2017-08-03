@@ -112,6 +112,7 @@
   <ItemGroup>
     <Content Include="Assets.json" />
     <Content Include="Recipes\ECommerceThemeSetup.recipe.xml" />
+    <Content Include="Recipes\NwazetIntegration.recipe.xml" />
     <Content Include="Recipes\SetupDemoContents.recipe.xml" />
     <Content Include="Recipes\SetupEcommerceTheme.recipe.xml" />
     <Content Include="Recipes\SetupNavigation.recipe.xml" />
@@ -339,6 +340,11 @@
     <Content Include="Views\Widget-Name-HighlightGroupHomePage.cshtml" />
     <Content Include="Views\HomePageTaxonomyTermPart.cshtml" />
     <Content Include="Views\Widget-Name-VideoCategoriesHomePage.cshtml" />
+    <Content Include="Views\AddressForm.cshtml" />
+    <Content Include="Views\Addresses\index.cshtml" />
+    <Content Include="Views\PosList.cshtml" />
+    <Content Include="Views\Payment\Info.cshtml" />
+    <Content Include="Views\Braintree\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
