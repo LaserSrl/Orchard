@@ -876,6 +876,10 @@ msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
 msgid "Validation error"
 msgstr "Errore di validazione"
 
+msgctxt "Laser.Orchard.StartupConfig.Settings.IdentityPartOnEveryTypeContentDefinitionEventHandler"
+msgid "The content type must have a form of identity. IdentityPart was added."
+msgstr "Il tipo deve avere una Identity. È stata aggiunta IdentityPart"
+
 msgctxt "Laser.Orchard.StartupConfig.TaxonomiesExtensions.Projections.TaxonomyTokenFilter"
 msgid "Categorized content items (search by token)"
 msgstr "Elementi di contenuto catalogati (ricerca tramite token)"
