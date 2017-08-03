@@ -1,36 +1,26 @@
-﻿
-using DotNetOpenAuth.Messaging;
-using DotNetOpenAuth.OpenId;
-using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration;
-using DotNetOpenAuth.OpenId.Messages;
-using DotNetOpenAuth.OpenId.RelyingParty;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Runtime.CompilerServices;
+using System.Web;
+using System.Web.Mvc;
 using Laser.Orchard.AppDirect.Models;
-using Microsoft.CSharp.RuntimeBinder;
 using Newtonsoft.Json.Linq;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Users.Events;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using System.Text;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Security;
-using System.Net.Http.Headers;
 using Orchard.Workflows.Services;
 
 namespace Laser.Orchard.AppDirect.Controllers {
     public class SubscriptionController : Controller {
-        public string ConsumerKey= "app-retail-b2c-172476";
-        public string ConsumerSecret= "wpIwWYppbVM07hIV";
+       // public string ConsumerKey= "app-retail-b2c-172476";
+       // public string ConsumerSecret= "wpIwWYppbVM07hIV";
         private readonly IMembershipService _membershipService;
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserEventHandler _userEventHandler;
@@ -38,6 +28,7 @@ namespace Laser.Orchard.AppDirect.Controllers {
         private readonly IRepository<LogEventsRecord> _repositoryLog;
         private readonly IContentManager _contentManager;
         private readonly IWorkflowManager _workflowManager;
+        private readonly IOrchardServices _orchardServices;
 
 
         public Localizer T { get; set; }
@@ -48,7 +39,9 @@ namespace Laser.Orchard.AppDirect.Controllers {
             IUserEventHandler userEventHandler, 
             IRepository<LogEventsRecord> repositoryLog, 
             IContentManager contentManager,
-            IWorkflowManager workflowManager) {
+            IWorkflowManager workflowManager,
+            IOrchardServices orchardServices) {
+            _orchardServices = orchardServices;
             _workflowManager = workflowManager;
             _membershipService = membershipService;
             _authenticationService = authenticationService;
@@ -59,30 +52,30 @@ namespace Laser.Orchard.AppDirect.Controllers {
             _contentManager = contentManager;
         }
 
-        protected string NormalizeParameters(SortedDictionary<string, string> parameters) {
-            StringBuilder stringBuilder = new StringBuilder();
-            int num = 0;
-            foreach (KeyValuePair<string, string> parameter in parameters) {
-                if (num > 0)
-                    stringBuilder.Append("&");
-                stringBuilder.AppendFormat("{0}={1}", (object)parameter.Key, (object)parameter.Value);
-                ++num;
-            }
-            return stringBuilder.ToString();
-        }
+        //protected string NormalizeParameters(SortedDictionary<string, string> parameters) {
+        //    StringBuilder stringBuilder = new StringBuilder();
+        //    int num = 0;
+        //    foreach (KeyValuePair<string, string> parameter in parameters) {
+        //        if (num > 0)
+        //            stringBuilder.Append("&");
+        //        stringBuilder.AppendFormat("{0}={1}", (object)parameter.Key, (object)parameter.Value);
+        //        ++num;
+        //    }
+        //    return stringBuilder.ToString();
+        //}
 
-        private string GenerateBase(string nonce, string timeStamp, Uri url) {
-            SortedDictionary<string, string> parameters = new SortedDictionary<string, string>() { { "oauth_consumer_key", ConsumerKey }, { "oauth_signature_method", "HMAC-SHA1" }, { "oauth_timestamp", timeStamp }, { "oauth_nonce", nonce }, { "oauth_version", "1.0" } };
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append("GET");
-            stringBuilder.Append("&" + Uri.EscapeDataString(url.AbsoluteUri));
-            stringBuilder.Append("&" + Uri.EscapeDataString(NormalizeParameters(parameters)));
-            return stringBuilder.ToString();
-        }
+        //private string GenerateBase(string nonce, string timeStamp, Uri url) {
+        //    SortedDictionary<string, string> parameters = new SortedDictionary<string, string>() { { "oauth_consumer_key", ConsumerKey }, { "oauth_signature_method", "HMAC-SHA1" }, { "oauth_timestamp", timeStamp }, { "oauth_nonce", nonce }, { "oauth_version", "1.0" } };
+        //    StringBuilder stringBuilder = new StringBuilder();
+        //    stringBuilder.Append("GET");
+        //    stringBuilder.Append("&" + Uri.EscapeDataString(url.AbsoluteUri));
+        //    stringBuilder.Append("&" + Uri.EscapeDataString(NormalizeParameters(parameters)));
+        //    return stringBuilder.ToString();
+        //}
 
-        public string GenerateSignature(string nonce, string timeStamp, Uri url) {
-            return Convert.ToBase64String(new HMACSHA1(Encoding.ASCII.GetBytes(string.Format("{0}&{1}",  ConsumerSecret, (object)""))).ComputeHash(new ASCIIEncoding().GetBytes(GenerateBase(nonce, timeStamp, url))));
-        }
+        //public string GenerateSignature(string nonce, string timeStamp, Uri url) {
+        //    return Convert.ToBase64String(new HMACSHA1(Encoding.ASCII.GetBytes(string.Format("{0}&{1}",  ConsumerSecret, (object)""))).ComputeHash(new ASCIIEncoding().GetBytes(GenerateBase(nonce, timeStamp, url))));
+        //}
 
 
         private string GetAuthorizationHeaderValue(string Authorization,string key) {
@@ -97,13 +90,15 @@ namespace Laser.Orchard.AppDirect.Controllers {
          return value;
         }
 
-        private bool VerifyValidRequest() {
+        private bool VerifyValidRequest() {       
             string authorization = (Request.Headers["Authorization"]?? "").ToString();
             if (string.IsNullOrEmpty(authorization)) {
                 Logger.Error(T("Authorization Header is empty").ToString());
                 return false;
             }
-            
+            var setting=_orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>();
+            string ConsumerKey = setting.ConsumerKey;
+            string ConsumerSecret = setting.ConsumerSecret;
             var oauth_consumer_key = GetAuthorizationHeaderValue(authorization, "consumer_key");
             var oauth_nonce = GetAuthorizationHeaderValue(authorization, "nonce");
             var oauth_signature = GetAuthorizationHeaderValue(authorization, "signature");
@@ -147,6 +142,9 @@ namespace Laser.Orchard.AppDirect.Controllers {
                 OAuthBase oauthBase = new OAuthBase();
                 if (string.IsNullOrEmpty(uri))
                     return false;
+                var setting = _orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>();
+                string ConsumerKey = setting.ConsumerKey;
+                string ConsumerSecret = setting.ConsumerSecret;
                 string consumerKey = ConsumerKey;
                 string consumerSecret = ConsumerSecret;
                 string timeStamp = oauthBase.GenerateTimeStamp();
@@ -169,44 +167,44 @@ namespace Laser.Orchard.AppDirect.Controllers {
             }
         }
 
-        private bool Login(string userName) {
-            if (string.IsNullOrWhiteSpace(userName))
-                return false;
-            IUser user = _membershipService.GetUser(userName);
-            if (user != null)
-                _authenticationService.SignIn(user, true);
-            IUser authenticatedUser = _authenticationService.GetAuthenticatedUser();
-            if (authenticatedUser == null)
-                return false;
-            _userEventHandler.LoggedIn(authenticatedUser);
-            return true;
-        }
+        //private bool Login(string userName) {
+        //    if (string.IsNullOrWhiteSpace(userName))
+        //        return false;
+        //    IUser user = _membershipService.GetUser(userName);
+        //    if (user != null)
+        //        _authenticationService.SignIn(user, true);
+        //    IUser authenticatedUser = _authenticationService.GetAuthenticatedUser();
+        //    if (authenticatedUser == null)
+        //        return false;
+        //    _userEventHandler.LoggedIn(authenticatedUser);
+        //    return true;
+        //}
 
-        private bool CreateUserOrchard(string username, string email) {
-            try {
-                string password = Membership.GeneratePassword(10, 5);
-                if (_membershipService.CreateUser(new CreateUserParams(username, password, email, T.Invoke("Auto Registered User", new object[0]).Text, password, true)) != null)
-                    return true;
-                Logger.Error( string.Format("AppDirect => Error Creating user username={0} email={1}", (object)username, (object)email));
-                return false;
-            }
-            catch (Exception ex) {
-                Logger.Error(string.Format("AppDirect => Error Creating user username={0} email={1}", (object)username, (object)email) + " " + ex.Message);
-                return false;
-            }
-        }
+        //private bool CreateUserOrchard(string username, string email) {
+        //    try {
+        //        string password = Membership.GeneratePassword(10, 5);
+        //        if (_membershipService.CreateUser(new CreateUserParams(username, password, email, T.Invoke("Auto Registered User", new object[0]).Text, password, true)) != null)
+        //            return true;
+        //        Logger.Error( string.Format("AppDirect => Error Creating user username={0} email={1}", (object)username, (object)email));
+        //        return false;
+        //    }
+        //    catch (Exception ex) {
+        //        Logger.Error(string.Format("AppDirect => Error Creating user username={0} email={1}", (object)username, (object)email) + " " + ex.Message);
+        //        return false;
+        //    }
+        //}
 
-        private bool CreateOrLoginUser(JObject json) {
-            if (json["creator"] == null)
-                return false;
-            string email = (json["creator"]["email"] ?? "").ToString();
-            string lowerInvariant = ("AppDirect_" + (json["creator"]["firstName"] ?? "").ToString() + "." + (json["creator"]["lastName"] ?? "").ToString() + "." + (json["creator"]["uuid"] ?? "").ToString()).ToLowerInvariant();
-            if (!Login(lowerInvariant)) {
-                CreateUserOrchard(lowerInvariant, email);
-                Login(lowerInvariant);
-            }
-            return _authenticationService.GetAuthenticatedUser() != null;
-        }
+        //private bool CreateOrLoginUser(JObject json) {
+        //    if (json["creator"] == null)
+        //        return false;
+        //    string email = (json["creator"]["email"] ?? "").ToString();
+        //    string lowerInvariant = ("AppDirect_" + (json["creator"]["firstName"] ?? "").ToString() + "." + (json["creator"]["lastName"] ?? "").ToString() + "." + (json["creator"]["uuid"] ?? "").ToString()).ToLowerInvariant();
+        //    if (!Login(lowerInvariant)) {
+        //        CreateUserOrchard(lowerInvariant, email);
+        //        Login(lowerInvariant);
+        //    }
+        //    return _authenticationService.GetAuthenticatedUser() != null;
+        //}
 
     //    public ActionResult LogOn(string loginIdentifier) {
     //        string stropenid = Request.QueryString["openid"];

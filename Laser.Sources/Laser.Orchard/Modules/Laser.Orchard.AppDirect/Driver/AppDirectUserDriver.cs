@@ -5,9 +5,6 @@ namespace Laser.Orchard.AppDirect.Driver
 {
   public class AppDirectUserDriver : ContentPartDriver<AppDirectUserPart>
   {
-    public AppDirectUserDriver()
-    {
-
-    }
+  
   }
 }

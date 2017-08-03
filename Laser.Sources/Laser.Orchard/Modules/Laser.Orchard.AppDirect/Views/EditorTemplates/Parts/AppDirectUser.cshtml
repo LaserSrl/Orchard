@@ -1,0 +1,51 @@
+﻿@model Laser.Orchard.AppDirect.Models.AppDirectUserPart
+<fieldset>
+    <legend>@T("AppDirect User")</legend>
+    <div>
+        @Html.LabelFor(m => m.Email)
+        @Html.TextBoxFor(m => m.Email)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.FirstName)
+        @Html.TextBoxFor(m => m.FirstName)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.LastName)
+        @Html.TextBoxFor(m => m.LastName)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Language)
+        @Html.TextBoxFor(m => m.Language)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Locale)
+        @Html.TextBoxFor(m => m.Locale)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.OpenIdCreator)
+        @Html.TextBoxFor(m => m.OpenIdCreator)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.UuidCreator)
+        @Html.TextBoxFor(m => m.UuidCreator)
+    </div>
+</fieldset>
+<fieldset>
+    <legend>@T("AppDirect User Company")</legend>
+    <div>
+        @Html.LabelFor(m => m.CompanyName)
+        @Html.TextBoxFor(m => m.CompanyName)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.CompanyCountry)
+        @Html.TextBoxFor(m => m.CompanyCountry)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.CompanyWebSite)
+        @Html.TextBoxFor(m => m.CompanyWebSite)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.CompanyUuidCreator)
+        @Html.TextBoxFor(m => m.CompanyUuidCreator)
+    </div>
+</fieldset>

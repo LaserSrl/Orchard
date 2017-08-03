@@ -1,0 +1,12 @@
+﻿@model Laser.Orchard.AppDirect.Models.AppDirectSettingsPart
+<fieldset>
+    <legend>@T("AppDirect Settings")</legend>
+    <div>
+        @Html.LabelFor(m => m.ConsumerKey)
+        @Html.TextBoxFor(m => m.ConsumerKey)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.ConsumerSecret)
+        @Html.TextBoxFor(m => m.ConsumerSecret)
+    </div>
+</fieldset>

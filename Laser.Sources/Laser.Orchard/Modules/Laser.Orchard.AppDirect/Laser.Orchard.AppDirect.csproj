@@ -109,9 +109,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\SubscriptionController.cs" />
+    <Compile Include="Driver\AppDirectSettingsDriver.cs" />
     <Compile Include="Driver\AppDirectUserDriver.cs" />
+    <Compile Include="Handlers\AppDirectSettingsHandler.cs" />
     <Compile Include="Handlers\AppDirectUserHandler.cs" />
     <Compile Include="Migration.cs" />
+    <Compile Include="Models\AppDirectSettingsPart.cs" />
     <Compile Include="Models\AppDirectUserPart.cs" />
     <Compile Include="Models\AppDirectUserPartRecord.cs" />
     <Compile Include="Models\EventType.cs" />
@@ -119,6 +122,7 @@
     <Compile Include="OAuthBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes\Routes.cs" />
+    <None Include="Views\EditorTemplates\Parts\AppDirectUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets.json" />
@@ -131,7 +135,7 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\" />
+    <Content Include="Placement.info" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -141,6 +145,9 @@
       <Project>{71BC32D3-96C6-4AA1-AED8-CF1546AB4C21}</Project>
       <Name>Laser.Orchard.ButtonToWorkflows</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\AppDirectSettings_Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -66,5 +66,13 @@ namespace Laser.Orchard.AppDirect
                 );
             return 7;
         }
+        public int UpdateFrom7() {
+            SchemaBuilder.CreateTable(typeof(AppDirectSettingsPartRecord).Name, table => table
+                        .ContentPartRecord()
+                        .Column<string>("ConsumerKey")
+                        .Column<string>("ConsumerSecret")
+         );
+            return 8;
+        }
     }
 }

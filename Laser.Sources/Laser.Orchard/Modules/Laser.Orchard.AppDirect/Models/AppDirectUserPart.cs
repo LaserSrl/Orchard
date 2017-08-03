@@ -1,7 +1,5 @@
 ﻿
 using Orchard.ContentManagement;
-using System;
-using System.Linq.Expressions;
 
 namespace Laser.Orchard.AppDirect.Models {
     public class AppDirectUserPart : ContentPart<AppDirectUserPartRecord> {
