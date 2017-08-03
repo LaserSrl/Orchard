@@ -20,6 +20,22 @@ msgctxt "~/Modules/Contrib.Widgets/Views/Admin/EditWidget.cshtml"
 msgid "Edit Widget"
 msgstr "Modifica il Widget"
 
+msgctxt "~/Modules/Contrib.Widgets/Views/DefinitionTemplates/WidgetsContainerSettingsViewModel.cshtml"
+msgid "Allowed widget types:"
+msgstr "Tipi di widget permessi:"
+
+msgctxt "~/Modules/Contrib.Widgets/Views/DefinitionTemplates/WidgetsContainerSettingsViewModel.cshtml"
+msgid "Allowed zones:"
+msgstr "Zone permesse:"
+
+msgctxt "~/Modules/Contrib.Widgets/Views/DefinitionTemplates/WidgetsContainerSettingsViewModel.cshtml"
+msgid "Select the zones where the widgets can be placed. If no zone is selected all of them will be available."
+msgstr "Selezionare le zone dove si potranno aggiungere dei widgets. Se nessuna zona è selezionata, saranno tutte disponibili."
+
+msgctxt "~/Modules/Contrib.Widgets/Views/DefinitionTemplates/WidgetsContainerSettingsViewModel.cshtml"
+msgid "Select which types of widgets can be added to the content. If no widget type is selected all of them will be available."
+msgstr "Selezionare i tipi di widget che si potrà aggiungere al contenuto. Se nessun tipo è selezionato, saranno tutti disponibili."
+
 msgctxt "~/Modules/Contrib.Widgets/Views/EditorTemplates/Parts.WidgetsContainer.cshtml"
 msgid "-- Choose a culture to copy widgets from its version --"
 msgstr "-- Scegliere una Culture dalla cui versione copiare i widget --"

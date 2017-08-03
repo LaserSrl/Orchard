@@ -32,6 +32,14 @@ msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/DefinitionTemplates/Content
 msgid "Translate Items"
 msgstr "Traduci Oggetti"
 
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/DefinitionTemplates/DisplayTextPartSettings.cshtml"
+msgid "Display Text"
+msgstr "Testo da mostrare"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/DefinitionTemplates/DisplayTextPartSettings.cshtml"
+msgid "Display Text to show in back-end lists."
+msgstr "Testo dal mostrare nelle liste di back-end."
+
 msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/DefinitionTemplates/Parts/ContentPickerConnector.Settings.cshtml"
 msgid "Comma separated value ex: ContentType.ContentFieldName, ContentType2.ContentFieldName2, ..."
 msgstr "Valori separati da virgola come ad esempio: ContentType.ContentFieldName, ContentType2.ContentFieldName2, ..."
@@ -847,6 +855,10 @@ msgstr "Token/csrfToken non valido"
 msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
 msgid "Invalid User"
 msgstr "Utente non valido"
+
+msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
+msgid "It seems you have not yet accepted the required policies"
+msgstr "Sembra che tu non abbia ancora accettato la policy associata."
 
 msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
 msgid "Missing Policies"

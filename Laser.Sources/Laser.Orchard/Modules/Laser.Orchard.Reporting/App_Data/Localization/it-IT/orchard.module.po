@@ -56,6 +56,10 @@ msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Parts/DataReportViewer.Histogra
 msgid "There is no data"
 msgstr "Nessun dato"
 
+msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Parts/DataReportViewer.HorizontalBars.cshtml"
+msgid "There is no data"
+msgstr "Nessun dato"
+
 msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Parts/DataReportViewer.LineChart.cshtml"
 msgid "There is no data"
 msgstr "Nessun dato"
