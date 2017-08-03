@@ -58,7 +58,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Handlers {
                                 _notifier.Add(NotifyType.Information, T(part.MessageToWrite));
                         }
                         else {
-                            _workflowManager.TriggerEvent("DynamicButtonEvent", content, () => new Dictionary<string, object> { { "ButtonName", part.ButtonName } });
+                            _workflowManager.TriggerEvent("DynamicButtonEvent", content, () => new Dictionary<string, object> { { "ButtonName", part.ButtonName }, { "Content", content } });
 
                             if (!string.IsNullOrEmpty(part.MessageToWrite))
                                 _notifier.Add(NotifyType.Information, T(part.MessageToWrite));

@@ -41,6 +41,10 @@ msgid "Registration behaviour"
 msgstr "Comportamento durante la fare di registrazione"
 
 msgctxt "~/Modules/Laser.Orchard.UsersExtensions/Views/EditorTemplates/Parts/UsersRegistrationSettings.cshtml"
+msgid "User Registration - Policies Acceptation"
+msgstr "Registrazione utente - Accettazione delle informative"
+
+msgctxt "~/Modules/Laser.Orchard.UsersExtensions/Views/EditorTemplates/Parts/UsersRegistrationSettings.cshtml"
 msgid "Users registration - policies acceptation"
 msgstr "Registrazione utenti - accettazione informative"
 

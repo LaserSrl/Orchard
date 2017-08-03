@@ -12,10 +12,6 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Web.Mvc;
-using Laser.Orchard.ShareLink.Servicies;
 using Orchard.UI.Admin;
 using Orchard.Mvc.Html;
 

@@ -142,7 +142,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                     if (message != "")
                         rsp.Message = message;
                     else
-                        rsp.Message = T("Missing Policies").ToString();
+                        rsp.Message = T("It seems you have not yet accepted the required policies").ToString();
                     rsp.ErrorCode = ErrorCode.MissingPolicies;
                     rsp.Data = data;
                     rsp.ResolutionAction = ResolutionAction.AcceptPolicies;

@@ -1,0 +1,53 @@
+@using Orchard.ContentManagement;
+@using Orchard.Core.Common.Models;
+@using System.Collections.Generic;
+@using System.Linq;
+
+@functions{
+    // Model.ContentItem is a Store and it can be null
+    string retString = "Error"; //possible outcomes: Error,Ok,Unpublished
+    string eMsg = String.Empty;
+    //services
+    IContentManager _contentManager;
+}
+@{
+    try {
+        // resolve services
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        // get configuration
+        IEnumerable<ContentItem> config = _contentManager.Query("ConfigurazioneBase").List();
+        if(config == null) {
+            if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
+                eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
+            }
+            eMsg += "Configurazione Base non trovata.";
+            Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+        } else {
+            int maxNumStore = Convert.ToInt32(config.ElementAt(0).Content.ConfigurazioneBase.MaxNumStore.Value);
+            int numStore = _contentManager.Query(VersionOptions.Published, "Store").Count();
+            if(numStore > maxNumStore) {
+                if(Model.ContentItem != null) {
+                    _contentManager.Unpublish(Model.ContentItem);
+                    numStore--;
+                }
+                if (numStore > maxNumStore) {
+                    var storeList = _contentManager.Query(VersionOptions.Published, "Store").OrderByDescending<CommonPartRecord>(x => x.PublishedUtc).List();
+                    foreach(var store in storeList) {
+                        if(numStore > maxNumStore) {
+                            _contentManager.Unpublish(store);
+                            numStore--;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                retString = "Unpublished";
+            } else {
+                retString = "Ok";
+            }
+        }
+    } catch (Exception ex) {
+        eMsg += string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    }
+}@retString

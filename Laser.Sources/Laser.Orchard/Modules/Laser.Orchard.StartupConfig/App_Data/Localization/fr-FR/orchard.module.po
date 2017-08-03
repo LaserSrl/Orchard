@@ -148,3 +148,7 @@ msgctxt "Laser.Orchard.StartupConfig.Projections.TaxonomyTokenForm"
 msgid "The token used as a source for term identifiers"
 msgstr "Le token utilisé comme source des identificateurs des termes"
 
+msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
+msgid "It seems you have not yet accepted the required policies"
+msgstr "Vous n'avez pas encore accepté les conditions d’utilisation."
+
