@@ -5,6 +5,6 @@
 
 pushd %~dp0
 del modulesmanifest.zip 
-7z a -tzip modulesmanifest.zip -r ..\..\..\Laser.Sources\Laser.Orchard\Module.txt -mx5 -xr!bin -xr!obj
-7z a -tzip modulesmanifest.zip -r ..\..\..\Laser.Sources\Laser.Orchard\Theme.txt -mx5 -xr!bin -xr!obj
+"C:\Program Files\7-Zip\7z" a -tzip modulesmanifest.zip -r ..\..\..\Laser.Sources\Laser.Orchard\Module.txt -mx5 -xr!bin -xr!obj
+"C:\Program Files\7-Zip\7z" a -tzip modulesmanifest.zip -r ..\..\..\Laser.Sources\Laser.Orchard\Theme.txt -mx5 -xr!bin -xr!obj
 pause
