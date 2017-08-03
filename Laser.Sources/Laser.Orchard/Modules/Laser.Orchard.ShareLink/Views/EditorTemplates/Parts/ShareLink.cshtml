@@ -13,7 +13,7 @@
     </script>
 }
 <fieldset>
-    @if (Model.ShowSharedLink || Model.ShowSharedText || Model.ShowSharedImage) {
+    @if (Model.ShowSharedLink || Model.ShowSharedText || Model.ShowSharedImage || Model.ShowSharedBody) {
         <legend>
             @T("Sharing")
         </legend>
@@ -26,7 +26,13 @@
     else {
         @Html.HiddenFor(m => m.SharedLink)
     }
-
+    @if (Model.ShowSharedBody) {
+        <div class="editor-label">@Html.LabelFor(m => m.SharedBody, T("Description - OpenGraph"))</div>
+        <div class="editor-label">@Html.TextBoxFor(m => m.SharedBody, new { @class = "text large", rows = "5" })</div>
+    }
+    else {
+        @Html.HiddenFor(m => m.SharedBody)
+    }
     @if (Model.ShowSharedText) {
         <div class="editor-label">@Html.LabelFor(m => m.SharedText, T("Text"))</div>
         <div class="editor-label">@Html.TextBoxFor(m => m.SharedText, new { @class = "text large" })</div>

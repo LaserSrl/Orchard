@@ -22,9 +22,11 @@ namespace Laser.Orchard.ShareLink.PartSettings {
             var model = new ShareLinkPartSettingVM();
             updateModel.TryUpdateModel(model, "ShareLinkPartSettingVM", null, null);
             builder.WithSetting("ShareLinkPartSettingVM.SharedLink", ((string)model.SharedLink) ?? "");
+            builder.WithSetting("ShareLinkPartSettingVM.SharedBody", ((string)model.SharedBody) ?? "");
             builder.WithSetting("ShareLinkPartSettingVM.SharedText", ((string)model.SharedText) ?? "");
             builder.WithSetting("ShareLinkPartSettingVM.SharedImage", ((string)model.SharedImage) ?? "");
             builder.WithSetting("ShareLinkPartSettingVM.ShowImageChoise", model.ShowImageChoise.ToString());
+            builder.WithSetting("ShareLinkPartSettingVM.ShowBodyChoise", model.ShowBodyChoise.ToString());
             builder.WithSetting("ShareLinkPartSettingVM.ShowTextChoise", model.ShowTextChoise.ToString());
             builder.WithSetting("ShareLinkPartSettingVM.ShowLinkChoise", model.ShowLinkChoise.ToString());
             yield return DefinitionTemplate(model);

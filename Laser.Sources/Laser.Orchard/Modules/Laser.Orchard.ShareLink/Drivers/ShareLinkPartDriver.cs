@@ -1,6 +1,9 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
+using AutoMapper;
 using Laser.Orchard.ShareLink.Models;
 using Laser.Orchard.ShareLink.PartSettings;
+using Laser.Orchard.ShareLink.Servicies;
 using Laser.Orchard.ShareLink.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
@@ -8,13 +11,9 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.MediaLibrary.Models;
-using Orchard.Mvc.Extensions;
 using Orchard.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Web.Mvc;
-using Laser.Orchard.ShareLink.Servicies;
+using Orchard.UI.Admin;
+using Orchard.Mvc.Html;
 
 namespace Laser.Orchard.ShareLink.Drivers {
 
@@ -40,7 +39,47 @@ namespace Laser.Orchard.ShareLink.Drivers {
             _contentManager = contentManager;
             _sharelinkservice = sharelinkService;
         }
+        private string TruncateAtWord(string value, int length) {
+            if (value == null || value.Length < length || value.IndexOf(" ", length) == -1)
+                return value;
 
+            return value.Substring(0, value.IndexOf(" ", length));
+        }
+        protected override DriverResult Display(ShareLinkPart part, string displayType, dynamic shapeHelper) {
+
+            ////Determine if we're on an admin page
+            //bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+            //if (isAdmin) {
+            if (displayType == "Detail") {
+                _sharelinkservice.FillPart(part);
+                var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                var description = part.SharedBody ?? "";
+                if (description.Length > 290)
+                    description = TruncateAtWord(part.SharedBody ?? "", 290) + " ...";
+                var getpart = _orchardServices.WorkContext.CurrentSite.As<ShareLinkModuleSettingPart>();
+                string fbappid = "";
+                if (getpart != null)
+                    fbappid = getpart.Fb_App;
+
+                var openGraphVM = new OpenGraphVM {
+                    Title = part.SharedText,
+                    Image = part.SharedImage,
+                    Url = _orchardServices.WorkContext.CurrentSite.BaseUrl+ urlHelper.ItemDisplayUrl(part.ContentItem),
+                    Site_name = _orchardServices.WorkContext.CurrentSite.SiteName,
+                    Description = description,
+                    Fbapp_id = fbappid, //Your page will appear in the "Likes and Interests" section of the user's profile, and you have the ability to publish updates to the user
+                    #region Twitter
+                    TwitterTitle = part.SharedText,
+                    TwitterDescription = part.SharedBody,
+                    TwitterImage = part.SharedImage
+                    #endregion
+                };
+                return ContentShape("Parts_ShareLink_Detail",
+                           () => shapeHelper.Parts_ShareLink_Detail(OpenGraphVM: openGraphVM));
+            }
+            //}
+            return null;
+        }
 
 
         protected override DriverResult Editor(ShareLinkPart part, dynamic shapeHelper) {
@@ -54,14 +93,28 @@ namespace Laser.Orchard.ShareLink.Drivers {
             var moduleSetting = _orchardServices.WorkContext.CurrentSite.As<ShareLinkModuleSettingPart>();
             var partSetting = part.Settings.GetModel<ShareLinkPartSettingVM>();
             var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
+            if ((!partSetting.ShowBodyChoise) || part.SharedBody == "") {
+                if (!string.IsNullOrEmpty(partSetting.SharedBody)) {
+                    vm.ShowSharedBody = false;
+                }
+                else {
+                    if (!string.IsNullOrEmpty(moduleSetting.SharedBody)) {
+                        vm.ShowSharedBody = false;
+                    }
+                }
+            }
+            if (partSetting.ShowBodyChoise) {
+                vm.ShowSharedBody = true;
+            }
+
             if ((!partSetting.ShowTextChoise) || part.SharedText == "") {
                 if (!string.IsNullOrEmpty(partSetting.SharedText)) {
- //                   vm.SharedText = _tokenizer.Replace(partSetting.SharedText, tokens);
+                    //                   vm.SharedText = _tokenizer.Replace(partSetting.SharedText, tokens);
                     vm.ShowSharedText = false;
                 }
                 else {
                     if (!string.IsNullOrEmpty(moduleSetting.SharedText)) {
- //                       vm.SharedText = _tokenizer.Replace(moduleSetting.SharedText, tokens);
+                        //                       vm.SharedText = _tokenizer.Replace(moduleSetting.SharedText, tokens);
                         vm.ShowSharedText = false;
                     }
                 }
@@ -72,12 +125,12 @@ namespace Laser.Orchard.ShareLink.Drivers {
 
             if ((!partSetting.ShowLinkChoise) || part.SharedLink == "") {
                 if (!string.IsNullOrEmpty(partSetting.SharedLink)) {
-//                    vm.SharedLink = _tokenizer.Replace(partSetting.SharedLink, tokens);
+                    //                    vm.SharedLink = _tokenizer.Replace(partSetting.SharedLink, tokens);
                     vm.ShowSharedLink = false;
                 }
                 else {
                     if (!string.IsNullOrEmpty(moduleSetting.SharedLink)) {
-//                        vm.SharedLink = _tokenizer.Replace(moduleSetting.SharedLink, tokens);
+                        //                        vm.SharedLink = _tokenizer.Replace(moduleSetting.SharedLink, tokens);
                         vm.ShowSharedLink = false;
                     }
                 }
@@ -94,7 +147,7 @@ namespace Laser.Orchard.ShareLink.Drivers {
             }
             else {
                 if (!string.IsNullOrEmpty(moduleSetting.SharedImage)) {
-                   ListId = _tokenizer.Replace(moduleSetting.SharedImage, tokens);
+                    ListId = _tokenizer.Replace(moduleSetting.SharedImage, tokens);
                     vm.SharedImage = _sharelinkservice.GetImgUrl(ListId);
                     vm.ShowSharedImage = false;
                 }
@@ -124,9 +177,6 @@ namespace Laser.Orchard.ShareLink.Drivers {
                                     Prefix: Prefix));
         }
 
-
-
-
         protected override DriverResult Editor(ShareLinkPart part, IUpdateModel updater, dynamic shapeHelper) {
             ShareLinkVM vm = new ShareLinkVM();
             updater.TryUpdateModel(vm, Prefix, null, null);
@@ -134,8 +184,9 @@ namespace Laser.Orchard.ShareLink.Drivers {
                 cfg.CreateMap<ShareLinkVM, ShareLinkPart>()
                 .ForSourceMember(src => src.ShowSharedImage, opt => opt.Ignore())
                 .ForSourceMember(src => src.ShowSharedLink, opt => opt.Ignore())
-                .ForSourceMember(src => src.ShowSharedText, opt => opt.Ignore());
-                    });
+                .ForSourceMember(src => src.ShowSharedText, opt => opt.Ignore())
+                .ForSourceMember(src => src.ShowSharedBody, opt => opt.Ignore());
+            });
             Mapper.Map(vm, part);
 
             if (vm.SharedImage != null) {
@@ -149,15 +200,20 @@ namespace Laser.Orchard.ShareLink.Drivers {
         protected override void Cloning(ShareLinkPart originalPart, ShareLinkPart clonePart, CloneContentContext context) {
             clonePart.SharedLink = originalPart.SharedLink;
             clonePart.SharedText = originalPart.SharedText;
+            clonePart.SharedBody = originalPart.SharedBody;
             //SharedImage is set based on SharedIdImage
             clonePart.SharedIdImage = originalPart.SharedIdImage;
         }
 
-        protected override void Importing(ShareLinkPart part, ImportContentContext context) 
-        {
+        protected override void Importing(ShareLinkPart part, ImportContentContext context) {
             var importedSharedLink = context.Attribute(part.PartDefinition.Name, "SharedLink");
             if (importedSharedLink != null) {
                 part.SharedLink = importedSharedLink;
+            }
+
+            var importedSharedBody = context.Attribute(part.PartDefinition.Name, "SharedBody");
+            if (importedSharedBody != null) {
+                part.SharedBody = importedSharedBody;
             }
 
             var importedSharedText = context.Attribute(part.PartDefinition.Name, "SharedText");
@@ -177,12 +233,12 @@ namespace Laser.Orchard.ShareLink.Drivers {
         }
 
 
-        protected override void Exporting(ShareLinkPart part, ExportContentContext context) 
-        {
+        protected override void Exporting(ShareLinkPart part, ExportContentContext context) {
             var root = context.Element(part.PartDefinition.Name);
             root.SetAttributeValue("SharedIdImage", part.SharedIdImage);
             root.SetAttributeValue("SharedLink", part.SharedLink);
             root.SetAttributeValue("SharedText", part.SharedText);
+            root.SetAttributeValue("SharedBody", part.SharedBody);
             root.SetAttributeValue("SharedImage", part.SharedImage);
         }
     }
