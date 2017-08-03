@@ -318,7 +318,7 @@ msgstr "Devi specificare una password."
 #: "Orchard.Users.Controllers.AccountController"
 msgctxt "Orchard.Users.Controllers.AccountController"
 msgid "The username or e-mail or password provided is incorrect."
-msgstr "Il nome utente or la email o la password fornite non sono corrette."
+msgstr "Il nome utente, la email o la password fornite non sono corrette."
 
 #: "Orchard.Users.Controllers.AccountController"
 msgctxt "Orchard.Users.Controllers.AccountController"
