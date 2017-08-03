@@ -25,8 +25,16 @@ msgid "You can configure the default values of the Part, so that the instances b
 msgstr "È possibile configurare i valori di default della Parte in modo che le istanze li ereditino"
 
 msgctxt "~/Modules/Laser.Orchard.Reporting/Views/EditorTemplates/Parts/DataReportViewer.cshtml"
+msgid "Chart Type"
+msgstr "Tipo di Grafico"
+
+msgctxt "~/Modules/Laser.Orchard.Reporting/Views/EditorTemplates/Parts/DataReportViewer.cshtml"
 msgid "ChartTag Css Class"
 msgstr "Classe CSS ChartTag"
+
+msgctxt "~/Modules/Laser.Orchard.Reporting/Views/EditorTemplates/Parts/DataReportViewer.cshtml"
+msgid "Color Style"
+msgstr "Stile Colore"
 
 msgctxt "~/Modules/Laser.Orchard.Reporting/Views/EditorTemplates/Parts/DataReportViewer.cshtml"
 msgid "Container Css Class"
@@ -35,6 +43,10 @@ msgstr "Classe CSS Container"
 msgctxt "~/Modules/Laser.Orchard.Reporting/Views/EditorTemplates/Parts/DataReportViewer.cshtml"
 msgid "Report:"
 msgstr "Report"
+
+msgctxt "~/Modules/Laser.Orchard.Reporting/Views/EditorTemplates/Parts/DataReportViewer.cshtml"
+msgid "Start Color"
+msgstr "Colore Iniziale"
 
 msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Parts/DataReportViewer.Donut.cshtml"
 msgid "There is no data"
@@ -120,6 +132,18 @@ msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Report/CreateHql.cshtml"
 msgid "You can specify filters in your HQL query using tokens like {Request.Form:*}. Then you have to add a field for each filter to your Data Report Viewer Content Type to enable users to set filters."
 msgstr "È possibile specificare filtri nella query HQL usando token come {Request.Form:*}. Quindi è necessario aggiungere un campo per ogni filtro nel Tipo di Contenuto Data Report Viewer per permettere agli utenti di impostare il valore dei filtri."
 
+msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Report/DashboardList.cshtml"
+msgid "Apply Filter"
+msgstr "Applica Filtro"
+
+msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Report/DashboardList.cshtml"
+msgid "Dashboards"
+msgstr "Dashboard"
+
+msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Report/DashboardList.cshtml"
+msgid "Name"
+msgstr "Nome"
+
 msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Report/Display.cshtml"
 msgid "Execute report"
 msgstr "Esegui Report"
@@ -127,6 +151,10 @@ msgstr "Esegui Report"
 msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Report/Display.cshtml"
 msgid "Loading report..."
 msgstr "Caricamento report in corso..."
+
+msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Report/Display.cshtml"
+msgid "Print"
+msgstr "Stampa"
 
 msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Report/Display.cshtml"
 msgid "Refresh"
@@ -233,6 +261,10 @@ msgid "Loading report..."
 msgstr "Caricamento report in corso..."
 
 msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Report/ShowDashboard.cshtml"
+msgid "Print"
+msgstr "Stampa"
+
+msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Report/ShowDashboard.cshtml"
 msgid "Refresh"
 msgstr "Aggiorna"
 
@@ -249,6 +281,26 @@ msgid "Name"
 msgstr "Nome"
 
 msgctxt "Laser.Orchard.Reporting.AdminMenu"
+msgid " - "
+msgstr "-"
+
+msgctxt "Laser.Orchard.Reporting.AdminMenu"
+msgid "Charts"
+msgstr "Grafici"
+
+msgctxt "Laser.Orchard.Reporting.AdminMenu"
+msgid "Charts & Reports"
+msgstr "Grafici e Report"
+
+msgctxt "Laser.Orchard.Reporting.AdminMenu"
+msgid "Dashboard Definitions"
+msgstr "Definizione Dashboard"
+
+msgctxt "Laser.Orchard.Reporting.AdminMenu"
+msgid "Dashboards"
+msgstr "Dashboard"
+
+msgctxt "Laser.Orchard.Reporting.AdminMenu"
 msgid "Data Report Dashboards"
 msgstr "Dashboard Report Dati"
 
@@ -259,6 +311,10 @@ msgstr "Report Dati"
 msgctxt "Laser.Orchard.Reporting.AdminMenu"
 msgid "Execute Data Reports"
 msgstr "Esegui Report Dati"
+
+msgctxt "Laser.Orchard.Reporting.AdminMenu"
+msgid "Query Report Definition"
+msgstr "Definizione Report"
 
 msgctxt "Laser.Orchard.Reporting.Controllers.ReportController"
 msgid "[No Name]"

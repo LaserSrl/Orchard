@@ -75,6 +75,13 @@ span.navicon-communication:before {
     background-image: none !important; 
 }
 
+.navicon-charts-reports:before {
+    content: "\f080";
+}
+.navicon-charts-reports {
+    background-image: none !important; 
+}
+
 .navicon-social-facebook-account:before {
     content: "\f09a";
 }

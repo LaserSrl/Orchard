@@ -23,11 +23,6 @@
             @Html.ValidationMessageFor(c => c.QueryId)
         </fieldset>
         <fieldset>
-            <label for="ChartTypeId">@T("Chart Types")</label>
-            @Html.DropDownListFor(c => c.ChartTypeId, Model.ChartTypes, new { @class = "select-medium" })
-            @Html.ValidationMessageFor(c => c.ChartTypeId)
-        </fieldset>
-        <fieldset>
             <label for="AggregateMethod">@T("Aggregate Method")</label>
             @Html.DropDownListFor(c => c.AggregateMethod, Model.Aggregations, new { @class = "select-medium" })
             @Html.ValidationMessageFor(c => c.AggregateMethod)
