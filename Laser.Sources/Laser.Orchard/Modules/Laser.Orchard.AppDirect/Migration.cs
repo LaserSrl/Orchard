@@ -61,9 +61,9 @@ namespace Laser.Orchard.AppDirect
       return 6;
     }
         public int UpdateFrom6() {
-            ContentDefinitionManager.AlterTypeDefinition("AppDirectRequest", x => x
-                 .WithPart(typeof(DynamicButtonToWorkflowsPart).Name)
-                );
+            //ContentDefinitionManager.AlterTypeDefinition("AppDirectRequest", x => x
+            //     .WithPart(typeof(DynamicButtonToWorkflowsPart).Name)
+            //    );
             return 7;
         }
         public int UpdateFrom7() {
@@ -73,6 +73,19 @@ namespace Laser.Orchard.AppDirect
                         .Column<string>("ConsumerSecret")
          );
             return 8;
+        }
+        public int UpdateFrom8() {
+            ContentDefinitionManager.AlterPartDefinition("AppDirectRequestPart", b => b
+            .WithField("State", cfg => cfg.OfType("TextField")
+            .WithDisplayName("Order State")
+            ));
+            return 9;
+        }
+        public int UpdateFrom9() {
+            ContentDefinitionManager.AlterTypeDefinition("AppDirectRequest", x => x
+                 .WithPart(typeof(AppDirectButtonPart).Name)
+                );
+            return 10;
         }
     }
 }

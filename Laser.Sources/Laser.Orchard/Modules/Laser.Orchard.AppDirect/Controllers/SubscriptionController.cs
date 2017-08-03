@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Mvc;
 using Laser.Orchard.AppDirect.Models;
+using Laser.Orchard.AppDirect.Services;
 using Newtonsoft.Json.Linq;
 using Orchard;
 using Orchard.ContentManagement;
@@ -24,12 +25,13 @@ namespace Laser.Orchard.AppDirect.Controllers {
         private readonly IMembershipService _membershipService;
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserEventHandler _userEventHandler;
-        private readonly ILogger Logger;
-        private readonly IRepository<LogEventsRecord> _repositoryLog;
+       private readonly ILogger Logger;
+   //     private readonly IRepository<LogEventsRecord> _repositoryLog;
         private readonly IContentManager _contentManager;
         private readonly IWorkflowManager _workflowManager;
         private readonly IOrchardServices _orchardServices;
-
+        private readonly IAppDirectCommunication _appDirectCommunication;
+        
 
         public Localizer T { get; set; }
 
@@ -40,13 +42,15 @@ namespace Laser.Orchard.AppDirect.Controllers {
             IRepository<LogEventsRecord> repositoryLog, 
             IContentManager contentManager,
             IWorkflowManager workflowManager,
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices,
+            IAppDirectCommunication appDirectCommunication) {
+            _appDirectCommunication = appDirectCommunication;
             _orchardServices = orchardServices;
             _workflowManager = workflowManager;
             _membershipService = membershipService;
             _authenticationService = authenticationService;
             _userEventHandler = userEventHandler;
-            _repositoryLog = repositoryLog;
+     //       _repositoryLog = repositoryLog;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
             _contentManager = contentManager;
@@ -127,45 +131,38 @@ namespace Laser.Orchard.AppDirect.Controllers {
             return false;
         }
 
-        private void WriteEvent(EventType type, string log) {
-            _repositoryLog.Create(new LogEventsRecord(type, log, GetCurrentMethod()));
-        }
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        public string GetCurrentMethod() {
-            return new StackTrace().GetFrame(2).GetMethod().Name;
-        }
 
-        private bool MakeRequestToAppdirect(string uri, out string outresponse, string token = "", string tokenSecret = "") {
-            outresponse = "";
-            try {
-                OAuthBase oauthBase = new OAuthBase();
-                if (string.IsNullOrEmpty(uri))
-                    return false;
-                var setting = _orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>();
-                string ConsumerKey = setting.ConsumerKey;
-                string ConsumerSecret = setting.ConsumerSecret;
-                string consumerKey = ConsumerKey;
-                string consumerSecret = ConsumerSecret;
-                string timeStamp = oauthBase.GenerateTimeStamp();
-                string nonce = oauthBase.GenerateNonce();
-                string normalizedUrl;
-                string normalizedRequestParameters;
-                string str1 = HttpUtility.UrlEncode(oauthBase.GenerateSignature(new Uri(uri), consumerKey, consumerSecret, token, tokenSecret, "GET", timeStamp, nonce, out normalizedUrl, out normalizedRequestParameters));
-                string str2 = string.Format("{0}?{1}&oauth_signature={2}", (object)normalizedUrl, (object)normalizedRequestParameters, (object)str1);
-                WriteEvent(EventType.Output, str2);
-                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(str2);
-                httpWebRequest.Accept = "application/json";
-                string end = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()).ReadToEnd();
-                WriteEvent(EventType.Input, end);
-                outresponse = end;
-                return true;
-            }
-            catch (Exception ex) {
-                Logger.Error(ex.Message);
-                return false;
-            }
-        }
+        //private bool MakeRequestToAppdirect(string uri, out string outresponse, string token = "", string tokenSecret = "") {
+        //    outresponse = "";
+        //    try {
+        //        OAuthBase oauthBase = new OAuthBase();
+        //        if (string.IsNullOrEmpty(uri))
+        //            return false;
+        //        var setting = _orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>();
+        //        string ConsumerKey = setting.ConsumerKey;
+        //        string ConsumerSecret = setting.ConsumerSecret;
+        //        string consumerKey = ConsumerKey;
+        //        string consumerSecret = ConsumerSecret;
+        //        string timeStamp = oauthBase.GenerateTimeStamp();
+        //        string nonce = oauthBase.GenerateNonce();
+        //        string normalizedUrl;
+        //        string normalizedRequestParameters;
+        //        string str1 = HttpUtility.UrlEncode(oauthBase.GenerateSignature(new Uri(uri), consumerKey, consumerSecret, token, tokenSecret, "GET", timeStamp, nonce, out normalizedUrl, out normalizedRequestParameters));
+        //        string str2 = string.Format("{0}?{1}&oauth_signature={2}", (object)normalizedUrl, (object)normalizedRequestParameters, (object)str1);
+        //        WriteEvent(EventType.Output, str2);
+        //        HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(str2);
+        //        httpWebRequest.Accept = "application/json";
+        //        string end = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()).ReadToEnd();
+        //        WriteEvent(EventType.Input, end);
+        //        outresponse = end;
+        //        return true;
+        //    }
+        //    catch (Exception ex) {
+        //        Logger.Error(ex.Message);
+        //        return false;
+        //    }
+        //}
 
         //private bool Login(string userName) {
         //    if (string.IsNullOrWhiteSpace(userName))
@@ -275,16 +272,16 @@ namespace Laser.Orchard.AppDirect.Controllers {
 
         public ActionResult Create() {
             string str = Request.QueryString["url"];
-            WriteEvent(EventType.Input, str);
+            _appDirectCommunication.WriteEvent(EventType.Input, str);
             if (VerifyValidRequest()) {
-                WriteEvent(EventType.Input, "OpenAuthValidation");
+                _appDirectCommunication.WriteEvent(EventType.Input, "OpenAuthValidation");
             }
             else {
-                WriteEvent(EventType.Input, "OpenAuthValidation Failed");
+                _appDirectCommunication.WriteEvent(EventType.Input, "OpenAuthValidation Failed");
                 Response.StatusCode = 404;
             }
             string outresponse;
-            if (MakeRequestToAppdirect(str, out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
+            if (_appDirectCommunication.MakeRequestToAppdirect(str, out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
                 var contentitem=CreateContentItemRequest(outresponse);
                 _workflowManager.TriggerEvent("Subscription_Order", contentitem, () => new Dictionary<string, object> { { "Content", contentitem } });
                 Response.StatusCode = 202; //async
@@ -293,7 +290,7 @@ namespace Laser.Orchard.AppDirect.Controllers {
             }
             else {
                 Logger.Error(T("Can't retrive order {0}", str).ToString());
-                WriteEvent(EventType.Input, "Error Can't retrive order "+str);
+                _appDirectCommunication.WriteEvent(EventType.Input, "Error Can't retrive order "+str);
                 var data = new { success = "false", errorCode= "INVALID_RESPONSE", message="Can't access order" };
                 return Json((object)data);
             }
@@ -320,8 +317,10 @@ namespace Laser.Orchard.AppDirect.Controllers {
             }
             ((dynamic)contentItem).AppDirectRequestPart.Request.Value = jsonstring;
             ((dynamic)contentItem).AppDirectRequestPart.Action.Value = "Create instance.";
+            ((dynamic)contentItem).AppDirectRequestPart.State.Value = "To Create";
             _contentManager.Publish(contentItem);
-            return contentItem;        }
+            return contentItem;
+        }
 
     public ActionResult Edit()
     {
