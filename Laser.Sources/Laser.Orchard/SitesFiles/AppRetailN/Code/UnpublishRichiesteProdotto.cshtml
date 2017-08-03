@@ -1,0 +1,36 @@
+@using Orchard.ContentManagement;
+@using Orchard.Core.Common.Models;
+@using System.Collections.Generic;
+@using System.Linq;
+
+@functions{
+    string retString = "Error"; //possible outcomes: Ok,Error
+    string eMsg = String.Empty;
+    //services
+    IContentManager _contentManager;
+}
+@{
+    try {
+        // resolve services
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        // get configuration
+        IEnumerable<ContentItem> config = _contentManager.Query("ConfigurazioneBase").List();
+        if(config == null) {
+            if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
+                eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
+            }
+            eMsg += "Configurazione Base non trovata.";
+            Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+        } else {
+            int numDays = Convert.ToInt32(config.ElementAt(0).Content.ConfigurazioneBase.NumDaysForUnpublishRichieste.Value);
+            IEnumerable<ContentItem> richieste = _contentManager.Query("RichiestaProdotto").Where<CommonPartRecord>(x => x.PublishedUtc < DateTime.UtcNow.AddDays(-1 * numDays)).List();
+            foreach(var richiesta in richieste) {
+                _contentManager.Unpublish(richiesta);
+            }
+        }
+        retString = "Ok";
+    } catch (Exception ex) {
+        eMsg += string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    }
+}@retString

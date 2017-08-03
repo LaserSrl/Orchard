@@ -64,6 +64,10 @@ msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
 msgid "Show scheduled task"
 msgstr "Mostra task pianificati"
 
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/Index.cshtml"
+msgid "Test Token"
+msgstr "Token di prova"
+
 msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/ShowCachedData.cshtml"
 msgid "Clear All Cache"
 msgstr "Elimina tutte le Cache"
@@ -99,6 +103,26 @@ msgstr "Elimina"
 msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/ShowScheduledTask.cshtml"
 msgid "Remove Task"
 msgstr "Elimina Task"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/TestToken.cshtml"
+msgid "ContentItem Id:"
+msgstr "Id del ContentItem:"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/TestToken.cshtml"
+msgid "LastVersion:"
+msgstr "Ultima versione:"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/TestToken.cshtml"
+msgid "Test"
+msgstr "Test"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/TestToken.cshtml"
+msgid "Test Token"
+msgstr "Token di prova"
+
+msgctxt "~/Modules/Laser.Orchard.DevTools/Views/Admin/TestToken.cshtml"
+msgid "Token to test:"
+msgstr "Token da verificare:"
 
 msgctxt "Laser.Orchard.DevTools.Navigation"
 msgid "DevTools"

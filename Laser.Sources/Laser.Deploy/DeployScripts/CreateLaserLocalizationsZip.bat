@@ -5,5 +5,5 @@
 
 pushd %~dp0
 del localizations-laser.zip
-7z a -tzip localizations-laser.zip -r ..\..\Laser.Orchard\*.po -mx5 -xr!bin -xr!obj
+"C:\Program Files\7-Zip\7z" a -tzip localizations-laser.zip -r ..\..\Laser.Orchard\*.po -mx5 -xr!bin -xr!obj
 pause

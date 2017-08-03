@@ -239,5 +239,6 @@
     recipes execute "Laser.ECommerce" "SetupProjections"
     recipes execute "Laser.ECommerce" "SetupNavigation"
     recipes execute "Laser.ECommerce" "SetupWidgets"
+    recipes execute "Laser.ECommerce" "NwazetIntegration"
   </Command>
 </Orchard>

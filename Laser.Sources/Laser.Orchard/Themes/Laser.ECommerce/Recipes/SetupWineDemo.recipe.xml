@@ -976,7 +976,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:44:00.5983233Z" PublishedUtc="2017-07-14T14:50:59.4260645Z" ModifiedUtc="2017-07-14T14:50:59.1563682Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-adelphi-s-liddesdale18" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="56" Price="¤123.49" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Adelphi's Liddesdale18" />
     </Product>
     <Product Id="/alias=al-zero/Sku=SKU-al-zero" Status="Published">
@@ -991,7 +991,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:34:14.117416Z" PublishedUtc="2017-07-14T09:34:14.4448387Z" ModifiedUtc="2017-07-14T09:34:14.3295416Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-al-zero" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="9" Price="¤292.30" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Al Zero" />
     </Product>
     <Product Id="/alias=bandol-rose/Sku=SKU-bandol-rose" Status="Published">
@@ -1006,7 +1006,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:58:15.611194Z" PublishedUtc="2017-07-14T09:58:16.0197943Z" ModifiedUtc="2017-07-14T09:58:15.8673551Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-bandol-rose" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="56" Price="¤27.63" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Bandol Rosè" />
     </Product>
     <Product Id="/alias=bas-armagnac/Sku=SKU-bas-armagnac" Status="Published">
@@ -1021,7 +1021,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:21:30.1077951Z" PublishedUtc="2017-07-14T10:21:30.4687522Z" ModifiedUtc="2017-07-14T10:21:30.3549626Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-bas-armagnac" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤49.01" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Bas Armagnac" />
     </Product>
     <Product Id="/alias=brut-imperial/Sku=SKU-brut-imperial" Status="Published">
@@ -1036,7 +1036,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:04:59.7754938Z" PublishedUtc="2017-07-14T10:05:00.0547032Z" ModifiedUtc="2017-07-14T10:04:59.9459328Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-brut-imperial" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="1" Price="¤1,485.20" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Brut Imperial " />
     </Product>
     <Product Id="/alias=brut-imperial-2/Sku=SKU-brut-imperial" Status="Published">
@@ -1051,7 +1051,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:06:22.4359008Z" PublishedUtc="2017-07-14T10:06:22.909637Z" ModifiedUtc="2017-07-14T10:06:22.6770227Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-brut-imperial" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤917.85" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Brut Imperial " />
     </Product>
     <Product Id="/alias=caberlot/Sku=SKU-caberlot" Status="Published">
@@ -1066,7 +1066,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:33:11.1965923Z" PublishedUtc="2017-07-14T09:33:11.5908634Z" ModifiedUtc="2017-07-14T09:33:11.4382317Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-caberlot" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="8" Price="¤293.41" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Caberlot" />
     </Product>
     <Product Id="/alias=caberlot-2/Sku=SKU-caberlot" Status="Published">
@@ -1081,7 +1081,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:35:10.7752015Z" PublishedUtc="2017-07-14T09:35:11.2541097Z" ModifiedUtc="2017-07-14T09:35:11.0110619Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-caberlot" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="98" Price="¤261.69" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Caberlot" />
     </Product>
     <Product Id="/alias=chassagne-montrachet/Sku=SKU-chassagne-montrachet" Status="Published">
@@ -1096,7 +1096,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:50:05.1000219Z" PublishedUtc="2017-07-14T09:51:47.7932724Z" ModifiedUtc="2017-07-14T09:51:47.7180242Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-chassagne-montrachet" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="3" Price="¤87.23" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Chassagne Montrachet" />
     </Product>
     <Product Id="/alias=chateau-la-nerthe-blanc/Sku=SKU-chateau-la-nerthe-blanc" Status="Published">
@@ -1111,7 +1111,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:56:18.8315068Z" PublishedUtc="2017-07-14T09:56:19.3158069Z" ModifiedUtc="2017-07-14T09:56:19.0997291Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-chateau-la-nerthe-blanc" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="6" Price="¤65.82" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Chateau la Nerthe blanc" />
     </Product>
     <Product Id="/alias=clos-du-mesnil/Sku=SKU-clos-du-mesnil" Status="Published">
@@ -1126,7 +1126,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:07:27.4669831Z" PublishedUtc="2017-07-14T10:07:27.8489571Z" ModifiedUtc="2017-07-14T10:07:27.6283345Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-clos-du-mesnil" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤821.98" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Clos du Mesnil" />
     </Product>
     <Product Id="/alias=clos-vougeot/Sku=SKU-clos-vougeot" Status="Published">
@@ -1141,7 +1141,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:38:44.4341677Z" PublishedUtc="2017-07-14T09:38:45.0032077Z" ModifiedUtc="2017-07-14T09:38:44.8287157Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-clos-vougeot" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="54" Price="¤171.29" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Clos Vougeot" />
     </Product>
     <Product Id="/alias=cristal/Sku=SKU-cristal" Status="Published">
@@ -1156,7 +1156,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:08:37.6435211Z" PublishedUtc="2017-07-14T10:08:38.0521732Z" ModifiedUtc="2017-07-14T10:08:37.897808Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-cristal" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="7" Price="¤502.76" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Cristal " />
     </Product>
     <Product Id="/alias=cristallo-extra/Sku=SKU-cristallo-extra" Status="Published">
@@ -1171,7 +1171,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:27:02.9396585Z" PublishedUtc="2017-07-14T10:27:03.4044338Z" ModifiedUtc="2017-07-14T10:27:03.2531284Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-cristallo-extra" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤417.12" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Cristallo Extra" />
     </Product>
     <Product Id="/alias=cuvee-imperiale-brut/Sku=SKU-cuvee-imperiale-brut" Status="Published">
@@ -1186,7 +1186,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:10:55.2326587Z" PublishedUtc="2017-07-14T10:10:55.5901092Z" ModifiedUtc="2017-07-14T10:10:55.4552624Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-cuvee-imperiale-brut" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤730.45" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Cuveè Imperiale Brut" />
     </Product>
     <Product Id="/alias=falanghina-via-del-campo/Sku=SKU-falanghina-via-del-campo" Status="Published">
@@ -1201,7 +1201,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:55:13.9864357Z" PublishedUtc="2017-07-14T09:55:14.4057794Z" ModifiedUtc="2017-07-14T09:55:14.2920984Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-falanghina-via-del-campo" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="7" Price="¤68.52" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Falanghina Via del Campo" />
     </Product>
     <Product Id="/alias=fiano-exultet/Sku=SKU-fiano-exultet" Status="Published">
@@ -1216,7 +1216,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:52:37.3821519Z" PublishedUtc="2017-07-14T09:52:37.8283222Z" ModifiedUtc="2017-07-14T09:52:37.6368576Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-fiano-exultet" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="0" Price="¤77.71" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Fiano Exultet" />
     </Product>
     <Product Id="/alias=fine/Sku=SKU-fine" Status="Published">
@@ -1231,7 +1231,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:29:58.4283848Z" PublishedUtc="2017-07-14T10:29:58.8344694Z" ModifiedUtc="2017-07-14T10:29:58.7006367Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-fine" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="4" Price="¤36.60" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Fine" />
     </Product>
     <Product Id="/alias=franciacorta-cuve-annamaria-clementi/Sku=SKU-franciacorta-cuve-annamaria-clementi" Status="Published">
@@ -1246,7 +1246,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:13:18.2473498Z" PublishedUtc="2017-07-14T14:51:45.8450901Z" ModifiedUtc="2017-07-14T14:51:45.7553539Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-franciacorta-cuve-annamaria-clementi" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤80.89" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Franciacorta Cuvè Annamaria Clementi" />
     </Product>
     <Product Id="/alias=greco-giallo-d-arles-magnum/Sku=SKU-greco-giallo-d-arles-magnum" Status="Published">
@@ -1261,7 +1261,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:54:00.400047Z" PublishedUtc="2017-07-14T09:54:00.804129Z" ModifiedUtc="2017-07-14T09:54:00.6626812Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-greco-giallo-d-arles-magnum" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="4" Price="¤71.37" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Greco Giallo d'Arles Magnum" />
     </Product>
     <Product Id="/alias=millesime-1974/Sku=SKU-millesime-1974" Status="Published">
@@ -1276,7 +1276,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:19:11.3185648Z" PublishedUtc="2017-07-14T14:51:36.0710409Z" ModifiedUtc="2017-07-14T14:51:35.9622326Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-millesime-1974" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤106.64" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Millesimè 1974" />
     </Product>
     <Product Id="/alias=montrachet-grand-cru/Sku=SKU-montrachet-grand-cru" Status="Published">
@@ -1291,7 +1291,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:45:14.385295Z" PublishedUtc="2017-07-14T09:45:14.7422695Z" ModifiedUtc="2017-07-14T09:45:14.6184031Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-montrachet-grand-cru" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="8" Price="¤539.24" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Montrachet Grand Cru" />
     </Product>
     <Product Id="/alias=pinot-nero-rose/Sku=SKU-pinot-nero-rose" Status="Published">
@@ -1306,7 +1306,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:01:42.8658306Z" PublishedUtc="2017-07-14T10:01:43.2445958Z" ModifiedUtc="2017-07-14T10:01:43.1475588Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-pinot-nero-rose" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤16.49" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Pinot Nero Rosè" />
     </Product>
     <Product Id="/alias=pouilly-fume/Sku=SKU-pouilly-fume" Status="Published">
@@ -1321,7 +1321,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:47:10.7893277Z" PublishedUtc="2017-07-14T09:47:11.1888894Z" ModifiedUtc="2017-07-14T09:47:11.0705993Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-pouilly-fume" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="8" Price="¤132.43" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Pouilly Fumè" />
     </Product>
     <Product Id="/alias=pouilly-fume-2/Sku=SKU-pouilly-fume" Status="Published">
@@ -1336,7 +1336,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:48:24.5941029Z" PublishedUtc="2017-07-14T09:48:25.0523379Z" ModifiedUtc="2017-07-14T09:48:24.8252202Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-pouilly-fume" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="56" Price="¤94.37" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Pouilly Fumè" />
     </Product>
     <Product Id="/alias=premier-grand-cru-classe/Sku=SKU-premier-grand-cru-classe" Status="Published">
@@ -1351,7 +1351,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:27:58.8944232Z" PublishedUtc="2017-07-14T09:27:59.5887551Z" ModifiedUtc="2017-07-14T09:27:59.3974304Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-premier-grand-cru-classe" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤1,030.90" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Premier Grand Cru Classè" />
     </Product>
     <Product Id="/alias=premier-grand-cru-classe-2/Sku=SKU-premier-grand-cru-classe" Status="Published">
@@ -1366,7 +1366,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:29:51.4534397Z" PublishedUtc="2017-07-14T09:29:52.1956866Z" ModifiedUtc="2017-07-14T09:29:51.8210477Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-premier-grand-cru-classe" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="6" Price="¤758.90" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Premier Grand Cru Classè" />
     </Product>
     <Product Id="/alias=premier-grand-cru-classe-3/Sku=SKU-premier-grand-cru-classe" Status="Published">
@@ -1381,7 +1381,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:31:56.9895196Z" PublishedUtc="2017-07-14T09:31:57.4437219Z" ModifiedUtc="2017-07-14T09:31:57.2251363Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-premier-grand-cru-classe" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="3" Price="¤666.12" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Premier Grand Cru Classè" />
     </Product>
     <Product Id="/alias=puro-rose/Sku=SKU-puro-rose" Status="Published">
@@ -1396,7 +1396,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:14:56.266841Z" PublishedUtc="2017-07-14T10:14:56.7471343Z" ModifiedUtc="2017-07-14T10:14:56.5170015Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-puro-rose" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤25.94" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Puro Rosè" />
     </Product>
     <Product Id="/alias=riesling-brut/Sku=SKU-riesling-brut" Status="Published">
@@ -1411,7 +1411,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:16:36.9074084Z" PublishedUtc="2017-07-14T10:16:37.2773745Z" ModifiedUtc="2017-07-14T10:16:37.1711057Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-riesling-brut" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤21.41" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Riesling Brut" />
     </Product>
     <Product Id="/alias=riserva-carlo-bocchino/Sku=SKU-riserva-carlo-bocchino" Status="Published">
@@ -1426,7 +1426,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:33:41.2416538Z" PublishedUtc="2017-07-14T10:33:41.6040521Z" ModifiedUtc="2017-07-14T10:33:41.4631957Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-riserva-carlo-bocchino" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤100.27" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino , Riserva" />
       <TitlePart Title="Riserva Carlo Bocchino" />
     </Product>
     <Product Id="/alias=riserva-del-fondatore/Sku=SKU-riserva-del-fondatore" Status="Published">
@@ -1441,7 +1441,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:35:08.1939079Z" PublishedUtc="2017-07-14T14:51:26.935754Z" ModifiedUtc="2017-07-14T14:51:26.7908446Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-riserva-del-fondatore" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤144.58" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino , Riserva" />
       <TitlePart Title="Riserva del Fondatore" />
     </Product>
     <Product Id="/alias=ron-23-solera/Sku=SKU-ron-23-solera" Status="Published">
@@ -1456,7 +1456,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:39:17.9474914Z" PublishedUtc="2017-07-14T10:39:18.2592965Z" ModifiedUtc="2017-07-14T10:39:18.1535464Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-ron-23-solera" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="6" Price="¤97.59" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino , Riserva" />
       <TitlePart Title="Ron 23 Solera" />
     </Product>
     <Product Id="/alias=ron-gran-reserva-18/Sku=SKU-ron-gran-reserva-18" Status="Published">
@@ -1471,7 +1471,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:40:40.0618166Z" PublishedUtc="2017-07-14T10:40:40.3405365Z" ModifiedUtc="2017-07-14T10:40:40.2202383Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-ron-gran-reserva-18" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="4" Price="¤85.64" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino , Riserva" />
       <TitlePart Title="Ron Gran Reserva 18 " />
     </Product>
     <Product Id="/alias=rosato/Sku=SKU-rosato" Status="Published">
@@ -1486,7 +1486,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:00:24.0385128Z" PublishedUtc="2017-07-14T10:00:24.4506386Z" ModifiedUtc="2017-07-14T10:00:24.2375602Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-rosato" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="2" Price="¤24.74" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino , Rosato" />
       <TitlePart Title="Rosato" />
     </Product>
     <Product Id="/alias=rose-de-provence/Sku=SKU-rose-de-provence" Status="Published">
@@ -1501,7 +1501,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:03:00.7688015Z" PublishedUtc="2017-07-14T10:03:01.2298474Z" ModifiedUtc="2017-07-14T10:03:01.0776341Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-rose-de-provence" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="85" Price="¤15.70" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino , Rosato" />
       <TitlePart Title="Rosè de Provence" />
     </Product>
     <Product Id="/alias=rum-old-cask/Sku=SKU-rum-old-cask" Status="Published">
@@ -1516,7 +1516,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:41:53.7462134Z" PublishedUtc="2017-07-14T14:51:07.745136Z" ModifiedUtc="2017-07-14T14:51:07.5518778Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-rum-old-cask" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="6" Price="¤83.35" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino , Rum" />
       <TitlePart Title="Rum Old Cask" />
     </Product>
     <Product Id="/alias=single-malt-12/Sku=SKU-single-malt-12" Status="Published">
@@ -1531,7 +1531,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:45:12.4917227Z" PublishedUtc="2017-07-14T10:45:12.920895Z" ModifiedUtc="2017-07-14T10:45:12.701782Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-single-malt-12" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="6" Price="¤96.37" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Single Malt 12" />
     </Product>
     <Product Id="/alias=single-malt-18/Sku=SKU-single-malt-18" Status="Published">
@@ -1546,7 +1546,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:46:28.5478376Z" PublishedUtc="2017-07-14T10:46:29.0190919Z" ModifiedUtc="2017-07-14T10:46:28.7874381Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-single-malt-18" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="6" Price="¤79.32" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Single Malt 18" />
     </Product>
     <Product Id="/alias=solaia/Sku=SKU-solaia" Status="Published">
@@ -1561,7 +1561,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:36:07.5227113Z" PublishedUtc="2017-07-14T09:36:07.9302671Z" ModifiedUtc="2017-07-14T09:36:07.7893703Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-solaia" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="0" Price="¤204.12" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Solaia" />
     </Product>
     <Product Id="/alias=storica/Sku=SKU-storica" Status="Published">
@@ -1576,7 +1576,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:36:21.1000531Z" PublishedUtc="2017-07-14T14:51:17.072616Z" ModifiedUtc="2017-07-14T14:51:16.9242447Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-storica" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤150.67" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Storica" />
     </Product>
     <Product Id="/alias=taurasi/Sku=SKU-taurasi" Status="Published">
@@ -1591,7 +1591,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T09:37:47.1606551Z" PublishedUtc="2017-07-14T09:37:47.5190585Z" ModifiedUtc="2017-07-14T09:37:47.4085258Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-taurasi" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="0" Price="¤183.82" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino" />
       <TitlePart Title="Taurasi" />
     </Product>
     <Product Id="/alias=trento-brut/Sku=SKU-trento-brut" Status="Published">
@@ -1606,7 +1606,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:12:01.829507Z" PublishedUtc="2017-07-14T10:12:02.3178043Z" ModifiedUtc="2017-07-14T10:12:02.1974741Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-trento-brut" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="7" Price="¤248.84" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vino, Brut" />
       <TitlePart Title="Trento Brut" />
     </Product>
     <Product Id="/alias=vodka-intense/Sku=SKU-vodka-intense" Status="Published">
@@ -1621,7 +1621,7 @@
       <CommonPart Owner="/User.UserName=admin" CreatedUtc="2017-07-14T10:37:29.5241639Z" PublishedUtc="2017-07-14T10:37:29.8414707Z" ModifiedUtc="2017-07-14T10:37:29.7542359Z" />
       <ProductAttributesPart Attributes="" Ids="" />
       <ProductPart Sku="SKU-vodka-intense" OutOfStockMessage="" AllowBackOrder="false" IsDigital="false" ConsiderInventory="false" Weight="0" OverrideTieredPricing="false" MinimumOrderQuantity="1" AuthenticationRequired="false" Inventory="5" Price="¤50.25" DiscountPrice="(¤1.00)" PriceTiers="" />
-      <TagsPart Tags="" />
+      <TagsPart Tags="Vodka" />
       <TitlePart Title="Vodka Intense" />
     </Product>
     <Product Id="/alias=x-o/Sku=SKU-x-o" Status="Published">

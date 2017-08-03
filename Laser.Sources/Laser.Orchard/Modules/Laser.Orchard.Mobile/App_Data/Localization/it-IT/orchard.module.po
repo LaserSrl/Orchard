@@ -696,9 +696,37 @@ msgctxt "Laser.Orchard.Mobile.Projections.DeveiceFilter"
 msgid "User device"
 msgstr "Dispositivo utente"
 
+msgctxt "Laser.Orchard.Mobile.Projections.DeviceTypeFilter"
+msgid "Communication Contacts"
+msgstr "Contatti"
+
+msgctxt "Laser.Orchard.Mobile.Projections.DeviceTypeFilter"
+msgid "Device Type"
+msgstr "Tipo del dispositivo"
+
+msgctxt "Laser.Orchard.Mobile.Projections.DeviceTypeFilter"
+msgid "Filter by the type of the device the contact registered with (i.e. Android, Apple, Windows)."
+msgstr "Filtra in base al tipo del dispositivo con cui si è registrato il contatto (i.e. Android, Apple, WIndows)."
+
+msgctxt "Laser.Orchard.Mobile.Projections.DeviceTypeFilter"
+msgid "The type of the device the contact registered with (i.e. Android, Apple, Windows)."
+msgstr "Il tipo del dispositivo con cui si è registrato il contatto (i.e. Android, Apple, WIndows)."
+
+msgctxt "Laser.Orchard.Mobile.Projections.DeviceTypeForm"
+msgid "Device Type"
+msgstr "Tipo del dispositivo"
+
+msgctxt "Laser.Orchard.Mobile.Projections.DeviceTypeForm"
+msgid "The type of the device the contact registered with (i.e. Android, Apple, Windows)."
+msgstr "Il tipo del dispositivo con cui si è registrato il contatto (i.e. Android, Apple, WIndows)."
+
 msgctxt "Laser.Orchard.Mobile.Services.MissingSmsSettingsBanner"
 msgid "The <a href=\"{0}\">SMS settings</a> need to be configured."
 msgstr "E' necessario configurare le <a href=\"{0}\">impostazioni SMS</a>."
+
+msgctxt "Laser.Orchard.Mobile.Services.PushGatewayService"
+msgid "Apple message payload exceeds the limit"
+msgstr "Il payload per i messaggi Apple supera il limite consentito"
 
 msgctxt "Laser.Orchard.Mobile.Services.PushGatewayService"
 msgid "Apple send: message payload exceed the limit"
@@ -735,6 +763,10 @@ msgstr "Notifica inviata:"
 msgctxt "Laser.Orchard.Mobile.Services.PushGatewayService"
 msgid "Notifications sent: "
 msgstr "Notifiche inviate:"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushGatewayService"
+msgid "Notifications sent: {0}"
+msgstr "Notifiche inviate: {0}"
 
 msgctxt "Laser.Orchard.Mobile.Services.PushGatewayService"
 msgid "Sent: "

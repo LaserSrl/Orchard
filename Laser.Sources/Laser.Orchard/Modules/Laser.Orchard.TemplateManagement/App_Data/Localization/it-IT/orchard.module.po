@@ -141,6 +141,10 @@ msgid "Author"
 msgstr "Autore"
 
 msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
+msgid "BCC"
+msgstr "BCC"
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
 msgid "CC"
 msgstr "CC"
 
@@ -169,12 +173,20 @@ msgid "Owner"
 msgstr "Proprietario"
 
 msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
+msgid "ReplyTo"
+msgstr "Rispondi a"
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
 msgid "Send to"
 msgstr "Invia a"
 
 msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
 msgid "Site Admin"
 msgstr "Amministratore del sito"
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
+msgid "Specify a comma-separated list of e-mail BCC recipients."
+msgstr "Specificare una lista separata da virgola di destinatari BCC."
 
 msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
 msgid "Specify a comma-separated list of e-mail CC recipients."
@@ -187,6 +199,10 @@ msgstr "Specificare una lista di email di destinatari separata da virgola"
 msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
 msgid "Specify email sender."
 msgstr "Inserire il mittente della mail."
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
+msgid "Specify reply to."
+msgstr "Specificare "Rispondi a"."
 
 msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
 msgid "Template"
