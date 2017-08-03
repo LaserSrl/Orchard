@@ -1,26 +1,22 @@
-﻿using System;
-using System.Web;
-using System.Web.Mvc;
+﻿using Laser.Orchard.CulturePicker.Services;
+using Orchard;
 using Orchard.Autoroute.Models;
-using Laser.Orchard.CulturePicker.Services;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Mvc.Extensions;
-using Orchard;
-using System.Linq;
-using NHibernate.Criterion;
-using NHibernate.Persister.Entity;
-using NHibernate.Transform;
-using Orchard.Localization.Models;
-using Orchard.Localization.Records;
-
+using System;
+using System.Web.Mvc;
 
 namespace Laser.Orchard.CulturePicker.Controllers {
     public class UserCultureController : Controller {
         private readonly ILocalizableContentService _localizableContentService;
         private readonly ICulturePickerServices _cpServices;
 
-        public UserCultureController(IOrchardServices services, ILocalizableContentService localizableContentService, ICulturePickerServices cpServices) {
+        public UserCultureController(
+            IOrchardServices services, 
+            ILocalizableContentService localizableContentService, 
+            ICulturePickerServices cpServices) {
+
             Services = services;
             _localizableContentService = localizableContentService;
             _cpServices = cpServices;
@@ -43,12 +39,14 @@ namespace Laser.Orchard.CulturePicker.Controllers {
                 AutoroutePart localizedRoutePart;
                 //content may not have localized version and we use "Try" approach
                 if (_localizableContentService.TryFindLocalizedRoute(currentRoutePart.ContentItem, cultureName, out localizedRoutePart)) {
-                    returnUrl = String.IsNullOrWhiteSpace(urlPrefix) ? localizedRoutePart.Path : urlPrefix + "/" + localizedRoutePart.Path;
+                    //returnUrl = localizedRoutePart.Path; // String.IsNullOrWhiteSpace(urlPrefix) ? localizedRoutePart.Path : urlPrefix + "/" + localizedRoutePart.Path;
+                    returnUrl = localizedRoutePart.PromoteToHomePage ? "" : localizedRoutePart.Path;
                 }
             }
 
             if (!String.IsNullOrWhiteSpace(urlPrefix) && !returnUrl.StartsWith(urlPrefix)) {
-                returnUrl = urlPrefix + "/" + returnUrl;
+                //returnUrl = urlPrefix + "/" + returnUrl;
+                returnUrl = "~/" + returnUrl;
             }
             _cpServices.SaveCultureCookie(cultureName, Services.WorkContext.HttpContext);
 
@@ -58,7 +56,7 @@ namespace Laser.Orchard.CulturePicker.Controllers {
             if (orchardVersion < new Version(1, 6)) {
                 returnUrl = Url.Encode(returnUrl);
             } else {
-                if (!returnUrl.StartsWith("~/")) {
+                if (!returnUrl.StartsWith("~/") && (String.IsNullOrWhiteSpace(urlPrefix) || !returnUrl.StartsWith(urlPrefix))) {
                     returnUrl = "~/" + returnUrl;
                 }
             }
@@ -70,8 +68,6 @@ namespace Laser.Orchard.CulturePicker.Controllers {
             return this.RedirectLocal(returnUrl);
         }
 
-        #region Helpers
-
-        #endregion
+        
     }
 }
