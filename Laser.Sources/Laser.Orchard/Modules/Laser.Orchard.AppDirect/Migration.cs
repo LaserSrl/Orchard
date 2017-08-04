@@ -87,5 +87,13 @@ namespace Laser.Orchard.AppDirect
                 );
             return 10;
         }
+        public int UpdateFrom10() {
+            ContentDefinitionManager.AlterPartDefinition("AppDirectRequestPart", b => b
+            .WithField("Uri", cfg => cfg.OfType("TextField")
+            .WithDisplayName("Uri to Call")
+            ));
+            return 11;
+        }
+        
     }
 }

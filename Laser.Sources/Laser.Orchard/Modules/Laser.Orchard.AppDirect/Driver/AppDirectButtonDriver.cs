@@ -32,9 +32,14 @@ namespace Laser.Orchard.AppDirect.Driver {
 
             if (updater != null &&  _orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "ConfirmOrder" ) {
                 //part.ContentItem
-                _appDirectCommunication.MakeRequestToAppdirect();
+                //  _appDirectCommunication.MakeRequestToAppdirect();
+                string outresponse;
+                string data = "success=true&accountIdentifier=teoric";
+                var uri = ((dynamic)part.ContentItem).AppDirectRequestPart.Uri.Value + "/result";
+                if (_appDirectCommunication.MakeRequestToAppdirect(uri, Method.POST, data, out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
+                }
 
-            }
+                }
                 return ContentShape("Parts_AppDirectButton",
                                () => shapeHelper.EditorTemplate(
                                    TemplateName: "Parts/AppDirectButton",

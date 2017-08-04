@@ -281,18 +281,18 @@ namespace Laser.Orchard.AppDirect.Controllers {
                 Response.StatusCode = 404;
             }
             string outresponse;
-            if (_appDirectCommunication.MakeRequestToAppdirect(str, out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
+            if (_appDirectCommunication.MakeRequestToAppdirect(str,Method.GET,"", out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
                 var contentitem=CreateContentItemRequest(outresponse);
                 _workflowManager.TriggerEvent("Subscription_Order", contentitem, () => new Dictionary<string, object> { { "Content", contentitem } });
                 Response.StatusCode = 202; //async
                 var data = new { success = "true" };
-                return Json((object)data);
+                return Json((object)data, JsonRequestBehavior.AllowGet);
             }
             else {
                 Logger.Error(T("Can't retrive order {0}", str).ToString());
                 _appDirectCommunication.WriteEvent(EventType.Input, "Error Can't retrive order "+str);
                 var data = new { success = "false", errorCode= "INVALID_RESPONSE", message="Can't access order" };
-                return Json((object)data);
+                return Json((object)data, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -318,6 +318,8 @@ namespace Laser.Orchard.AppDirect.Controllers {
             ((dynamic)contentItem).AppDirectRequestPart.Request.Value = jsonstring;
             ((dynamic)contentItem).AppDirectRequestPart.Action.Value = "Create instance.";
             ((dynamic)contentItem).AppDirectRequestPart.State.Value = "To Create";
+            ((dynamic)contentItem).AppDirectRequestPart.Uri.Value = Request.QueryString["url"];
+
             _contentManager.Publish(contentItem);
             return contentItem;
         }
