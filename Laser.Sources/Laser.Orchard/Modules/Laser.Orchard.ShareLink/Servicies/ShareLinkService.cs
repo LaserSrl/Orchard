@@ -22,6 +22,7 @@ namespace Laser.Orchard.ShareLink.Servicies {
     public class ShareLinkService : IShareLinkService {
         private readonly IOrchardServices _orchardServices;
         private readonly ITokenizer _tokenizer;
+
         public ShareLinkService(IOrchardServices orchardServicies, ITokenizer tokenizer) {
             _orchardServices = orchardServicies;
             _tokenizer = tokenizer;
@@ -34,42 +35,60 @@ namespace Laser.Orchard.ShareLink.Servicies {
             htmlDoc.LoadHtml(text);
             return (htmlDoc.DocumentNode.InnerText);
         }
+        private string TruncateText(string value, int length = 0) {
+            if (string.IsNullOrWhiteSpace(value) || value.Length < length || length <= 0) {
+                return value;
+            }
+
+            value = value.Substring(0, value.IndexOf(" ", length));
+            if (value.Length > length) {
+                if (value.LastIndexOf(" ") != -1) { //try to be nice and truncate aftrer a word
+                    value = value.Substring(0, value.LastIndexOf(" "));
+                } else { //just shear it off to avoid breaking stuff db-side
+                    value = value.Substring(0, length);
+                }
+            }
+            return value;
+        }
+        private string ProcessString(string value, bool removeHtml) {
+            return ProcessString(value, 0, removeHtml);
+        }
+        private string ProcessString(string value, int length = 0, bool removeHtml = false) {
+            if (removeHtml) {
+                value = HttpUtility.HtmlDecode(value);
+                value = RemoveHtmlTag(value);
+            }
+            return TruncateText(value, length);
+        }
+        private string FillString(string first, string second, Dictionary<string, object> tokens) {
+            if (!string.IsNullOrEmpty(first)) {
+                return _tokenizer.Replace(first, tokens);
+            }
+            if (!string.IsNullOrEmpty(second)) {
+                return _tokenizer.Replace(second, tokens);
+            }
+            return string.Empty;
+        }
+
         public void FillPart(ShareLinkPart part) {
             var moduleSetting = _orchardServices.WorkContext.CurrentSite.As<ShareLinkModuleSettingPart>();
             var partSetting = part.Settings.GetModel<ShareLinkPartSettingVM>();
             var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
-            if ((!partSetting.ShowBodyChoise) || part.SharedBody == "") {
-                if (!string.IsNullOrEmpty(partSetting.SharedBody)) {
-                    part.SharedBody = _tokenizer.Replace(partSetting.SharedBody, tokens);
-                }
-                else {
-                    if (!string.IsNullOrEmpty(moduleSetting.SharedBody)) {
-                        part.SharedBody = _tokenizer.Replace(moduleSetting.SharedBody, tokens);
-                    }
-                }
-                var s=HttpUtility.HtmlDecode(part.SharedBody);
-                part.SharedBody = RemoveHtmlTag(s);
-            }
 
+            if ((!partSetting.ShowBodyChoise) || part.SharedBody == "") {
+                var s = FillString(partSetting.SharedBody, moduleSetting.SharedBody, tokens);
+                part.SharedBody = ProcessString(s, true);
+            }
             if ((!partSetting.ShowTextChoise) || part.SharedText == "") {
-                if (!string.IsNullOrEmpty(partSetting.SharedText)) {
-                    part.SharedText = _tokenizer.Replace(partSetting.SharedText, tokens);
-                }
-                else {
-                    if (!string.IsNullOrEmpty(moduleSetting.SharedText)) {
-                        part.SharedText = _tokenizer.Replace(moduleSetting.SharedText, tokens);
-                    }
+                var s = FillString(partSetting.SharedText, moduleSetting.SharedText, tokens);
+                if (!string.IsNullOrWhiteSpace(s)) {
+                    part.SharedText = ProcessString(s);
                 }
             }
             if ((!partSetting.ShowLinkChoise) || part.SharedLink == "") {
-                if (!string.IsNullOrEmpty(partSetting.SharedLink)) {
-                    part.SharedLink = _tokenizer.Replace(partSetting.SharedLink, tokens);
-
-                }
-                else {
-                    if (!string.IsNullOrEmpty(moduleSetting.SharedLink)) {
-                        part.SharedLink = _tokenizer.Replace(moduleSetting.SharedLink, tokens);
-                    }
+                var s = FillString(partSetting.SharedLink, moduleSetting.SharedLink, tokens);
+                if (!string.IsNullOrWhiteSpace(s)) {
+                    part.SharedLink = ProcessString(s);
                 }
             }
 
@@ -79,8 +98,7 @@ namespace Laser.Orchard.ShareLink.Servicies {
                     ListId = _tokenizer.Replace(partSetting.SharedImage, tokens);
                     part.SharedImage = GetImgUrl(ListId);
 
-                }
-                else {
+                } else {
                     if (!string.IsNullOrEmpty(moduleSetting.SharedImage)) {
                         ListId = _tokenizer.Replace(moduleSetting.SharedImage, tokens);
                         part.SharedImage = GetImgUrl(ListId);
@@ -105,8 +123,7 @@ namespace Laser.Orchard.ShareLink.Servicies {
                         if (ContentImage != null) {
                             return urlHelper.MakeAbsolute(ContentImage.As<MediaPart>().MediaUrl);
                         }
-                    }
-                    else {
+                    } else {
                         return idimg;   // non ho passato un id e quindi sarà un link  
                     }
                 }
