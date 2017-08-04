@@ -93,51 +93,15 @@ namespace Laser.Orchard.ShareLink.Drivers {
             var moduleSetting = _orchardServices.WorkContext.CurrentSite.As<ShareLinkModuleSettingPart>();
             var partSetting = part.Settings.GetModel<ShareLinkPartSettingVM>();
             var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
-            if ((!partSetting.ShowBodyChoise) || part.SharedBody == "") {
-                if (!string.IsNullOrEmpty(partSetting.SharedBody)) {
-                    vm.ShowSharedBody = false;
-                }
-                else {
-                    if (!string.IsNullOrEmpty(moduleSetting.SharedBody)) {
-                        vm.ShowSharedBody = false;
-                    }
-                }
-            }
-            if (partSetting.ShowBodyChoise) {
-                vm.ShowSharedBody = true;
-            }
 
-            if ((!partSetting.ShowTextChoise) || part.SharedText == "") {
-                if (!string.IsNullOrEmpty(partSetting.SharedText)) {
-                    //                   vm.SharedText = _tokenizer.Replace(partSetting.SharedText, tokens);
-                    vm.ShowSharedText = false;
-                }
-                else {
-                    if (!string.IsNullOrEmpty(moduleSetting.SharedText)) {
-                        //                       vm.SharedText = _tokenizer.Replace(moduleSetting.SharedText, tokens);
-                        vm.ShowSharedText = false;
-                    }
-                }
-            }
-            if (partSetting.ShowTextChoise) {
-                vm.ShowSharedText = true;
-            }
+            vm.ShowSharedBody = partSetting.ShowBodyChoise ||
+                (string.IsNullOrWhiteSpace(partSetting.SharedBody) && string.IsNullOrWhiteSpace(moduleSetting.SharedBody));
 
-            if ((!partSetting.ShowLinkChoise) || part.SharedLink == "") {
-                if (!string.IsNullOrEmpty(partSetting.SharedLink)) {
-                    //                    vm.SharedLink = _tokenizer.Replace(partSetting.SharedLink, tokens);
-                    vm.ShowSharedLink = false;
-                }
-                else {
-                    if (!string.IsNullOrEmpty(moduleSetting.SharedLink)) {
-                        //                        vm.SharedLink = _tokenizer.Replace(moduleSetting.SharedLink, tokens);
-                        vm.ShowSharedLink = false;
-                    }
-                }
-            }
-            if (partSetting.ShowLinkChoise) {
-                vm.ShowSharedLink = true;
-            }
+            vm.ShowSharedText = partSetting.ShowTextChoise ||
+                (string.IsNullOrWhiteSpace(partSetting.SharedText) && string.IsNullOrWhiteSpace(moduleSetting.SharedText));
+
+            vm.ShowSharedLink = partSetting.ShowLinkChoise ||
+                (string.IsNullOrWhiteSpace(partSetting.SharedLink) && string.IsNullOrWhiteSpace(moduleSetting.SharedLink));
 
             string ListId = "";
             if (!string.IsNullOrEmpty(partSetting.SharedImage)) {
