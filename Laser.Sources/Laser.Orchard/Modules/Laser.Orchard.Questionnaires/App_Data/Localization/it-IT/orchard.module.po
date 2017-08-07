@@ -209,6 +209,10 @@ msgid "Allow admin users to manage single choice answers"
 msgstr "Permette agli amministratori di gestire le risposte a scelte mutuamente esclusive"
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
+msgid "Check if you don't want to save the username in the answers."
+msgstr "Selezionare se non si vuole salvare il nome utente nelle risposte."
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
 msgid "Check if you want the user to be able to edit section text."
 msgstr "Selezionare per permettere all'utente di modificare le sezioni di testo."
 
@@ -255,6 +259,10 @@ msgstr "Abilita Immagine della Risposta"
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
 msgid "Enable Question's Image"
 msgstr "Abilita Immagine della Domanda"
+
+msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
+msgid "Force anonymous responses for authenticated users."
+msgstr "Forza risposte anonime per gli utenti autenticati."
 
 msgctxt "~/Modules/Laser.Orchard.Questionnaires/Views/DefinitionTemplates/QuestionnairesPartSettingVM.cshtml"
 msgid "Limit the number of answer for each questionnaire"
