@@ -100,13 +100,10 @@ namespace Contrib.Widgets.Drivers {
                 // recupero i contenuti localizzati una try è necessaria in quanto non è detto che un contenuto sia localizzato
                 dynamic contentLocalizations;
                 try {
-                    contentLocalizations = _localizationService.GetLocalizations(part.ContentItem, VersionOptions.Latest)
-                        .Select(c => {
-                            var localized = c.ContentItem.As<LocalizationPart>();
-                            if (localized.Culture == null)
-                                localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture());
-                            return c;
-                        })
+                    contentLocalizations = _localizationService
+                        .GetLocalizations(part.ContentItem, VersionOptions.Latest) //the other cultures
+                        .Where(lp => //as long as a culture has been assigned
+                            lp.Culture != null && !string.IsNullOrWhiteSpace(lp.Culture.Culture))
                         .OrderBy(o => o.Culture.Culture)
                         .ToList();
                 }
