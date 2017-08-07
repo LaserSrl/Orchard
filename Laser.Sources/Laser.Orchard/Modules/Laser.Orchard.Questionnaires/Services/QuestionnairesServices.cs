@@ -449,6 +449,7 @@ namespace Laser.Orchard.Questionnaires.Services {
         public bool Save(QuestionnaireWithResultsViewModel editModel, IUser currentUser, string SessionID) {
             bool result = false;
             var questionnaireModuleSettings = _orchardServices.WorkContext.CurrentSite.As<QuestionnaireModuleSettingsPart>();
+            var questionnairePartSettings = _orchardServices.ContentManager.Get<QuestionnairePart>(editModel.Id).Settings.GetModel<QuestionnairesPartSettingVM>();
             bool exit = false;
             if (questionnaireModuleSettings.Disposable) {
                 if (currentUser != null) {
@@ -456,7 +457,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                         exit = true;
                     }
                 }
-                else { // anonymous user => check SesionID
+                else { // anonymous user => check SessionID
                     if (_repositoryUserAnswer.Fetch(x => x.SessionID == SessionID && x.QuestionnairePartRecord_Id == editModel.Id && x.Context == editModel.Context).Count() > 0) {
                         exit = true;
                     }
@@ -470,7 +471,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                             userAnswer.AnswerText = q.OpenAnswerAnswerText;
                             userAnswer.QuestionText = q.Question;
                             userAnswer.QuestionRecord_Id = q.Id;
-                            userAnswer.User_Id = (currentUser == null) ? 0 : currentUser.Id;
+                            userAnswer.User_Id = (currentUser == null || questionnairePartSettings.ForceAnonymous) ? 0 : currentUser.Id;
                             userAnswer.QuestionnairePartRecord_Id = editModel.Id;
                             userAnswer.SessionID = SessionID;
                             userAnswer.Context = editModel.Context;
@@ -483,7 +484,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                             userAnswer.AnswerRecord_Id = q.SingleChoiceAnswer;
                             userAnswer.AnswerText = GetAnswer(q.SingleChoiceAnswer).Answer;
                             userAnswer.QuestionRecord_Id = q.Id;
-                            userAnswer.User_Id = (currentUser == null) ? 0 : currentUser.Id;
+                            userAnswer.User_Id = (currentUser == null || questionnairePartSettings.ForceAnonymous) ? 0 : currentUser.Id;
                             userAnswer.QuestionText = q.Question;
                             userAnswer.QuestionnairePartRecord_Id = editModel.Id;
                             userAnswer.SessionID = SessionID;
@@ -498,7 +499,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                             userAnswer.AnswerRecord_Id = a.Id;
                             userAnswer.AnswerText = GetAnswer(a.Id).Answer;
                             userAnswer.QuestionRecord_Id = q.Id;
-                            userAnswer.User_Id = (currentUser == null) ? 0 : currentUser.Id;
+                            userAnswer.User_Id = (currentUser == null || questionnairePartSettings.ForceAnonymous) ? 0 : currentUser.Id;
                             userAnswer.QuestionText = q.Question;
                             userAnswer.QuestionnairePartRecord_Id = editModel.Id;
                             userAnswer.SessionID = SessionID;

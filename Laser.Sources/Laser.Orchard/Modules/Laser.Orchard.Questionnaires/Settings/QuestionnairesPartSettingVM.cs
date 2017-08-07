@@ -30,6 +30,7 @@ namespace Laser.Orchard.Questionnaires.Settings {
         public bool AllowMultiChoice { get; set; }
         public bool AllowOpenAnswers { get; set; }
         public string QuestionnaireContext { get; set; }
+        public bool ForceAnonymous { get; set; }
 
         public QuestionnairesPartSettingVM() {
             this.QuestionsLimitsNumber = 0;
@@ -47,6 +48,7 @@ namespace Laser.Orchard.Questionnaires.Settings {
             this.AllowMultiChoice  = true;
             this.AllowOpenAnswers = true;
             this.QuestionnaireContext = "";
+            ForceAnonymous = false;
         }
     }
 }
