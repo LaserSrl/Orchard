@@ -31,11 +31,9 @@
         _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         // get richiesta
         dynamic richiesta = Model.ContentItem;
-        // get current user
-        var usr = Model.OrchardServices.WorkContext.CurrentUser;
-        dynamic dUsr = usr.ContentItem;
-        // get store list
-        //var storeList = _contentManager.Query("Store").List();
+        // get creator
+        int idCreator = Convert.ToInt32(richiesta.CommonPart.Creator.Value);
+        dynamic dUsr = _contentManager.Get(idCreator);
         // get store mittente
         dynamic mittente = null;
         int idMittente = 0;
