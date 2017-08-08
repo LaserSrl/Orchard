@@ -15,6 +15,9 @@ namespace Laser.Orchard.StartupConfig
             manifest.DefineStyle("FontAwesome430.ie7").SetUrl("//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome-ie7.min.css");
 
             //maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css
+
+            // color picker
+            builder.Add().DefineScript("spectrum").SetUrl("spectrum.js").SetDependencies("jQuery");
         }
     }
 }
