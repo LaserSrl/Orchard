@@ -23,6 +23,7 @@
                 HiddenStringField hidden = field as HiddenStringField;
                 if (string.IsNullOrWhiteSpace(hidden.Value)) {
                     hidden.Value = "locked";
+                    _contentManager.Publish(config);
                 } else {
                     // annullo la versione corrente
                     config.VersionRecord.Published = false;
