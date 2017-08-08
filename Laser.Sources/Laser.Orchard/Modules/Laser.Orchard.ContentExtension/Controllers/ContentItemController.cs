@@ -171,12 +171,14 @@ namespace Laser.Orchard.ContentExtension.Controllers {
 
                         var taxobase = _taxonomyService.GetTaxonomyByName(singleField.Settings["TaxonomyFieldSettings.Taxonomy"]);
                         int idmaster = taxobase.Id;
-                        if(taxobase.ContentItem.Has<LocalizationPart>()) {
+                        if(taxobase.ContentItem.As<LocalizationPart>() != null) {
                             if (((dynamic)taxobase.ContentItem).LocalizationPart.MasterContentItem != null) {
                                 idmaster = ((dynamic)taxobase.ContentItem).LocalizationPart.MasterContentItem.Id;
                             }
-                            if (((dynamic)taxobase.ContentItem).LocalizationPart.Culture.Culture != Language) {
-                                taxobase = _taxonomyService.GetTaxonomies().Where(x => (x.Id == idmaster || (((dynamic)x.ContentItem).LocalizationPart.MasterContentItem != null && ((dynamic)x.ContentItem).LocalizationPart.MasterContentItem.Id == idmaster)) && ((dynamic)x.ContentItem).LocalizationPart.Culture.Culture == Language).FirstOrDefault();
+                            if(((dynamic)taxobase.ContentItem).LocalizationPart.Culture != null) {
+                                if (((dynamic)taxobase.ContentItem).LocalizationPart.Culture.Culture != Language) {
+                                    taxobase = _taxonomyService.GetTaxonomies().Where(x => (x.Id == idmaster || (((dynamic)x.ContentItem).LocalizationPart.MasterContentItem != null && ((dynamic)x.ContentItem).LocalizationPart.MasterContentItem.Id == idmaster)) && ((dynamic)x.ContentItem).LocalizationPart.Culture.Culture == Language).FirstOrDefault();
+                                }
                             }
                         }
                         List<TermPart> cata = _taxonomyService.GetTerms(taxobase.Id).ToList();//.GetTermsForContentItem(currentUser.Id, singleField.Name).ToList();
