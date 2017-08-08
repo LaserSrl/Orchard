@@ -74,7 +74,7 @@ msgstr "Hai dimenticato la tua password?"
 
 msgctxt "~/Themes/KrakeDefaultTheme/Views/LogOn.cshtml"
 msgid "Register"
-msgstr "Registra"
+msgstr "Registrati"
 
 msgctxt "~/Themes/KrakeDefaultTheme/Views/LogOn.cshtml"
 msgid "Remember Me"
