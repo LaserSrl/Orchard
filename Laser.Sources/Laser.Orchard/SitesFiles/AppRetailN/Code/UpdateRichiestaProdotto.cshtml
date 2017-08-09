@@ -1,7 +1,6 @@
 @using Orchard;
 @using Orchard.ContentManagement;
 @using Orchard.Data;
-@using Orchard.Projections.Models;
 @using System.Collections.Generic;
 @using System.Linq;
 
@@ -11,7 +10,6 @@
     string eMsg = "";
     //services
     IContentManager _contentManager;
-    IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
     // methods
     private string GetIdUserOfStoreAssistants(ContentItem store) {
         int[] idsDipendenti = ((dynamic)store).Store.StoreAssistants.Ids;
@@ -28,7 +26,6 @@
     try {
         // resolve services
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
-        _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         // get richiesta
         dynamic richiesta = Model.ContentItem;
         // get creator

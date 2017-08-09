@@ -36,8 +36,11 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="AppRetailN\Code\CheckUpdatedConfig.cshtml" />
     <None Include="AppRetailN\Code\CreaUtenzaKrake.cshtml" />
     <None Include="AppRetailN\Code\GetCredenziali.cshtml" />
+    <None Include="AppRetailN\Code\LockConfig.cshtml" />
+    <None Include="AppRetailN\Code\SignalRichiestaProdotto.cshtml" />
     <None Include="AppRetailN\Code\UnpublishRichiesteProdotto.cshtml" />
     <None Include="AppRetailN\Code\UnpublishStores.cshtml" />
     <None Include="AppRetailN\Code\UpdateMessaggioPromozionale.cshtml" />
