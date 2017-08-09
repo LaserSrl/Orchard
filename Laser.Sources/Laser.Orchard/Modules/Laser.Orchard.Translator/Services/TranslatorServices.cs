@@ -111,9 +111,9 @@ namespace Laser.Orchard.Translator.Services {
         private void AddOrUpdateTranslationFolderSettings(TranslationFolderSettingsRecord translationSettings) {
             List<TranslationFolderSettingsRecord> existingSettings = new List<TranslationFolderSettingsRecord>();
 
-            existingSettings = GetTranslationFoldersSettings().Where(t => t.Language == translationSettings.Language
-                                                                    && t.ContainerName == translationSettings.ContainerName
-                                                                    && t.ContainerType == translationSettings.ContainerType).ToList();
+            existingSettings = GetTranslationFoldersSettings().Where(t => t.ContainerName == translationSettings.ContainerName
+                                                                  && t.ContainerType == translationSettings.ContainerType
+                                                                  /*&& t.Language == translationSettings.Language*/).ToList();
 
             if (existingSettings.Any()) {
                 TranslationFolderSettingsRecord existingFolderSettings = existingSettings.FirstOrDefault();

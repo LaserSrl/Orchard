@@ -6,7 +6,6 @@ using Orchard.Mvc;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -31,7 +30,7 @@ namespace Laser.Orchard.Translator.Controllers {
                                                                 .Select(x => new StringSummaryViewModel {
                                                                     id = x.Id,
                                                                     message = x.Message,
-                                                                    localized = !String.IsNullOrWhiteSpace(x.TranslatedMessage)
+                                                                    localized = !string.IsNullOrWhiteSpace(x.TranslatedMessage)
                                                                 });
 
             translationDetailVM.containerName = folderName;
@@ -42,7 +41,6 @@ namespace Laser.Orchard.Translator.Controllers {
             return View(translationDetailVM);
         }
 
-        [Themed(false)]
         public ActionResult TranslatorForm(int id) {
             TranslationRecord messageRecord = _translatorServices.GetTranslations().Where(m => m.Id == id).FirstOrDefault();
             if (messageRecord != null) {
@@ -53,17 +51,16 @@ namespace Laser.Orchard.Translator.Controllers {
             }
         }
 
-        [Themed(false)]
         public ActionResult TranslatorFolderSettings(string language, string folderName, string folderType) {
-            TranslationFolderSettingsRecord settings = _translatorServices.GetTranslationFoldersSettings().Where(m => m.Language == language
-                                                                                                              && m.ContainerName == folderName
-                                                                                                              && m.ContainerType == folderType).FirstOrDefault();
+            TranslationFolderSettingsRecord settings = _translatorServices.GetTranslationFoldersSettings().Where(m => m.ContainerName == folderName
+                                                                                                              && m.ContainerType == folderType
+                                                                                                              /*&& m.Language == language*/).FirstOrDefault();
 
             if (settings == null) {
                 settings = new TranslationFolderSettingsRecord();
                 settings.ContainerName = folderName;
                 settings.ContainerType = folderType;
-                settings.Language = language;
+                //settings.Language = language;
             }
 
             return View(settings);

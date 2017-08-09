@@ -21,7 +21,7 @@ namespace Laser.Orchard.Translator {
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
                 .Column<string>("ContainerName")
                 .Column<string>("ContainerType", column => column.WithLength(1))
-                .Column<string>("Language")
+                //.Column<string>("Language")
                 .Column<bool>("Deprecated")
                 );
 

@@ -58,7 +58,7 @@ namespace Laser.Orchard.Translator.Controllers
                 Response.ContentType = "application/zip";
                 Response.AppendHeader("content-disposition", "attachment; filename=" + filename);
 
-                var deprecatedFolders = _translatorServices.GetTranslationFoldersSettings().Where(m => m.Deprecated).Select(s => new { s.ContainerName, s.ContainerType, s.Language });
+                var deprecatedFolders = _translatorServices.GetTranslationFoldersSettings().Where(m => m.Deprecated).Select(s => new { s.ContainerName, s.ContainerType/*, s.Language*/ });
 
                 var messagesToExport = _translatorServices.GetTranslations().Where(m => m.TranslatedMessage != null
                                                                                      && m.TranslatedMessage != string.Empty);
@@ -67,7 +67,7 @@ namespace Laser.Orchard.Translator.Controllers
                                                       .Select(g => new { g.Key.ContainerName, g.Key.ContainerType, g.Key.Language });
 
                 foreach (var folder in foldersToExport) {
-                    if (!deprecatedFolders.Where(item => item.Language == folder.Language && item.ContainerName == folder.ContainerName && item.ContainerType == folder.ContainerType).Any()) {
+                    if (!deprecatedFolders.Where(item => /*item.Language == folder.Language &&*/ item.ContainerName == folder.ContainerName && item.ContainerType == folder.ContainerType).Any()) {
 
                         var folderMessages = messagesToExport.Where(m => m.ContainerName == folder.ContainerName
                                                                       && m.ContainerType == folder.ContainerType

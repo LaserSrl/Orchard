@@ -38,11 +38,17 @@
                     <div id="translation-text-container">
                         @Html.CheckBoxFor(m => m.Deprecated)
                         <label class="forcheckbox">@T("Deprecated")</label>
-                        <span class="hint">@T("If checked, these translations won't be exported anymore.")</span>
+                        @if (Model.ContainerType.Equals("M")) {
+                            <span class="hint">@T("If checked, translations for this module won't be exported anymore.")</span>
+                            <span class="hint">@T("WARNING: this setting is applied to all languages.")</span>
+                        } else if (Model.ContainerType.Equals("T")) {
+                            <span class="hint">@T("If checked, translations for this theme won't be exported anymore.")</span>
+                            <span class="hint">@T("WARNING: this setting is applied to all languages.")</span>
+                        }
                     </div>
 
                     @Html.HiddenFor(m => m.Id);
-                    @Html.HiddenFor(m => m.Language);
+                    @*@Html.HiddenFor(m => m.Language);*@
                     @Html.HiddenFor(m => m.ContainerName);
                     @Html.HiddenFor(m => m.ContainerType);
 
