@@ -38,13 +38,14 @@
                 @foreach (var item in items) {                  
                 if (item.Text.Text == "Tutti" || item.Text.Text == "All") {
                     <li><a id="nofilter" href="#all">@item.Text</a></li>
-                } else {
-                    var term = contentManager.Get(item.Content.Id);
+                    } else {
+                        var term = contentManager.Get(item.Content.Id);
+                        if (term != null) { //term may be draft
+                            string slug = term.AutoroutePart.DisplayAlias;
+                            var slugTerms = slug.Split('/');
 
-                    string slug = term.AutoroutePart.DisplayAlias;
-                    var slugTerms = slug.Split('/');
-
-                    <li><a id="@item.Content.Id" href="#@slugTerms[1]">@item.Text</a></li>
+                            <li><a id="@item.Content.Id" href="#@slugTerms[1]">@item.Text</a></li>
+                        }
                     }
                 }
             </ul>
