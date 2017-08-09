@@ -4,7 +4,6 @@
     ImageUrl: "",
     ImageTitle: "",
     ImageAlternateText: ""))
-@Display(New.Parts_Body_Default(Html: T("Please enter your username or email address.You will receive a link to create a new password via email.").ToString()))
 @if (Url.IsLocalUrl(Request.QueryString["ReturnUrl"])) {
     @Display(New.Parts_Body_Default(Html: Html.Link(T("Go back to where you were"), Url.Content(Request.QueryString["ReturnUrl"])).ToString()))
 }
