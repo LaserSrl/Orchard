@@ -1,0 +1,43 @@
+@using Orchard.ContentManagement;
+@using Orchard.Fields.Fields;
+@using System.Linq;
+
+@functions{
+    // Model.ContentItem is a Config
+    string retString = "Ok"; //possible outcomes: Error,Ok
+    string eMsg = "";
+    //services
+    IContentManager _contentManager;
+}
+@{
+    try {
+        // resolve services
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        ContentItem richiesta = Model.ContentItem;
+        string contentType = richiesta.ContentType;
+        ContentPart part = richiesta.Parts.FirstOrDefault(x => x.PartDefinition.Name == contentType);
+        if (part != null) {
+            ContentField field = part.Fields.FirstOrDefault(x => x.Name == "Stato");
+            if (field != null) {
+                EnumerationField enumField = field as EnumerationField;
+                string signal = Model.Tokens["Signal"];
+                switch (signal) {
+                    case "RichiestaNonEvasa":
+                        enumField.Value = "Non evasa";
+                        break;
+                    case "RichiestaEvasa":
+                        enumField.Value = "Evasa";
+                        break;
+                    case "RichiestaAnnullata":
+                        enumField.Value = "Annullata";
+                        break;
+                }
+                richiesta.VersionRecord.Published = false;
+                _contentManager.Publish(richiesta);
+            }
+        }
+    } catch (Exception ex) {
+        eMsg += string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    }
+    }@retString
