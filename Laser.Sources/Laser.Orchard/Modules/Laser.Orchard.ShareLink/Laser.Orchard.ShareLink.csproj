@@ -141,7 +141,7 @@
     <Content Include="packages.config" />
     <None Include="Views\DefinitionTemplates\ShareLinkPartSettingVM.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\ShareLinkModuleSetting.cshtml" />
-    <Content Include="Views\Parts\ShareLink_Detail.cshtml" />
+    <Content Include="Views\ShareLinkMeta.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
