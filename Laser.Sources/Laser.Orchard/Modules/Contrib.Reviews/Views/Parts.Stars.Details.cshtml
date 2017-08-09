@@ -1,13 +1,14 @@
 ﻿@using Orchard.Utility.Extensions;
 @{
     Style.Require("Contrib_Stars");
-    Script.Require("jQuery");
+    Script.Require("jQuery").AtHead();
     Script.Require("Contrib_Stars");
 
     const string viewName = "ConfirmRatingDelete";
     if (!HttpContext.Current.Items.Contains(viewName)) {
         HttpContext.Current.Items[viewName] = true;
-        WorkContext.Layout.AfterContent.Add(New.Partial(TemplateName: viewName));
+        @Display(New.ConfirmRatingDelete())
+        //WorkContext.Layout.AfterContent.Add(New.Partial(TemplateName: viewName));
     }
 
     var roundedResult = Math.Round(Model.ContentPart.Rating.CurrentVotingResult.Value * 2, MidpointRounding.AwayFromZero) / 2;
@@ -58,7 +59,7 @@
         <span id="stars-clear-btn" class="stars-clear" @*style="display:none;"*@>x</span>
     </div>
     @if (Request.IsAuthenticated) {
-        using (Html.BeginFormAntiForgeryPost(Url.Action("Apply", "Rate", new { area = "Contrib.Reviews" }), FormMethod.Post, new {@class = "rate"})) {
+        using (Html.BeginFormAntiForgeryPost(Url.Action("Apply", "Rate", new { area = "Contrib.Reviews" }), FormMethod.Post, new { @class = "rate" })) {
             <label for="starsRateActions-@Model.ContentPart.ContentItem.Id">@T("Rate:")</label>
             <select id="starsRateActions-@Model.ContentPart.ContentItem.Id" name="rating">
                 @Html.SelectOption(userRating, 0, T("give your opinion").ToString())

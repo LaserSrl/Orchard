@@ -1,8 +1,8 @@
 ﻿@{
-    Style.Require("jQueryUI_Orchard");
+    Style.Require("jQueryUI_Orchard").AtHead();
 
-    Script.Require("jQueryUI_Core");
-    Script.Require("jQueryUI_Dialog");
+    Script.Require("jQueryUI_Core").AtHead();
+    Script.Require("jQueryUI_Dialog").AtHead();
 }
 <div id="deleteRatingConfirmationDialogDiv" title="Confirm Deletion" style="display:none">
     <p>@T("When you clear your rating, if you've left a review it will also be deleted. Do you wish to proceed?")</p>
@@ -17,7 +17,7 @@
         var $deleteRatingConfirmationDialogDiv = $('#deleteRatingConfirmationDialogDiv');
 
         function OpenDeleteRatingConfirmationDialog() {
-            $deleteRatingConfirmationDialogDiv.dialog('open');
+            $deleteRatingConfirmationDialogDiv.dialog({ autoOpen: false, modal: true, resizable: false }).dialog('open');
             return false;
         }
 
@@ -27,7 +27,6 @@
         }
 
         $(function () {
-            $deleteRatingConfirmationDialogDiv.dialog({ autoOpen: false, modal: true, resizable: false });
 
             $('#cancelDeleteRatingButton').click(function () {
                 CloseDeleteRatingConfirmationDialog();
