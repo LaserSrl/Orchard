@@ -158,15 +158,11 @@
                 Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
                 throw new Exception();
             }
-            Model.Tokens["Workflow"].SetState("Password", password);
         }
         // update user
         user.ProfilePart.Nome.Value = givenName;
         user.ProfilePart.Cognome.Value = familyName;
         user.ProfilePart.Store.Ids = item.Dipendente.Store.Ids;
-        // assign taxo field
-        var terms = _taxonomyService.GetTermsForContentItem(item.Id, "Categoria");
-        _taxonomyService.UpdateTerms(user, terms, "Categoria");
         user.ProfilePart.TipoUtente.Value = "dipendente";
         user.VersionRecord.Published = false;
         _contentManager.Publish(user);
