@@ -51,7 +51,22 @@ namespace Laser.Orchard.Translator.Controllers {
             } else {
                 return View(new TranslationRecord());
             }
+        }
 
+        [Themed(false)]
+        public ActionResult TranslatorFolderSettings(string language, string folderName, string folderType) {
+            TranslationFolderSettingsRecord settings = _translatorServices.GetTranslationFoldersSettings().Where(m => m.Language == language
+                                                                                                              && m.ContainerName == folderName
+                                                                                                              && m.ContainerType == folderType).FirstOrDefault();
+
+            if (settings == null) {
+                settings = new TranslationFolderSettingsRecord();
+                settings.ContainerName = folderName;
+                settings.ContainerType = folderType;
+                settings.Language = language;
+            }
+
+            return View(settings);
         }
 
         [HttpPost]
@@ -87,6 +102,21 @@ namespace Laser.Orchard.Translator.Controllers {
                 ViewBag.DeleteSuccess = true;
                 return View(new TranslationRecord { Id = 0 });
             }
+        }
+
+        [HttpPost]
+        [ActionName("TranslatorFolderSettings")]
+        public ActionResult SaveTranslationFolderSettings(TranslationFolderSettingsRecord translationSettings) {
+            bool success = _translatorServices.TryAddOrUpdateTranslationFolderSettings(translationSettings);
+
+            if (!success) {
+                ModelState.AddModelError("SaveTranslationError", T("An error occurred while saving the translation folder settings. Please reload the page and retry.").ToString());
+                ViewBag.SaveSuccess = false;
+            } else {
+                ViewBag.SaveSuccess = true;
+            }
+
+            return View(translationSettings);
         }
     }
 }

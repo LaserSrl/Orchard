@@ -8,14 +8,15 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Laser.Orchard.Translator.ViewModels;
 
 namespace Laser.Orchard.Translator.Services {
     public interface ITranslatorServices : IDependency {
         IEnumerable<string> GetCultureList();
         IQueryable<TranslationRecord> GetTranslations();
+        IQueryable<TranslationFolderSettingsRecord> GetTranslationFoldersSettings();
         IList<string> GetSuggestedTranslations(string message, string language);
         bool TryAddOrUpdateTranslation(TranslationRecord translation);
+        bool TryAddOrUpdateTranslationFolderSettings(TranslationFolderSettingsRecord translation);
         void EnableFolderTranslation(string folderName, ElementToTranslate folderType);
         bool DeleteTranslation(TranslationRecord record);
         void DeleteAllTranslations();
@@ -25,13 +26,15 @@ namespace Laser.Orchard.Translator.Services {
         private readonly ICultureManager _cultureManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IRepository<TranslationRecord> _translationRecordRepository;
+        private readonly IRepository<TranslationFolderSettingsRecord> _translationFoldersSettingsRecordRepository;
 
         public Localizer T { get; set; }
 
-        public TranslatorServices(ICultureManager cultureManager, IOrchardServices orchardServices, IRepository<TranslationRecord> translationRecordRepository) {
+        public TranslatorServices(ICultureManager cultureManager, IOrchardServices orchardServices, IRepository<TranslationRecord> translationRecordRepository, IRepository<TranslationFolderSettingsRecord> translationFoldersSettingsRecordRepository) {
             _cultureManager = cultureManager;
             _orchardServices = orchardServices;
             _translationRecordRepository = translationRecordRepository;
+            _translationFoldersSettingsRecordRepository = translationFoldersSettingsRecordRepository;
             T = NullLocalizer.Instance;
         }
 
@@ -47,9 +50,22 @@ namespace Laser.Orchard.Translator.Services {
             return _translationRecordRepository.Table;
         }
 
+        public IQueryable<TranslationFolderSettingsRecord> GetTranslationFoldersSettings() {
+            return _translationFoldersSettingsRecordRepository.Table;
+        }
+
         public bool TryAddOrUpdateTranslation(TranslationRecord translation) {
             try {
                 AddOrUpdateTranslation(translation);
+                return true;
+            } catch (Exception) {
+                return false;
+            }
+        }
+
+        public bool TryAddOrUpdateTranslationFolderSettings(TranslationFolderSettingsRecord translation) {
+            try {
+                AddOrUpdateTranslationFolderSettings(translation);
                 return true;
             } catch (Exception) {
                 return false;
@@ -89,6 +105,26 @@ namespace Laser.Orchard.Translator.Services {
                     _translationRecordRepository.Create(translation);
                     _translationRecordRepository.Flush();
                 }
+            }
+        }
+
+        private void AddOrUpdateTranslationFolderSettings(TranslationFolderSettingsRecord translationSettings) {
+            List<TranslationFolderSettingsRecord> existingSettings = new List<TranslationFolderSettingsRecord>();
+
+            existingSettings = GetTranslationFoldersSettings().Where(t => t.Language == translationSettings.Language
+                                                                    && t.ContainerName == translationSettings.ContainerName
+                                                                    && t.ContainerType == translationSettings.ContainerType).ToList();
+
+            if (existingSettings.Any()) {
+                TranslationFolderSettingsRecord existingFolderSettings = existingSettings.FirstOrDefault();
+
+                existingFolderSettings.Deprecated = translationSettings.Deprecated;
+
+                _translationFoldersSettingsRecordRepository.Update(existingFolderSettings);
+                _translationFoldersSettingsRecordRepository.Flush();
+            } else {
+                _translationFoldersSettingsRecordRepository.Create(translationSettings);
+                _translationFoldersSettingsRecordRepository.Flush();
             }
         }
 

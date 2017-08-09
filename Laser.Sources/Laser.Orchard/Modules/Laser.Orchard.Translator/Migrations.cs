@@ -15,5 +15,17 @@ namespace Laser.Orchard.Translator {
 
             return 1;
         }
+
+        public int UpdateFrom1() {
+            SchemaBuilder.CreateTable("TranslationFolderSettingsRecord", table => table
+                .Column<int>("Id", column => column.PrimaryKey().Identity())
+                .Column<string>("ContainerName")
+                .Column<string>("ContainerType", column => column.WithLength(1))
+                .Column<string>("Language")
+                .Column<bool>("Deprecated")
+                );
+
+            return 2;
+        }
     }
 }

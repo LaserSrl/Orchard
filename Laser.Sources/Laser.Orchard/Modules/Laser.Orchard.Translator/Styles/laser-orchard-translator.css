@@ -39,11 +39,11 @@
     float: right;
 }
 
-#translator-html {
+#translator-html, #translator-settings-html {
     background: none;
 }
 
-#translator-body {
+#translator-body, #translator-settings-body {
     background: none;
     min-width: 0px;
 }
@@ -52,7 +52,12 @@
     margin-left: 20px !important;
 }
 
-#translation-container {
+#folderSettingsButton {
+    float: right;
+    margin-right: 10px;
+}
+
+#translation-container, #translator-settings-container {
     padding-top: 10px;
 }
 
