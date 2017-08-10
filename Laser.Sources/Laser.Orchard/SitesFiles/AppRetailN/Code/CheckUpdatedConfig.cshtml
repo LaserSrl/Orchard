@@ -15,7 +15,7 @@
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
         ContentItem config = Model.ContentItem;
         string contentType = config.ContentType;
-        ContentPart part = (config as ContentItem).Parts.FirstOrDefault(x => x.PartDefinition.Name == contentType);
+        ContentPart part = config.Parts.FirstOrDefault(x => x.PartDefinition.Name == contentType);
         if (part != null) {
             ContentField field = part.Fields.FirstOrDefault(x => x.Name == "ConfigStatus");
             if (field != null) {
