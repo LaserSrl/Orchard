@@ -52,14 +52,9 @@ namespace Laser.Orchard.ShareLink.Drivers {
             var partSetting = part.Settings.GetModel<ShareLinkPartSettingVM>();
             var tokens = new Dictionary<string, object> { { "Content", part.ContentItem } };
 
-            vm.ShowSharedBody = partSetting.ShowBodyChoise; //||
-                //(string.IsNullOrWhiteSpace(partSetting.SharedBody) && string.IsNullOrWhiteSpace(moduleSetting.SharedBody));
-
-            vm.ShowSharedText = partSetting.ShowTextChoise; //||
-                //(string.IsNullOrWhiteSpace(partSetting.SharedText) && string.IsNullOrWhiteSpace(moduleSetting.SharedText));
-
-            vm.ShowSharedLink = partSetting.ShowLinkChoise; //||
-                //(string.IsNullOrWhiteSpace(partSetting.SharedLink) && string.IsNullOrWhiteSpace(moduleSetting.SharedLink));
+            vm.ShowSharedBody = partSetting.ShowBodyChoise;
+            vm.ShowSharedText = partSetting.ShowTextChoise;
+            vm.ShowSharedLink = partSetting.ShowLinkChoise;
 
             string ListId = "";
             if (!string.IsNullOrEmpty(partSetting.SharedImage)) {
