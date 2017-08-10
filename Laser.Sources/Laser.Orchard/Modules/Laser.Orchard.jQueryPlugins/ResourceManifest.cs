@@ -50,6 +50,7 @@ namespace Laser.Orchard.jQueryPlugins {
             manifest.DefineScript("jqPlot").SetUrl("jqPlot/jquery.jqplot.js").SetDependencies("jQuery");
             manifest.DefineScript("jqPlot_Mini").SetUrl("jqPlot/jquery.jqplot.min.js").SetDependencies("jQuery");
             manifest.DefineScript("jqPlotPieChart").SetUrl("jqPlot/plugins/jqplot.pieRenderer.js").SetDependencies("jqPlot");
+            manifest.DefineScript("jqPlotEnhancedPieLegendRenderer").SetUrl("jqPlot/plugins/jqplot.enhancedPieLegendRenderer.js").SetDependencies("jqPlot");
 
             //Styles
 
