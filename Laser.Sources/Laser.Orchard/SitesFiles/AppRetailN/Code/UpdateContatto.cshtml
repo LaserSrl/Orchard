@@ -1,0 +1,46 @@
+@using Orchard.ContentManagement;
+@using System.Linq;
+@using Orchard.Taxonomies.Models;
+@using Orchard.Taxonomies.Services;
+@using Laser.Orchard.CommunicationGateway.Models;
+
+@functions{
+    // Model.ContentItem is a MessaggioPromozionale
+    string retString = "Error"; //possible outcomes: Error,Ok
+    string eMsg = "";
+    //services
+    IContentManager _contentManager;
+    ITaxonomyService _taxonomyService;
+    // methods
+    private int[] GetIdPuntiVendita() {
+        var puntiVenditaList = _contentManager.Query("PuntoVendita").List().Select(x => x.Id);
+        return puntiVenditaList.ToArray();
+    }
+}
+@{
+    try {
+        // resolve services
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _taxonomyService = Model.OrchardServices.WorkContext.Resolve<ITaxonomyService>();
+        // check user existance
+        ContentItem contatto = Model.ContentItem;
+        dynamic part = contatto.Parts.FirstOrDefault(x => x.PartDefinition.Name == "CommunicationContactPart");
+        if(part.UserIdentifier == 0) {
+            //copia i campi dalla ContactInfoPart alla ProfilePart
+            dynamic info = contatto.Parts.FirstOrDefault(x => x.PartDefinition.Name == "ContactInfoPart");
+            dynamic profile = contatto.Parts.FirstOrDefault(x => x.PartDefinition.Name == "ProfilePart");
+            profile.Avatar.Ids = info.AvatarInfo.Ids;
+            profile.Cognome.Value = info.CognomeInfo.Value;
+            profile.Nome.Value = info.NomeInfo.Value;
+            profile.Datadinascita.DateTime = info.DatadinascitaInfo.DateTime;
+            profile.PuntoVendita.Ids = info.PuntoVenditaInfo.Ids;
+            // assign taxo field
+            var terms = _taxonomyService.GetTermsForContentItem(contatto.Id, "PreferenzeInfo");
+            _taxonomyService.UpdateTerms(contatto, terms, "Preferenze");
+        }
+        retString = "Ok";
+    } catch (Exception ex) {
+        eMsg += string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    }
+}@retString
