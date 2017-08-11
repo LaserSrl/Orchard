@@ -47,6 +47,8 @@
         dynamic destinatario = _contentManager.Get(idDestinatario);
         // set title of richiesta
         richiesta.TitlePart.Title = string.Format("{0} - {1} - {2} {3}", mittente.TitlePart.Title, destinatario.TitlePart.Title, dUsr.ProfilePart.Cognome.Value, dUsr.ProfilePart.Nome.Value);
+        richiesta.VersionRecord.Published = false;
+        _contentManager.Publish(richiesta);
         // get status
         string status = richiesta.RichiestaProdotto.Stato.Value;
         int idOwner = 0;
