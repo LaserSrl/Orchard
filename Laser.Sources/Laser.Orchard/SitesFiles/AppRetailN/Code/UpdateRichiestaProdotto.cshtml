@@ -6,7 +6,7 @@
 
 @functions{
     // Model.ContentItem is a RichiestaProdotto
-    string retString = "Error"; //possible outcomes: Error,NonEvasa,Evasa,Annullata
+    string retString = "Error"; //possible outcomes: Error,NonEvasa,Evasa,Annullata,Rifiutata
     string eMsg = "";
     //services
     IContentManager _contentManager;
@@ -49,6 +49,7 @@
         richiesta.TitlePart.Title = string.Format("{0} - {1} - {2} {3}", mittente.TitlePart.Title, destinatario.TitlePart.Title, dUsr.ProfilePart.Cognome.Value, dUsr.ProfilePart.Nome.Value);
         // get status
         string status = richiesta.RichiestaProdotto.Stato.Value;
+        int idOwner = 0;
         switch (status) {
             case "Non evasa":
                 retString = "NonEvasa";
@@ -56,13 +57,19 @@
                 break;
             case "Evasa":
                 // get owner of richiesta
-                int idOwner = richiesta.CommonPart.Owner.Id;
+                idOwner = richiesta.CommonPart.Owner.Id;
                 retString = "Evasa";
                 Model.Tokens["Workflow"].SetState("UserIdToNotify", idOwner.ToString());
                 break;
             case "Annullata":
                 retString = "Annullata";
                 Model.Tokens["Workflow"].SetState("UserIdToNotify", GetIdUserOfStoreAssistants(destinatario));
+                break;
+            case "Rifiutata":
+                // get owner of richiesta
+                idOwner = richiesta.CommonPart.Owner.Id;
+                retString = "Rifiutata";
+                Model.Tokens["Workflow"].SetState("UserIdToNotify", idOwner.ToString());
                 break;
         }
     } catch (Exception ex) {
