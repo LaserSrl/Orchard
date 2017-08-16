@@ -398,8 +398,8 @@
                                         (string)Model.AdvancedOptions.SelectedOwner :
                                         (string)WorkContext.CurrentUser.UserName,
                                     (!onlyMine) ?
-                                        (object)new { id = "ownerResults", @placeholder = @T("User name or e-mail") } :
-                                        (object)new { id = "ownerResults", @disabled = "disabled" }
+                                        (object)new { id = "ownerResults", @placeholder = @T("User name or e-mail"), @class = "av-textbox" } :
+                                        (object)new { id = "ownerResults", @disabled = "disabled", @class = "av-textbox" }
                                 )
                                 &nbsp;
 			                    @Html.CheckBox(

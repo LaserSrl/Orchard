@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Laser.Orchard.AdvancedSearch.ViewModels;
+﻿using Laser.Orchard.AdvancedSearch.ViewModels;
+using Laser.Orchard.StartupConfig.Localization;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentTypes.Services;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Contents;
@@ -18,35 +13,34 @@ using Orchard.Core.Contents.Settings;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.Data;
 using Orchard.DisplayManagement;
+using Orchard.Fields.Settings;
 using Orchard.Localization;
+using Orchard.Localization.Models;
+using Orchard.Localization.Records;
 using Orchard.Localization.Services;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
+using Orchard.Projections.Models;
 using Orchard.Settings;
+using Orchard.Taxonomies.Helpers;
+using Orchard.Taxonomies.Models;
+using Orchard.Taxonomies.Services;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
-using Orchard.Utility.Extensions;
-using Mvc = Orchard.Mvc;
-using Orchard.Localization.Models;
-using Orchard.Localization.Records;
-using Orchard.Taxonomies.Services;
-using Orchard.Taxonomies.Helpers;
-using Orchard.Taxonomies.Models;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
-using Laser.Orchard.StartupConfig.Localization;
-using Orchard.Projections.Models;
-using Orchard.ContentTypes.Services;
-using Orchard.Fields.Settings;
-using Orchard.Security;
+using Orchard.Utility.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
-using Orchard.Core.Settings.Metadata.Records;
-using Orchard.ContentManagement.Records;
+using System.Web.Mvc;
+using System.Web.Routing;
+using Mvc = Orchard.Mvc;
 
 //using System.Diagnostics;
-
 
 namespace Laser.Orchard.AdvancedSearch.Controllers {
     public class AdminController : Controller, IUpdateModel {
@@ -126,10 +120,11 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                     break;
             }
 
-            var query = _contentManager.Query(versionOptions, GetCreatableTypes(false).Select(ctd => ctd.Name).ToArray());
+            var query = _contentManager.Query(versionOptions, GetListableTypes(false).Select(ctd => ctd.Name).ToArray());
+
             //the lQuery is used only in the case where we have the language queries, but since we cannot clone IContentQuery objects,
             //we create it here and build is as we build the other
-            var lQuery = _contentManager.Query(versionOptions, GetCreatableTypes(false).Select(ctd => ctd.Name).ToArray());
+            var lQuery = _contentManager.Query(versionOptions, GetListableTypes(false).Select(ctd => ctd.Name).ToArray());
 
             if (!string.IsNullOrEmpty(model.TypeName)) {
                 var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.TypeName);
@@ -142,9 +137,8 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 query = query.ForType(model.TypeName);
                 lQuery = lQuery.ForType(model.TypeName);
             }
+
             // FILTER QUERIES: START //
-
-
 
             // terms query
             if (model.AdvancedOptions.SelectedTermId > 0) {
@@ -203,7 +197,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
 
             // Has media query
             if (model.AdvancedOptions.HasMedia) {
-                var allCt = GetCreatableTypes(false);
+                var allCt = GetListableTypes(false);
                 var listFields = new List<string>();
                 foreach (var ct in allCt) {
                     var allMediaFld = _contentDefinitionService.GetType(ct.Name).Fields.Where(w =>
@@ -250,7 +244,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             }
 
             model.Options.SelectedFilter = model.TypeName;
-            model.Options.FilterOptions = GetCreatableTypes(false)
+            model.Options.FilterOptions = GetListableTypes(false)
                 .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
                 .ToList().OrderBy(kvp => kvp.Value);
 
@@ -487,6 +481,13 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")));
         }
 
+        private IEnumerable<ContentTypeDefinition> GetListableTypes(bool andContainable) {
+            return _contentDefinitionManager.ListTypeDefinitions().Where(ctd =>
+                Services.Authorizer.Authorize(Permissions.EditContent, _contentManager.New(ctd.Name)) &&
+                ctd.Settings.GetModel<ContentTypeSettings>().Listable &&
+                (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")));
+        }
+
         [Admin]
         [HttpPost, ActionName("List")]
         [Mvc.FormValueRequired("submit.Filter")]
@@ -533,7 +534,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                 }
 
 
-                if (GetCreatableTypes(false).Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
+                if (GetListableTypes(false).Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
                     routeValues["id"] = options.SelectedFilter;
                 } else {
                     routeValues.Remove("id");
@@ -597,6 +598,12 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
             var viewModel = Shape.ViewModel(ContentTypes: GetCreatableTypes(containerId.HasValue), ContainerId: containerId);
 
             return View("CreatableTypeList", viewModel);
+        }
+
+        ActionResult ListableTypeList(int? containerId) {
+            var viewModel = Shape.ViewModel(ContentTypes: GetListableTypes(containerId.HasValue), ContainerId: containerId);
+
+            return View("ListableTypeList", viewModel);
         }
 
         [Admin]

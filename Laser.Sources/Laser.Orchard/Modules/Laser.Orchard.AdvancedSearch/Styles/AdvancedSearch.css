@@ -17,3 +17,15 @@
     display: inline;
     margin-right: 0.2em;
 }
+
+.box-body, .box-footer {
+    padding-top: 10px;
+}
+
+.av-textbox {
+    width: 12em;
+    font-family: inherit;
+    padding: 3px;
+    border: 1px solid #bdbcbc;
+    font-size: inherit;
+}
