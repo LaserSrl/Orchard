@@ -29,3 +29,18 @@
     border: 1px solid #bdbcbc;
     font-size: inherit;
 }
+
+.ac-li {
+    width: 30em;
+}
+
+.ac-div-name, .ac-div-mail {
+    width: 25em;
+    display: inline-block;
+    vertical-align: top;
+    word-wrap: break-word
+}
+
+.ac-div-mail {
+    margin-left: 0.4em;
+}

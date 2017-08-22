@@ -92,8 +92,8 @@
 
             $.widget("custom.myautocomplete", $.ui.autocomplete, {
                 _renderItem: function (ul, item) {
-                    var row = $("<li style='width:30em'>");
-                    var aux = "<div style='width:14em;display:inline-block;vertical-align:top;word-wrap:break-word'>" + item.UserName + "</div><div style='margin-left:0.4em;width:14em;display:inline-block;vertical-align:top;word-wrap:break-word'>" + item.Email + "</div>";
+                    var row = $("<li class='ac-li'>");
+                    var aux = "<div class='ac-div-name'>" + item.UserName + "</div><div class='ac-div-mail'>" + item.Email + "</div>";
                     row = row.append($("<a>").html(aux));
                     row = row.appendTo(ul);
                     return row;
