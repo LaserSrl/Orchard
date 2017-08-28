@@ -22,7 +22,7 @@ namespace Laser.Orchard.ExternalContent.Handlers {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IFieldExternalService _fieldExternalService;
         private readonly IOrchardServices _orchardServices;
-        public ILogger Logger { get; set; }
+        //public ILogger Logger { get; set; } //no need to declare it here, because ContentHandler already declares it
         public FieldExternalHandler(
              IContentDefinitionManager contentDefinitionManager
             , IFieldExternalService fieldExternalService

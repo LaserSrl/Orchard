@@ -14,14 +14,12 @@ namespace Laser.Orchard.Mobile.Handlers {
         private readonly IRepository<UserDeviceRecord> _userDeviceRepository;
         private readonly IOrchardServices _orchardServices;
         private readonly IPushNotificationService _pushNotificationService;
-        private readonly IRepository<SentRecord> _sentRepository;
 
-        public MobileContactPartHandler(IRepository<MobileContactPartRecord> repository, IRepository<SentRecord> sentRepository, IRepository<PushNotificationRecord> ProviderRepository, IRepository<UserDeviceRecord> userDeviceRepository, IOrchardServices orchardServices, IPushNotificationService pushNotificationService) {
+        public MobileContactPartHandler(IRepository<MobileContactPartRecord> repository, IRepository<PushNotificationRecord> ProviderRepository, IRepository<UserDeviceRecord> userDeviceRepository, IOrchardServices orchardServices, IPushNotificationService pushNotificationService) {
             Filters.Add(StorageFilter.For(repository));
             _deviceRepository = ProviderRepository;
             _userDeviceRepository = userDeviceRepository;
             _orchardServices = orchardServices;
-            _sentRepository = sentRepository;
             _pushNotificationService = pushNotificationService;
             Filters.Add(new ActivatingFilter<MobileContactPart>("CommunicationContact"));
             OnLoaded<MobileContactPart>(LazyLoadHandlers);
@@ -30,7 +28,7 @@ namespace Laser.Orchard.Mobile.Handlers {
 
         protected void LazyLoadHandlers(LoadContentContext context, MobileContactPart part) {
             // Add handlers that will load content for id's just-in-time
-            part.MobileEntries.Loader(x => OnLoader(context));
+            part.MobileEntries.Loader(() => OnLoader(context));
         }
 
         private IList<PushNotificationRecord> OnLoader(LoadContentContext context) {

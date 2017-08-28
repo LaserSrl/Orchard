@@ -28,14 +28,18 @@ namespace Laser.Orchard.WebServices.Controllers {
                 foreach (dynamic item in items) {
                     if (item.Icon != null && ((int[])item.Icon.Ids).Length > 0) {
                         listIconIds = listIconIds.Union((int[])item.Icon.Ids).ToList();
-                    } else if (item.Icon == null) {
+                    }
+                    else if (item.Icon == null) {
                         var error = _utilsServices.GetResponse(StartupConfig.ViewModels.ResponseType.None);
                         error.ErrorCode = StartupConfig.ViewModels.ErrorCode.GenericError;
                         error.Data = T("Missing Icon field in Term Part.").Text;
                         return Json(error, JsonRequestBehavior.AllowGet);
                     }
                 }
-            } catch (Exception ex) {
+                // verifica che le icon non siano state eliminate
+                listIconIds = _contentManager.Query().ForContentItems(listIconIds).List().Select(x => x.Id).ToList<int>();
+            }
+            catch (Exception ex) {
                 var error = _utilsServices.GetResponse(StartupConfig.ViewModels.ResponseType.None);
                 error.ErrorCode = StartupConfig.ViewModels.ErrorCode.GenericError;
                 error.Data = ex.Message;

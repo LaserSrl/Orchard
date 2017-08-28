@@ -16,7 +16,7 @@ namespace Laser.Orchard.TemplateManagement.Handlers {
         }
 
         private void PropertyHandlers(ActivatedContentContext context, TemplatePart part) {
-            part.LayoutField.Loader(x => part.Record.LayoutIdSelected != null ? _templateService.GetTemplate(part.Record.LayoutIdSelected.Value) : null);
+            part.LayoutField.Loader(() => part.Record.LayoutIdSelected != null ? _templateService.GetTemplate(part.Record.LayoutIdSelected.Value) : null);
             part.LayoutField.Setter(x => { part.Record.LayoutIdSelected = x != null ? x.Id : default(int?); return x; });
         }
     }

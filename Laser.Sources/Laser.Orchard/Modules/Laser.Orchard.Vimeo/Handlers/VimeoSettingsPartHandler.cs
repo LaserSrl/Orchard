@@ -8,6 +8,7 @@ using Orchard.MediaLibrary.Fields;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Laser.Orchard.Vimeo.Services;
 using Laser.Orchard.StartupConfig.WebApiProtection.Models;
 
@@ -40,7 +41,16 @@ namespace Laser.Orchard.Vimeo.Handlers {
                     !string.IsNullOrWhiteSpace(oePart["provider_name"]) &&
                     oePart["provider_name"] == "Vimeo") {
                     //part._publicUrl.Loader(x => part.As<OEmbedPart>().Source);
-                    part._publicUrl.Loader(x => "Vimeo|" + _vimeoContentServices.EncryptedVideoUrl(_vimeoContentServices.ExtractVimeoStreamURL(oePart)));
+                    //We want to do the following:
+                    // part._publicUrl.Loader(x => "Vimeo|" + _vimeoContentServices.EncryptedVideoUrl(_vimeoContentServices.ExtractVimeoStreamURL(oePart)));
+                    //but we need reflection to do it, because _publicUrl is declared as internal
+                    FieldInfo fInfo = part.GetType().GetField("_publicUrl", BindingFlags.NonPublic | BindingFlags.Instance);
+                    MethodInfo mInfo = fInfo.FieldType.GetMethod("Loader", new Type[] { typeof(Func<string>) });
+                    Func<string> urlLoader = () => "Vimeo|" + _vimeoContentServices.EncryptedVideoUrl(_vimeoContentServices.ExtractVimeoStreamURL(oePart));
+                    mInfo.Invoke( //invoke the method described in mInfo
+                        fInfo.GetValue(part), //on the instance of the field described in fInfo belonging to part
+                        new object[] { urlLoader } //passing the parameters in this array
+                    );
                 }
             });
         }

@@ -1,4 +1,11 @@
-﻿using Laser.Orchard.Commons.Services;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Web;
+using System.Web.Script.Serialization;
+using System.Xml.Linq;
+using Laser.Orchard.Commons.Services;
 using Laser.Orchard.Policy.Events;
 using Laser.Orchard.Policy.Models;
 using Laser.Orchard.Policy.ViewModels;
@@ -12,13 +19,6 @@ using Orchard.Localization.Models;
 using Orchard.Localization.Records;
 using Orchard.Localization.Services;
 using Orchard.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
-using System.Web.Script.Serialization;
-using System.Xml.Linq;
 using OrchardNS = Orchard;
 
 namespace Laser.Orchard.Policy.Services {
@@ -120,7 +120,7 @@ namespace Laser.Orchard.Policy.Services {
 
 
         public void PolicyForUserUpdate(PolicyForUserViewModel viewModel, IUser user = null) {
-            UserPolicyAnswersRecord record = new UserPolicyAnswersRecord();
+            UserPolicyAnswersRecord record = null;
             var loggedUser = user ?? _workContext.GetContext().CurrentUser;
 
             // Recupero la risposta precedente dell'utente, se esiste
@@ -132,7 +132,7 @@ namespace Laser.Orchard.Policy.Services {
             bool oldAnswer = record != null ? record.Accepted : false;
 
             // Entro nella funzione solo se il valore della nuova risposta è diverso da quello della precedente o se si tratta della prima risposta
-            if ((oldAnswer != viewModel.Accepted || (!viewModel.Accepted && viewModel.AnswerDate == DateTime.MinValue))) {
+            if ((oldAnswer != viewModel.Accepted) || (record == null)) {
                 var policyText = _contentManager.Get<PolicyTextInfoPart>(viewModel.PolicyTextId).Record;
                 if ((policyText.UserHaveToAccept && viewModel.Accepted) || !policyText.UserHaveToAccept) {
                     var shouldCreateRecord = false;

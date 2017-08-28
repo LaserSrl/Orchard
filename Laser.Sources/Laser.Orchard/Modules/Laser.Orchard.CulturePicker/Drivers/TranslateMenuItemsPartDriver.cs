@@ -16,7 +16,7 @@ using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.CulturePicker.Drivers {
     [OrchardFeature("Laser.Orchard.CulturePicker.TranslateMenuItems")]
-    public class TranslateMenuItemsPartDriver : ContentPartDriver<TranslateMenuItemsPart> {
+    public class TranslateMenuItemsPartDriver : ContentPartCloningDriver<TranslateMenuItemsPart> {
         private readonly IOrchardServices _orchardServices;
         private readonly ILocalizationService _localizationService;
         private readonly ISessionLocator _sessionLocator;
@@ -87,31 +87,35 @@ namespace Laser.Orchard.CulturePicker.Drivers {
                 );
         }
 
-
-        protected override void Exporting(TranslateMenuItemsPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ToBeTranslated", part.ToBeTranslated);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Translated", part.Translated);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("FromLocale", part.FromLocale);
-
+        protected override void Cloning(TranslateMenuItemsPart originalPart, TranslateMenuItemsPart clonePart, CloneContentContext context) {
+            //actualy clone nothing
         }
 
 
-        protected override void Importing(TranslateMenuItemsPart part, ImportContentContext context) {
-            var importedToBeTranslated = context.Attribute(part.PartDefinition.Name, "ToBeTranslated");
-            if (importedToBeTranslated != null) {
-                part.ToBeTranslated = bool.Parse(importedToBeTranslated);
-            }
+        //protected override void Exporting(TranslateMenuItemsPart part, ExportContentContext context) {
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("ToBeTranslated", part.ToBeTranslated);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("Translated", part.Translated);
+        //    context.Element(part.PartDefinition.Name).SetAttributeValue("FromLocale", part.FromLocale);
 
-            var importedTranslated = context.Attribute(part.PartDefinition.Name, "Translated");
-            if (importedTranslated != null) {
-                part.Translated = bool.Parse(importedTranslated);
-            }
+        //}
 
-            var importedFromLocale = context.Attribute(part.PartDefinition.Name, "FromLocale");
-            if (importedFromLocale != null) {
-                part.FromLocale =importedFromLocale;
-            }
 
-        }
+        //protected override void Importing(TranslateMenuItemsPart part, ImportContentContext context) {
+        //    var importedToBeTranslated = context.Attribute(part.PartDefinition.Name, "ToBeTranslated");
+        //    if (importedToBeTranslated != null) {
+        //        part.ToBeTranslated = bool.Parse(importedToBeTranslated);
+        //    }
+
+        //    var importedTranslated = context.Attribute(part.PartDefinition.Name, "Translated");
+        //    if (importedTranslated != null) {
+        //        part.Translated = bool.Parse(importedTranslated);
+        //    }
+
+        //    var importedFromLocale = context.Attribute(part.PartDefinition.Name, "FromLocale");
+        //    if (importedFromLocale != null) {
+        //        part.FromLocale =importedFromLocale;
+        //    }
+
+        //}
     }
 }

@@ -486,7 +486,6 @@ namespace Laser.Orchard.PaymentGestPay.Services {
             LocalizedString ErrorHere = T("GestPay sent transaction information, but the Shop Login was wrong ({0})", a);
             Logger.Error(ErrorHere.Text);
             throw new Exception(ErrorHere.Text);
-            return null;
         }
     }
 }

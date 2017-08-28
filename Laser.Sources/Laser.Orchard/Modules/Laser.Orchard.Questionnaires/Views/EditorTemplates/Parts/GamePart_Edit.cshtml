@@ -5,8 +5,9 @@
     <span class="hint"></span>
 </fieldset>
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.GameDate)">@T("Game Date")</label>
-    @Html.TextBoxFor(m => m.GameDate, new { @class = "text" })
+    <label for="@Html.FieldIdFor(m => m.GameDateEditor)">@T("Game Date")</label>
+
+    @Html.EditorFor(m => m.GameDateEditor, new { @class = "text" })
     <span class="hint"></span>
 </fieldset>
 <fieldset>
@@ -65,12 +66,3 @@
 </fieldset>
 
 @Html.HiddenFor(x => x.State)
-@using (Script.Foot()) {
-        @Display.DatePickerLocalization()
-    @Display.TimePickerLocalization()
-<script type="text/javascript">
-        $(function () {
-            $('#@Html.FieldIdFor(m => m.GameDate)').datetimepicker({ 'showTimepicker': true, showAnim: "", changeYear: true, changeMonth: true });
-        })
-    </script>
-}

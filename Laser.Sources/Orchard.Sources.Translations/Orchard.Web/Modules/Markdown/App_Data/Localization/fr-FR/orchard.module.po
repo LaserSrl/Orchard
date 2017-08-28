@@ -1,15 +1,23 @@
+#. "Name"
+#: "~/Modules/Markdown/Module.txt"
 msgctxt "~/Modules/Markdown/Module.txt"
 msgid "Markdown"
 msgstr "Markdown"
 
+#. "Author"
+#: "~/Modules/Markdown/Module.txt"
 msgctxt "~/Modules/Markdown/Module.txt"
 msgid "The Orchard Team"
 msgstr "L'équipe Orchard"
 
+#. "Website"
+#: "~/Modules/Markdown/Module.txt"
 msgctxt "~/Modules/Markdown/Module.txt"
 msgid "http://orchardproject.net"
 msgstr "http://orchardproject.net"
 
+#. "Description"
+#: "~/Modules/Markdown/Module.txt"
 msgctxt "~/Modules/Markdown/Module.txt"
 msgid "The Markdown module enables rich text contents to be created using the Markdown syntax."
 msgstr "Le module Markdown permet l'édition de contenus enrichis en utilisant la syntaxe Markdown."

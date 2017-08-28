@@ -2,8 +2,8 @@ Name: Content sharing
 AntiForgery: enabled
 Author: Laser srl
 Website: http://www.laser-group.com
-Version: 1.6
-OrchardVersion: 1.8
+Version: 1.10
+OrchardVersion: 1.10
 Description: Adds content sharing functionality via AddThis sharing service.
 Features:
     Laser.Orchard.Sharing:

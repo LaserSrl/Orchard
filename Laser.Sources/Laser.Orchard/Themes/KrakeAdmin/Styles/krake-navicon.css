@@ -75,6 +75,13 @@ span.navicon-communication:before {
     background-image: none !important; 
 }
 
+.navicon-charts-reports:before {
+    content: "\f080";
+}
+.navicon-charts-reports {
+    background-image: none !important; 
+}
+
 .navicon-social-facebook-account:before {
     content: "\f09a";
 }
@@ -260,4 +267,16 @@ span.navicon-statistics:before {
     background-image: none !important; 
 }
 
+.navicon-layouts:before {
+    content: "\f00a";
+}
+.navicon-layouts {
+    background-image: none !important; 
+}
 
+.navicon-commerce:before {
+	content: "\f07a";
+}
+.navicon-commerce {
+	background-image: none !important;
+}

@@ -39,8 +39,20 @@ namespace Laser.Orchard.Accessibility.Controllers
                 return HttpNotFound();
             else {
                 // calcola l'url di ritorno: è la pagina in cui è stato richiamato il controller
+                // accoda all'url un valore in query string per by-passare la cache del browser
+                string acc = operation;
+                var reg = new System.Text.RegularExpressions.Regex("(\\?|\\&)acc=[a-z]+(\\&|\\z)");
                 string returnUrl = _orchardServices.WorkContext.HttpContext.Request.UrlReferrer.AbsoluteUri;
-
+                var match = reg.Match(returnUrl);
+                if (match.Success) {
+                    returnUrl = reg.Replace(returnUrl, match.Value.Substring(0, 1) + "acc=" + acc + (match.Value.EndsWith("&")? "&" : ""));
+                }
+                else if (returnUrl.Contains("?")) {
+                    returnUrl += "&acc=" + acc;
+                }
+                else {
+                    returnUrl += "?acc=" + acc;
+                }
                 return Redirect(returnUrl);
             }
         }

@@ -15,7 +15,7 @@ namespace Laser.Orchard.PaymentCartaSi.Controllers {
 
         }
 
-        protected override dynamic GetSettingsPart() {
+        protected override ContentPart GetSettingsPart() {
             return _orchardServices.WorkContext.CurrentSite.As<PaymentCartaSiSettingsPart>();
         }
     }

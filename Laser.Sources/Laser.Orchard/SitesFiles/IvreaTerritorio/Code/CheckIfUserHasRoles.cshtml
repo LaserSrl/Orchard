@@ -1,0 +1,16 @@
+﻿@{
+    //Possible outcomes HaRuolo, NessunRuolo, DoNothing, Error
+    string retString = "DoNothing";
+    var wfContext = Model.Tokens["Workflow"];
+    try {
+		if (Model.ContentItem.UserRolesPart.Roles.Count > 0) {
+			retString = ("HaRuolo");
+		} else {
+			retString = ("NessunRuolo");
+		}
+    } catch (Exception ex) {
+        retString = "Error";
+        wfContext.SetState("ErrorMessage", ex.Message);
+    }
+}
+@retString

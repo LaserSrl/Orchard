@@ -30,7 +30,7 @@ using Orchard.Projections.ViewModels;
 
 namespace Laser.Orchard.Highlights.Drivers {
 
-    public class HighlightsGroupDriver : ContentPartDriver<HighlightsGroupPart> {
+    public class HighlightsGroupDriver : ContentPartCloningDriver<HighlightsGroupPart> {
 
         private readonly IHighlightsService _HighlightsService;
         private readonly IOrchardServices _orchardServices;
@@ -195,36 +195,51 @@ namespace Laser.Orchard.Highlights.Drivers {
         }
 
         protected override void Exporting(HighlightsGroupPart part, ExportContentContext context) {
-
             var container = _contentManager.Get(part.Record.Id);
             if (container != null) {
-                var containerIdentity = _contentManager.GetItemMetadata(container).Identity;
-                context.Element(part.PartDefinition.Name).SetAttributeValue("Id", part.Record.Id.ToString());
+                var ciQuery = _contentManager.Get(part.Query_Id);
+                var containerIdentity = _contentManager.GetItemMetadata(ciQuery).Identity.ToString();
+                context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayPlugin", part.DisplayPlugin);
+                context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayTemplate", part.DisplayTemplate);
+                context.Element(part.PartDefinition.Name).SetAttributeValue("Query_Id", containerIdentity);
+                context.Element(part.PartDefinition.Name).SetAttributeValue("ItemsSourceType", part.ItemsSourceType);
             }
-
-            context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayPlugin", part.DisplayPlugin);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("DisplayTemplate", part.DisplayTemplate);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Query_Id", part.Query_Id);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ItemsSourceType", part.ItemsSourceType);
         }
-
         protected override void Importing(HighlightsGroupPart part, ImportContentContext context) {
-            part.DisplayPlugin = context.Attribute(part.PartDefinition.Name, "DisplayPlugin");
+            var importedDisplayPlugin = context.Attribute(part.PartDefinition.Name, "DisplayPlugin");
+            if (importedDisplayPlugin != null) {
+                part.DisplayPlugin = importedDisplayPlugin;
+            }
+            
             var displayTemplate = Enums.DisplayTemplate.List;
-            Enum.TryParse<Enums.DisplayTemplate>(context.Attribute(part.PartDefinition.Name, "DisplayTemplate"), out displayTemplate);
-            part.DisplayTemplate = displayTemplate;
+            Enum.TryParse<Enums.DisplayTemplate>(context.Attribute(part.PartDefinition.Name, "DisplayTemplate"), out displayTemplate); 
+                part.DisplayTemplate = displayTemplate;
+            
             var itemsSourceType = Enums.ItemsSourceTypes.ByHand;
             Enum.TryParse<Enums.ItemsSourceTypes>(context.Attribute(part.PartDefinition.Name, "ItemsSourceType"), out itemsSourceType);
             part.ItemsSourceType = itemsSourceType;
-            var query_Id = -1;
-            int.TryParse(context.Attribute(part.PartDefinition.Name, "Query_Id"), out query_Id);
-            part.Query_Id = query_Id;
+            
+            var queryIdentifier = context.Attribute(part.PartDefinition.Name, "Query_Id");
+            if (queryIdentifier != null) {
+                var ciQuery = _contentManager.ResolveIdentity(new ContentIdentity(queryIdentifier));
+                if (ciQuery != null) {
+                    part.Query_Id = ciQuery.Id;
+        }
+            }
         }
 
         protected override void Imported(HighlightsGroupPart part, ImportContentContext context) {
 
             var groupID = Convert.ToInt16(context.Attribute(part.PartDefinition.Name, "GroupId"));
 
+            FinalizeImportAndClone(groupID, part);
+        }
+
+        protected override void Exported(HighlightsGroupPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("GroupId", part.Id.ToString());
+        }
+
+        private void FinalizeImportAndClone(int groupID, HighlightsGroupPart part) {
             _contentManager.Publish(part.ContentItem);
 
             var MediaViewerItems = _HighlightsService.GetHighlightsItemsByGroupId(groupID);
@@ -245,12 +260,16 @@ namespace Laser.Orchard.Highlights.Drivers {
             }
         }
 
-        protected override void Exported(HighlightsGroupPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("GroupId", part.Id.ToString());
+        protected override void Cloning(HighlightsGroupPart originalPart, HighlightsGroupPart clonePart, CloneContentContext context) {
+            clonePart.DisplayPlugin = originalPart.DisplayPlugin;
+            clonePart.DisplayTemplate = originalPart.DisplayTemplate;
+            clonePart.ItemsSourceType = originalPart.ItemsSourceType;
+            clonePart.Query_Id = originalPart.Query_Id;
         }
 
-
-
+        protected override void Cloned(HighlightsGroupPart originalPart, HighlightsGroupPart clonePart, CloneContentContext context) {
+            FinalizeImportAndClone(originalPart.Id, clonePart);
+        }
     }
 
 

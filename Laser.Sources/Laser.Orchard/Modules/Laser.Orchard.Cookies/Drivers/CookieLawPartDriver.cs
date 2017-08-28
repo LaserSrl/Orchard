@@ -9,7 +9,7 @@ using System;
 namespace Laser.Orchard.Cookies.Drivers {
 
     
-    public class CookieLawPartDriver : ContentPartDriver<CookieLawPart> {
+    public class CookieLawPartDriver : ContentPartCloningDriver<CookieLawPart> {
 
         private readonly IWorkContextAccessor _workContextAccessor;
 
@@ -24,6 +24,37 @@ namespace Laser.Orchard.Cookies.Drivers {
             return ContentShape("Parts_CookieLaw",
                 () => shapeHelper.Parts_CookieLaw(CookieSettings: cookieSettings, CookieLawPart: part));
         }
+
+        protected override DriverResult Editor(CookieLawPart part, dynamic shapeHelper) {
+
+            var workContext = _workContextAccessor.GetContext();
+            var cookieSettings = workContext.CurrentSite.As<CookieSettingsPart>();
+            var editModel = new Laser.Orchard.Cookies.ViewModels.CookieLawEditModel {
+                CookieLaw = part,
+                CookieSettings = cookieSettings
+            };
+
+            return ContentShape("Parts_CookieLaw_Edit",
+                                () => shapeHelper.EditorTemplate(
+                                      TemplateName: "Parts/CookieLawWidgetSettings",
+                                      Model: editModel,
+                                      Prefix: Prefix));
+        }
+
+        protected override DriverResult Editor(CookieLawPart part, IUpdateModel updater, dynamic shapeHelper) {
+
+            var workContext = _workContextAccessor.GetContext();
+            var cookieSettings = workContext.CurrentSite.As<CookieSettingsPart>();
+            var editModel = new Laser.Orchard.Cookies.ViewModels.CookieLawEditModel {
+                CookieLaw = part,
+                CookieSettings = cookieSettings
+            };
+
+            updater.TryUpdateModel(editModel, Prefix, null, null);
+            return Editor(editModel.CookieLaw, shapeHelper);
+        }
+
+
 
         protected override void Exporting(CookieLawPart part, ExportContentContext context) {
 
@@ -42,6 +73,8 @@ namespace Laser.Orchard.Cookies.Drivers {
             element.SetAttributeValue("cookieWhatAreTheyLink", part.cookieWhatAreTheyLink);
         }
 
+
+
         protected override void Importing(CookieLawPart part, ImportContentContext context) {
 
             var partName = part.PartDefinition.Name;
@@ -59,114 +92,6 @@ namespace Laser.Orchard.Cookies.Drivers {
             part.cookieWhatAreTheyLink = GetAttribute<string>(context, partName, "cookieWhatAreTheyLink");
         }
 
-        protected override DriverResult Editor(CookieLawPart part, dynamic shapeHelper) {
-
-            var workContext = _workContextAccessor.GetContext();
-            var cookieSettings = workContext.CurrentSite.As<CookieSettingsPart>();
-            var editModel = new Laser.Orchard.Cookies.ViewModels.CookieLawEditModel
-            {
-                CookieLaw = part,
-                CookieSettings = cookieSettings
-            };
-
-            return ContentShape("Parts_CookieLaw_Edit",
-                                () => shapeHelper.EditorTemplate(
-                                      TemplateName: "Parts/CookieLawWidgetSettings",
-                                      Model: editModel,
-                                      Prefix: Prefix));
-        }
-
-        protected override DriverResult Editor(CookieLawPart part, IUpdateModel updater, dynamic shapeHelper) {
-
-            var workContext = _workContextAccessor.GetContext();
-            var cookieSettings = workContext.CurrentSite.As<CookieSettingsPart>();
-            var editModel = new Laser.Orchard.Cookies.ViewModels.CookieLawEditModel
-            {
-                CookieLaw = part,
-                CookieSettings = cookieSettings
-            };
-
-            updater.TryUpdateModel(editModel, Prefix, null, null);
-            return Editor(editModel.CookieLaw, shapeHelper);
-        }
-
-
-        //protected override void Importing(CookieLawPart part, ImportContentContext context) {
-           
-        //    var importedcookieDiscreetLinkText = context.Attribute(part.PartDefinition.Name, "cookieDiscreetLinkText");
-        //    if (importedcookieDiscreetLinkText != null) {
-        //        part.cookieDiscreetLinkText = importedcookieDiscreetLinkText;
-        //    }
-
-        //    var importedcookiePolicyPageMessage = context.Attribute(part.PartDefinition.Name, "cookiePolicyPageMessage");
-        //    if (importedcookiePolicyPageMessage != null) {
-        //        part.cookiePolicyPageMessage = importedcookiePolicyPageMessage;
-        //    }
-
-        //    var importedcookieErrorMessage = context.Attribute(part.PartDefinition.Name, "cookieErrorMessage");
-        //    if (importedcookieErrorMessage != null) {
-        //        part.cookieErrorMessage = importedcookieErrorMessage;
-        //    }
-
-        //    var importedcookieAcceptButtonText = context.Attribute(part.PartDefinition.Name, "cookieAcceptButtonText");
-        //    if (importedcookieAcceptButtonText != null) {
-        //        part.cookieAcceptButtonText = importedcookieAcceptButtonText;
-        //    }
-
-        //    var importedcookieDeclineButtonText = context.Attribute(part.PartDefinition.Name, "cookieDeclineButtonText");
-        //    if (importedcookieDeclineButtonText != null) {
-        //        part.cookieDeclineButtonText = importedcookieDeclineButtonText;
-        //    }
-
-        //    var importedcookieResetButtonText = context.Attribute(part.PartDefinition.Name, "cookieResetButtonText");
-        //    if (importedcookieResetButtonText != null) {
-        //        part.cookieResetButtonText = importedcookieResetButtonText;
-        //    }
-
-        //    var importedcookieWhatAreLinkText = context.Attribute(part.PartDefinition.Name, "cookieWhatAreLinkText");
-        //    if (importedcookieWhatAreLinkText != null) {
-        //        part.cookieWhatAreLinkText = importedcookieWhatAreLinkText;
-        //    }
-
-        //    var importedcookieAnalyticsMessage = context.Attribute(part.PartDefinition.Name, "cookieAnalyticsMessage");
-        //    if (importedcookieAnalyticsMessage != null) {
-        //        part.cookieAnalyticsMessage = importedcookieAnalyticsMessage;
-        //    }
-
-        //    var importedcookiePolicyLink = context.Attribute(part.PartDefinition.Name, "cookiePolicyLink");
-        //    if (importedcookiePolicyLink != null) {
-        //        part.cookiePolicyLink = importedcookiePolicyLink;
-        //    }
-
-        //    var importedcookieMessage = context.Attribute(part.PartDefinition.Name, "cookieMessage");
-        //    if (importedcookieMessage != null) {
-        //        part.cookieMessage = importedcookieMessage;
-        //    }
-
-        //    var importedcookieWhatAreTheyLink = context.Attribute(part.PartDefinition.Name, "cookieWhatAreTheyLink");
-        //    if (importedcookieWhatAreTheyLink != null) {
-        //        part.cookieWhatAreTheyLink = importedcookieWhatAreTheyLink;
-        //    }
-
-        //}
-
-
-        //protected override void Exporting(CookieLawPart part, ExportContentContext context) {
-        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieDiscreetLinkText", part.cookieDiscreetLinkText);
-        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookiePolicyPageMessage", part.cookieDiscreetLinkText);
-        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieErrorMessage", part.cookieErrorMessage);
-        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieAcceptButtonText", part.cookieAcceptButtonText);
-        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieDeclineButtonText", part.cookieDeclineButtonText);
-        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieResetButtonText", part.cookieResetButtonText);
-        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieWhatAreLinkText", part.cookieWhatAreLinkText);
-        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieAnalyticsMessage", part.cookieAnalyticsMessage);
-        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookiePolicyLink", part.cookiePolicyLink);
-        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieMessage", part.cookieMessage);
-        //    context.Element(part.PartDefinition.Name).SetAttributeValue("cookieWhatAreTheyLink", part.cookieWhatAreTheyLink);
-        //}
-
-
-
 
         private TV GetAttribute<TV>(ImportContentContext context, string partName, string elementName) {
             string value = context.Attribute(partName, elementName);
@@ -176,8 +101,28 @@ namespace Laser.Orchard.Cookies.Drivers {
             return default(TV);
         }
 
+
+       
+
+       
+
+      
        
       
 
+
+        protected override void Cloning(CookieLawPart originalPart, CookieLawPart clonePart, CloneContentContext context) {
+            clonePart.cookieDiscreetLinkText = originalPart.cookieDiscreetLinkText;
+            clonePart.cookiePolicyPageMessage = originalPart.cookiePolicyPageMessage;
+            clonePart.cookieErrorMessage = originalPart.cookieErrorMessage;
+            clonePart.cookieAcceptButtonText = originalPart.cookieAcceptButtonText;
+            clonePart.cookieDeclineButtonText = originalPart.cookieDeclineButtonText;
+            clonePart.cookieResetButtonText = originalPart.cookieResetButtonText;
+            clonePart.cookieWhatAreLinkText = originalPart.cookieWhatAreLinkText;
+            clonePart.cookieAnalyticsMessage = originalPart.cookieAnalyticsMessage;
+            clonePart.cookiePolicyLink = originalPart.cookiePolicyLink;
+            clonePart.cookieMessage = originalPart.cookieMessage;
+            clonePart.cookieWhatAreTheyLink = originalPart.cookieWhatAreTheyLink;
+        }
     }
 }

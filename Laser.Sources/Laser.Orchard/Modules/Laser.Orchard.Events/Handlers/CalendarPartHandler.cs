@@ -34,7 +34,7 @@ namespace Laser.Orchard.Events.Handlers {
 
                         //var calendarPart = (CalendarPart)context.ContentItem.Parts.SingleOrDefault(x => x.PartDefinition.Name == "CalendarPart");
 
-                        part._eventList.Loader(x => {
+                        part._eventList.Loader(() => {
                             return _eventsService.GetAggregatedList(part);
                         });
                     }

@@ -163,12 +163,14 @@ namespace Laser.Orchard.Vimeo.Services {
                         if (GroupIsValid(settings.GroupName)) {
                             _orchardServices.Notifier.Information(T("Group Name valid"));
                             settings.GroupId = GetGroupId();
-                        } else {
+                        }
+                        else {
                             string res = CreateNewGroup(settings.GroupName);
                             if (res == "OK") {
                                 _orchardServices.Notifier.Information(T("Group created"));
                                 settings.GroupId = GetGroupId();
-                            } else {
+                            }
+                            else {
                                 _orchardServices.Notifier.Error(T("Failed to create group. Internal message: {0}", res));
                                 settings.AlwaysUploadToGroup = false;
                             }
@@ -179,12 +181,14 @@ namespace Laser.Orchard.Vimeo.Services {
                         if (ChannelIsValid(settings.ChannelName)) {
                             _orchardServices.Notifier.Information(T("Channel Name valid"));
                             settings.ChannelId = GetChannelId();
-                        } else {
+                        }
+                        else {
                             string res = CreateNewChannel(settings.ChannelName);
                             if (res == "OK") {
                                 _orchardServices.Notifier.Information(T("Channel created"));
                                 settings.ChannelId = GetChannelId();
-                            } else {
+                            }
+                            else {
                                 _orchardServices.Notifier.Error(T("Failed to create channel. Internal message: {0}", res));
                                 settings.AlwaysUploadToChannel = false;
                             }
@@ -195,18 +199,21 @@ namespace Laser.Orchard.Vimeo.Services {
                         if (AlbumIsValid(settings.AlbumName)) {
                             _orchardServices.Notifier.Information(T("Album Name valid"));
                             settings.AlbumId = GetAlbumId();
-                        } else {
+                        }
+                        else {
                             string res = CreateNewAlbum(settings.AlbumName);
                             if (res == "OK") {
                                 _orchardServices.Notifier.Information(T("Album created"));
                                 settings.AlbumId = GetAlbumId();
-                            } else {
+                            }
+                            else {
                                 _orchardServices.Notifier.Error(T("Failed to create album. Internal message: {0}", res));
                                 settings.AlwaysUploadToAlbum = false;
                             }
                         }
                     }
-                } else {
+                }
+                else {
                     _orchardServices.Notifier.Error(T("Access token not valid"));
                 }
 
@@ -226,9 +233,11 @@ namespace Laser.Orchard.Vimeo.Services {
                 RetrieveAccountType(settings);
                 settings.LastTimeAccountTypeWasChecked = DateTime.UtcNow;
                 CheckQuota();
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 _orchardServices.Notifier.Error(T("Too many requests to Vimeo. Rate limits will reset on {0} UTC", vre.resetTime.Value.ToString()));
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 _orchardServices.Notifier.Error(T("{0}", ex.Message));
             }
         }
@@ -263,13 +272,16 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 }
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     UpdateAPIRateLimits(vatr, resp);
-                } else {
+                }
+                else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
             }
@@ -300,7 +312,8 @@ namespace Laser.Orchard.Vimeo.Services {
                 if (group.Count() == 1) {
                     //no duplicates of this
                     ATs.Add(group.FirstOrDefault());
-                } else {
+                }
+                else {
                     //objects with same access token
                     VimeoAccessTokenViewModel existing = null;
                     if (group.Where(at => at.Id != 0).Any()) {
@@ -318,7 +331,8 @@ namespace Laser.Orchard.Vimeo.Services {
                             //the tokens here are not the same we found in the db
                             existing = subGroup.FirstOrDefault();
                         }
-                    } else {
+                    }
+                    else {
                         //all the elements in the group have id == 0
                         existing = group.FirstOrDefault();
                     }
@@ -345,7 +359,7 @@ namespace Laser.Orchard.Vimeo.Services {
         public void CommitTokensUpdate(VimeoSettingsPartViewModel vm) {
             ConsolidateTokensList(vm);
             string tamperExceptionMessage = T("Do not tamper with the data in the page.").Text;
-            
+
             //bad errors:
             // - not all ids from the db are in the lists from the vm, and viceversa
             // - tokens with the same id (handled in the consolidate step
@@ -373,7 +387,7 @@ namespace Laser.Orchard.Vimeo.Services {
 
             List<VimeoAccessTokenViewModel> alltokens = new List<VimeoAccessTokenViewModel>();
             alltokens.AddRange(vm.AccessTokens);
-            alltokens.AddRange(vm.DeletedAccessTokens); 
+            alltokens.AddRange(vm.DeletedAccessTokens);
             //access tokens to add/keep are processed before the ones to delete
             foreach (var token in alltokens) {
                 VimeoAccessTokenRecord vatr = null;
@@ -390,7 +404,8 @@ namespace Laser.Orchard.Vimeo.Services {
                             RateAvailableRatio = 1.0 //maximum for the ratio (actual value will be computed on first use)
                         };
                         _repositoryAccessTokens.Create(vatr);
-                    } else {
+                    }
+                    else {
                         //we already have this token (case 2).
                         //since the id from the vm is 0, on the front-end the token has either been deleted and then inserted again, 
                         //or changed and then inserted again. Either way, we want to keep it.
@@ -406,7 +421,8 @@ namespace Laser.Orchard.Vimeo.Services {
                         };
                         _repositoryAccessTokens.Create(newRecord);
                     }
-                } else {
+                }
+                else {
                     vatr = _repositoryAccessTokens.Get(token.Id);
                     if (vatr == null) {
                         //this handles cases 6 and 7
@@ -416,13 +432,15 @@ namespace Laser.Orchard.Vimeo.Services {
                         //we want to delete vatr. The way the allTokens collection is built, this happens after all other updates.
                         //(cases 8 and 9)
                         _repositoryAccessTokens.Delete(vatr);
-                    } else {
+                    }
+                    else {
                         //get the record that has the same access token string as the token we are processing
                         var otherRecord = _repositoryAccessTokens.Get(at => at.AccessToken == token.AccessToken);
                         if (otherRecord != null) {
                             if (otherRecord.Id == vatr.Id) {
                                 //we changed nothing for this access token, so do nothing. (case 3)
-                            } else {
+                            }
+                            else {
                                 //from the vm we got the Id of vatr and the string of otherRecord (cases 4 and 5)
                                 //we should update vatr with the new information
                                 vatr.AccessToken = token.AccessToken;
@@ -432,7 +450,8 @@ namespace Laser.Orchard.Vimeo.Services {
                                 vatr.RateAvailableRatio = otherRecord.RateAvailableRatio;
                                 //we should do nothing with otherRecord: that Id is somewhere else and the record will be handled
                             }
-                        } else {
+                        }
+                        else {
                             //we just changed things on the old record, putting in a new token
                             //we should update vatr with the new information
                             vatr.AccessToken = token.AccessToken;
@@ -553,7 +572,8 @@ namespace Laser.Orchard.Vimeo.Services {
         public bool TokenIsValid(VimeoSettingsPartViewModel vm) {
             try {
                 return !string.IsNullOrWhiteSpace(vm.AccessToken) && this.TokenIsValid(vm.AccessToken);
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
             }
         }
@@ -572,14 +592,16 @@ namespace Laser.Orchard.Vimeo.Services {
                             if (!TokenIsValid(at.AccessToken, false)) {
                                 errorMessages.Add(T("Token {0} not valid.", at.AccessToken).Text);
                             }
-                        } catch (Exception ex) {
+                        }
+                        catch (Exception ex) {
                             errorMessages.Add(T("Token {0} not valid. {1}", at.AccessToken, ex.Message).Text);
                         }
                     }
                     return errorMessages.Count == 0
                         ? "OK"
                         : string.Join(Environment.NewLine, errorMessages);
-                } else {
+                }
+                else {
                     return T("You need to add at least one Access Token.").Text;
                 }
             }
@@ -606,14 +628,17 @@ namespace Laser.Orchard.Vimeo.Services {
                         UpdateAPIRateLimits(aToken, resp);
                     ret = resp.StatusCode == HttpStatusCode.OK;
                 }
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     if (shouldUpdateRateLimits)
                         UpdateAPIRateLimits(aToken, resp);
-                } else {
+                }
+                else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
                 ret = false;
@@ -630,7 +655,8 @@ namespace Laser.Orchard.Vimeo.Services {
         public bool GroupIsValid(VimeoSettingsPartViewModel vm) {
             try {
                 return !string.IsNullOrWhiteSpace(vm.GroupName) && this.GroupIsValid(vm.GroupName);
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
             }
         }
@@ -688,13 +714,16 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 } while (morePages);
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     UpdateAPIRateLimits(vatr, resp);
-                } else {
+                }
+                else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
                 ret = false;
@@ -711,7 +740,8 @@ namespace Laser.Orchard.Vimeo.Services {
         public bool AlbumIsValid(VimeoSettingsPartViewModel vm) {
             try {
                 return !string.IsNullOrWhiteSpace(vm.AlbumName) && this.AlbumIsValid(vm.AlbumName);
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
             }
         }
@@ -769,13 +799,16 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 } while (morePages);
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     UpdateAPIRateLimits(vatr, resp);
-                } else {
+                }
+                else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
                 ret = false;
@@ -791,7 +824,8 @@ namespace Laser.Orchard.Vimeo.Services {
         public bool ChannelIsValid(VimeoSettingsPartViewModel vm) {
             try {
                 return !string.IsNullOrWhiteSpace(vm.AlbumName) && this.ChannelIsValid(vm.ChannelName);
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
             }
         }
@@ -849,13 +883,16 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 } while (morePages);
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     UpdateAPIRateLimits(vatr, resp);
-                } else {
+                }
+                else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
                 ret = false;
@@ -887,18 +924,22 @@ namespace Laser.Orchard.Vimeo.Services {
                         return "OK";
                     }
                 }
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     UpdateAPIRateLimits(vatr, resp);
                     if (resp.StatusCode == HttpStatusCode.BadRequest) {
                         return T("Bad Request: one of the parameters is invalid. {0}", new StreamReader(resp.GetResponseStream()).ReadToEnd()).Text;
-                    } else if (resp.StatusCode == HttpStatusCode.Forbidden) {
+                    }
+                    else if (resp.StatusCode == HttpStatusCode.Forbidden) {
                         return T("Access Denied: user is not allowed to create a Group. {0}", new StreamReader(resp.GetResponseStream()).ReadToEnd()).Text;
                     }
-                } else {
+                }
+                else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
 
@@ -932,18 +973,22 @@ namespace Laser.Orchard.Vimeo.Services {
                         return "OK";
                     }
                 }
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     UpdateAPIRateLimits(vatr, resp);
                     if (resp.StatusCode == HttpStatusCode.BadRequest) {
                         return T("Bad Request: one of the parameters is invalid. {0}", new StreamReader(resp.GetResponseStream()).ReadToEnd()).Text;
-                    } else if (resp.StatusCode == HttpStatusCode.Forbidden) {
+                    }
+                    else if (resp.StatusCode == HttpStatusCode.Forbidden) {
                         return T("Access Denied: user is not allowed to create a channel. {0}", new StreamReader(resp.GetResponseStream()).ReadToEnd()).Text;
                     }
-                } else {
+                }
+                else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
             }
@@ -973,18 +1018,22 @@ namespace Laser.Orchard.Vimeo.Services {
                         return "OK";
                     }
                 }
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     UpdateAPIRateLimits(vatr, resp);
                     if (resp.StatusCode == HttpStatusCode.BadRequest) {
                         return T("Bad Request: one of the parameters is invalid. {0}", new StreamReader(resp.GetResponseStream()).ReadToEnd()).Text;
-                    } else if (resp.StatusCode == HttpStatusCode.Forbidden) {
+                    }
+                    else if (resp.StatusCode == HttpStatusCode.Forbidden) {
                         return T("Access Denied: user is not allowed to create an album. {0}", new StreamReader(resp.GetResponseStream()).ReadToEnd()).Text;
                     }
-                } else {
+                }
+                else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
             }
@@ -1023,18 +1072,22 @@ namespace Laser.Orchard.Vimeo.Services {
                             }
                         }
                     }
-                } catch (VimeoRateException vre) {
+                }
+                catch (VimeoRateException vre) {
                     throw vre;
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                     if (resp != null) {
                         UpdateAPIRateLimits(vatr, resp);
-                    } else {
+                    }
+                    else {
                         throw new Exception(T("Failed to read response").ToString(), ex);
                     }
                     quotaInfo = null;
                 }
-            } else {
+            }
+            else {
                 quotaInfo = new VimeoUploadQuota(settings.UploadQuotaSpaceFree, settings.UploadQuotaSpaceMax, settings.UploadQuotaSpaceUsed);
             }
 
@@ -1049,7 +1102,8 @@ namespace Laser.Orchard.Vimeo.Services {
             try {
                 VimeoUploadQuota quotaInfo = CheckQuota();
                 return quotaInfo != null ? quotaInfo.space.used : -1;
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
             }
         }
@@ -1062,7 +1116,8 @@ namespace Laser.Orchard.Vimeo.Services {
             try {
                 VimeoUploadQuota quotaInfo = CheckQuota();
                 return quotaInfo != null ? quotaInfo.space.free : -1;
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
             }
         }
@@ -1086,7 +1141,8 @@ namespace Laser.Orchard.Vimeo.Services {
             Int64 remoteSpace;
             try {
                 remoteSpace = this.FreeQuota();
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
             }
             if (remoteSpace - quotaBeingUploaded < fileSize) {
@@ -1114,7 +1170,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <returns>The Url where the client may upload the file.</returns>
         /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public string GenerateUploadTicket(int uploadId) {
-            
+
             VimeoAccessTokenRecord vatr = SelectAccessToken();
             HttpWebRequest wr = VimeoCreateRequest(
                     vatr.AccessToken,
@@ -1141,13 +1197,16 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 }
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     UpdateAPIRateLimits(vatr, resp);
-                } else {
+                }
+                else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
                 return "";
@@ -1247,18 +1306,25 @@ namespace Laser.Orchard.Vimeo.Services {
                 .CurrentSite
                 .As<VimeoSettingsPart>();
 
+            
             HttpWebRequest wr = VimeoCreateRequest(
                     endpoint: entity.UploadLinkSecure,
                     method: WebRequestMethods.Http.Put
                 );
             wr.Headers.Add("Content-Range: bytes */*");
+            //wr.AuthenticationLevel = System.Net.Security.AuthenticationLevel.None;
+            //wr.ClientCertificates.Clear();
             try {
+                ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) => true; // new System.Net.Security.RemoteCertificateValidationCallback(AcceptAllCertifications);
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                     //if we end up here, something went really wrong
                     //schedule the next verification for never
                     entity.ScheduledVerificationTime = DateTime.MaxValue;
                 }
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     if (resp.StatusDescription == "Resume Incomplete") {
@@ -1278,18 +1344,21 @@ namespace Laser.Orchard.Vimeo.Services {
                             if (sent == entity.UploadSize) {
                                 //Upload finished                            
                                 return VerifyUploadResult.Complete;
-                            } else if (sent > entity.UploadSize) {
+                            }
+                            else if (sent > entity.UploadSize) {
                                 //this is a terrible error that we have no way of recovering from.
                                 //schedule the next verification for never
                                 entity.ScheduledVerificationTime = DateTime.MaxValue;
                                 return VerifyUploadResult.Error;
-                            } else {
+                            }
+                            else {
                                 //determine how much we should wait before the next verification event;
                                 DateTime dtNow = DateTime.UtcNow;
                                 if (lastSlice == 0) {
                                     entity.ScheduledVerificationTime = dtNow.AddMinutes(Constants.MaxDelayBetweenVerifications);
                                     return VerifyUploadResult.Incomplete;
-                                } else {
+                                }
+                                else {
                                     entity.LastProgressTime = dtNow; //since the previous verification the upload has made progress
                                     double lSlice = (double)lastSlice;
                                     //I use seconds here instead of minutes to have finer granularity
@@ -1299,9 +1368,11 @@ namespace Laser.Orchard.Vimeo.Services {
                                     //double secondsToFinish = remaining / bytesPerSecond;
                                     if (remaining * secondsPassed <= Constants.MinDelaySeconds * lSlice) {
                                         entity.ScheduledVerificationTime = dtNow.AddMinutes(Constants.MinDelayBetweenVerifications);
-                                    } else if (remaining * secondsPassed >= Constants.MaxDelaySeconds * lSlice) {
+                                    }
+                                    else if (remaining * secondsPassed >= Constants.MaxDelaySeconds * lSlice) {
                                         entity.ScheduledVerificationTime = dtNow.AddMinutes(Constants.MaxDelayBetweenVerifications);
-                                    } else {
+                                    }
+                                    else {
                                         //pretend the upload speed will remain constant
                                         entity.ScheduledVerificationTime = dtNow.AddMinutes((remaining * secondsPassed / lSlice) * Constants.SecToMinMultiplier);
                                     }
@@ -1313,7 +1384,8 @@ namespace Laser.Orchard.Vimeo.Services {
                                 //just a slow/long upload, or the upload actualy stopped and we may discard it safely.
                             }
                         }
-                    } else {
+                    }
+                    else {
                         //The Vimeo specification says there is no other possible response status. If we are here, something went 
                         //terribly wrong, most likely on their side of things.
                         //schedule the next verification for never
@@ -1377,7 +1449,8 @@ namespace Laser.Orchard.Vimeo.Services {
                 return true;
             try {
                 return TerminateUpload(entity) > 0;
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
             }
         }
@@ -1388,7 +1461,7 @@ namespace Laser.Orchard.Vimeo.Services {
         /// <returns>The Id of the UploadCompleted, which we'll need to patch and publish the video.<value>-1</value> in case of errors.</returns>
         /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public int TerminateUpload(UploadsInProgressRecord entity) {
-            
+
             VimeoAccessTokenRecord vatr = SelectAccessToken();
             //Make the DELETE call to terminate the upload: this gives us the video URI
             HttpWebRequest del = VimeoCreateRequest(
@@ -1416,13 +1489,16 @@ namespace Laser.Orchard.Vimeo.Services {
                         return ucr.Id;
                     }
                 }
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     UpdateAPIRateLimits(vatr, resp);
-                } else {
+                }
+                else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
             }
@@ -1490,9 +1566,11 @@ namespace Laser.Orchard.Vimeo.Services {
                         return "OK";
                     }
                 }
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     UpdateAPIRateLimits(vatr, resp);
@@ -1501,7 +1579,8 @@ namespace Laser.Orchard.Vimeo.Services {
                         return new StreamReader(resp.GetResponseStream()).ReadToEnd();
                     }
                     return resp.StatusCode.ToString() + " " + resp.StatusDescription;
-                } else {
+                }
+                else {
                     //throw new Exception(T("Failed to read response").ToString(), ex);
                     //Do not raise an exception if we failed to read a response, to avoid messing up the terminations of the uploads
                 }
@@ -1566,13 +1645,16 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 } while (morePages);
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     UpdateAPIRateLimits(vatr, resp);
-                } else {
+                }
+                else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
             }
@@ -1636,13 +1718,16 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 } while (morePages);
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     UpdateAPIRateLimits(vatr, resp);
-                } else {
+                }
+                else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
             }
@@ -1705,13 +1790,16 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 } while (morePages);
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     UpdateAPIRateLimits(vatr, resp);
-                } else {
+                }
+                else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
             }
@@ -1743,7 +1831,8 @@ namespace Laser.Orchard.Vimeo.Services {
             UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
             if (ucr != null) {
                 return AddVideoToGroup(ucr);
-            } else {
+            }
+            else {
                 return T("Cannot identify video").Text;
             }
         }
@@ -1776,9 +1865,11 @@ namespace Laser.Orchard.Vimeo.Services {
                             return "OK";
                         }
                     }
-                } catch (VimeoRateException vre) {
+                }
+                catch (VimeoRateException vre) {
                     throw vre;
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                     if (resp != null) {
                         UpdateAPIRateLimits(vatr, resp);
@@ -1789,15 +1880,18 @@ namespace Laser.Orchard.Vimeo.Services {
                             //we end up here if the video is already in the group
                             ucr.UploadedToGroup = true;
                             return T("Access Denied: cannot add video. {0}", new StreamReader(resp.GetResponseStream()).ReadToEnd()).Text;
-                        } else {
+                        }
+                        else {
                             return T("Http error when adding video to group. Response {0}:{1}", resp.StatusCode.ToString(), new StreamReader(resp.GetResponseStream()).ReadToEnd()).Text;
                         }
-                    } else {
+                    }
+                    else {
                         //throw new Exception(T("Failed to read response").ToString(), ex);
                         //Do not raise an exception if we failed to read a response, to avoid messing up the terminations of the uploads
                     }
                 }
-            } else {
+            }
+            else {
                 return T("Cannot access group").Text;
             }
 
@@ -1828,7 +1922,8 @@ namespace Laser.Orchard.Vimeo.Services {
             UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
             if (ucr != null) {
                 return AddVideoToChannel(ucr);
-            } else {
+            }
+            else {
                 return T("Cannot identify video").Text;
             }
         }
@@ -1861,9 +1956,11 @@ namespace Laser.Orchard.Vimeo.Services {
                             return "OK";
                         }
                     }
-                } catch (VimeoRateException vre) {
+                }
+                catch (VimeoRateException vre) {
                     throw vre;
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                     if (resp != null) {
                         UpdateAPIRateLimits(vatr, resp);
@@ -1872,17 +1969,21 @@ namespace Laser.Orchard.Vimeo.Services {
                         //ucr.UploadedToChannel = true;
                         if (resp.StatusCode == HttpStatusCode.Forbidden) {
                             return T("Access Denied: cannot add video. {0}", new StreamReader(resp.GetResponseStream()).ReadToEnd()).Text;
-                        } else if (resp.StatusCode == HttpStatusCode.NotFound) {
+                        }
+                        else if (resp.StatusCode == HttpStatusCode.NotFound) {
                             return T("Resource not found. {0}", new StreamReader(resp.GetResponseStream()).ReadToEnd()).Text;
-                        } else {
+                        }
+                        else {
                             return T("Http error when adding video to channel. Response {0}:{1}", resp.StatusCode.ToString(), new StreamReader(resp.GetResponseStream()).ReadToEnd()).Text;
                         }
-                    } else {
+                    }
+                    else {
                         //throw new Exception(T("Failed to read response").ToString(), ex);
                         //Do not raise an exception if we failed to read a response, to avoid messing up the terminations of the uploads
                     }
                 }
-            } else {
+            }
+            else {
                 return T("Cannot access channel").Text;
             }
 
@@ -1913,7 +2014,8 @@ namespace Laser.Orchard.Vimeo.Services {
             UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
             if (ucr != null) {
                 return AddVideoToAlbum(ucr);
-            } else {
+            }
+            else {
                 return T("Cannot identify video").Text;
             }
         }
@@ -1946,9 +2048,11 @@ namespace Laser.Orchard.Vimeo.Services {
                             return "OK";
                         }
                     }
-                } catch (VimeoRateException vre) {
+                }
+                catch (VimeoRateException vre) {
                     throw vre;
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                     if (resp != null) {
                         UpdateAPIRateLimits(vatr, resp);
@@ -1957,17 +2061,21 @@ namespace Laser.Orchard.Vimeo.Services {
                         //ucr.UploadedToAlbum = true;
                         if (resp.StatusCode == HttpStatusCode.Forbidden) {
                             return T("Access Denied: cannot add video. {0}", new StreamReader(resp.GetResponseStream()).ReadToEnd()).Text;
-                        } else if (resp.StatusCode == HttpStatusCode.NotFound) {
+                        }
+                        else if (resp.StatusCode == HttpStatusCode.NotFound) {
                             return T("Resource not found. {0}", new StreamReader(resp.GetResponseStream()).ReadToEnd()).Text;
-                        } else {
+                        }
+                        else {
                             return T("Http error when adding video to channel. Response {0}:{1}", resp.StatusCode.ToString(), new StreamReader(resp.GetResponseStream()).ReadToEnd()).Text;
                         }
-                    } else {
+                    }
+                    else {
                         //throw new Exception(T("Failed to read response").ToString(), ex);
                         //Do not raise an exception if we failed to read a response, to avoid messing up the terminations of the uploads
                     }
                 }
-            } else {
+            }
+            else {
                 return T("Cannot access album").Text;
             }
 
@@ -2011,7 +2119,7 @@ namespace Laser.Orchard.Vimeo.Services {
             HttpWebRequest apiCall = VimeoCreateRequest(
                 aToken: vatr.AccessToken,
                 endpoint: VimeoEndpoints.APIEntry + part["uri"], //NOTE: this is not /me/videos
-                //endpoint: VimeoEndpoints.Me + part["uri"], //me/videos/id
+                                                                 //endpoint: VimeoEndpoints.Me + part["uri"], //me/videos/id
                 method: "GET",
                 qString: "?fields=files,user.uri,privacy" //the "files" field is an array with the info for the different resolutions available
                 );
@@ -2024,12 +2132,14 @@ namespace Laser.Orchard.Vimeo.Services {
                         videoJsonTree = JObject.Parse(data);
                     }
                 }
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     try {
                         UpdateAPIRateLimits(vatr, resp);
-                    } catch (Exception vre) {
+                    }
+                    catch (Exception vre) {
                         return vre.Message;
                     }
                 }
@@ -2069,11 +2179,13 @@ namespace Laser.Orchard.Vimeo.Services {
                         //we get redirected, so our request gets changed
                         url = playerCall.Address.AbsoluteUri;
                     }
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     return ex.Message;
                 }
                 return url;
-            } else {
+            }
+            else {
                 //if our account is not pro, under some conditions we may be able to extract a stream's url
                 //NOTE: this url expires after a while (it's not clear how long), and has to be reextracted
                 //We are also here for public videos we do not own, even with a pro account
@@ -2091,7 +2203,8 @@ namespace Laser.Orchard.Vimeo.Services {
                             embeddable = settings.Whitelist.Contains(myDomain);
                         }
                     }
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     return ex.Message;
                 }
                 if (embeddable) {
@@ -2121,7 +2234,8 @@ namespace Laser.Orchard.Vimeo.Services {
                                 return url;
                             }
                         }
-                    } catch (Exception ex) {
+                    }
+                    catch (Exception ex) {
                         return ex.Message;
                     }
                 }
@@ -2153,7 +2267,7 @@ namespace Laser.Orchard.Vimeo.Services {
         public string GetVideoStatus(UploadsCompleteRecord ucr) {
             if (ucr == null) return T("Record is null").Text;
 
-            
+
             VimeoAccessTokenRecord vatr = SelectAccessToken();
             HttpWebRequest wr = VimeoCreateRequest(
                     aToken: vatr.AccessToken,
@@ -2171,9 +2285,11 @@ namespace Laser.Orchard.Vimeo.Services {
                         }
                     }
                 }
-            } catch (VimeoRateException vre) {
+            }
+            catch (VimeoRateException vre) {
                 throw vre;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                 if (resp != null) {
                     UpdateAPIRateLimits(vatr, resp);
@@ -2181,7 +2297,8 @@ namespace Laser.Orchard.Vimeo.Services {
                         //this is for non existing videos, or videos that are private to someone else
                         return "Video not found"; //not localized because we use this specific output
                     }
-                } else {
+                }
+                else {
                     throw new Exception(T("Failed to read response").ToString(), ex);
                 }
                 return ex.Message;
@@ -2198,10 +2315,10 @@ namespace Laser.Orchard.Vimeo.Services {
             UploadsCompleteRecord ucr = _repositoryUploadsComplete.Get(ucId);
             if (ucr != null) FinishMediaPart(ucr);
         }/// <summary>
-        /// Fill in the MediaPart information by pretending to embed the video.
-        /// </summary>
-        /// <param name="ucr">The record that contains the information on the video we are checking</param>
-        /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
+         /// Fill in the MediaPart information by pretending to embed the video.
+         /// </summary>
+         /// <param name="ucr">The record that contains the information on the video we are checking</param>
+         /// <exception cref="VimeoRateException">If the application is being rate limited.</exception>
         public void FinishMediaPart(UploadsCompleteRecord ucr) {
             string vId = ucr.Uri.Substring(ucr.Uri.LastIndexOf("/") + 1);
             string url = "https://vimeo.com/" + vId;
@@ -2231,12 +2348,14 @@ namespace Laser.Orchard.Vimeo.Services {
                         try {
                             var content = wClient.DownloadString(HttpUtility.HtmlDecode(href));
                             oeContent = XDocument.Parse(content);
-                        } catch {
+                        }
+                        catch {
                             //bubble
                         }
                     }
                 }
-            } catch (Exception ex) {
+            }
+            catch (Exception) {
 
             }
             if (oembedPart != null) {
@@ -2247,7 +2366,8 @@ namespace Laser.Orchard.Vimeo.Services {
                     var oembed = oeContent.Root;
                     if (oembed.Element("title") != null) {
                         mPart.Title = oembed.Element("title").Value;
-                    } else {
+                    }
+                    else {
                         mPart.Title = oembed.Element("url").Value;
                     }
                     if (oembed.Element("description") != null) {
@@ -2256,7 +2376,8 @@ namespace Laser.Orchard.Vimeo.Services {
                     foreach (var element in oembed.Elements()) {
                         oembedPart[element.Name.LocalName] = element.Value;
                     }
-                } else {
+                }
+                else {
                     //oeContent == null means we were not able to parse that stuff above. Maybe the video is set to private
                     //or whitelisted. Anyway, we can get most of that stuff by calling the vimeo API.
                     oembedPart["type"] = "video";
@@ -2289,7 +2410,8 @@ namespace Laser.Orchard.Vimeo.Services {
                                     //embed section
                                     if (video.embed.html != null) {
                                         oembedPart["html"] = video.embed.html;
-                                    } else {
+                                    }
+                                    else {
                                         //this correctly populates the html. However, if the video embed settings are "private" it will still not be possible
                                         //to watch it in the embed object
                                         string iframe = string.Format("<iframe src=\"https://player.vimeo.com{0}\" width=\"{1}\" height=\"{2}\" frameborder=\"0\" title=\"title\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>", ucr.Uri.Remove(ucr.Uri.IndexOf("video") + 5, 1), video.width.ToString(), video.height.ToString());
@@ -2321,13 +2443,16 @@ namespace Laser.Orchard.Vimeo.Services {
                                 }
                             }
                         }
-                    } catch (VimeoRateException vre) {
+                    }
+                    catch (VimeoRateException vre) {
                         throw vre;
-                    } catch (Exception ex) {
+                    }
+                    catch (Exception ex) {
                         HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                         if (resp != null) {
                             UpdateAPIRateLimits(vatr, resp);
-                        } else {
+                        }
+                        else {
                             throw new Exception(T("Failed to read response").ToString(), ex);
                         }
                     }
@@ -2439,17 +2564,21 @@ namespace Laser.Orchard.Vimeo.Services {
                         if (resp.StatusCode == HttpStatusCode.NoContent) {
                             //success
                             str.AppendLine(T("Removed video on Vimeo.com").ToString());
-                        } else {
+                        }
+                        else {
                             str.AppendLine(T("Failed to remove video on Vimeo.com").ToString());
                         }
                     }
-                } catch (VimeoRateException vre) {
+                }
+                catch (VimeoRateException vre) {
                     throw vre;
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
                     if (resp != null) {
                         UpdateAPIRateLimits(vatr, resp);
-                    } else {
+                    }
+                    else {
                         throw new Exception(T("Failed to read response").ToString(), ex);
                     }
                     str.AppendLine(T("Failed to remove video on Vimeo.com").ToString());
@@ -2515,7 +2644,8 @@ namespace Laser.Orchard.Vimeo.Services {
                 foreach (var uip in uips) {
                     uip.ScheduledVerificationTime = later;
                 }
-            } else {
+            }
+            else {
                 var uploadsInProgressToVerify = _repositoryUploadsInProgress.Table.ToList()
                     .Where(uip => uip.ScheduledVerificationTime.Value <= dNow);
                 foreach (var uip in uploadsInProgressToVerify) {
@@ -2527,9 +2657,11 @@ namespace Laser.Orchard.Vimeo.Services {
                                 case VerifyUploadResult.Complete:
                                     try {
                                         TerminateUpload(uip);
-                                    } catch (VimeoRateException vre) {
+                                    }
+                                    catch (VimeoRateException vre) {
                                         throw vre;
-                                    } catch (Exception ex) {
+                                    }
+                                    catch (Exception) {
                                         //we might end up here if the termination was called at the same time from here and the controller
                                     }
                                     break;
@@ -2550,14 +2682,16 @@ namespace Laser.Orchard.Vimeo.Services {
                                 default:
                                     break;
                             }
-                        } catch (VimeoRateException vre) {
+                        }
+                        catch (VimeoRateException vre) {
                             //in case we finished our API calls, postpone calling the verification
                             //until after the reset
                             uip.ScheduledVerificationTime = vre.resetTime.Value.AddMinutes(1);
                             //break out of the loop, because there is no point in trying to process the remaining uploads
                             break;
                         }
-                    } else if (uip.ScheduledVerificationTime.Value == DateTime.MaxValue && dNow > uip.LastProgressTime.Value.AddDays(1)) {
+                    }
+                    else if (uip.ScheduledVerificationTime.Value == DateTime.MaxValue && dNow > uip.LastProgressTime.Value.AddDays(1)) {
                         //we still keep the faulty upload information for roughly 24 hours
                         DestroyUpload(uip.MediaPartId);
                     }
@@ -2584,7 +2718,8 @@ namespace Laser.Orchard.Vimeo.Services {
                 foreach (var ucr in ucrs) {
                     ucr.ScheduledTerminationTime = later;
                 }
-            } else {
+            }
+            else {
                 var recordsToVerify = _repositoryUploadsComplete.Table.ToList()
                     .Where(ucr => ucr.ScheduledTerminationTime <= dNow);
                 DateTime rescheduleTime = dNow.AddMinutes(Constants.MinDelayBetweenTerminations);
@@ -2625,7 +2760,8 @@ namespace Laser.Orchard.Vimeo.Services {
                                 && (ucr.UploadedToAlbum || !settings.AlwaysUploadToAlbum)) {
                                 //We finished everything for this video upload, so we may remove its record
                                 _repositoryUploadsComplete.Delete(ucr);
-                            } else {
+                            }
+                            else {
                                 //reschedule these less important finishing touches
                                 int timeToRateReset = (vatr.RateLimitReset.Value - dNow).Seconds;
                                 //consider the frequency at which we have been making API calls since the last reset.
@@ -2643,7 +2779,8 @@ namespace Laser.Orchard.Vimeo.Services {
                                     || timeToRateReset < 0) { //we should not have passed the expected reset time, but it's better to check
                                     //we still have quite a bit of API calls we can do in the time left before it resets
                                     ucr.ScheduledTerminationTime = rescheduleTime; //the reschedule time is computed above with the default delay
-                                } else {
+                                }
+                                else {
                                     //compute a longer delay to try and not overload the Vimeo API endpoints
                                     DateTime newScheduleTime = vatr.RateLimitReset.Value.AddMinutes(1);
                                     //recompute the new frequency we want to have from
@@ -2657,12 +2794,14 @@ namespace Laser.Orchard.Vimeo.Services {
                                     ucr.ScheduledTerminationTime = newScheduleTime > targetTime ? newScheduleTime : targetTime;
                                 }
                             }
-                        } else {
+                        }
+                        else {
                             //reschedule
                             ucr.ScheduledTerminationTime = rescheduleTime;
                         }
 
-                    } catch (VimeoRateException vre) {
+                    }
+                    catch (VimeoRateException vre) {
                         //in case we have run out of API calls postpone further terminations 
                         //until after the reset
                         ucr.ScheduledTerminationTime = vre.resetTime.Value.AddMinutes(1);
@@ -2688,7 +2827,8 @@ namespace Laser.Orchard.Vimeo.Services {
             Uri targetUri;
             if (string.IsNullOrWhiteSpace(qString)) {
                 targetUri = new Uri(endpoint);
-            } else {
+            }
+            else {
                 targetUri = new Uri(endpoint + qString);
             }
             HttpWebRequest wr = HttpWebRequest.CreateHttp(targetUri);
@@ -2727,8 +2867,8 @@ namespace Laser.Orchard.Vimeo.Services {
             this.resetTime = resetTime;
         }
 
-        public VimeoRateException(VimeoAccessTokenRecord atRecord) 
-            : base (string.Format("Token: {0}", atRecord.AccessToken)){
+        public VimeoRateException(VimeoAccessTokenRecord atRecord)
+            : base(string.Format("Token: {0}", atRecord.AccessToken)) {
             this.resetTime = atRecord.RateLimitReset;
         }
 

@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -65,6 +65,18 @@ msgid "Contact"
 msgstr "Contatto"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
+msgid "Enter recipients manually"
+msgstr "Inserire lista dei destinatari manualmente"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
+msgid "Enter username or e-mail of the contacts to which to deliver this Push notification. One recipient for each line."
+msgstr "Inserire username o e-mail dei contatti a cui consegnare questa notifica Push. Inserire un solo destinatario per ogni linea."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
+msgid "Manual recipients:"
+msgstr "Lista destinatari manuale:"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
 msgid "Mask to make test for Push... this option is set by settings of module"
 msgstr "Mask per effettuare test di push... questa opzione viene valorizzata dalle impostazioni del modulo"
 
@@ -101,6 +113,10 @@ msgid "Number push test:"
 msgstr "Numero di push di test:"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
+msgid "Push notification"
+msgstr "Notifica Push"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
 msgid "Push on next Publish"
 msgstr "Push sulla prossima Pubblicazione"
 
@@ -127,6 +143,14 @@ msgstr "Invio di test"
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
 msgid "Send push to selected contact"
 msgstr "Invia la push al contatto selezionato"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
+msgid "Test over developer devices"
+msgstr "Test sui dispositivi appartenenti agli sviluppatori"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
+msgid "Test over single contact devices"
+msgstr "Test su un singolo contatto"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/MobilePush_Edit.cshtml"
 msgid "Test Push on device"
@@ -197,6 +221,18 @@ msgid "This Push message has been already sent. You will be able to edit and sav
 msgstr "Questa PUSH è già stata inoltrata. Sarà possibile modificarla e salvarla, ma non sarà più reinoltrata."
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "0 means default value (1000)."
+msgstr "0 indica il valore di default (1000)."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "0 means default value (5)."
+msgstr "0 indica il valore di default (5)."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "0 means default value (50)."
+msgstr "0 indica il valore di default (50)."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
 msgid "Android ApiKey"
 msgstr "ApiKey Android"
 
@@ -233,6 +269,18 @@ msgid "Apple Push Sound"
 msgstr "Apple Push Sound"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Check if you prefer to send some push message twice rather than loose some push message in case of system error."
+msgstr "Selezionare per scegliere di inviare alcuni messaggi push due volte piuttosto che non inviarli in caso di errore di sistema."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Commit sent recipients only"
+msgstr "Committare solo i destinatari per i quali il messaggio push è già stato inviato al server."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Delay in minutes before next iteration or retry"
+msgstr "Intervallo di tempo in minuti prima della prossima iterazione o nuovo tentativo di invio."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
 msgid "Enter Taxonomy Name used"
 msgstr "Inserire il nome usato per la tassonomia"
 
@@ -245,8 +293,28 @@ msgid "Leave blank to use Gcm default URL or set to the Firebase Service URL: ht
 msgstr "Lasciare vuoto per usare l'URL di default di Gcm oppure impostare l'URL del Servizio Firebase https://fcm.googleapis.com/fcm/send"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Max number of push messages to send in each database transaction"
+msgstr "Numero massimo di messaggi push da inviare per ogni transazione del database"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Max number of push per iteration"
+msgstr "Numero massimo di messaggi push da inviare per ogni iterazione"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Max number of retries in case of errors"
+msgstr "Numero massimo di nuovi tentativi di invio in caso di errore"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Optional icon in push notification section of the payload. Leave blank to suppress notification section."
+msgstr "Icona opzionale nella sezione notification del payload. Lasciare vuoto per inibire la sezione notification."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
 msgid "Push Mobile Settings"
 msgstr "Impostazioni Push Mobile"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Push notification icon"
+msgstr "Icona per la notifica push"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
 msgid "Push service URL"
@@ -263,6 +331,10 @@ msgstr "Impostazioni Tassonomia"
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
 msgid "Show Test Options"
 msgstr "Visualizza Opzioni di Test"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
+msgid "Suggested value: 2. Set to 0 for no retries in case of errors on first sending."
+msgstr "Valore suggerito: 2. Impostare a 0 per inibire nuovi tentativi di invio in caso di errore al primo tentativo."
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/PushMobileSettings_Edit.cshtml"
 msgid "Will able back office to send push to development device"
@@ -293,8 +365,24 @@ msgid "Approved"
 msgstr "Approvato"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "Enter phone number (prefix + number) of the contacts to which to deliver this Sms. One recipient for each line."
+msgstr "Inserire il numero di telefono (prefisso internazionale + numero) dei contatti a cui consegnare questo Sms. Inserire un solo destinatario per ogni linea."
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "Enter recipients manually"
+msgstr "Inserire lista dei destinatari manualmente"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
 msgid "Have Alias"
 msgstr "Ha almeno un Alias"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "MAM have alias"
+msgstr "MAM con alias"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "Manual recipients:"
+msgstr "Lista destinatari manuale:"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
 msgid "NO"
@@ -329,12 +417,20 @@ msgid "SMS not yet sent."
 msgstr "SMS non ancora inoltrato."
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "Test over single phone number"
+msgstr "Test su un solo numero di telefono"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
 msgid "Test Sms number"
 msgstr "Numero di cellulare per l'invio del SMS di test"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
 msgid "Test Sms prefix"
 msgstr "Prefisso"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
+msgid "Text"
+msgstr "Testo"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsGateway_Edit.cshtml"
 msgid "This SMS has been already sent. You will be able to edit and save it, but it will not be sent anymore on next publish."
@@ -353,12 +449,24 @@ msgid "Settings - Sms Placeholders"
 msgstr "Impostazioni - Segnaposti per SMS"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
+msgid "High"
+msgstr "Alta"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
+msgid "Low"
+msgstr "Bassa"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
 msgid "Mam driver identifier"
 msgstr "Identificativo driver Mam"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
 msgid "Mam has alias"
 msgstr "Mam ha un alias"
+
+msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
+msgid "Medium"
+msgstr "Media"
 
 msgctxt "~/Modules/Laser.Orchard.Mobile/Views/EditorTemplates/Parts/SmsSettingsPart_Edit.cshtml"
 msgid "Protocol"
@@ -545,12 +653,20 @@ msgid "Cannot Update!"
 msgstr "Impossibile aggiornare!"
 
 msgctxt "Laser.Orchard.Mobile.Handlers.MobilePushPartHandler"
-msgid "Push message sent to contact {0}."
-msgstr "Messsaggio push inviato al contatto {0}."
+msgid "Push message will be sent to contact {0} in a minute."
+msgstr "Messsaggio push sarà inviato al contatto {0} entro minuto."
 
 msgctxt "Laser.Orchard.Mobile.Handlers.SiteSettingsPartHandler"
 msgid "PushMobile"
 msgstr "PushMobile"
+
+msgctxt "Laser.Orchard.Mobile.Handlers.SmsGatewayPartHandler"
+msgid "Send SMS to test phone number failed."
+msgstr "Fallito invio dell'SMS al numero telefonico di test."
+
+msgctxt "Laser.Orchard.Mobile.Handlers.SmsGatewayPartHandler"
+msgid "SMS sent successfully to test phone number."
+msgstr "SMS inviato con successo al numero telefonico di test."
 
 msgctxt "Laser.Orchard.Mobile.Handlers.SmsSettingsPartHandler"
 msgid "SMS"
@@ -580,9 +696,37 @@ msgctxt "Laser.Orchard.Mobile.Projections.DeveiceFilter"
 msgid "User device"
 msgstr "Dispositivo utente"
 
+msgctxt "Laser.Orchard.Mobile.Projections.DeviceTypeFilter"
+msgid "Communication Contacts"
+msgstr "Contatti"
+
+msgctxt "Laser.Orchard.Mobile.Projections.DeviceTypeFilter"
+msgid "Device Type"
+msgstr "Tipo del dispositivo"
+
+msgctxt "Laser.Orchard.Mobile.Projections.DeviceTypeFilter"
+msgid "Filter by the type of the device the contact registered with (i.e. Android, Apple, Windows)."
+msgstr "Filtra in base al tipo del dispositivo con cui si è registrato il contatto (i.e. Android, Apple, WIndows)."
+
+msgctxt "Laser.Orchard.Mobile.Projections.DeviceTypeFilter"
+msgid "The type of the device the contact registered with (i.e. Android, Apple, Windows)."
+msgstr "Il tipo del dispositivo con cui si è registrato il contatto (i.e. Android, Apple, WIndows)."
+
+msgctxt "Laser.Orchard.Mobile.Projections.DeviceTypeForm"
+msgid "Device Type"
+msgstr "Tipo del dispositivo"
+
+msgctxt "Laser.Orchard.Mobile.Projections.DeviceTypeForm"
+msgid "The type of the device the contact registered with (i.e. Android, Apple, Windows)."
+msgstr "Il tipo del dispositivo con cui si è registrato il contatto (i.e. Android, Apple, WIndows)."
+
 msgctxt "Laser.Orchard.Mobile.Services.MissingSmsSettingsBanner"
 msgid "The <a href=\"{0}\">SMS settings</a> need to be configured."
 msgstr "E' necessario configurare le <a href=\"{0}\">impostazioni SMS</a>."
+
+msgctxt "Laser.Orchard.Mobile.Services.PushGatewayService"
+msgid "Apple message payload exceeds the limit"
+msgstr "Il payload per i messaggi Apple supera il limite consentito"
 
 msgctxt "Laser.Orchard.Mobile.Services.PushGatewayService"
 msgid "Apple send: message payload exceed the limit"
@@ -615,6 +759,14 @@ msgstr "Nessuna push sarà inoltrata, il contenuto di riferimento deve essere pu
 msgctxt "Laser.Orchard.Mobile.Services.PushGatewayService"
 msgid "Notification sent: "
 msgstr "Notifica inviata:"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushGatewayService"
+msgid "Notifications sent: "
+msgstr "Notifiche inviate:"
+
+msgctxt "Laser.Orchard.Mobile.Services.PushGatewayService"
+msgid "Notifications sent: {0}"
+msgstr "Notifiche inviate: {0}"
 
 msgctxt "Laser.Orchard.Mobile.Services.PushGatewayService"
 msgid "Sent: "
@@ -721,6 +873,14 @@ msgid "Apple"
 msgstr "Apple"
 
 msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
+msgid "Comma separated list of User ID (eg. 12,45,239). Tokenized."
+msgstr "Elenco separato da virgola degli ID degli utenti (es. 12,45,239). Tokenizzato."
+
+msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
+msgid "Content ID. Tokenized. Example: the current content item is {Content.Id}."
+msgstr "ID del contenuto. Si possono usare i Tokens. e.g.: il Content Item attuale è {Content.Id}."
+
+msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
 msgid "Content Owner"
 msgstr "Proprietario del Contenuto"
 
@@ -783,6 +943,18 @@ msgstr "Sviluppo"
 msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
 msgid "Template"
 msgstr "Template"
+
+msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
+msgid "User ID"
+msgstr "ID User"
+
+msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
+msgid "User ID list"
+msgstr "Lista di ID degli utenti"
+
+msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
+msgid "User ID Tokenized."
+msgstr "ID User Tokenized"
 
 msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
 msgid "Windows Mobile"

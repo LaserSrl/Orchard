@@ -80,5 +80,17 @@ namespace Laser.Orchard.TemplateManagement {
              return 5;
          }
 
+
+        public int UpdateFrom5() {
+            ContentDefinitionManager.AlterTypeDefinition("CustomTemplate", type => type.Listable());
+            return 6;
+        }
+        public int UpdateFrom6() {
+            return 7;
+        }
+        public int UpdateFrom7() {
+            ContentDefinitionManager.AlterTypeDefinition("Template", type => type.Listable(false));
+            return 8;
+        }
     }
 }

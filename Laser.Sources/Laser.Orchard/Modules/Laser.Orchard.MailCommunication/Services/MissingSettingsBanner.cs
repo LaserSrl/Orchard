@@ -37,7 +37,7 @@ namespace Laser.Orchard.MailCommunication.Services
             if (settingsMailCommunication == null || settingsMailCommunication.IdTemplateUnsubscribe == null) 
             {
                 var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
-                var url = urlHelper.Action("Mail Communication", "Admin", new { Area = "Settings" });
+                var url = urlHelper.Action("MailCommunication", "Admin", new { Area = "Settings" });
                 yield return new NotifyEntry { Message = T("The <a href=\"{0}\">Mail Communication</a> settings need to be configured.", url), Type = NotifyType.Warning };
             }
         }

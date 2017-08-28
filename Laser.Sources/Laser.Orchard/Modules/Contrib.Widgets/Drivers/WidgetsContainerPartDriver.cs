@@ -16,11 +16,11 @@ using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 using Orchard.Themes.Services;
 using Orchard.Widgets.Services;
-
+using Contrib.Widgets.Settings;
 
 namespace Contrib.Widgets.Drivers {
     [OrchardFeature("Contrib.Widgets")]
-    public class WidgetsContainerPartDriver : ContentPartDriver<WidgetsContainerPart> {
+    public class WidgetsContainerPartDriver : ContentPartCloningDriver<WidgetsContainerPart> {
         private readonly ISiteThemeService _siteThemeService;
         private readonly IWidgetsService _widgetsService;
         private readonly IVirtualPathProvider _virtualPathProvider;
@@ -47,7 +47,8 @@ namespace Contrib.Widgets.Drivers {
 
         private dynamic New { get; set; }
 
-        protected override string Prefix {
+        protected override string Prefix
+        {
             get { return "WidgetsContainer"; }
         }
 
@@ -56,7 +57,15 @@ namespace Contrib.Widgets.Drivers {
             if (displayType != "Detail")
                 return null;
 
-            var widgetParts = _widgetManager.GetWidgets(part.Id);
+            var settings = part.Settings.GetModel<WidgetsContainerSettings>();
+
+            var widgetParts = _widgetManager.GetWidgets(part.Id, part.ContentItem.IsPublished());
+
+            if (!string.IsNullOrWhiteSpace(settings.AllowedWidgets))
+                widgetParts = widgetParts.Where(x => settings.AllowedWidgets.Split(',').Contains(x.TypeDefinition.Name));
+
+            if (!string.IsNullOrWhiteSpace(settings.AllowedZones))
+                widgetParts = widgetParts.Where(x => settings.AllowedZones.Split(',').Contains(x.Zone));
 
             // Build and add shape to zone.
             var workContext = _wca.GetContext();
@@ -71,27 +80,34 @@ namespace Contrib.Widgets.Drivers {
 
         protected override DriverResult Editor(WidgetsContainerPart part, dynamic shapeHelper) {
             return ContentShape("Parts_WidgetsContainer", () => {
+                var settings = part.Settings.GetModel<WidgetsContainerSettings>();
+
                 var currentTheme = _siteThemeService.GetSiteTheme();
                 var currentThemesZones = _widgetsService.GetZones(currentTheme).ToList();
+                if (!string.IsNullOrWhiteSpace(settings.AllowedZones))
+                    currentThemesZones = currentThemesZones.Where(x => settings.AllowedZones.Split(',').Contains(x)).ToList();
+
                 var widgetTypes = _widgetsService.GetWidgetTypeNames().ToList();
-                var widgets = _widgetManager.GetWidgets(part.Id);
+                if (!string.IsNullOrWhiteSpace(settings.AllowedWidgets))
+                    widgetTypes = widgetTypes.Where(x => settings.AllowedWidgets.Split(',').Contains(x)).ToList();
+                var widgets = _widgetManager.GetWidgets(part.Id, part.ContentItem.IsPublished());
+
                 var zonePreviewImagePath = string.Format("{0}/{1}/ThemeZonePreview.png", currentTheme.Location, currentTheme.Id);
                 var zonePreviewImage = _virtualPathProvider.FileExists(zonePreviewImagePath) ? zonePreviewImagePath : null;
+
                 var layer = _widgetsService.GetLayers().First();
 
                 // recupero i contenuti localizzati una try è necessaria in quanto non è detto che un contenuto sia localizzato
                 dynamic contentLocalizations;
                 try {
-                    contentLocalizations = _localizationService.GetLocalizations(part.ContentItem, VersionOptions.Latest)
-                        .Select(c => {
-                            var localized = c.ContentItem.As<LocalizationPart>();
-                            if (localized.Culture == null)
-                                localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture());
-                            return c;
-                        })
+                    contentLocalizations = _localizationService
+                        .GetLocalizations(part.ContentItem, VersionOptions.Latest) //the other cultures
+                        .Where(lp => //as long as a culture has been assigned
+                            lp.Culture != null && !string.IsNullOrWhiteSpace(lp.Culture.Culture))
                         .OrderBy(o => o.Culture.Culture)
                         .ToList();
-                } catch {
+                }
+                catch {
                     contentLocalizations = null;
                 }
 
@@ -116,10 +132,13 @@ namespace Contrib.Widgets.Drivers {
                 UpdatePositions(viewModel);
                 RemoveWidgets(viewModel);
                 CloneWidgets(viewModel, part.ContentItem);
+
             }
 
             return Editor(part, shapeHelper);
         }
+
+
 
         private void RemoveWidgets(WidgetsContainerViewModel viewModel) {
             if (string.IsNullOrEmpty(viewModel.RemovedWidgets))
@@ -168,7 +187,7 @@ namespace Contrib.Widgets.Drivers {
             // memorizzo l'id della pagina sorgente
             context.Element(part.PartDefinition.Name).SetAttributeValue("HostId", part.Id.ToString());
         }
-
+        
         #region [ Clone Functionality ]
 
         private void CloneWidgets(WidgetsContainerViewModel viewModel, ContentItem hostContentItem) {
@@ -199,7 +218,30 @@ namespace Contrib.Widgets.Drivers {
             }
 
         }
+
+        private void CloneWidgets(ContentItem original, ContentItem destination) {
+            if (original == null || destination == null) return;
+
+            // recupero i WidgetExPart del Content selezionato come Master (CloneFrom)
+            var widgets = _widgetManager.GetWidgets(original.Id, original.IsPublished());
+            foreach (var widget in widgets) {
+                // Clono il ContentMaster e recupero la parte WidgetExPart
+                var clonedContentitem = _services.ContentManager.Clone(widget.ContentItem);
+
+                var widgetExPart = clonedContentitem.As<WidgetExPart>();
+
+                // assegno il nuovo contenitore se non nullo ( nel caso di HtmlWidget per esempio la GetWidget ritorna nullo...)
+                if (widgetExPart != null) {
+                    widgetExPart.Host = destination;
+                    _services.ContentManager.Publish(widgetExPart.ContentItem);
+                }
+
+            }
+        }
         #endregion
 
+        protected override void Cloning(WidgetsContainerPart originalPart, WidgetsContainerPart clonePart, CloneContentContext context) {
+            CloneWidgets(context.ContentItem, context.CloneContentItem);
+        }
     }
 }

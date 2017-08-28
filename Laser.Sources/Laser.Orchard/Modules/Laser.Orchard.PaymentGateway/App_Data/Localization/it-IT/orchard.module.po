@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -9,8 +9,24 @@
 # > msgstr "{ messaggio }"
 
 msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Admin/Index.cshtml"
+msgid "Payment Gateway Settings"
+msgstr "Impostazioni dei Gateways di pagamento"
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Admin/Index.cshtml"
+msgid "Payment nonce duration (minutes)"
+msgstr "Durata del nonce di pagamento (minuti)."
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Admin/Index.cshtml"
+msgid "Payment nonce duration in minutes (suggested value: 20)."
+msgstr "Durata in minuti del nonce di pagamento (valore suggerito: 20)."
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Admin/Index.cshtml"
 msgid "Please refer to each POS tab for POS specific settings."
 msgstr "Fare riferimento alle schede di ogni POS per le relative impostazioni."
+
+msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/Admin/Index.cshtml"
+msgid "Save"
+msgstr "Salva"
 
 msgctxt "~/Modules/Laser.Orchard.PaymentGateway/Views/EditorTemplates/Parts/PayButtonEdit.cshtml"
 msgid "This item is payable"
@@ -207,6 +223,14 @@ msgstr "Pagamento"
 msgctxt "Laser.Orchard.PaymentGateway.Activities.PaymentEventActivity"
 msgid "Succeeded"
 msgstr "Riuscito"
+
+msgctxt "Laser.Orchard.PaymentGateway.Controllers.AdminController"
+msgid "Could not save settings."
+msgstr "Impossibile salvare le impostazioni."
+
+msgctxt "Laser.Orchard.PaymentGateway.Controllers.AdminController"
+msgid "Settings saved successfully."
+msgstr "Impostazioni salvate correttamente."
 
 msgctxt "Laser.Orchard.PaymentGateway.Controllers.PaymentGatewayAPIController"
 msgid "A valid currency is required. You may find a list of valid currencies in this response's data object."

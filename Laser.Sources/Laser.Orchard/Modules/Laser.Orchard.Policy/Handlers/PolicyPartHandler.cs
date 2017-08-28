@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Script.Serialization;
-
 using Laser.Orchard.Policy.Models;
 using Laser.Orchard.Policy.Services;
 using Laser.Orchard.Policy.ViewModels;
@@ -15,13 +12,11 @@ using Orchard.Localization.Services;
 
 namespace Laser.Orchard.Policy.Handlers {
 
-    
     public class PolicyPartHandler : ContentHandler {
         private readonly IContentManager _contentManager;
         private readonly IWorkContextAccessor _workContext;
         private readonly ICultureManager _cultureManager;
         private readonly IPolicyServices _policyServices;
-
 
         public PolicyPartHandler(IContentManager contentManager, IWorkContextAccessor workContext, ICultureManager cultureManager, IPolicyServices policyServices) {
             _contentManager = contentManager;
@@ -29,12 +24,12 @@ namespace Laser.Orchard.Policy.Handlers {
             _cultureManager = cultureManager;
             _policyServices = policyServices;
             OnLoaded<PolicyPart>((context, part) => {
-                part._hasPendingPolicies.Loader(l => {
+                part._hasPendingPolicies.Loader(() => {
                     RealPolicyInclusionSetter(part);
                     if (!IsPolicyIncluded(part)) return null;
                     return GetPendingPolicies(context, part).List<IContent>().Count() > 0;
                 });
-                part._pendingPolicies.Loader(l => {
+                part._pendingPolicies.Loader(() => {
                     RealPolicyInclusionSetter(part);
                     if (!IsPolicyIncluded(part)) return null;
                     return GetPendingPolicies(context, part).List<IContent>().Select(s => (IContent)s.ContentItem).ToList();

@@ -10,7 +10,7 @@
     var includePoliciesEnum = Enum.GetNames(typeof(Laser.Orchard.Policy.IncludePendingPolicyOptions)).Where(w => w != "DependsOnContent").ToArray();
 }
 <fieldset>
-    <legend>@T("Users registration - policies acceptation")</legend>
+    <legend>@T("User Registration - Policies Acceptation")</legend>
     <div>
         <label for="@Html.FieldIdFor(m => m.IncludePendingPolicy)">@T("Registration behaviour"):</label>
         @T("Include policies on registration"): @Html.DropDownListFor(m => m.IncludePendingPolicy, new System.Web.Mvc.SelectList(includePoliciesEnum), Model.IncludePendingPolicy)

@@ -53,7 +53,7 @@ namespace Laser.Orchard.NewsLetters.Controllers {
                         {
                             ValidateModel(subRecord);
                         } 
-                        catch (Exception ex) {
+                        catch (Exception) {
                             allOK = false;
                             var errors = ModelState.Values.Where(w => w.Errors.Count() > 0);
                             foreach (var error in errors) {

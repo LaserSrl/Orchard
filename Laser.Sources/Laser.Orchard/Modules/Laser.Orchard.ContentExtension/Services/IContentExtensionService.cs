@@ -168,19 +168,15 @@ namespace Laser.Orchard.ContentExtension.Services {
                 switch (method) {
                     case Methods.Get:
                         return TestPermission("ViewContent", mycontent);
-                        break;
 
                     case Methods.Post:
                         return TestPermission("EditContent", mycontent);
-                        break;
 
                     case Methods.Publish:
                         return TestPermission("PublishContent", mycontent);
-                        break;
 
                     case Methods.Delete:
                         return TestPermission("DeleteContent", mycontent);
-                        break;
                 }
             }
 

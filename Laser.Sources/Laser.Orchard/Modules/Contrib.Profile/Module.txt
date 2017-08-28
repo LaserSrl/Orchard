@@ -3,7 +3,7 @@ AntiForgery: enabled
 Author: André Rodrigues, Sébastien Ros
 Website: http://orchardproject.net
 Version: 1.1
-OrchardVersion: 1.8
+OrchardVersion: 1.10
 Description: Adds a set of functionalities to display and edit users' profile.
 Features:
     Contrib.Profile:

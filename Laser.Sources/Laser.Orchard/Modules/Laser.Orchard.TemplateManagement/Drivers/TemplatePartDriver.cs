@@ -11,7 +11,7 @@ using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.TemplateManagement.Drivers {
     [OrchardFeature("Laser.Orchard.TemplateManagement")]
-    public class TemplatePartDriver : ContentPartDriver<TemplatePart> {
+    public class TemplatePartDriver : ContentPartCloningDriver<TemplatePart> {
         private readonly IContentManager _contentManager;
         private readonly ITemplateService _templateService;
 
@@ -76,6 +76,14 @@ namespace Laser.Orchard.TemplateManagement.Drivers {
 
             if(part.Layout != null)
                 context.Element(part.PartDefinition.Name).SetAttributeValue("Layout", context.ContentManager.GetItemMetadata(part.Layout).Identity.ToString());
+        }
+
+        protected override void Cloning(TemplatePart originalPart, TemplatePart clonePart, CloneContentContext context) {
+            clonePart.Title = originalPart.Title;
+            clonePart.Subject = originalPart.Subject;
+            clonePart.Text = originalPart.Text;
+            clonePart.IsLayout = originalPart.IsLayout;
+            clonePart.Layout = originalPart.Layout;
         }
     }
 }

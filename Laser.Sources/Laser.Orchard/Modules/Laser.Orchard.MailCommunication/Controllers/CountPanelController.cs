@@ -5,6 +5,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using System.Linq;
+using Orchard;
 
 namespace Laser.Orchard.MailCommunication.Controllers {
 
@@ -15,11 +17,13 @@ namespace Laser.Orchard.MailCommunication.Controllers {
             _mailCommunicationService = mailCommunicationService;
         }
 
-        [HttpGet]
+        [HttpPost]
         [AdminService]
-        public JsonResult GetTotal(Int32[] ids, Int32? idlocalization, Int32? tot) {
-         //   Int32[] Ids = ids.Split(',').Where(tag => !string.IsNullOrEmpty(tag)).Select(x => int.Parse(x)).ToArray();
-            Dictionary<string,string> Total=new Dictionary<string,string>();
+        public JsonResult GetTotal(Int32[] ids, string[] manualRecipients, int? contentId, Int32? idlocalization, Int32? tot) {
+            if (manualRecipients != null) {
+                manualRecipients = manualRecipients.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            }
+            Dictionary<string, string> Total = new Dictionary<string, string>();
             Total.Add("Key","<i class=\"fa fa-envelope\"></i>");
             if (tot.HasValue)
             {
@@ -27,7 +31,13 @@ namespace Laser.Orchard.MailCommunication.Controllers {
             }
             else
             {
-                var elenco = _mailCommunicationService.GetMailQueryResult(ids, idlocalization, true);
+                IList elenco;
+                if (manualRecipients == null || manualRecipients.Length == 0) {
+                    elenco = _mailCommunicationService.GetMailQueryResult(ids, idlocalization, true, contentId.HasValue ? contentId.Value : 0);
+                }
+                else {
+                    elenco = _mailCommunicationService.GetMailQueryResult(manualRecipients, idlocalization, true);
+                }
                 Total.Add("Value", ((long)(((Hashtable)(elenco[0]))["Tot"])).ToString("#,##0"));
             }
             return Json(Total, JsonRequestBehavior.AllowGet);

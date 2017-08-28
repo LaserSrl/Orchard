@@ -12,7 +12,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 
 namespace Laser.Orchard.Policy.Drivers {
-    public class PolicyTextInfoPartDriver : ContentPartDriver<PolicyTextInfoPart> {
+    public class PolicyTextInfoPartDriver : ContentPartCloningDriver<PolicyTextInfoPart> {
         private readonly IPolicyServices _policyServices;
         private readonly IOrchardServices _orchardServices;
         private readonly RequestContext _requestContext;
@@ -70,16 +70,27 @@ namespace Laser.Orchard.Policy.Drivers {
 
         protected override void Importing(PolicyTextInfoPart part, ImportContentContext context) {
             var root = context.Data.Element(part.PartDefinition.Name);
+
             var policyType = PolicyTypeOptions.Policy;
             var priority = 0;
             var userHaveToAccept = false;
-            Enum.TryParse<PolicyTypeOptions>(root.Attribute("PolicyType").Value, out policyType);
-            Int32.TryParse(root.Attribute("Priority").Value, out priority);
-            bool.TryParse(root.Attribute("UserHaveToAccept").Value, out userHaveToAccept);
-            part.PolicyType = policyType;
-            part.Priority = priority;
-            part.UserHaveToAccept = userHaveToAccept;
+
+            if(Enum.TryParse<PolicyTypeOptions>(root.Attribute("PolicyType").Value, out policyType)) {
+                part.PolicyType = policyType;
+            }
+            if(Int32.TryParse(root.Attribute("Priority").Value, out priority)) {
+                part.Priority = priority;
+            }
+            if(bool.TryParse(root.Attribute("UserHaveToAccept").Value, out userHaveToAccept)) {
+                part.UserHaveToAccept = userHaveToAccept;
+            }
         }
         #endregion
+
+        protected override void Cloning(PolicyTextInfoPart originalPart, PolicyTextInfoPart clonePart, CloneContentContext context) {
+            clonePart.UserHaveToAccept = originalPart.UserHaveToAccept;
+            clonePart.Priority = originalPart.Priority;
+            clonePart.PolicyType = originalPart.PolicyType;
+        }
     }
 }

@@ -19,11 +19,17 @@ namespace Laser.Orchard.NewsLetters.Drivers {
         private readonly INewsletterServices _newslServices;
         private readonly IOrchardServices _orchardServices;
         private readonly RequestContext _requestContext;
+        private readonly IContentManager _contentManager;
 
-        public SubscriberRegistrationPartDriver(IOrchardServices orchardServices, RequestContext requestContext, INewsletterServices newsletterDefinitionServices) {
+        public SubscriberRegistrationPartDriver(IOrchardServices orchardServices, 
+            RequestContext requestContext, 
+            INewsletterServices newsletterDefinitionServices,
+            IContentManager contentManager) {
+
             _newslServices = newsletterDefinitionServices;
             _orchardServices = orchardServices;
             _requestContext = requestContext;
+            _contentManager = contentManager;
             T = NullLocalizer.Instance;
         }
         public Localizer T { get; set; }
@@ -78,16 +84,23 @@ namespace Laser.Orchard.NewsLetters.Drivers {
 
         #region [ Import/Export ]
         protected override void Exporting(SubscriberRegistrationPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("NewsletterDefinitionIds",
+                string.Join(@"/,\", _newslServices
+                    .GetNewsletterDefinition(part.NewsletterDefinitionIds, VersionOptions.Published)
+                    .Select(def => _contentManager.GetItemMetadata(def.ContentItem).Identity.ToString())));
 
-            context.Element(part.PartDefinition.Name).SetAttributeValue("NewsletterDefinitionIds", part.NewsletterDefinitionIds);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("PermitCumulativeRegistrations", part.PermitCumulativeRegistrations);
-
+            context.Element(part.PartDefinition.Name).SetAttributeValue("PermitCumulativeRegistrations", 
+                part.PermitCumulativeRegistrations);
         }
 
         protected override void Importing(SubscriberRegistrationPart part, ImportContentContext context) {
             var importedNewsletterDefinitionIds = context.Attribute(part.PartDefinition.Name, "NewsletterDefinitionIds");
             if (importedNewsletterDefinitionIds != null) {
-                part.NewsletterDefinitionIds = importedNewsletterDefinitionIds;
+                var identifiers = importedNewsletterDefinitionIds.Split(new string[] { @"/,\" }, StringSplitOptions.RemoveEmptyEntries);
+                if (identifiers != null && identifiers.Any()) {
+                    part.NewsletterDefinitionIds = string.Join(",",
+                        identifiers.Select(context.GetItemFromSession).Select(contentItem => contentItem.Id));
+                }
             }
 
             var importedPermitCumulativeRegistrations = context.Attribute(part.PartDefinition.Name, "PermitCumulativeRegistrations");

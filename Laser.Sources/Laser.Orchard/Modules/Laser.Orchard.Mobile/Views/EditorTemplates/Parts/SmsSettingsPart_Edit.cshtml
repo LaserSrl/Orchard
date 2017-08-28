@@ -24,7 +24,25 @@
     @Html.ValidationMessageFor(m=>m.Protocollo)
 
     @Html.LabelFor(m=>m.SmsPrority, T("SMS priority"))
-    @Html.EditorFor(m=>m.SmsPrority)
+    @{ 
+        List<SelectListItem> priorityList = new List<SelectListItem>();
+
+        priorityList.Add(new SelectListItem {
+            Text = T("High").ToString(),
+            Value = "0",
+        });
+        priorityList.Add(new SelectListItem {
+            Text = T("Medium").ToString(),
+            Value = "5",
+            Selected = true
+        });
+        priorityList.Add(new SelectListItem {
+            Text = T("Low").ToString(),
+            Value = "9",
+        });
+
+    }
+    @Html.DropDownListFor(m => m.SmsPrority, priorityList)
     @Html.ValidationMessageFor(m=>m.SmsPrority)
 
     @Html.LabelFor(m=>m.SmsValidityPeriod, T("Sms validity period in seconds"))

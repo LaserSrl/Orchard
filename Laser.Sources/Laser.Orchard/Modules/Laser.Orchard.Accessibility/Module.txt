@@ -3,7 +3,7 @@ AntiForgery: enabled
 Author: Laser Group - Musso Giuseppe
 Website: http://orchardproject.net
 Version: 1.0
-OrchardVersion: 1.8
+OrchardVersion: 1.10
 Description: This module add ability to manage accessibility.
 Dependencies: Orchard.OutputCache
 Category: Content

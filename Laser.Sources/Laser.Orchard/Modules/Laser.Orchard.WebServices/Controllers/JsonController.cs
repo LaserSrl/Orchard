@@ -21,12 +21,12 @@ using System.Text;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
-//using Newtonsoft.Json;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using Orchard.OutputCache.Filters;
 using Laser.Orchard.StartupConfig.Exceptions;
+using Orchard.OutputCache;
 
 namespace Laser.Orchard.WebServices.Controllers {
 
@@ -308,6 +308,9 @@ namespace Laser.Orchard.WebServices.Controllers {
                 }
                 return cr;
             }
+            catch (System.Security.SecurityException) {
+                return Json(_utilsServices.GetResponse(ResponseType.InvalidUser), JsonRequestBehavior.AllowGet);
+            }
             catch {
                 return new HttpStatusCodeResult(500);
             }
@@ -337,7 +340,7 @@ namespace Laser.Orchard.WebServices.Controllers {
             XElement projectionDump = null;
             // il dump dell'oggetto principale non filtra per field
             ObjectDumper dumper = new ObjectDumper(deeplevel, null, false, tinyResponse, complexBehaviour);
-            dynamic shape, specificShape;
+            dynamic shape; //, specificShape;
             var sb = new StringBuilder();
             List<XElement> listContent = new List<XElement>();
 
@@ -654,7 +657,7 @@ namespace Laser.Orchard.WebServices.Controllers {
         /// </summary>
         /// <param name="key">default cache key such as defined in Orchard.OutpuCache</param>
         /// <returns>The new cache key</returns>
-        public StringBuilder InflatingCacheKey(StringBuilder key) {
+        public void KeyGenerated(StringBuilder key) {
             var area = _request.RequestContext.RouteData.Values["area"];
             var controller = _request.RequestContext.RouteData.Values["controller"];
             var action = _request.RequestContext.RouteData.Values["action"];
@@ -665,15 +668,13 @@ namespace Laser.Orchard.WebServices.Controllers {
                         var policy = item.As<Policy.Models.PolicyPart>();
                         if (policy != null && (policy.HasPendingPolicies ?? false)) {
                             key.Append("policy-not-accepted;");
-                        } else if (policy != null && !(policy.HasPendingPolicies ?? false)) {
+                        }
+                        else if (policy != null && !(policy.HasPendingPolicies ?? false)) {
                             key.Append("policy-accepted;");
                         }
                     }
                 }
             }
-            return key;
         }
-
-
     }
 }

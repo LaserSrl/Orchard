@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -7,6 +7,10 @@
 # > msgctxt  "{ contesto del messaggio }"
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
+
+msgctxt "~/Themes/BaroLegnami/Views/Parts.Blogs.BlogPost.List.cshtml"
+msgid "There are no posts for this blog."
+msgstr "Non ci sono news in questa sezione"
 
 msgctxt "~/Themes/BaroLegnami/Views/Parts.ContactForm.cshtml"
 msgid "Comments or Inquiry"
@@ -39,4 +43,108 @@ msgstr "Oggetto"
 msgctxt "~/Themes/BaroLegnami/Views/Parts.ContactForm.cshtml"
 msgid "Your Name"
 msgstr "Il vostro nome"
+
+msgctxt "~/Themes/BaroLegnami/Views/Parts.SubscriberRegistration.cshtml"
+msgid "Email Address"
+msgstr "Indirizzo email"
+
+msgctxt "~/Themes/BaroLegnami/Views/Parts.SubscriberRegistration.cshtml"
+msgid "Email Confirmation"
+msgstr "Conferma Email"
+
+msgctxt "~/Themes/BaroLegnami/Views/Parts.SubscriberRegistration.cshtml"
+msgid "Subscribe"
+msgstr "Sottoscrivi"
+
+msgctxt "~/Themes/BaroLegnami/Views/Parts.SubscriberRegistration.cshtml"
+msgid "Subscribe to"
+msgstr "Sottoscrivi"
+
+msgctxt "~/Themes/BaroLegnami/Views/Parts.SubscriberRegistration.cshtml"
+msgid "Your Name"
+msgstr "Il Vostro Nome"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.ConfirmationEmailSent.cshtml"
+msgid "a confirmation email was sent to your email address.<br/>Please confirm your email by clicking on link in your email."
+msgstr "Confermato l'invio dell'email al tuo indirizzo. <br/> Confermare l'indirizzo cliccando sul link nella tua email."
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.ConfirmationEmailSent.cshtml"
+msgid "Dear"
+msgstr "Caro"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.ConfirmationEmailSent.cshtml"
+msgid "Newsletter subscription"
+msgstr "Iscrizione Newsletter"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.ConfirmedEmail.cshtml"
+msgid "Email confirmation"
+msgstr "Email di conferma"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.ConfirmedEmail.cshtml"
+msgid "Your Email address has been confirmed! Thank you!"
+msgstr "La tua email è stata confermata! Grazie!"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.SubscribeError.cshtml"
+msgid "Dear"
+msgstr "Caro"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.SubscribeError.cshtml"
+msgid "Newsletter subscription"
+msgstr "Iscrizione Newsletter"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.SubscribeError.cshtml"
+msgid "Something went worng. Please retry."
+msgstr "Si è verificato un problema. Si prega di riprovare."
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.UnconfirmedEmail.cshtml"
+msgid "Email confirmation"
+msgstr "Email di conferma"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.UnconfirmedEmail.cshtml"
+msgid "No email address found!"
+msgstr "Indirizzo email non trovato!"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.Unsubscribe.cshtml"
+msgid "Email Address"
+msgstr "Indirizzo email"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.Unsubscribe.cshtml"
+msgid "Email Confirmation"
+msgstr "Conferma Email"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.Unsubscribe.cshtml"
+msgid "Newsletter {0} unsubscription"
+msgstr "Revoca iscrizione Newsletter {0}"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.Unsubscribe.cshtml"
+msgid "Newsletter unsubscription"
+msgstr "Rimozione sottoscrizione newsletter"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.Unsubscribe.cshtml"
+msgid "Unsubscribe"
+msgstr "Rimozione"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.UnsubscribedEmail.cshtml"
+msgid "Newsletter unsubscription"
+msgstr "Rimozione sottoscrizione newsletter"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.UnsubscribedEmail.cshtml"
+msgid "Your Email address has been removed! Thank you!"
+msgstr "La tua email è stata rimossa! Grazie!"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.UnsubscribeEmailSent.cshtml"
+msgid "a confirmation email was sent to your email address.<br/>Please confirm your unsubscription by clicking on link in your email."
+msgstr "Confermato l'invio dell'email al tuo indirizzo. <br/> Confermare l'eleminazione cliccando sul link nella tua email."
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.UnsubscribeEmailSent.cshtml"
+msgid "Newsletter unsubscription"
+msgstr "Rimozione sottoscrizione newsletter"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.UnsubscribeError.cshtml"
+msgid "Newsletter unsubscribe"
+msgstr "Rimuovi sottoscrizione newsletter"
+
+msgctxt "~/Themes/BaroLegnami/Views/Subscription.UnsubscribeError.cshtml"
+msgid "No email address found!"
+msgstr "Indirizzo email non trovato!"
 

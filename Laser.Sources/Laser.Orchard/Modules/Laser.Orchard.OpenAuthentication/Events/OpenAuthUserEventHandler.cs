@@ -1,4 +1,5 @@
-﻿using Laser.Orchard.OpenAuthentication.Services;
+﻿using System;
+using Laser.Orchard.OpenAuthentication.Services;
 using Orchard.Mvc;
 using Orchard.Security;
 using Orchard.Users.Events;
@@ -69,6 +70,12 @@ namespace Laser.Orchard.OpenAuthentication.Events {
         }
 
         public void Approved(IUser user) {
+        }
+
+        public void LoggingIn(string userNameOrEmail, string password) {
+        }
+
+        public void LogInFailed(string userNameOrEmail, string password) {
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Handlers {
         public ProtectionSettingsHandler() {
             T = NullLocalizer.Instance;
             Filters.Add(new ActivatingFilter<ProtectionSettingsPart>("Site"));
-            Filters.Add(new TemplateFilterForPart<ProtectionSettingsPart>("ProtectionSettings_Edit", "Parts/ProtectionSettingsPart.Edit", T("Web Api").Text));
+            Filters.Add(new TemplateFilterForPart<ProtectionSettingsPart>("ProtectionSettings_Edit", "Parts/ProtectionSettingsPart.Edit", T("WebApi").Text));
             OnUpdated<ProtectionSettingsPart>((context, part) => {
                 part.ExternalApplicationList = new ExternalApplicationList {
                     ExternalApplications = part.ExternalApplicationList.ExternalApplications.Where(w => !w.Delete),
@@ -30,7 +30,7 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Handlers {
             if (context.ContentItem.ContentType != "Site")
                 return;
             base.GetItemMetadata(context);
-            context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("Web Api")));
+            context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("WebApi")));
         }
 
 

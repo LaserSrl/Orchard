@@ -1,7 +1,9 @@
-﻿using Laser.Orchard.StartupConfig.Services;
+﻿using Laser.Orchard.CommunicationGateway.Models;
+using Laser.Orchard.StartupConfig.Services;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
+using Orchard.Layouts.Helpers;
 using System;
 using System.Data;
 
@@ -10,8 +12,7 @@ namespace Laser.Orchard.CommunicationGateway {
     public class CoomunicationMigrations : DataMigrationImpl {
         private readonly IUtilsServices _utilsServices;
 
-        public CoomunicationMigrations(IUtilsServices utilsServices)
-        {
+        public CoomunicationMigrations(IUtilsServices utilsServices) {
             _utilsServices = utilsServices;
         }
 
@@ -219,6 +220,7 @@ namespace Laser.Orchard.CommunicationGateway {
            );
             return 11;
         }
+
         public int UpdateFrom11() {
             SchemaBuilder.CreateTable("SmsContactPartRecord",
                table => table
@@ -245,6 +247,7 @@ namespace Laser.Orchard.CommunicationGateway {
                 );
             return 14;
         }
+
         public int UpdateFrom14() {
             ContentDefinitionManager.AlterTypeDefinition(
             "CommunicationAdvertising",
@@ -253,6 +256,7 @@ namespace Laser.Orchard.CommunicationGateway {
                 );
             return 15;
         }
+
         public int UpdateFrom15() {
             ContentDefinitionManager.AlterTypeDefinition(
             "CommunicationAdvertising",
@@ -261,8 +265,8 @@ namespace Laser.Orchard.CommunicationGateway {
                 );
             return 16;
         }
-        public int UpdateFrom16() {
 
+        public int UpdateFrom16() {
             SchemaBuilder.AlterTable("CommunicationSmsRecord", table => table.AddColumn<bool>("AccettatoUsoCommerciale", c => c.WithDefault(false)));
             SchemaBuilder.AlterTable("CommunicationSmsRecord", table => table.AddColumn<bool>("AutorizzatoTerzeParti", c => c.WithDefault(false)));
             SchemaBuilder.AlterTable("CommunicationEmailRecord", table => table.AddColumn<bool>("AccettatoUsoCommerciale", c => c.WithDefault(false)));
@@ -270,6 +274,7 @@ namespace Laser.Orchard.CommunicationGateway {
 
             return 17;
         }
+
         public int UpdateFrom17() {
             ContentDefinitionManager.AlterPartDefinition("ExportTaskParametersPart", part => part
                 .WithField("Parameters", cfg => cfg.OfType("TextField"))
@@ -281,6 +286,7 @@ namespace Laser.Orchard.CommunicationGateway {
 
             return 18;
         }
+
         public int UpdateFrom18() {
             SchemaBuilder.AlterTable("CommunicationContactPartRecord",
                table => table
@@ -288,16 +294,19 @@ namespace Laser.Orchard.CommunicationGateway {
              );
             return 19;
         }
+
         public int UpdateFrom19() {
             _utilsServices.EnableFeature("Laser.Orchard.ZoneAlternates");
             return 20;
         }
+
         public int UpdateFrom20() {
             SchemaBuilder.AlterTable("CommunicationContactPartRecord",
                table => table
                    .AlterColumn("Logs", x => x.WithType(DbType.String).Unlimited()));
             return 21;
         }
+
         public int UpdateFrom21() {
             SchemaBuilder.AlterTable("CommunicationEmailRecord",
                 table => table.AddColumn<string>("KeyUnsubscribe", column => column.WithLength(500))
@@ -309,5 +318,76 @@ namespace Laser.Orchard.CommunicationGateway {
             return 22;
         }
 
+        public int UpdateFrom22() {
+            SchemaBuilder.CreateTable("CommunicationDeliveryReportRecord",
+            table => table
+                .Column<int>("CommunicationAdvertisingPartRecord_Id", column => column.WithDefault(0))
+                .Column<string>("ExternalId", column => column.WithLength(50))
+                .Column<DateTime>("RequestDate", column => column.Nullable())
+                .Column<DateTime>("SubmittedDate", column => column.Nullable())
+                .Column<string>("Status", col => col.WithLength(50))
+                .Column<string>("Recipient", column => column.Unlimited())
+                .Column<string>("Context", column => column.WithLength(100))
+                .Column<string>("Medium", column => column.WithLength(50))
+             );
+
+            return 23;
+        }
+
+        public int UpdateFrom23() {
+            ContentDefinitionManager.AlterTypeDefinition(
+                  "CommunicationContact", type => type
+                   .WithPart("AutoroutePart", part => part
+                   .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
+                   .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
+                   .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Title', Pattern: '{Content.Slug}', Description: 'my-page'}]")
+                   .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
+                   );
+            return 24;
+        }
+
+        public int UpdateFrom24() {
+            ContentDefinitionManager.AlterTypeDefinition(
+                  "CommunicationContact", type => type
+                   .WithPart("AutoroutePart", part => part
+                   .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
+                   .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
+                   .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Title', Pattern: 'contact_{Content.Slug}', Description: 'Autoroute Contact'}]")
+                   .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
+                   );
+            return 25;
+        }
+        public int UpdateFrom25() {
+            SchemaBuilder.CreateTable("CommunicationRetryRecord",
+                table => table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<int>("ContentItemRecord_Id", column => column.WithDefault(0))
+                    .Column<string>("Context", column => column.WithLength(100))
+                    .Column<int>("NoOfFailures", column => column.WithDefault(0))
+                    .Column<string>("Data", column => column.Unlimited())
+             );
+            return 26;
+        }
+        public int UpdateFrom26() {
+            SchemaBuilder.AlterTable("CommunicationRetryRecord",
+                table => table.AddColumn<bool>("PendingErrors", column => column.WithDefault(false))
+            );
+            return 27;
+        }
+        public int UpdateFrom27() {
+            ContentDefinitionManager.AlterPartDefinition(typeof(ContactInfoPart).Name, p => p.Attachable(true));
+            return 28;
+        }
+        public int UpdateFrom28() {
+            ContentDefinitionManager.AlterPartDefinition(typeof(ContactInfoPart).Name, p => p.Attachable(true).Placeable(true));
+            return 29;
+        }
+        public int UpdateFrom29() {
+            ContentDefinitionManager.AlterPartDefinition(typeof(ContactInfoPart).Name, p => 
+                p.Attachable(true)
+                .Placeable(true)
+                .WithDescription("Fields that are not synchronized with related user."));
+            return 30;
+        }
     }
 }

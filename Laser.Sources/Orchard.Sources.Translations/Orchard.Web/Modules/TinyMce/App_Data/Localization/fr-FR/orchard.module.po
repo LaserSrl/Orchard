@@ -1,15 +1,23 @@
+#. "Name"
+#: "~/Modules/TinyMce/Module.txt"
 msgctxt "~/Modules/TinyMce/Module.txt"
 msgid "TinyMce"
 msgstr "TinyMce"
 
+#. "Author"
+#: "~/Modules/TinyMce/Module.txt"
 msgctxt "~/Modules/TinyMce/Module.txt"
 msgid "The Orchard Team"
 msgstr "L'équipe Orchard"
 
+#. "Website"
+#: "~/Modules/TinyMce/Module.txt"
 msgctxt "~/Modules/TinyMce/Module.txt"
 msgid "http://orchardproject.net"
 msgstr "http://orchardproject.net"
 
+#. "Description"
+#: "~/Modules/TinyMce/Module.txt"
 msgctxt "~/Modules/TinyMce/Module.txt"
 msgid "The TinyMCE module enables rich text contents to be created using a \"What You See Is What You Get\" user interface."
 msgstr "Le module TinyMce permet la création de contenus en texte enrichi grâce à un éditeur visuel."

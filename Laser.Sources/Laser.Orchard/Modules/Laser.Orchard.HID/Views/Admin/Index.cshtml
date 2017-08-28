@@ -1,0 +1,39 @@
+﻿@using Laser.Orchard.HID.Models;
+
+@model HIDSiteSettingsPart
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    <fieldset id="CustomerID">
+        <legend>@T("Input your Customer ID.")</legend>
+        @Html.TextBoxFor(m => m.CustomerID, new { pattern = @"[\d]+", @class = "medium text"})
+        <span class="hint">@T("This information can be found from the HID Mobile Access Portal. ")</span>
+    </fieldset>
+    <fieldset id="UseTestEnvironment">
+        @Html.CheckBoxFor(m => m.UseTestEnvironment)
+        <label for="@Html.FieldIdFor(m => m.UseTestEnvironment)" class="forcheckbox">@T("Use test environment.")</label>
+        <span class="hint">@T("Selecting this checkbox will mean that we are using HID's test environment.")</span>
+    </fieldset>
+    <fieldset id="Client">
+        <legend>@T("Information for the account that manages Mobile Access")</legend>
+        @Html.LabelFor(m => m.ClientID)
+        @Html.TextBoxFor(m => m.ClientID, new { @class = "medium text"})
+        <span class="hint">@T("This is the username for the account responsible for managing Mobile Access.")</span>
+        @Html.LabelFor(m => m.ClientSecret)
+        @Html.PasswordFor(m => m.ClientSecret, new { @class = "medium text"})
+        <span class="hint">@T("This is the password for the account responsible for managing Mobile Access.")</span>
+    </fieldset>
+    <fieldset id="PartNumbers">
+        <legend>@T("Input your HID Part Numbers")</legend>
+        @Html.TextAreaFor(m => m.SerializedPartNumbers, new {@cols = "80"})
+        <span class="hint">@T("Input the Part Numbers you want to be able to manage automatically, one per line.")</span>
+    </fieldset>
+    <fieldset id="AppVersionStrings">
+        <legend>@T("Input your HID App Version Strings")</legend>
+        @Html.TextAreaFor(m => m.SerializedAppVersionStrings, new {@cols = "80"})
+        <span class="hint">@T("Input the App Version Strings used for the application, one per line. These strings are used in the mobile apps to configure the HID SDK. The system will use them to identify registered device. Only insert the immutable part of these strings (e.g.: no version numbers).")</span>
+    </fieldset>
+    
+    <div class="box-footer align-right padding-right-35">
+        <button id="saveSettings" type="submit" name="submit.SaveSettings" value="yes please">@T("Save")</button>
+    </div>
+}

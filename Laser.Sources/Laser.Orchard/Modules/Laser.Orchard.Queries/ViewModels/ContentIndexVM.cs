@@ -8,5 +8,6 @@ namespace Laser.Orchard.Queries.ViewModels {
         public string UserName { get; set; }
         public DateTime? ModifiedUtc { get; set; }
         public string ContentType { get; set; }
+        public bool OneShotQuery { get; set; }
     }
 }

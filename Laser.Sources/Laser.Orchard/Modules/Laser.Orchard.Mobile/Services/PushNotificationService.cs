@@ -1,39 +1,19 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.Services;
 using Laser.Orchard.Mobile.Models;
-using Laser.Orchard.Mobile.Settings;
-using Laser.Orchard.Mobile.ViewModels;
-using Laser.Orchard.Queries.Models;
 using Laser.Orchard.Queries.Services;
-using Newtonsoft.Json;
-using NHibernate.Transform;
 using Orchard;
-using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
-using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
-using Orchard.Security;
 using Orchard.Tokens;
 using Orchard.UI.Notify;
 using Orchard.Users.Models;
-using PushSharp;
-using PushSharp.Google;
-using PushSharp.Apple;
-using PushSharp.Core;
-using PushSharp.Windows;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Web.Hosting;
-using Newtonsoft.Json.Linq;
-using System.Text;
-using System.Xml.Linq;
+using OrchardLogging = Orchard.Logging;
 
 namespace Laser.Orchard.Mobile.Services {
 
@@ -47,42 +27,37 @@ namespace Laser.Orchard.Mobile.Services {
     }
 
     public class PushNotificationService : IPushNotificationService {
-        private readonly IRepository<SentRecord> _sentRepository;
         private readonly IRepository<PushNotificationRecord> _pushNotificationRepository;
         private readonly IRepository<UserDeviceRecord> _userDeviceRecord;
         private readonly IQueryPickerService _queryPickerServices;
         public Localizer T { get; set; }
+        public OrchardLogging.ILogger Logger { get; set; }
+
         private readonly INotifier _notifier;
         private readonly IOrchardServices _orchardServices;
-        private readonly IMylogService _myLog;
         private readonly ShellSettings _shellSetting;
         private readonly ISessionLocator _sessionLocator;
         public ICommunicationService _communicationService;
         private readonly ITokenizer _tokenizer;
         private readonly ITransactionManager _transactionManager;
-        private Int32 messageSent;
         private const int MAX_PUSH_TEXT_LENGTH = 160;
-        private object lockMonitor;
 
         public PushNotificationService(
-            IRepository<SentRecord> sentRepository,
-                IOrchardServices orchardServices,
-                IRepository<PushNotificationRecord> pushNotificationRepository,
-                IRepository<UserDeviceRecord> userDeviceRecord,
-                INotifier notifier,
-                IMylogService myLog,
-                ShellSettings shellSetting,
-                ISessionLocator sessionLocator,
-                ITokenizer tokenizer,
-                IQueryPickerService queryPickerService,
-                ITransactionManager transactionManager
+            IOrchardServices orchardServices,
+            IRepository<PushNotificationRecord> pushNotificationRepository,
+            IRepository<UserDeviceRecord> userDeviceRecord,
+            INotifier notifier,
+            ShellSettings shellSetting,
+            ISessionLocator sessionLocator,
+            ITokenizer tokenizer,
+            IQueryPickerService queryPickerService,
+            ITransactionManager transactionManager
+            
          ) {
             _orchardServices = orchardServices;
-            _sentRepository = sentRepository;
             T = NullLocalizer.Instance;
             _pushNotificationRepository = pushNotificationRepository;
             _notifier = notifier;
-            _myLog = myLog;
             _shellSetting = shellSetting;
             _sessionLocator = sessionLocator;
             _tokenizer = tokenizer;
@@ -92,6 +67,7 @@ namespace Laser.Orchard.Mobile.Services {
             }
             _queryPickerServices = queryPickerService;
             _transactionManager = transactionManager;
+            Logger = OrchardLogging.NullLogger.Instance;
         }
 
         /// <summary>
@@ -124,7 +100,9 @@ namespace Laser.Orchard.Mobile.Services {
                 }
                 _pushNotificationRepository.Flush();
                 _notifier.Add(NotifyType.Information, T("Linked {0} device To Master contact", notificationrecords.Count().ToString()));
-                _myLog.WriteLog(string.Format("Linked {0} device To Master contact", notificationrecords.Count().ToString()));
+                string message = string.Format("Linked {0} device To Master contact", notificationrecords.Count().ToString());
+                Logger.Log(OrchardLogging.LogLevel.Information, null, message, null);
+
                 _transactionManager.RequireNew();
 
                 // elimina gli userDevice riferiti a utenti inesistenti (perché cancellati)
@@ -242,7 +220,8 @@ namespace Laser.Orchard.Mobile.Services {
                 }
             }
             catch (Exception ex) {
-                _myLog.WriteLog(string.Format("EnsureContactId - Exception occurred: {0} \r\n    in {1}", ex.Message, ex.StackTrace));
+                string message = string.Format("EnsureContactId - Exception occurred: {0} \r\n    in {1}", ex.Message, ex.StackTrace);
+                Logger.Log(OrchardLogging.LogLevel.Error, null, message, null);
             }
             return contactId;
         }
@@ -271,7 +250,8 @@ namespace Laser.Orchard.Mobile.Services {
                 }
             }
             catch (Exception ex) {
-                _myLog.WriteLog(string.Format("EnsureContactId(string, int) - Exception occurred: {0} \r\n    in {1}", ex.Message, ex.StackTrace));
+                string message = string.Format("EnsureContactId(string, int) - Exception occurred: {0} \r\n    in {1}", ex.Message, ex.StackTrace);
+                Logger.Log(OrchardLogging.LogLevel.Error, null, message, null);
             }
             return contactId;
         }

@@ -1,0 +1,14 @@
+Orchard.Core.Tests\Orchard.Core.Tests.csproj
+Orchard.Profile\Orchard.Profile.csproj
+Orchard.Specs\Orchard.Specs.csproj
+Orchard.Tests.Modules\Orchard.Tests.Modules.csproj
+Orchard.Tests\Orchard.Framework.Tests.csproj
+Orchard.Web.Tests\Orchard.Web.Tests.csproj
+Orchard.Web\Core\Orchard.Core.csproj
+Orchard.Web\Modules\Orchard.Projections\Tests\Orchard.Projections.Tests.csproj
+Orchard.Web\Modules\Orchard.Tokens\Tests\Orchard.Tokens.Tests.csproj
+Orchard\Orchard.Framework.csproj
+Orchard.WarmupStarter\Orchard.WarmupStarter.csproj
+Orchard.Web\Orchard.Web.csproj
+Tools\Orchard\Orchard.csproj
+Tools\MSBuild.Orchard.Tasks\MSBuild.Orchard.Tasks.csproj

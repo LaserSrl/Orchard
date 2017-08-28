@@ -11,7 +11,7 @@ using Laser.Orchard.ButtonToWorkflows.Models;
 
 namespace Laser.Orchard.ButtonToWorkflows.Activity {
     public class ButtonToWorkflowsEvent : Event {
-        public readonly IOrchardServices _orchardServices;
+        protected readonly IOrchardServices _orchardServices;
         public ButtonToWorkflowsEvent(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
         }
@@ -84,12 +84,9 @@ namespace Laser.Orchard.ButtonToWorkflows.Activity {
     }
 
     public class CustomButton2 : ButtonToWorkflowsEvent {
-
-
-        private IOrchardServices _orchardServices;
+        
         public CustomButton2(IOrchardServices orchardServices)
             : base(orchardServices) {
-            _orchardServices = orchardServices;
         }
 
         public override string Name {
@@ -115,10 +112,9 @@ namespace Laser.Orchard.ButtonToWorkflows.Activity {
 
     }
     public class CustomButton3 : ButtonToWorkflowsEvent {
-        private readonly IOrchardServices _orchardServices;
+
         public CustomButton3(IOrchardServices orchardServices)
             : base(orchardServices) {
-            _orchardServices = orchardServices;
         }
         public override string Name {
             get {

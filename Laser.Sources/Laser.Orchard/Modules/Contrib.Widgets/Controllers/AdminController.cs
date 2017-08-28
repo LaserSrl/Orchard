@@ -1,14 +1,8 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Web.Mvc;
-using Contrib.Widgets.Models;
+﻿using Contrib.Widgets.Models;
 using Contrib.Widgets.Services;
+using Contrib.Widgets.Settings;
 using Orchard;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Contents.Controllers;
-using Orchard.Core.Contents.Settings;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -16,6 +10,10 @@ using Orchard.Mvc.Extensions;
 using Orchard.UI.Notify;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Web.Mvc;
 using Permissions = Orchard.Widgets.Permissions;
 
 namespace Contrib.Widgets.Controllers {
@@ -56,13 +54,19 @@ namespace Contrib.Widgets.Controllers {
             _services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been created.")
                 : T("Your {0} has been created.", contentItem.TypeDefinition.DisplayName));
-            
+
             return RedirectToAction("ListWidgets", new { hostId = contentItem.Id, zone });
         }
 
         public ActionResult ListWidgets(int hostId, string zone) {
             var widgetTypes = _widgetsService.GetWidgetTypeNames().OrderBy(x => x).ToList();
-            
+
+            var widgetsContainerPart = _contentManager.Get(hostId).As<WidgetsContainerPart>();
+            var settings = widgetsContainerPart.Settings.GetModel<WidgetsContainerSettings>();
+
+            if (!string.IsNullOrWhiteSpace(settings.AllowedWidgets))
+                widgetTypes = widgetTypes.Where(x => settings.AllowedWidgets.Split(',').Contains(x)).ToList();
+
             var viewModel = _services.New.ViewModel()
                 .WidgetTypes(widgetTypes)
                 .HostId(hostId)
@@ -88,8 +92,7 @@ namespace Contrib.Widgets.Controllers {
 
                 var model = _services.ContentManager.BuildEditor(widgetPart).HostId(hostId);
                 return View(model);
-            }
-            catch (Exception exception) {
+            } catch (Exception exception) {
                 Logger.Error(T("Creating widget failed: {0}", exception.Message).Text);
                 _services.Notifier.Error(T("Creating widget failed: {0}", exception.Message));
                 return this.RedirectLocal(returnUrl, () => RedirectToAction("Edit", "Admin", new { area = "Contents" }));
@@ -97,7 +100,7 @@ namespace Contrib.Widgets.Controllers {
         }
 
         [HttpPost, ActionName("AddWidget")]
-        [FormValueRequired("submit.Save")]
+        [Orchard.Mvc.FormValueRequired("submit.Save")]
         public ActionResult AddWidgetPost(string widgetType, int hostId) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
@@ -115,8 +118,7 @@ namespace Contrib.Widgets.Controllers {
             try {
                 widgetPart.LayerPart = _widgetManager.GetContentLayer();
                 widgetExPart.Host = contentItem;
-            }
-            catch (Exception exception) {
+            } catch (Exception exception) {
                 Logger.Error(T("Creating widget failed: {0}", exception.Message).Text);
                 _services.Notifier.Error(T("Creating widget failed: {0}", exception.Message));
                 return Redirect(returnUrl);
@@ -146,8 +148,7 @@ namespace Contrib.Widgets.Controllers {
             try {
                 var model = _services.ContentManager.BuildEditor(widgetPart).HostId(hostId);
                 return View(model);
-            }
-            catch (Exception exception) {
+            } catch (Exception exception) {
                 Logger.Error(T("Editing widget failed: {0}", exception.Message).Text);
                 _services.Notifier.Error(T("Editing widget failed: {0}", exception.Message));
 
@@ -156,7 +157,7 @@ namespace Contrib.Widgets.Controllers {
         }
 
         [HttpPost, ActionName("EditWidget")]
-        [FormValueRequired("submit.Save")]
+        [Orchard.Mvc.FormValueRequired("submit.Save")]
         public ActionResult EditWidgetSavePost(int hostId, int id) {
             if (!IsAuthorizedToManageWidgets())
                 return new HttpUnauthorizedResult();
@@ -164,7 +165,7 @@ namespace Contrib.Widgets.Controllers {
             var contentItem = _services.ContentManager.Get(hostId, VersionOptions.Latest);
             var contentMetadata = _services.ContentManager.GetItemMetadata(contentItem);
             var returnUrl = Url.RouteUrl(contentMetadata.EditorRouteValues);
-            var widgetPart = _widgetsService.GetWidget(id);
+            var widgetPart = _contentManager.Get<WidgetPart>(id, VersionOptions.DraftRequired); //_widgetsService.GetWidget(id);
 
             if (widgetPart == null)
                 return HttpNotFound();
@@ -172,7 +173,7 @@ namespace Contrib.Widgets.Controllers {
             try {
                 var model = _services.ContentManager.UpdateEditor(widgetPart, this).HostId(hostId);
                 var widgetExPart = widgetPart.As<WidgetExPart>();
-                
+
                 widgetPart.LayerPart = _widgetManager.GetContentLayer();
                 widgetExPart.Host = contentItem;
 
@@ -182,8 +183,7 @@ namespace Contrib.Widgets.Controllers {
                 }
 
                 _services.Notifier.Information(T("Your {0} has been saved.", widgetPart.TypeDefinition.DisplayName));
-            }
-            catch (Exception exception) {
+            } catch (Exception exception) {
                 Logger.Error(T("Editing widget failed: {0}", exception.Message).Text);
                 _services.Notifier.Error(T("Editing widget failed: {0}", exception.Message));
             }
@@ -192,7 +192,7 @@ namespace Contrib.Widgets.Controllers {
         }
 
         [HttpPost, ActionName("EditWidget")]
-        [FormValueRequired("submit.Delete")]
+        [Orchard.Mvc.FormValueRequired("submit.Delete")]
         public ActionResult EditWidgetDeletePOST(int id, int hostId) {
             return DeleteWidget(id, hostId);
         }
@@ -212,8 +212,7 @@ namespace Contrib.Widgets.Controllers {
             try {
                 _widgetsService.DeleteWidget(widgetPart.Id);
                 _services.Notifier.Information(T("Widget was successfully deleted"));
-            }
-            catch (Exception exception) {
+            } catch (Exception exception) {
                 Logger.Error(T("Removing Widget failed: {0}", exception.Message).Text);
                 _services.Notifier.Error(T("Removing Widget failed: {0}", exception.Message));
             }

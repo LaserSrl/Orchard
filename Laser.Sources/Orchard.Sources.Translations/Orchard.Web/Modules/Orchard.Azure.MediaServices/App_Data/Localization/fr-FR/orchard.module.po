@@ -1,21 +1,31 @@
+#. "Name"
 #. "Orchard.Azure.MediaServices.Name"
+#: "~/Modules/Orchard.Azure.MediaServices/Module.txt"
 msgctxt "~/Modules/Orchard.Azure.MediaServices/Module.txt"
 msgid "Microsoft Azure Media Services"
 msgstr "Microsoft Azure Media Services"
 
+#. "Author"
+#: "~/Modules/Orchard.Azure.MediaServices/Module.txt"
 msgctxt "~/Modules/Orchard.Azure.MediaServices/Module.txt"
 msgid "Microsoft Open Technologies, Inc"
 msgstr "Microsoft Open Technologies, Inc"
 
+#. "Website"
+#: "~/Modules/Orchard.Azure.MediaServices/Module.txt"
 msgctxt "~/Modules/Orchard.Azure.MediaServices/Module.txt"
 msgid "http://msopentech.com"
 msgstr "http://msopentech.com"
 
+#. "Description"
 #. "Orchard.Azure.MediaServices.Description"
+#: "~/Modules/Orchard.Azure.MediaServices/Module.txt"
 msgctxt "~/Modules/Orchard.Azure.MediaServices/Module.txt"
 msgid "Provides integration of Microsoft Azure Media Services functionality into Orchard."
 msgstr "Fournit l'intégration de la fonctionnalité Microsoft Azure Media Services dans Orchard."
 
+#. "Orchard.Azure.MediaServices.Category"
+#: "~/Modules/Orchard.Azure.MediaServices/Module.txt"
 msgctxt "~/Modules/Orchard.Azure.MediaServices/Module.txt"
 msgid "Hosting"
 msgstr "Hébergement"
@@ -37,8 +47,10 @@ msgstr "La ressource « {0} » a été supprimée avec succès."
 
 #: "Orchard.Azure.MediaServices.Controllers.AssetController"
 msgctxt "Orchard.Azure.MediaServices.Controllers.AssetController"
-msgid "Ar error occurred while deleting the asset '{0}':\n{1}"
-msgstr "Une erreur s'est produite lors de la suppression de la ressource « {0} » : \n {1}"
+msgid "Ar error occurred while deleting the asset '{0}':\n"
+"{1}"
+msgstr "Une erreur s'est produite lors de la suppression de la ressource « {0} » : \n"
+" {1}"
 
 #. "You are not authorized to manage cloud jobs."
 msgctxt "Orchard.Azure.MediaServices.Controllers.JobController"
@@ -52,8 +64,10 @@ msgstr "Le travail de « {0} » a été créé avec succès."
 
 #: "Orchard.Azure.MediaServices.Controllers.JobController"
 msgctxt "Orchard.Azure.MediaServices.Controllers.JobController"
-msgid "Ar error occurred while creating the job:\n{0}"
-msgstr "Une erreur s'est produite lors de la création du travail : \n {0}"
+msgid "Ar error occurred while creating the job:\n"
+"{0}"
+msgstr "Une erreur s'est produite lors de la création du travail : \n"
+" {0}"
 
 #: "Orchard.Azure.MediaServices.Controllers.JobController"
 msgctxt "Orchard.Azure.MediaServices.Controllers.JobController"
@@ -67,8 +81,10 @@ msgstr "Le travail « {0} » a été correctement annulé."
 
 #: "Orchard.Azure.MediaServices.Controllers.JobController"
 msgctxt "Orchard.Azure.MediaServices.Controllers.JobController"
-msgid "An error occurred while canceling the job:\n{0}"
-msgstr "Une erreur s'est produite lors de l'annulation du travail : \n {0}"
+msgid "An error occurred while canceling the job:\n"
+"{0}"
+msgstr "Une erreur s'est produite lors de l'annulation du travail : \n"
+" {0}"
 
 #. "The cloud video item was successfully created."
 msgctxt "Orchard.Azure.MediaServices.Controllers.MediaController"
@@ -87,8 +103,10 @@ msgstr "Vous n'êtes pas autorisé à gérer le contenu de médias sur Microsoft
 
 #: "Orchard.Azure.MediaServices.Controllers.MediaController"
 msgctxt "Orchard.Azure.MediaServices.Controllers.MediaController"
-msgid "Ar error occurred while saving the cloud video item:\n{1}"
-msgstr "Une erreur s'est produite lors de l'enregistrement de l'élément vidéo cloud : \n {1}"
+msgid "Ar error occurred while saving the cloud video item:\n"
+"{1}"
+msgstr "Une erreur s'est produite lors de l'enregistrement de l'élément vidéo cloud : \n"
+" {1}"
 
 #. "You are not authorized to manage Microsoft Azure Media settings."
 msgctxt "Orchard.Azure.MediaServices.Controllers.SettingsController"
@@ -97,7 +115,7 @@ msgstr "Vous n'êtes pas autorisé à gérer le contenu de médias sur Microsoft
 
 #: "Orchard.Azure.MediaServices.Controllers.SettingsController"
 msgctxt "Orchard.Azure.MediaServices.Controllers.SettingsController"
-msgid "The encoding preset '{0}' is invalid. Encoding presets can only contain letters, numbers and spaces."
+msgid "The encoding preset name '{0}' is invalid. Encoding presets can only contain letters, numbers and spaces."
 msgstr "Le préréglage d'encodage « {0} » n'est pas valide. Les paramètres prédéfinis d'encodage peuvent uniquement contenir des lettres, des chiffres et des espaces."
 
 #: "Orchard.Azure.MediaServices.Controllers.SettingsController"
@@ -367,6 +385,26 @@ msgstr "Dépublier"
 
 #: "~/Modules/Orchard.Azure.MediaServices/Views/CloudVideoEditor.Direct.cshtml"
 msgctxt "~/Modules/Orchard.Azure.MediaServices/Views/CloudVideoEditor.Direct.cshtml"
+msgid "Ready to upload file '{filename}'."
+msgstr "Prêt à uploader le fichier '{filename}'."
+
+#: "~/Modules/Orchard.Azure.MediaServices/Views/CloudVideoEditor.Direct.cshtml"
+msgctxt "~/Modules/Orchard.Azure.MediaServices/Views/CloudVideoEditor.Direct.cshtml"
+msgid "Optional: Enter a different name for the uploaded file"
+msgstr "Facultatif : Entrez un nom différent pour le fichier uploadé"
+
+#: "~/Modules/Orchard.Azure.MediaServices/Views/CloudVideoEditor.Direct.cshtml"
+msgctxt "~/Modules/Orchard.Azure.MediaServices/Views/CloudVideoEditor.Direct.cshtml"
+msgid "Reset"
+msgstr "Réinitialiser"
+
+#: "~/Modules/Orchard.Azure.MediaServices/Views/CloudVideoEditor.Direct.cshtml"
+msgctxt "~/Modules/Orchard.Azure.MediaServices/Views/CloudVideoEditor.Direct.cshtml"
+msgid "Upload"
+msgstr "Uploader"
+
+#: "~/Modules/Orchard.Azure.MediaServices/Views/CloudVideoEditor.Direct.cshtml"
+msgctxt "~/Modules/Orchard.Azure.MediaServices/Views/CloudVideoEditor.Direct.cshtml"
 msgid "Preparing to upload..."
 msgstr "Préparation de l'upload ..."
 
@@ -632,6 +670,26 @@ msgstr "Nom"
 
 #: "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/EncodingSettingsViewModel.cshtml"
 msgctxt "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/EncodingSettingsViewModel.cshtml"
+msgid "Type"
+msgstr "Type"
+
+#: "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/EncodingSettingsViewModel.cshtml"
+msgctxt "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/EncodingSettingsViewModel.cshtml"
+msgid "Custom encoding preset XML"
+msgstr "Préréglage d'encodage XML personnalisé"
+
+#: "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/EncodingSettingsViewModel.cshtml"
+msgctxt "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/EncodingSettingsViewModel.cshtml"
+msgid "Leave empty if this is a standard preset (in which case the name must match a standard Microsoft Azure Media Services encoding preset name)."
+msgstr "Laisser vide si c'est un standard prédéfini (auquel cas le nom doit correspondre à un nom de standard d'encodage Microsoft Azure Media Services prédéfini)."
+
+#: "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/EncodingSettingsViewModel.cshtml"
+msgctxt "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/EncodingSettingsViewModel.cshtml"
+msgid "Change"
+msgstr "Modifier"
+
+#: "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/EncodingSettingsViewModel.cshtml"
+msgctxt "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/EncodingSettingsViewModel.cshtml"
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -657,8 +715,8 @@ msgstr "Informations d'identification de compte"
 
 #: "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/GeneralSettingsViewModel.cshtml"
 msgctxt "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/GeneralSettingsViewModel.cshtml"
-msgid "The account name and access key for your Microsoft Azure Media Services account can be obtained from the Windows Azure management portal at <a href='https://manage.windowsazure.com'>https://manage.windowsazure.com</a>."
-msgstr "Le nom de compte et la clé d'accès pourServices  Microsoft Azure Media peut être obtenue à partir du portail de gestion Windows Azure à l'adresse <a href='https://manage.windowsazure.com'> https://manage.windowsazure.com</a>."
+msgid "The account name and access key for your Microsoft Azure Media Services account can be obtained from the Microsoft Azure management portal at <a href='https://manage.windowsazure.com'>https://manage.windowsazure.com</a>."
+msgstr "Le nom de compte et la clé d'accès pour votre compte Microsoft Azure Media Services peuvent être obtenus à partir du portail de gestion Windows Azure à l'adresse <a href='https://manage.windowsazure.com'> https://manage.windowsazure.com</a>."
 
 #: "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/GeneralSettingsViewModel.cshtml"
 msgctxt "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/GeneralSettingsViewModel.cshtml"
@@ -682,8 +740,8 @@ msgstr "Clé d'accès au compte de stockage"
 
 #: "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/GeneralSettingsViewModel.cshtml"
 msgctxt "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/GeneralSettingsViewModel.cshtml"
-msgid "Specify the account key for the underlying Microsoft Azure Storage account used by your Windows Azure Media Services instance if you want to automatically enable CORS support with the appropriate origin URLs for this web site. Enabling CORS support in your Windows Azure Storage account is required for uploading media files directly to Windows Azure Media Services. If you leave this field blank you will have to manually enable the appropriate CORS support for your Windows Azure Storage account using PowerShell."
-msgstr "Spécifier la clé d'identification pour le compte de Microsoft Azure Storage sous-jacent utilisé par votre instance de Windows Azure Media Service si vous voulez activer automatiquement le support CORS avec l'URL d'origine adéquate pour ce site web. L'activation du support CORS dans votre compte de stockage Windows Azure est requis pour le téléchargement de fichiers multimédias directement vers Microsoft Azure Media Services. Si vous laissez ce champ vide, vous devrez activer manuellement le support CORS approprié pour votre compte de stockage Microsoft Azure à l'aide de PowerShell."
+msgid "Specify the account key for the underlying Microsoft Azure Storage account used by your Microsoft Azure Media Services instance if you want to automatically enable CORS support with the appropriate origin URLs for this web site. Enabling CORS support in your Microsoft Azure Storage account is required for uploading media files directly to Microsoft Azure Media Services. If you leave this field blank you will have to manually enable the appropriate CORS support for your Microsoft Azure Storage account using PowerShell."
+msgstr "Spécifier la clé d'identification pour le compte de Microsoft Azure Storage sous-jacent utilisé par votre instance de Windows Azure Media Service si vous voulez activer automatiquement le support CORS avec l'URL d'origine adéquate pour ce site web. L'activation du support CORS dans votre compte de stockage Windows Azure est requise pour le téléchargement de fichiers multimédias directement vers Microsoft Azure Media Services. Si vous laissez ce champ vide, vous devrez activer manuellement le support CORS approprié pour votre compte de stockage Microsoft Azure à l'aide de PowerShell."
 
 #: "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/GeneralSettingsViewModel.cshtml"
 msgctxt "~/Modules/Orchard.Azure.MediaServices/Views/EditorTemplates/GeneralSettingsViewModel.cshtml"

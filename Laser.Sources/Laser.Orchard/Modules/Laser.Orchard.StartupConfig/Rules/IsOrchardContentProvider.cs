@@ -6,9 +6,10 @@ using Orchard.Security;
 using Orchard.Widgets.Services;
 using Orchard.Localization.Services;
 using Laser.Orchard.StartupConfig.Services;
+using Orchard.Conditions.Services;
 
 namespace Laser.Orchard.StartupConfig.Rules {
-    public class IsOrchardContentProvider : IRuleProvider {
+    public class IsOrchardContentProvider : IConditionProvider {
         private readonly ICurrentContentAccessor _currentContentAccessor;
 
 
@@ -16,18 +17,18 @@ namespace Laser.Orchard.StartupConfig.Rules {
             _currentContentAccessor = currentContentAccessor;
         }
 
-        public void Process(RuleContext ruleContext) {
-            if (!String.Equals(ruleContext.FunctionName, "IsOrchardContent", StringComparison.OrdinalIgnoreCase)) {
+        public void Evaluate(ConditionEvaluationContext evaluationContext) {
+            if (!String.Equals(evaluationContext.FunctionName, "IsOrchardContent", StringComparison.OrdinalIgnoreCase)) {
                 return;
             }
 
             var matches = _currentContentAccessor.CurrentContentItemId.HasValue;
             if (matches) {
-                ruleContext.Result = true;
+                evaluationContext.Result = true;
                 return;
             }
 
-            ruleContext.Result = false;
+            evaluationContext.Result = false;
             return;
 
         }

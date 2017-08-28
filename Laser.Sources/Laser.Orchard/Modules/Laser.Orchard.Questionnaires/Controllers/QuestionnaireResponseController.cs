@@ -55,26 +55,36 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         /// </param>
         /// <returns></returns>
         public Response Post([FromBody] List<AnswerWithResultViewModel> Risps) {
-            //       try {
+            return ExecPost(Risps);
+        }
+        /// <summary>
+        /// esempio [{"Answered":1,"AnswerText":"cioa","Id":5,"QuestionRecord_Id":5}]
+        /// </summary>
+        /// <param name="Risps">elenco con valorizzati solo id della risposta scelta  nel caso di risposta semplice
+        /// QuestionRecord_Id e e AnswerText nel caso di risposta con testo libero
+        /// </param>
+        /// <param name="qContext">Questo parametro è preso dall'URL: è dichiarato nella rotta.</param>
+        /// <returns></returns>
+        [HttpPost]
+        public Response PostContext([FromBody] List<AnswerWithResultViewModel> Risps, string qContext) {
+            if (Risps != null) {
+                return ExecPost(Risps, qContext);
+            }
+            else {
+                return (_utilsServices.GetResponse(ResponseType.Validation, "Validation: invalid input data structure."));
+            }
+        }
+        private Response ExecPost(List<AnswerWithResultViewModel> Risps, string QuestionnaireContext = "external") {
 #if DEBUG
             Logger.Error(Request.Headers.ToString());
 #endif
+            int QuestionId = 0;
 
-            //  var csrfToken = Request.Headers.GetValues("X-XSRF-TOKEN").FirstOrDefault();
-            //if (!_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
-            //    throw new UnauthorizedAccessException("Unauthorized Method");
-            //}
-
-            //if (currentUser == null) {
-            //    throw new UnauthorizedAccessException("Unauthorized User");
-            //}
             if (_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
                 var currentUser = _orchardServices.WorkContext.CurrentUser;
                 if (currentUser == null) {
                     return (_utilsServices.GetResponse(ResponseType.InvalidUser));
                 }
-                Int32 QuestionId = 0;
-                //    Int32 id = _repositoryQuestions.Fetch(x => x.Id == Risps[0].QuestionRecord_Id).FirstOrDefault().QuestionnairePartRecord_Id;
                 if (Risps[0].Id > 0)
                     QuestionId = _repositoryAnswer.Fetch(x => x.Id == Risps[0].Id).FirstOrDefault().QuestionRecord_Id;
                 else
@@ -105,8 +115,6 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                         }
                     }
                 }
-
-                // var currentUser = _orchardServices.WorkContext.CurrentUser;
                 var context = new ValidationContext(qVM, serviceProvider: null, items: null);
                 var results = new List<ValidationResult>();
                 var isValid = Validator.TryValidateObject(qVM, context, results);
@@ -118,9 +126,13 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                     return (_utilsServices.GetResponse(ResponseType.Validation, "Validation:" + messaggio));
                 }
                 else {
-                    qVM.Context = "external";
-                    _questionnairesServices.Save(qVM, currentUser, HttpContext.Current.Session.SessionID);
-                    return (_utilsServices.GetResponse(ResponseType.Success));
+                    qVM.Context = QuestionnaireContext;
+                    if (_questionnairesServices.Save(qVM, currentUser, HttpContext.Current.Session.SessionID)) {
+                        return (_utilsServices.GetResponse(ResponseType.Success));
+                    }
+                    else {
+                        return (_utilsServices.GetResponse(ResponseType.Validation, "Questionnaire already submitted."));
+                    }
                 }
             }
             else

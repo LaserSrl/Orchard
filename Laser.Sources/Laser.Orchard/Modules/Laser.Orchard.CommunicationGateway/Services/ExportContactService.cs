@@ -40,12 +40,12 @@ namespace Laser.Orchard.CommunicationGateway.Services {
     public class ExportContactService : IExportContactService {
 
         private readonly IContentManager _contentManager;
-        private readonly ISessionLocator _session;
+        private readonly ITransactionManager _transactionManager;
         private readonly ITaxonomyService _taxonomyService;
 
-        public ExportContactService(IContentManager contentManager, ISessionLocator session, ITaxonomyService taxonomyService) {
+        public ExportContactService(IContentManager contentManager, ITransactionManager transactionManager, ITaxonomyService taxonomyService) {
             _contentManager = contentManager;
-            _session = session;
+            _transactionManager = transactionManager;
             _taxonomyService = taxonomyService;
         }
 
@@ -73,7 +73,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         if (search.ThirdPartyAuthorization.HasValue) myQueryMail += "and EmailRecord.AutorizzatoTerzeParti = :tpuse ";
                         myQueryMail += "order by cir.Id";
 
-                        var mailQueryToExecute = _session.For(null).CreateQuery(myQueryMail);
+                        var mailQueryToExecute = _transactionManager.GetSession().CreateQuery(myQueryMail);
                         if (!string.IsNullOrEmpty(search.Expression)) mailQueryToExecute.SetParameter("mail", search.Expression);
                         if (search.CommercialUseAuthorization.HasValue) mailQueryToExecute.SetParameter("commuse", search.CommercialUseAuthorization.Value, NHibernateUtil.Boolean);
                         if (search.ThirdPartyAuthorization.HasValue) mailQueryToExecute.SetParameter("tpuse", search.ThirdPartyAuthorization.Value, NHibernateUtil.Boolean);
@@ -96,7 +96,7 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         if (search.ThirdPartyAuthorization.HasValue) myQuerySms += "and SmsRecord.AutorizzatoTerzeParti = :tpuse ";
                         myQuerySms += "order by cir.Id";
 
-                        var smsQueryToExecute = _session.For(null).CreateQuery(myQuerySms);
+                        var smsQueryToExecute = _transactionManager.GetSession().CreateQuery(myQuerySms);
                         if (!string.IsNullOrEmpty(search.Expression)) smsQueryToExecute.SetParameter("sms", search.Expression);
                         if (search.CommercialUseAuthorization.HasValue) smsQueryToExecute.SetParameter("commuse", search.CommercialUseAuthorization.Value, NHibernateUtil.Boolean);
                         if (search.ThirdPartyAuthorization.HasValue) smsQueryToExecute.SetParameter("tpuse", search.ThirdPartyAuthorization.Value, NHibernateUtil.Boolean);

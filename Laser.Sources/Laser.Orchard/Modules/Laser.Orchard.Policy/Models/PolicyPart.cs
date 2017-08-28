@@ -7,6 +7,7 @@ using Orchard.ContentManagement.Utilities;
 
 namespace Laser.Orchard.Policy.Models {
     public class PolicyPart : ContentPart {
+
         internal LazyField<bool?> _hasPendingPolicies = new LazyField<bool?>();
         internal LazyField<IList<IContent>> _pendingPolicies = new LazyField<IList<IContent>>();
 

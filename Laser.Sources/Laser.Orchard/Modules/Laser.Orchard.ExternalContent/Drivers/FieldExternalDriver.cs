@@ -5,13 +5,14 @@ using Laser.Orchard.ExternalContent.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
 using System.Web.Hosting;
 
 namespace Laser.Orchard.ExternalContent.Drivers {
-    public class FieldExternalDriver : ContentFieldDriver<FieldExternal> {
+    public class FieldExternalDriver : ContentFieldCloningDriver<FieldExternal> {
         private readonly ShellSettings _shellSettings;
         private readonly IOrchardServices _orchardServices;
         private readonly IFieldExternalService _fieldExternalService;
@@ -73,6 +74,35 @@ namespace Laser.Orchard.ExternalContent.Drivers {
             
             return Editor(part, field, shapeHelper);
         }
-
+        protected override void Exporting(ContentPart part, FieldExternal field, ExportContentContext context) {
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("BodyRequest", field.BodyRequest);
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("ExternalUrl", field.ExternalUrl);
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("HttpDataTypeCode", field.HttpDataTypeCode);
+            context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("HttpVerbCode", field.HttpVerbCode);
+        }
+        protected override void Cloning(ContentPart part, FieldExternal originalField, FieldExternal cloneField, CloneContentContext context) {
+            cloneField.ExternalUrl = originalField.ExternalUrl;
+            cloneField.HttpVerbCode = originalField.HttpVerbCode;
+            cloneField.HttpDataTypeCode = originalField.HttpDataTypeCode;
+            cloneField.BodyRequest = originalField.BodyRequest;
+        }
+        protected override void Importing(ContentPart part, FieldExternal field, ImportContentContext context) {
+            var BodyRequest = context.Attribute(field.FieldDefinition.Name + "." + field.Name, "BodyRequest");
+            if (BodyRequest != null) {
+                field.BodyRequest = BodyRequest;
+            }
+            var ExternalUrl = context.Attribute(field.FieldDefinition.Name + "." + field.Name, "ExternalUrl");
+            if (ExternalUrl != null) {
+                field.ExternalUrl = ExternalUrl;
+            }
+            var HttpDataTypeCode = context.Attribute(field.FieldDefinition.Name + "." + field.Name, "HttpDataTypeCode");
+            if (HttpDataTypeCode != null) {
+                field.HttpDataTypeCode = HttpDataTypeCode;
+            }
+            var HttpVerbCode = context.Attribute(field.FieldDefinition.Name + "." + field.Name, "HttpVerbCode");
+            if (HttpVerbCode != null) {
+                field.HttpVerbCode = HttpVerbCode;
+            }
+        }
     }
 }

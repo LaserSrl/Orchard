@@ -16,7 +16,7 @@ using System.Collections.Generic;
 
 namespace Laser.Orchard.Mobile.Drivers {
     [OrchardFeature("Laser.Orchard.PushGateway")]
-    public class MobilePushPartDriver : ContentPartDriver<MobilePushPart> {
+    public class MobilePushPartDriver : ContentPartCloningDriver<MobilePushPart> {
 
         private readonly IOrchardServices _orchardServices;
         private readonly IControllerContextAccessor _controllerContextAccessor;
@@ -77,8 +77,10 @@ namespace Laser.Orchard.Mobile.Drivers {
                     {
                         viewModel.ToPush = true;
                     }
-                    Mapper.CreateMap<MobilePushVM, MobilePushPart>();
-                    Mapper.Map(viewModel, part);
+                    Mapper.Initialize(cfg => {
+                        cfg.CreateMap<MobilePushVM, MobilePushPart>();
+                    });
+                    Mapper.Map<MobilePushVM, MobilePushPart>(viewModel, part);
 
                 } else
                     updater.AddModelError("Cannotupdate", T("Cannot Update!"));
@@ -93,9 +95,13 @@ namespace Laser.Orchard.Mobile.Drivers {
                 viewModel.ToPush = part.ToPush;
                 viewModel.TestPush = part.TestPush;
                 viewModel.DevicePush = part.DevicePush;
+                viewModel.TestPushToDevice = part.TestPushToDevice;
+                viewModel.DevicePush = part.DevicePush;
                 viewModel.PushSent = part.PushSent;
                 viewModel.TargetDeviceNumber = part.TargetDeviceNumber;
                 viewModel.PushSentNumber = part.PushSentNumber;
+                viewModel.UseRecipientList = part.UseRecipientList;
+                viewModel.RecipientList = part.RecipientList;
             }
 
             viewModel.SiteUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix;
@@ -136,36 +142,54 @@ namespace Laser.Orchard.Mobile.Drivers {
             var TextPush = context.Attribute(part.PartDefinition.Name, "TextPush");
             if (TextPush != null)
                 part.TextPush = TextPush;
-            var ToPush = context.Attribute(part.PartDefinition.Name, "ToPush");
-            if (ToPush != null)
-                part.ToPush = bool.Parse(ToPush);
+            //ToPush non ha senso per l'import
             var TestPush = context.Attribute(part.PartDefinition.Name, "TestPush");
             if (TestPush != null)
                 part.TestPush = bool.Parse(TestPush);
+            var TestPushToDevice = context.Attribute(part.PartDefinition.Name, "TestPushToDevice");
+            if (TestPushToDevice != null)
+                part.TestPushToDevice = bool.Parse(TestPushToDevice);
             var DevicePush = context.Attribute(part.PartDefinition.Name, "DevicePush");
             if (DevicePush != null)
                 part.DevicePush = DevicePush;
-            var PushSent = context.Attribute(part.PartDefinition.Name, "PushSent");
-            if (PushSent != null)
-                part.PushSent = bool.Parse(PushSent);
-            var TargetDeviceNumber = context.Attribute(part.PartDefinition.Name, "TargetDeviceNumber");
-            if (TargetDeviceNumber != null)
-                part.TargetDeviceNumber = int.Parse(TargetDeviceNumber);
-            var PushSentNumber = context.Attribute(part.PartDefinition.Name, "PushSentNumber");
-            if (PushSentNumber != null)
-                part.PushSentNumber = int.Parse(PushSentNumber);
+            var UseRecipientList = context.Attribute(part.PartDefinition.Name, "UseRecipientList");
+            if (UseRecipientList != null)
+                part.UseRecipientList = bool.Parse(UseRecipientList);
+            var RecipientList = context.Attribute(part.PartDefinition.Name, "RecipientList");
+            if (RecipientList != null)
+                part.RecipientList = RecipientList;
+            //PushSent non ha senso per l'import
+            //TargetDeviceNumber non ha senso per l'import
+            //PushSentNumber non ha senso per l'import
         }
 
         protected override void Exporting(MobilePushPart part, ExportContentContext context) {
             var root = context.Element(part.PartDefinition.Name);
             root.SetAttributeValue("TitlePush", part.TitlePush);
             root.SetAttributeValue("TextPush", part.TextPush);
-            root.SetAttributeValue("ToPush", part.ToPush);
+            //ToPush non ha senso per l'import
             root.SetAttributeValue("TestPush", part.TestPush);
+            root.SetAttributeValue("TestPushToDevice", part.TestPushToDevice);
             root.SetAttributeValue("DevicePush", part.DevicePush);
-            root.SetAttributeValue("PushSent", part.PushSent);
-            root.SetAttributeValue("TargetDeviceNumber", part.TargetDeviceNumber);
-            root.SetAttributeValue("PushSentNumber", part.PushSentNumber);
+            root.SetAttributeValue("UseRecipientList", part.UseRecipientList);
+            root.SetAttributeValue("RecipientList", part.RecipientList);
+            //PushSent non ha senso per l'import
+            //TargetDeviceNumber non ha senso per l'import
+            //PushSentNumber non ha senso per l'import
+        }
+
+        protected override void Cloning(MobilePushPart originalPart, MobilePushPart clonePart, CloneContentContext context) {
+            clonePart.TitlePush = originalPart.TitlePush;
+            clonePart.TextPush = originalPart.TextPush;
+            //The ToPush property is not copied over and left to default (false), else the handler will send the notifications
+            clonePart.TestPush = originalPart.TestPush;
+            clonePart.TestPushToDevice = originalPart.TestPushToDevice;
+            clonePart.DevicePush = originalPart.DevicePush;
+            clonePart.UseRecipientList = originalPart.UseRecipientList;
+            clonePart.RecipientList = originalPart.RecipientList;
+            //PushSent is not copied over, because it is controlled by the push services
+            //TargetDeviceNumber is not copied over, because it is controlled by the push services
+            //PushSentNumber is not copied over, because it is controlled by the push services
         }
     }
 }

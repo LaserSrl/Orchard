@@ -182,7 +182,7 @@ namespace Laser.Orchard.Maps.Controllers {
 
 
                 }
-            } catch (Exception e) {
+            } catch (Exception) {
                 return null;
             }
         }

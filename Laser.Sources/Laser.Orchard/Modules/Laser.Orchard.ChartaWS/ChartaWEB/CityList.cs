@@ -19,7 +19,7 @@ namespace ChartaWEB
             try
             {
                 var lista = new List<string>();
-                City city = null;
+                //City city = null;
                 using (CityListTableAdapter objTACity = new CityListTableAdapter())
                 {
                     using (ChartaDb.Charta.CityListDataTable objDtCity = objTACity.GetData())

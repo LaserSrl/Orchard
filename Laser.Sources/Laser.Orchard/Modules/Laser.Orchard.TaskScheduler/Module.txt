@@ -9,4 +9,4 @@ Features:
     Laser.Orchard.TaskScheduler:
         Description: Enables the creation of schedulable and periodic tasks that trigger custom signals upon termination
 		Category: Workflows
-		Dependencies: Laser.Orchard.StartupConfig,Orchard.Workflows
+		Dependencies: Laser.Orchard.StartupConfig,Orchard.Workflows,Orchard.Resources,Laser.Orchard.jQueryPlugins

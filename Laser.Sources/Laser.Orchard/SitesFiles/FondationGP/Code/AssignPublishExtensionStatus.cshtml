@@ -1,0 +1,15 @@
+﻿@{
+    //Possible outcomes LoadedAssigned, DoNothing, Error
+    string retString = "DoNothing";
+    var wfContext = Model.Tokens["Workflow"];
+    try {
+        if (Model.ContentItem.PublishExtensionPart.PublishExtensionStatus.Value == "Created") {
+            Model.ContentItem.PublishExtensionPart.PublishExtensionStatus.Value = "Loaded";
+            retString = "LoadedAssigned";
+        }
+    } catch (Exception ex) {
+        retString = "Error";
+        wfContext.SetState("ErrorMessage", ex.Message);
+    }
+}
+@retString

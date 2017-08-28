@@ -58,7 +58,8 @@ namespace Laser.Orchard.Questionnaires.Settings {
             builder.WithSetting("QuestionnairesPartSettingVM.AllowSingleChoice", model.AllowSingleChoice.ToString());
             builder.WithSetting("QuestionnairesPartSettingVM.AllowMultiChoice", model.AllowMultiChoice.ToString());
             builder.WithSetting("QuestionnairesPartSettingVM.AllowOpenAnswers", model.AllowOpenAnswers.ToString());
-
+            builder.WithSetting("QuestionnairesPartSettingVM.QuestionnaireContext", model.QuestionnaireContext);
+            builder.WithSetting("QuestionnairesPartSettingVM.ForceAnonymous", model.ForceAnonymous.ToString());
 
             yield return DefinitionTemplate(model);
         }

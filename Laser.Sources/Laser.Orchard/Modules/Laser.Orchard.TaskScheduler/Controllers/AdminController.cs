@@ -13,18 +13,21 @@ using System.Web.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
 using OMvc = Orchard.Mvc;
+using Orchard.Localization.Services;
 
 namespace Laser.Orchard.TaskScheduler.Controllers {
     public class AdminController : Controller {
 
         private readonly IOrchardServices _orchardServices;
         private readonly IScheduledTaskService _scheduledTaskService;
+        private readonly IDateLocalizationServices _dateServices;
 
         public Localizer T { get; set; }
 
-        public AdminController(IOrchardServices orchardServices, IScheduledTaskService scheduledTaskService) {
+        public AdminController(IOrchardServices orchardServices, IScheduledTaskService scheduledTaskService, IDateLocalizationServices dateServices) {
             _orchardServices = orchardServices;
             _scheduledTaskService = scheduledTaskService;
+            _dateServices = dateServices;
 
             T = NullLocalizer.Instance;
         }
@@ -33,7 +36,7 @@ namespace Laser.Orchard.TaskScheduler.Controllers {
             if (!_orchardServices.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to schedule periodic tasks")))
                 return new HttpUnauthorizedResult();
 
-            IndexViewModel vm = new IndexViewModel(_scheduledTaskService.GetAllTasks());
+            IndexViewModel vm = new IndexViewModel(_scheduledTaskService.GetAllTasks(), _orchardServices, _dateServices);
 
             return View(vm);
         }

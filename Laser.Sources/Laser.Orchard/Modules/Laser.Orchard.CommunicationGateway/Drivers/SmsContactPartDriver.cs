@@ -1,28 +1,4 @@
-﻿//using Laser.Orchard.CommunicationGateway.Models;
-//using Orchard.ContentManagement.Drivers;
-//using Orchard.Data;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Web;
-
-//namespace Laser.Orchard.CommunicationGateway.Drivers {
-//    public class SmsContactPartDriver : ContentPartDriver<SmsContactPart> {
-
-//        protected override string Prefix {
-//            get { return "Laser.Mobile.SmsContact"; }
-//        }
-
-//        protected override DriverResult Editor(SmsContactPart part, dynamic shapeHelper) {
-//            List<CommunicationSmsRecord> viewModel = part.SmsEntries.Value.ToList();
-//            return ContentShape("Parts_SmsContact_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/SmsContact_Edit", Model: viewModel, Prefix: Prefix));
-//        }
-//    }
-
-//}
-
-
-using AutoMapper;
+﻿using AutoMapper;
 using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.CommunicationGateway.ViewModels;
 using Orchard;
@@ -36,22 +12,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.CommunicationGateway.Drivers {
     public class SmsContactPartDriver : ContentPartDriver<SmsContactPart> {
         public Localizer T { get; set; }
-        protected override string Prefix {
+        protected override string Prefix
+        {
             get { return "Laser.Mobile.SmsContact"; }
         }
         private readonly IRepository<CommunicationSmsRecord> _repoSms;
         private readonly ITransactionManager _transaction;
         private readonly IOrchardServices _orchardServices;
+        private IMapper _mapper;
 
         public SmsContactPartDriver(IRepository<CommunicationSmsRecord> repoSms, ITransactionManager transaction, IOrchardServices orchardServices) {
             _repoSms = repoSms;
             T = NullLocalizer.Instance;
             _transaction = transaction;
             _orchardServices = orchardServices;
+
+            var mapperConfiguration = new MapperConfiguration(cfg => {
+                cfg.CreateMap<CommunicationSmsRecord, View_SmsVM_element>();
+                cfg.CreateMap<View_SmsVM_element, CommunicationSmsRecord>();
+            });
+            _mapper = mapperConfiguration.CreateMapper();
         }
 
         protected override DriverResult Display(SmsContactPart part, string displayType, dynamic shapeHelper) {
@@ -59,37 +44,36 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             bool isAdmin = AdminFilter.IsApplied(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
             if (isAdmin) {
                 if (displayType == "Detail") {
-                    Mapper.CreateMap<CommunicationSmsRecord, View_SmsVM_element>();
                     View_SmsVM viewModel = new View_SmsVM();
                     View_SmsVM_element vm = new View_SmsVM_element();
                     if (part.SmsEntries.Value != null) {
                         List<CommunicationSmsRecord> oldviewModel = part.SmsEntries.Value.ToList();
                         foreach (CommunicationSmsRecord cm in oldviewModel) {
                             vm = new View_SmsVM_element();
-                            Mapper.Map(cm, vm);
+                            _mapper.Map<CommunicationSmsRecord, View_SmsVM_element>(cm, vm);
                             viewModel.Elenco.Add(vm);
                         }
                     }
                     return ContentShape("Parts_SmsContact",
                         () => shapeHelper.Parts_SmsContact(Elenco: viewModel.Elenco));
-                } else {
+                }
+                else {
                     return null;
                 }
-            } else {
+            }
+            else {
                 return null;
             }
         }
 
         protected override DriverResult Editor(SmsContactPart part, dynamic shapeHelper) {
-            Mapper.CreateMap<CommunicationSmsRecord, View_SmsVM_element>();
             View_SmsVM viewModel = new View_SmsVM();
-            View_SmsVM_element vm = new View_SmsVM_element();
-            // viewModel.Elenco.Add(vm);
+            View_SmsVM_element vm = null;
             if (part.SmsEntries.Value != null) {
                 List<CommunicationSmsRecord> oldviewModel = part.SmsEntries.Value.ToList();
                 foreach (CommunicationSmsRecord cm in oldviewModel) {
                     vm = new View_SmsVM_element();
-                    Mapper.Map(cm, vm);
+                    _mapper.Map<CommunicationSmsRecord, View_SmsVM_element>(cm, vm);
                     viewModel.Elenco.Add(vm);
                 }
             }
@@ -111,41 +95,40 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                 }
                 else
                     if (!vmel.Delete) {
-                        if (!string.IsNullOrEmpty(vmel.Sms))
-                            if (_repoSms.Fetch(x => x.Sms == vmel.Sms && x.Prefix == vmel.Prefix && x.Id != vmel.Id).Count() > 0) {
-                                error = true;
-                                updater.AddModelError("Error", T("Sms can't be assigned is linked to other contact"));
-                            }
-                        if (vmel.Id > 0) {
-                            CommunicationSmsRecord cmr = _repoSms.Fetch(x => x.Id == vmel.Id).FirstOrDefault();
-                            if (cmr.Sms != vmel.Sms || cmr.Prefix != vmel.Prefix || cmr.Validated != vmel.Validated|| 
-                                cmr.AccettatoUsoCommerciale != vmel.AccettatoUsoCommerciale ||
-                                cmr.AutorizzatoTerzeParti != vmel.AutorizzatoTerzeParti) {
-                                cmr.Sms = vmel.Sms;
-                                cmr.Prefix = vmel.Prefix;
-                                cmr.Validated = vmel.Validated;
-                                cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;
-                                cmr.AutorizzatoTerzeParti = vmel.AutorizzatoTerzeParti;
-                                cmr.DataModifica = DateTime.Now;
-                                _repoSms.Update(cmr);
-
-                            }
+                    if (!string.IsNullOrEmpty(vmel.Sms))
+                        if (_repoSms.Fetch(x => x.Sms == vmel.Sms && x.Prefix == vmel.Prefix && x.Id != vmel.Id).Count() > 0) {
+                            error = true;
+                            updater.AddModelError("Error", T("Sms can't be assigned is linked to other contact"));
                         }
-                        else {
-                            View_SmsVM_element vm = new View_SmsVM_element();
-                            CommunicationSmsRecord cmr = new CommunicationSmsRecord();
-                            Mapper.CreateMap<View_SmsVM_element, CommunicationSmsRecord>();
-                            Mapper.Map(vm, cmr);
+                    if (vmel.Id > 0) {
+                        CommunicationSmsRecord cmr = _repoSms.Fetch(x => x.Id == vmel.Id).FirstOrDefault();
+                        if (cmr.Sms != vmel.Sms || cmr.Prefix != vmel.Prefix || cmr.Validated != vmel.Validated ||
+                            cmr.AccettatoUsoCommerciale != vmel.AccettatoUsoCommerciale ||
+                            cmr.AutorizzatoTerzeParti != vmel.AutorizzatoTerzeParti) {
                             cmr.Sms = vmel.Sms;
+                            cmr.Prefix = vmel.Prefix;
                             cmr.Validated = vmel.Validated;
                             cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;
                             cmr.AutorizzatoTerzeParti = vmel.AutorizzatoTerzeParti;
-                            cmr.Prefix = vmel.Prefix;
-                            cmr.SmsContactPartRecord_Id = part.Id;
-                            _repoSms.Create(cmr);
+                            cmr.DataModifica = DateTime.Now;
+                            _repoSms.Update(cmr);
 
                         }
                     }
+                    else {
+                        View_SmsVM_element vm = new View_SmsVM_element();
+                        CommunicationSmsRecord cmr = new CommunicationSmsRecord();
+                        _mapper.Map<View_SmsVM_element, CommunicationSmsRecord>(vm, cmr);
+                        cmr.Sms = vmel.Sms;
+                        cmr.Validated = vmel.Validated;
+                        cmr.AccettatoUsoCommerciale = vmel.AccettatoUsoCommerciale;
+                        cmr.AutorizzatoTerzeParti = vmel.AutorizzatoTerzeParti;
+                        cmr.Prefix = vmel.Prefix;
+                        cmr.SmsContactPartRecord_Id = part.Id;
+                        _repoSms.Create(cmr);
+
+                    }
+                }
             }
             if (error == true)
                 _transaction.Cancel();
@@ -155,64 +138,88 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="part"></param>
+        /// <param name="context"></param>
         protected override void Importing(SmsContactPart part, ImportContentContext context) {
-            //throw new NotImplementedException();
-
-            var root = context.Data.Element(part.PartDefinition.Name);
-
-            var importedSmsRecord = context.Attribute("SmsRecord", "SmsRecord");
-
+            var importedSmsRecord = context.Data.Element(part.PartDefinition.Name).Elements("SmsRecord");
             if (importedSmsRecord != null) {
-
-                foreach (CommunicationSmsRecord rec in part.SmsRecord) {
-                    rec.Id = int.Parse(root.Attribute("SmsRecord").Parent.Element("Id").Value);
-                    rec.Language = root.Attribute("SmsRecord").Parent.Element("Language").Value;
-                    rec.Validated = bool.Parse(root.Attribute("SmsRecord").Parent.Element("Validated").Value);
-                    rec.DataInserimento = DateTime.Parse(root.Attribute("SmsRecord").Parent.Element("DataInserimento").Value);
-                    rec.DataModifica = DateTime.Parse(root.Attribute("SmsRecord").Parent.Element("DataModifica").Value);
-                    rec.Sms = root.Attribute("SmsRecord").Parent.Element("Sms").Value;
-                    rec.Prefix = root.Attribute("SmsRecord").Parent.Element("Prefix").Value;
-                    rec.Produzione = bool.Parse(root.Attribute("SmsRecord").Parent.Element("Produzione").Value);
-                    rec.AccettatoUsoCommerciale = bool.Parse(root.Attribute("SmsRecord").Parent.Element("AccettatoUsoCommerciale").Value);
-                    rec.AutorizzatoTerzeParti = bool.Parse(root.Attribute("SmsRecord").Parent.Element("AutorizzatoTerzeParti").Value);
-
+                if (part.SmsRecord == null) {
+                    part.SmsRecord = new List<CommunicationSmsRecord>();
                 }
+                foreach (var sms in importedSmsRecord) {
+                    string locPrefix = "";
+                    var Prefix = sms.Attribute("Prefix");
+                    if (Prefix != null)
+                        locPrefix = Prefix.Value;
 
+                    string locSms = "";
+                    var Sms = sms.Attribute("Sms");
+                    if (Sms != null)
+                        locSms = Sms.Value;
+
+                    CommunicationSmsRecord comSms = part.Record.SmsRecord.FirstOrDefault(x => 
+                        x.Prefix == locPrefix && x.Sms == locSms);
+                    if (comSms == null) {
+                        comSms = new CommunicationSmsRecord();
+                        comSms.SmsContactPartRecord_Id = part.Id;
+                        comSms.Prefix = locPrefix;
+                        comSms.Sms = locSms;
+                        _repoSms.Create(comSms);
+                        part.SmsRecord.Add(comSms);
+                    }
+
+                    var Language = sms.Attribute("Language");
+                    if (Language != null)
+                        comSms.Language = Language.Value;
+
+                    var Validated = sms.Attribute("Validated");
+                    if (Validated != null)
+                        comSms.Validated = Convert.ToBoolean(Validated.Value);
+
+                    var DataModifica = sms.Attribute("DataModifica");
+                    if (DataModifica != null)
+                        comSms.DataModifica = Convert.ToDateTime(DataModifica.Value);
+
+                    var DataInserimento = sms.Attribute("DataInserimento");
+                    if (DataInserimento != null)
+                        comSms.DataInserimento = Convert.ToDateTime(DataInserimento.Value);
+
+                    var Produzione = sms.Attribute("Produzione");
+                    if (Produzione != null)
+                        comSms.Produzione = Convert.ToBoolean(Produzione.Value);
+
+                    var AccettatoUsoCommerciale = sms.Attribute("AccettatoUsoCommerciale");
+                    if (AccettatoUsoCommerciale != null)
+                        comSms.AccettatoUsoCommerciale = Convert.ToBoolean(AccettatoUsoCommerciale.Value);
+
+                    var AutorizzatoTerzeParti = sms.Attribute("AutorizzatoTerzeParti");
+                    if (AutorizzatoTerzeParti != null)
+                        comSms.AutorizzatoTerzeParti = Convert.ToBoolean(AutorizzatoTerzeParti.Value);
+                }
+                _repoSms.Flush();
             }
-
         }
 
         protected override void Exporting(SmsContactPart part, ExportContentContext context) {
-            //throw new NotImplementedException();
-            
             if (part.SmsRecord != null) {
-
-                context.Element(part.PartDefinition.Name).SetAttributeValue("SmsRecord", part.SmsRecord);
-                var smsRecord = context.Element(part.PartDefinition.Name).Element("SmsRecord");
-
+                var root = context.Element(part.PartDefinition.Name);
                 foreach (CommunicationSmsRecord rec in part.SmsRecord) {
-
-                    smsRecord.Element("Id").SetAttributeValue("Id", rec.Id);
-                    smsRecord.Element("Language").SetAttributeValue("Language", rec.Language);
-                    smsRecord.Element("Validated").SetAttributeValue("Validated", rec.Validated);
-                    smsRecord.Element("DataInserimento").SetAttributeValue("DataInserimento", rec.DataInserimento);
-                    smsRecord.Element("DataModifica").SetAttributeValue("DataModifica", rec.DataModifica);
-                    smsRecord.Element("Sms").SetAttributeValue("Sms", rec.Sms);
-                    smsRecord.Element("Prefix").SetAttributeValue("Sms", rec.Prefix);
-                    smsRecord.Element("Produzione").SetAttributeValue("Produzione", rec.Produzione);
-                    smsRecord.Element("AccettatoUsoCommerciale").SetAttributeValue("AccettatoUsoCommerciale", rec.AccettatoUsoCommerciale);
-                    smsRecord.Element("AutorizzatoTerzeParti").SetAttributeValue("AutorizzatoTerzeParti", rec.AutorizzatoTerzeParti);
-
+                    XElement smsText = new XElement("SmsRecord");
+                    smsText.SetAttributeValue("Language", rec.Language);
+                    smsText.SetAttributeValue("Validated", rec.Validated);
+                    smsText.SetAttributeValue("DataInserimento", rec.DataInserimento);
+                    smsText.SetAttributeValue("DataModifica", rec.DataModifica);
+                    smsText.SetAttributeValue("Sms", rec.Sms);
+                    smsText.SetAttributeValue("Prefix", rec.Prefix);
+                    smsText.SetAttributeValue("Produzione", rec.Produzione);
+                    smsText.SetAttributeValue("AccettatoUsoCommerciale", rec.AccettatoUsoCommerciale);
+                    smsText.SetAttributeValue("AutorizzatoTerzeParti", rec.AutorizzatoTerzeParti);
+                    root.Add(smsText);
                 }
             }
-
-
         }
-
-
-
-
-
     }
-
 }

@@ -139,7 +139,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                 var floorLimit = Math.Abs(unixTimeStampNow - unixTimeStamp);
                 if (item.EnableTimeStampVerification) {
                     cacheKey = String.Concat(_shellSettings.Name, token);
-                    if (_cacheStorage.Get(cacheKey) != null) {
+                    if (_cacheStorage.Get<object>(cacheKey) != null) {
                         Logger.Error("cachekey duplicated: key = " + key);
                         return false;
                     }

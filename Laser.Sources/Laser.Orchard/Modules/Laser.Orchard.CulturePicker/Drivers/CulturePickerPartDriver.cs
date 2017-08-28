@@ -9,6 +9,7 @@ using System;
 using System.Web;
 using Orchard;
 using Orchard.ContentManagement.Handlers;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.CulturePicker.Drivers {
     
@@ -55,103 +56,101 @@ namespace Laser.Orchard.CulturePicker.Drivers {
         }
 
 
+    //    //mod 30-11-2016
+    //    protected override void Exporting(CulturePickerPart part, ExportContentContext context) {
 
-        protected override void Exporting(CulturePickerPart part, ExportContentContext context) {
+    //       var root = context.Element(part.PartDefinition.Name);
+    //       if (part.AvailableCultures != null) 
+    //        {
+                                
+    //            foreach (ExtendedCultureRecord recAvCulture in part.AvailableCultures) 
+    //            {
+    //                XElement avCult = new XElement("AvailableCultures");
+    //                avCult.SetAttributeValue("CultureCode", recAvCulture.CultureCode);
+    //                avCult.SetAttributeValue("DisplayName", recAvCulture.DisplayName);
+    //                avCult.SetAttributeValue("Priority", recAvCulture.Priority);
+    //                root.Add(avCult);
+    //            }
+    //        }
 
-           if (part.AvailableCultures != null) 
-            {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("AvailableCultures", part.AvailableCultures);
-                var avCult = context.Element(part.PartDefinition.Name).Element("AvailableCultures");
-                foreach (ExtendedCultureRecord recAvCulture in part.AvailableCultures) 
-                {
-                    avCult.Element("Id").SetAttributeValue("Id", recAvCulture.Id);
-                    avCult.Element("CultureCode").SetAttributeValue("CultureCode", recAvCulture.CultureCode);
-                    avCult.Element("DisplayName").SetAttributeValue("DisplayName", recAvCulture.DisplayName);
-                    avCult.Element("Priority").SetAttributeValue("Priority", recAvCulture.Priority);               
-                }
-            }
+    //        if (part.TranslatedCultures != null) 
+    //        {
+                
+    //            foreach (ExtendedCultureRecord recTranslCulture in part.TranslatedCultures) 
+    //            {
+    //                XElement transCult = new XElement("TranslatedCultures");
+    //                transCult.SetAttributeValue("CultureCode", recTranslCulture.CultureCode);
+    //                transCult.SetAttributeValue("DisplayName", recTranslCulture.DisplayName);
+    //                transCult.SetAttributeValue("Priority", recTranslCulture.Priority);
+    //                root.Add(transCult);
+    //            }
+    //        }
 
-            if (part.TranslatedCultures != null) 
-            {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("TranslatedCultures", part.TranslatedCultures);
-                var transCult =context.Element(part.PartDefinition.Name).Element("TranslatedCultures");
+                                     
+    //        if (part.UserCulture !=null)
+    //        {
+    //            ExtendedCultureRecord userCulture= part.UserCulture;
+    //            context.Element(part.PartDefinition.Name).SetAttributeValue("UserCulture", part.UserCulture);
+                
+    //            var userCult = context.Element(part.PartDefinition.Name).Element("UserCulture");
+                
+    //            userCult.SetAttributeValue("CultureCode", userCulture.CultureCode);
+    //            userCult.SetAttributeValue("DisplayName", userCulture.DisplayName);
+    //            userCult.SetAttributeValue("Priority", userCulture.Priority);
+    //            root.Add(userCult);
+    //        }
 
-                foreach (ExtendedCultureRecord recTranslCulture in part.TranslatedCultures) 
-                {
-                    transCult.Element("Id").SetAttributeValue("Id", recTranslCulture.Id);
-                    transCult.Element("CultureCode").SetAttributeValue("CultureCode", recTranslCulture.CultureCode);
-                    transCult.Element("DisplayName").SetAttributeValue("DisplayName", recTranslCulture.DisplayName);
-                    transCult.Element("Priority").SetAttributeValue("Priority", recTranslCulture.Priority);
-                }
-            }
-
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ShowOnlyPertinentCultures", part.ShowOnlyPertinentCultures);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ShowLabel", part.ShowLabel);
-                          
-            if (part.UserCulture !=null)
-            {
-                ExtendedCultureRecord userCulture= part.UserCulture;
-                context.Element(part.PartDefinition.Name).SetAttributeValue("UserCulture", part.UserCulture);
-                var userCult = context.Element(part.PartDefinition.Name).Element("UserCulture");
-                userCult.Element("Id").SetAttributeValue("Id", userCulture.Id);
-                userCult.Element("CultureCode").SetAttributeValue("CultureCode", userCulture.CultureCode);
-                userCult.Element("DisplayName").SetAttributeValue("DisplayName", userCulture.DisplayName);
-                userCult.Element("Priority").SetAttributeValue("Priority", userCulture.Priority);
-            }
-
-       }
-
-
+    //   }
 
 
-        protected override void Importing(CulturePickerPart part, ImportContentContext context) 
-        {
-            var root = context.Data.Element(part.PartDefinition.Name);
-            var importedAvailableCultures = context.Attribute("AvailableCultures", "AvailableCultures");
+
+
+    //    protected override void Importing(CulturePickerPart part, ImportContentContext context) 
+    //    {
+    //        var root = context.Data.Element(part.PartDefinition.Name);
+    //        var importedAvailableCultures = context.Attribute("AvailableCultures", "AvailableCultures");
            
-            if (importedAvailableCultures != null) 
-            {
-                foreach (ExtendedCultureRecord rec in part.AvailableCultures) 
-                {
-                    rec.Id = int.Parse(root.Attribute("AvailableCultures").Parent.Element("Id").Value);
-                    rec.CultureCode =root.Attribute("AvailableCultures").Parent.Element("CultureCode").Value;
-                    rec.DisplayName = root.Attribute("AvailableCultures").Parent.Element("DisplayName").Value;
-                    rec.Priority = int.Parse(root.Attribute("AvailableCultures").Parent.Element("Priority").Value);
-                    part.AvailableCultures.Add(rec);
-                }
-            }
+    //        if (importedAvailableCultures != null) 
+    //        {
+    //            foreach (ExtendedCultureRecord rec in part.AvailableCultures) 
+    //            {
+    //                rec.CultureCode =root.Attribute("AvailableCultures").Parent.Element("CultureCode").Value;
+    //                rec.DisplayName = root.Attribute("AvailableCultures").Parent.Element("DisplayName").Value;
+    //                rec.Priority = int.Parse(root.Attribute("AvailableCultures").Parent.Element("Priority").Value);
+    //                part.AvailableCultures.Add(rec);
+    //            }
+    //        }
 
-            var importedTranslatedCultures = context.Attribute("TranslatedCultures", "TranslatedCultures");
-            if (importedTranslatedCultures != null) {
-                foreach (ExtendedCultureRecord rec in part.TranslatedCultures) {
-                    rec.Id = int.Parse(root.Attribute("TranslatedCultures").Parent.Element("Id").Value);
-                    rec.CultureCode = root.Attribute("TranslatedCultures").Parent.Element("CultureCode").Value;
-                    rec.DisplayName = root.Attribute("TranslatedCultures").Parent.Element("DisplayName").Value;
-                    rec.Priority = int.Parse(root.Attribute("TranslatedCultures").Parent.Element("Priority").Value);
-                    part.TranslatedCultures.Add(rec);
-                }
-            }
+    //        var importedTranslatedCultures = context.Attribute("TranslatedCultures", "TranslatedCultures");
+    //        if (importedTranslatedCultures != null) {
+    //            foreach (ExtendedCultureRecord rec in part.TranslatedCultures) {
+                  
+    //                rec.CultureCode = root.Attribute("TranslatedCultures").Parent.Element("CultureCode").Value;
+    //                rec.DisplayName = root.Attribute("TranslatedCultures").Parent.Element("DisplayName").Value;
+    //                rec.Priority = int.Parse(root.Attribute("TranslatedCultures").Parent.Element("Priority").Value);
+    //                part.TranslatedCultures.Add(rec);
+    //            }
+    //        }
 
-            var importedShowOnlyPertinentCultures = context.Attribute("ShowOnlyPertinentCultures", "ShowOnlyPertinentCultures");
-            if (importedShowOnlyPertinentCultures != null)
-            {
-                part.ShowOnlyPertinentCultures = bool.Parse(root.Attribute("ShowOnlyPertinentCultures").Value);                
-            }
+    //        var importedShowOnlyPertinentCultures = context.Attribute("ShowOnlyPertinentCultures", "ShowOnlyPertinentCultures");
+    //        if (importedShowOnlyPertinentCultures != null)
+    //        {
+    //            part.ShowOnlyPertinentCultures = bool.Parse(root.Attribute("ShowOnlyPertinentCultures").Value);                
+    //        }
 
-            var importedShowLabel = context.Attribute("ShowLabel", "ShowLabel");
-            if (importedShowLabel != null) {
-                part.ShowLabel = bool.Parse(root.Attribute("ShowLabel").Value);
-            }
+    //        var importedShowLabel = context.Attribute("ShowLabel", "ShowLabel");
+    //        if (importedShowLabel != null) {
+    //            part.ShowLabel = bool.Parse(root.Attribute("ShowLabel").Value);
+    //        }
      
-            var importedUserCulture = context.Attribute("UserCulture", "UserCulture");            
-            if (importedUserCulture != null) 
-            {
-                    part.UserCulture.Id= int.Parse(root.Attribute("UserCulture").Parent.Element("Id").Value);
-                    part.UserCulture.CultureCode = root.Attribute("UserCulture").Parent.Element("CultureCode").Value;
-                    part.UserCulture.DisplayName = root.Attribute("UserCulture").Parent.Element("DisplayName").Value;
-                    part.UserCulture.Priority = int.Parse(root.Attribute("UserCulture").Parent.Element("Priority").Value);  
-                }
-            }
+    //        var importedUserCulture = context.Attribute("UserCulture", "UserCulture");            
+    //        if (importedUserCulture != null) 
+    //        {
+    //                part.UserCulture.CultureCode = root.Attribute("UserCulture").Parent.Element("CultureCode").Value;
+    //                part.UserCulture.DisplayName = root.Attribute("UserCulture").Parent.Element("DisplayName").Value;
+    //                part.UserCulture.Priority = int.Parse(root.Attribute("UserCulture").Parent.Element("Priority").Value);  
+    //            }
+    //        }
 
     }
 }

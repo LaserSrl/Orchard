@@ -21,6 +21,12 @@ namespace Contrib.Widgets.Services {
                 .Where(x => x.HostId == hostId)
                 .List();
         }
+        public IEnumerable<WidgetExPart> GetWidgets(int hostId, bool published) {
+            return _contentManager
+                .Query<WidgetExPart, WidgetExPartRecord>(published ? VersionOptions.Published : VersionOptions.Latest)
+                .Where(x => x.HostId == hostId)
+                .List();
+        }
 
         public LayerPart GetContentLayer() {
             var contentLayer = _widgetsService.GetLayers().FirstOrDefault(x => x.Name == "ContentWidgets")

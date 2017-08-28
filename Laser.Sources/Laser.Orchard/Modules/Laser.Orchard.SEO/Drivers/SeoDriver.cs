@@ -11,11 +11,10 @@ using Laser.Orchard.SEO.ViewModels;
 using Laser.Orchard.SEO.Services;
 using Orchard.ContentManagement.Handlers;
 
-
 namespace Laser.Orchard.SEO.Drivers {
 
 
-    public class SeoDriver : ContentPartDriver<SeoPart> {
+    public class SeoDriver : ContentPartCloningDriver<SeoPart> {
 
 
         private readonly IWorkContextAccessor _workContextAccessor;
@@ -62,7 +61,7 @@ namespace Laser.Orchard.SEO.Drivers {
             if (!string.IsNullOrWhiteSpace(metaRobots)) {
                 resourceManager.SetMeta(new MetaEntry {
                     Name = "robots",
-                    Content = metaRobots.Substring(0, metaRobots.Length-1) //remove trailing comma
+                    Content = metaRobots.Substring(0, metaRobots.Length - 1) //remove trailing comma
                 });
             }
 
@@ -102,13 +101,27 @@ namespace Laser.Orchard.SEO.Drivers {
         /// POST Editor.
         /// </summary>
         protected override DriverResult Editor(SeoPart part, IUpdateModel updater, dynamic shapeHelper) {
-            var vm = new SeoPartViewModel();
+            var vm = new SeoPartViewModel(_seoServices);
             updater.TryUpdateModel(vm, Prefix, null, null);
-            vm.UpdatePart(part, _seoServices);
+            vm.UpdatePart(part);
             return Editor(part, shapeHelper);
         }
 
-
+        protected override void Cloning(SeoPart originalPart, SeoPart clonePart, CloneContentContext context) {
+            clonePart.TitleOverride = originalPart.TitleOverride;
+            clonePart.Keywords = originalPart.Keywords;
+            clonePart.Description = originalPart.Description;
+            clonePart.RobotsNoIndex = originalPart.RobotsNoIndex;
+            clonePart.RobotsNoFollow = originalPart.RobotsNoFollow;
+            clonePart.RobotsNoSnippet = originalPart.RobotsNoSnippet;
+            clonePart.RobotsNoOdp = originalPart.RobotsNoOdp;
+            clonePart.RobotsNoArchive = originalPart.RobotsNoArchive;
+            clonePart.RobotsUnavailableAfter = originalPart.RobotsUnavailableAfter;
+            clonePart.RobotsUnavailableAfterDate = originalPart.RobotsUnavailableAfterDate;
+            clonePart.RobotsNoImageIndex = originalPart.RobotsNoImageIndex;
+            clonePart.GoogleNoSiteLinkSearchBox = originalPart.GoogleNoSiteLinkSearchBox;
+            clonePart.GoogleNoTranslate = originalPart.GoogleNoTranslate;
+        }
         protected override void Importing(SeoPart part, ImportContentContext context) {
             var importedTitleOverride = context.Attribute(part.PartDefinition.Name, "TitleOverride");
             if (importedTitleOverride != null) {

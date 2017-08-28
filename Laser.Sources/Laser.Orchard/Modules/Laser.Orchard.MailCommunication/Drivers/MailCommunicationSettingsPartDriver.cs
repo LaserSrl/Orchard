@@ -48,7 +48,7 @@ namespace Laser.Orchard.MailCommunication.Drivers {
 
                 return shapeHelper.EditorTemplate(TemplateName: "Parts/MailCommunicationSettings", Model: vModel, Prefix: Prefix);
             })
-                .OnGroup("Mail Communication");
+                .OnGroup("MailCommunication");
         }
 
     }

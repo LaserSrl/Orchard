@@ -16,7 +16,7 @@ using Orchard.ContentManagement.Handlers;
 namespace Laser.Orchard.Mobile.Drivers {
 
     [OrchardFeature("Laser.Orchard.SmsGateway")]
-    public class SmsGatewayPartDriver : ContentPartDriver<SmsGatewayPart> {
+    public class SmsGatewayPartDriver : ContentPartCloningDriver<SmsGatewayPart> {
 
         private readonly ISmsServices _smsServices;
         private readonly IOrchardServices _orchardServices;
@@ -103,83 +103,89 @@ namespace Laser.Orchard.Mobile.Drivers {
             if (!part.HaveAlias)
                 part.Alias = null;
 
+            // reset Recipient List
+            if (!part.SendToRecipientList)
+                part.RecipientList = null;
+
             return Editor(part, shapeHelper);
         }
 
+        protected override void Cloning(SmsGatewayPart originalPart, SmsGatewayPart clonePart, CloneContentContext context) {
+            clonePart.Message = originalPart.Message;
+            clonePart.HaveAlias = originalPart.HaveAlias;
+            clonePart.Alias = originalPart.Alias;
+            //SmsMessageSent is not copied over, because it is controlled by the handler
+            clonePart.SmsMessageSent = false;
+            clonePart.SendToTestNumber = originalPart.SendToTestNumber;
+            clonePart.NumberForTest = originalPart.NumberForTest;
+            clonePart.SendOnNextPublish = false;
+            //SmsDeliveredOrAcceptedNumber is computed as message are sent
+            //SmsRejectedOrExpiredNumber is computed as messages are sent
+            //SmsRecipientsNumber is updated by the handler
+            clonePart.PrefixForTest = originalPart.PrefixForTest;
+            clonePart.RecipientList = originalPart.RecipientList;
+            //ExternalId is not copied becuse it is a unique identifier to the external WS and set by the SmsGatewayEventHandler
+            clonePart.SendToRecipientList = originalPart.SendToRecipientList;
+        }
+
+
 
         protected override void Importing(SmsGatewayPart part, ImportContentContext context) {
-
             var importedMessage = context.Attribute(part.PartDefinition.Name, "Message");
             if (importedMessage != null) {
                 part.Message = importedMessage;
             }
-
             var importedHaveAlias = context.Attribute(part.PartDefinition.Name, "HaveAlias");
             if (importedHaveAlias != null) {
                 part.HaveAlias = bool.Parse(importedHaveAlias);
             }
-
             var importedAlias = context.Attribute(part.PartDefinition.Name, "Alias");
             if (importedAlias != null) {
                 part.Alias = importedAlias;
             }
-
-            var importedSmsMessageSent = context.Attribute(part.PartDefinition.Name, "SmsMessageSent");
-            if (importedSmsMessageSent != null) {
-                part.SmsMessageSent = bool.Parse(importedSmsMessageSent);
-            }
-
+            //SmsMessageSent non ha senso per l'import
             var importedSendToTestNumber = context.Attribute(part.PartDefinition.Name, "SendToTestNumber");
             if (importedSendToTestNumber != null) {
                 part.SendToTestNumber = bool.Parse(importedSendToTestNumber);
             }
-
             var importedNumberForTest = context.Attribute(part.PartDefinition.Name, "NumberForTest");
             if (importedNumberForTest != null) {
                 part.NumberForTest =importedNumberForTest;
             }
-
-            var importedSendOnNextPublish = context.Attribute(part.PartDefinition.Name, "SendOnNextPublish");
-            if (importedSendOnNextPublish != null) {
-                part.SendOnNextPublish = bool.Parse(importedSendOnNextPublish);
-            }
-
-            var importedSmsDeliveredOrAcceptedNumber = context.Attribute(part.PartDefinition.Name, "SmsDeliveredOrAcceptedNumber");
-            if (importedSmsDeliveredOrAcceptedNumber != null) {
-                part.SmsDeliveredOrAcceptedNumber = int.Parse(importedSmsDeliveredOrAcceptedNumber);
-            }
-
-            var importedSmsRejectedOrExpiredNumber = context.Attribute(part.PartDefinition.Name, "SmsRejectedOrExpiredNumber");
-            if (importedSmsRejectedOrExpiredNumber != null) {
-                part.SmsRejectedOrExpiredNumber = int.Parse(importedSmsRejectedOrExpiredNumber);
-            }
-
-            var importedSmsRecipientsNumber = context.Attribute(part.PartDefinition.Name, "SmsRecipientsNumber");
-            if (importedSmsRecipientsNumber != null) {
-                part.SmsRecipientsNumber = int.Parse(importedSmsRecipientsNumber);
-            }
-
+            //SendOnNextPublish non ha senso per l'import
+            //SmsDeliveredOrAcceptedNumber non ha senso per l'import
+            //SmsRejectedOrExpiredNumber non ha senso per l'import
+            //SmsRecipientsNumber non ha senso per l'import
             var importedPrefixForTest = context.Attribute(part.PartDefinition.Name, "PrefixForTest");
             if (importedPrefixForTest != null) {
                 part.PrefixForTest = importedPrefixForTest;
             }
-
+            var importedRecipientList = context.Attribute(part.PartDefinition.Name, "RecipientList");
+            if (importedRecipientList != null) {
+                part.RecipientList = importedRecipientList;
+            }
+            //ExternalId non ha senso per l'import
+            var importedSendToRecipientList = context.Attribute(part.PartDefinition.Name, "SendToRecipientList");
+            if (importedSendToRecipientList != null) {
+                part.SendToRecipientList = bool.Parse(importedSendToRecipientList);
+            }
         }
 
         protected override void Exporting(SmsGatewayPart part, ExportContentContext context) {
-
             context.Element(part.PartDefinition.Name).SetAttributeValue("Message", part.Message);
             context.Element(part.PartDefinition.Name).SetAttributeValue("HaveAlias", part.HaveAlias);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Alias", part.Alias);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("SmsMessageSent", part.SmsMessageSent);
+            //SmsMessageSent non ha senso per l'import
             context.Element(part.PartDefinition.Name).SetAttributeValue("SendToTestNumber", part.SendToTestNumber);
             context.Element(part.PartDefinition.Name).SetAttributeValue("NumberForTest", part.NumberForTest);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("SendOnNextPublish", part.SendOnNextPublish);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("SmsDeliveredOrAcceptedNumber", part.SmsDeliveredOrAcceptedNumber);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("SmsRejectedOrExpiredNumber", part.SmsRejectedOrExpiredNumber);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("SmsRecipientsNumber", part.SmsRecipientsNumber);
+            //SendOnNextPublish non ha senso per l'import
+            //SmsDeliveredOrAcceptedNumber non ha senso per l'import
+            //SmsRejectedOrExpiredNumber non ha senso per l'import
+            //SmsRecipientsNumber non ha senso per l'import
             context.Element(part.PartDefinition.Name).SetAttributeValue("PrefixForTest", part.PrefixForTest);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("RecipientList", part.RecipientList);
+            //ExternalId non ha senso per l'import
+            context.Element(part.PartDefinition.Name).SetAttributeValue("SendToRecipientList", part.SendToRecipientList);
         }
-
     }
 }

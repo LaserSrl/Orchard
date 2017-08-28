@@ -14,7 +14,7 @@ namespace Laser.Orchard.UserReactions.Projections {
     public class UserReactionsQueryFilter : IFilterProvider {
         private readonly IRepository<UserReactionsSummaryRecord> _repoSummary;
         public Localizer T { get; set; }
-        private readonly ITokenizer _tokenizer;
+        //private readonly ITokenizer _tokenizer;
 
         /// <summary>
         /// 

@@ -11,14 +11,11 @@ using System.Linq;
 using System.Collections.Generic;
 using Orchard.Environment.Configuration;
 using Orchard.ContentManagement.Handlers;
-using Orchard.UI.Notify;
-using System;
-using System.Xml.Linq;
 
 namespace Laser.Orchard.StartupConfig.Drivers {
 
     [OrchardFeature("Laser.Orchard.StartupConfig.Maintenance")]
-    public class MaintenancePartDriver : ContentPartDriver<MaintenancePart> {
+    public class MaintenancePartDriver : ContentPartCloningDriver<MaintenancePart> {
        // public Localizer T { get; set; }
         private readonly IMaintenanceService _maintenance;
         private readonly ShellSettings _shellSettings;
@@ -33,8 +30,7 @@ namespace Laser.Orchard.StartupConfig.Drivers {
         //GET
         protected override DriverResult Editor(MaintenancePart part, dynamic shapeHelper) {
             MaintenanceVM MaintenanceVM = new MaintenanceVM();
-            Mapper.CreateMap<MaintenancePart, MaintenanceVM>();
-            Mapper.Map(part, MaintenanceVM);
+            Mapper.Map<MaintenancePart, MaintenanceVM>(part, MaintenanceVM);
             List<string> AllTenantName = new List<string>();
             AllTenantName.Add("All Tenant");
             AllTenantName.AddRange(_maintenance.GetAllTenantName());
@@ -55,8 +51,7 @@ namespace Laser.Orchard.StartupConfig.Drivers {
         protected override DriverResult Editor(MaintenancePart part, IUpdateModel updater, dynamic shapeHelper) {
             MaintenanceVM MaintenanceVM = new MaintenanceVM();
             if (updater.TryUpdateModel(MaintenanceVM, Prefix, null, null)) {
-                Mapper.CreateMap<MaintenanceVM, MaintenancePart>();
-                Mapper.Map( MaintenanceVM,part);
+                Mapper.Map<MaintenanceVM, MaintenancePart>( MaintenanceVM,part);
                 part.Selected_Tenant=string.Join(",",MaintenanceVM.Selected_TenantVM);
             }
             else {
@@ -70,37 +65,16 @@ namespace Laser.Orchard.StartupConfig.Drivers {
             return Editor(part, shapeHelper);
         }
 
+        protected override void Cloning(MaintenancePart originalPart, MaintenancePart clonePart, CloneContentContext context) {
+            clonePart.MaintenanceNotifyType = originalPart.MaintenanceNotifyType;
+            clonePart.MaintenanceNotify = originalPart.MaintenanceNotify;
+            clonePart.Selected_Tenant = originalPart.Selected_Tenant;
+        }
         protected override void Importing(MaintenancePart part, ImportContentContext context) {
-           
-            var importedMaintenanceNotify = context.Attribute(part.PartDefinition.Name, "MaintenanceNotify");
-            if (importedMaintenanceNotify != null) {
-                part.MaintenanceNotify =importedMaintenanceNotify;
-            }
-
-            var importedSelected_Tenant = context.Attribute(part.PartDefinition.Name, "Selected_Tenant");
-            if (importedSelected_Tenant != null) {
-                part.Selected_Tenant = importedSelected_Tenant;
-            }
-
-            var importedMaintenanceNotifyType = context.Attribute(part.PartDefinition.Name, "MaintenanceNotifyType");
-            if (importedMaintenanceNotifyType != null) {
-                part.MaintenanceNotifyType = (NotifyType)Enum.Parse(typeof(NotifyType),importedMaintenanceNotifyType);
-            }
+            // si è deciso di non esportare e importare nulla
         }
-
-
         protected override void Exporting(MaintenancePart part, ExportContentContext context) {
-            
-            context.Element(part.PartDefinition.Name).SetAttributeValue("MailMessageSent", part.MaintenanceNotify);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Selected_Tenant", part.Selected_Tenant);          
-            
-            var MaintenanceNotifyTypeRec = (NotifyType)part.MaintenanceNotifyType;
-            
-            context.Element(part.PartDefinition.Name).SetAttributeValue("MaintenanceNotifyType", MaintenanceNotifyTypeRec);
-
+            // si è deciso di non esportare e importare nulla
         }
-
-       
-       
     }
 }

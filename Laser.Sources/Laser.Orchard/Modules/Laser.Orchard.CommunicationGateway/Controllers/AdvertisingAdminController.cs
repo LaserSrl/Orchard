@@ -23,7 +23,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         private readonly string contentType = "CommunicationAdvertising";
         private readonly dynamic TestPermission = Permissions.ManageCommunicationAdv;
         private readonly INotifier _notifier;
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public AdvertisingAdminController(
             IOrchardServices orchardServices,
@@ -147,8 +147,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
                     );
             else
                 contentQuery = contentQuery.Join<CommunicationAdvertisingPartRecord>().Where(w =>
-                    w.CampaignId == null || w.CampaignId.Equals(0)
-                    );
+                    w.CampaignId.Equals(0));
             if (!string.IsNullOrEmpty(search.Expression))
                 contentQuery = contentQuery.Where<TitlePartRecord>(w => w.Title.Contains(expression));
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);

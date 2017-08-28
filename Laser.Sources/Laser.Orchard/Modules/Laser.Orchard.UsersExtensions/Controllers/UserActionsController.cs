@@ -174,8 +174,14 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
             }
             try {
                 _usersExtensionsServices.Register(userRegistrationParams);
+                List<string> roles = new List<string>();
+                if (_orchardServices.WorkContext.CurrentUser != null) {
+                    roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
+                }
+
                 var registeredServicesData = new {
-                    RegisteredServices = _controllerContextAccessor.Context.Controller.TempData
+                    RegisteredServices = _controllerContextAccessor.Context.Controller.TempData,
+                    Roles = roles
                 };
                 result = _utilsServices.GetResponse(ResponseType.Success, data: registeredServicesData);
             } catch (Exception ex) {
@@ -189,8 +195,13 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
             Response result;
             try {
                 _usersExtensionsServices.SignIn(login);
+                List<string> roles = new List<string>();
+                if (_orchardServices.WorkContext.CurrentUser != null) {
+                    roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
+                }
                 var registeredServicesData = new {
-                    RegisteredServices = _controllerContextAccessor.Context.Controller.TempData
+                    RegisteredServices = _controllerContextAccessor.Context.Controller.TempData,
+                    Roles = roles
                 };
                 result = _utilsServices.GetResponse(ResponseType.Success, "", registeredServicesData);
             } catch (Exception ex) {
@@ -241,7 +252,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
         private ContentResult GetRegistrationPoliciesLogic(string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string lang = null, string complexBehaviour = "") {
             var sb = new StringBuilder();
             var _filterContentFieldsParts = mfilter.ToLower().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            XElement dump;
+            
             XElement projectionDump = null;
             // il dump dell'oggetto principale non filtra per field
             ObjectDumper dumper;

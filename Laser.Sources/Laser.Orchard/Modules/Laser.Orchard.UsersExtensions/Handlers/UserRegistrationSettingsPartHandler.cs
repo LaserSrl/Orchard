@@ -16,7 +16,7 @@ namespace Laser.Orchard.UsersExtensions.Handlers {
             _utilsServices = utilsServices;
             T = NullLocalizer.Instance;
             Filters.Add(new ActivatingFilter<UserRegistrationSettingsPart>("Site"));
-            Filters.Add(new TemplateFilterForPart<UserRegistrationSettingsPart>("UserRegistrationSettings", "Parts/UsersRegistrationSettings", "users extras"));
+            Filters.Add(new TemplateFilterForPart<UserRegistrationSettingsPart>("UserRegistrationSettings", "Parts/UsersRegistrationSettings", "UserExtras"));
         }
 
         public Localizer T { get; set; }
@@ -26,7 +26,7 @@ namespace Laser.Orchard.UsersExtensions.Handlers {
                 return;
             if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy")) {
                 base.GetItemMetadata(context);
-                context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("Users extras")));
+                context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("UserExtras")));
             }
         }
 

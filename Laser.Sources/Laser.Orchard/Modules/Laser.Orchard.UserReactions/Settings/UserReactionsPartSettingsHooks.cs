@@ -50,16 +50,14 @@ namespace Laser.Orchard.UserReactions.Settings {
 
 
             updateModel.TryUpdateModel(model, "UserReactionsPartSettings", null, null);
-            string jsonTypeReactions = new JavaScriptSerializer().Serialize(model.TypeReactionsPartsSelected.ToArray());
-
-           
-            builder.WithSetting("UserReactionsPartSettings.Filtering", ((bool)model.Filtering).ToString());            
-            builder.WithSetting("UserReactionsPartSettings.TypeReactionsPartsSelected", jsonTypeReactions);
-            builder.WithSetting("UserReactionsPartSettings.UserChoiceBehaviour", ((UserChoiceBehaviourValues)model.UserChoiceBehaviour).ToString());            
-
+            if(model.TypeReactionsPartsSelected != null){
+                string jsonTypeReactions = new JavaScriptSerializer().Serialize(model.TypeReactionsPartsSelected.ToArray());
+                builder.WithSetting("UserReactionsPartSettings.Filtering", ((bool)model.Filtering).ToString());
+                builder.WithSetting("UserReactionsPartSettings.TypeReactionsPartsSelected", jsonTypeReactions);
+                builder.WithSetting("UserReactionsPartSettings.UserChoiceBehaviour", ((UserChoiceBehaviourValues)model.UserChoiceBehaviour).ToString());
+            }
+    
             yield return DefinitionTemplate(model);
         }
-
-
     }
 }

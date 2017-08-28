@@ -26,7 +26,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         private readonly IScheduledTaskManager _taskManager;
         private readonly INotifier _notifier;
         private readonly ShellSettings _shellSettings;
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public QuestionnaireStatsController(IOrchardServices orchardServices, IQuestionnairesServices questionnairesServices, IScheduledTaskManager taskManager, INotifier notifier, ShellSettings shellSettings) {
             _orchardServices = orchardServices;
@@ -47,11 +47,12 @@ namespace Laser.Orchard.Questionnaires.Controllers {
 
             var stats = _questionnairesServices.GetStats(idQuestionario, (DateTime?)fromDate, (DateTime?)toDate).Where(x => x.QuestionId == idDomanda).FirstOrDefault();
 
+            var orderedAnswers = stats.Answers.OrderByDescending(x => x.LastDate).ThenByDescending(o => o.Count).ThenBy(o => o.Answer).ToList();
+
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, new PagerParameters { Page = page, PageSize = pageSize });
             var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(stats.Answers.Count());
-            var pageOfAnswers = stats.Answers.Skip(pager.GetStartIndex()).Take(pager.PageSize).ToList();
 
-            stats.Answers = pageOfAnswers.OrderByDescending(o => o.Count).ThenBy(o => o.Answer).ToList();
+            stats.Answers = orderedAnswers.Skip(pager.GetStartIndex()).Take(pager.PageSize).ToList();
 
             QuestionnaireStatsDetailViewModel model = new QuestionnaireStatsDetailViewModel();
             model.AnswersStats = stats;

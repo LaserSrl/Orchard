@@ -8,8 +8,10 @@ namespace LinkCreator
 {
     class LinkCreator
     {
-        [DllImport("kernel32.dll")]
-        static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
+        class NativeMethods {
+            [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+            public static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
+        }
 
         enum SymbolicLink
         {
@@ -24,7 +26,7 @@ namespace LinkCreator
                 // Leggo i parametri di configurazione
 
                 string sourceFolder = ConfigurationManager.AppSettings["SourceFolder"];
-                string destFolder = ConfigurationManager.AppSettings["DestFolder"]; ;
+                string destFolder = ConfigurationManager.AppSettings["DestFolder"];
 
                 // Controllo i moduli
 
@@ -48,6 +50,12 @@ namespace LinkCreator
                     Console.WriteLine("Tutti i temi sono già presenti.");
 
                 // Concludo
+                string NwazetFolder = ConfigurationManager.AppSettings["NwazetFolder"];
+              
+                bool missingNwazet = CheckAndCreateSingleLink(NwazetFolder, destFolder + @"\Modules\","Nwazet.Commerce");
+                if (!missingNwazet)
+                    Console.WriteLine("Nwazet presente.");
+
 
                 Console.WriteLine("");
                 Console.Write("-- Operazione terminata. Premere invio per chiudere la finestra. --");
@@ -74,12 +82,26 @@ namespace LinkCreator
                 if (!itemsLinks.Contains(destPath + itemName))
                 {
                     Console.WriteLine("Collegamento a " + itemName + " mancante: lo aggiungo.");
-                    CreateSymbolicLink(destPath + itemName, Path.GetFullPath(item), SymbolicLink.Directory);
+                    Console.WriteLine("1" + destPath + itemName);
+                    Console.WriteLine("2" + Path.GetFullPath(item));
+                    NativeMethods.CreateSymbolicLink(destPath + itemName, Path.GetFullPath(item), SymbolicLink.Directory);
                     missingItems = true;
                 }
             }
 
             return missingItems;
+        }
+
+        public static bool CheckAndCreateSingleLink(string sourcePath, string destPath,string foldername) {
+            string[] itemsLinks = Directory.GetDirectories(destPath);
+            if (!itemsLinks.Contains(destPath + foldername)) {
+                Console.WriteLine("Collegamento a " + foldername + " mancante: lo aggiungo.");
+                Console.WriteLine("1" + destPath + foldername);
+                Console.WriteLine("2" + Path.GetFullPath(sourcePath + foldername));
+                NativeMethods.CreateSymbolicLink(destPath + foldername, Path.GetFullPath(sourcePath + foldername), SymbolicLink.Directory);
+                return true;
+            }
+            return false;
         }
     }
 }

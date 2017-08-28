@@ -9,6 +9,7 @@ using Orchard.Environment.Configuration;
 using Orchard.Localization.Services;
 using Orchard.Taxonomies.Models;
 using Orchard.UI.Admin;
+using Orchard.Autoroute.Models;
 
 namespace Laser.Orchard.CulturePicker.Services {
     public class ContentCultureSelector : ICultureSelector {
@@ -46,6 +47,9 @@ namespace Laser.Orchard.CulturePicker.Services {
                 return null;
             }
 
+            if (AdminFilter.IsApplied(context.Request.RequestContext)) { // I am in admin context so I have to use defualt site culture
+                return new CultureSelectorResult { Priority = SelectorPriority, CultureName = _orchardServices.WorkContext.CurrentSite.SiteCulture };
+            }
 
             //TODO: check for a more efficient way to get content item for the current request
             string relativePath = Utils.GetAppRelativePath(context.Request.Url.AbsolutePath, context.Request);
@@ -56,11 +60,10 @@ namespace Laser.Orchard.CulturePicker.Services {
             relativePath = relativePath.StartsWith("/") ? relativePath.Substring(1) : relativePath;
             relativePath = HttpUtility.UrlDecode(relativePath);
 
-            if (AdminFilter.IsApplied(context.Request.RequestContext)) { // I am in admin context so I have to use defualt site culture
-                return new CultureSelectorResult { Priority = SelectorPriority, CultureName = _orchardServices.WorkContext.CurrentSite.SiteCulture };
-            }
-            if (context.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "blogpost" && relativePath.IndexOf("/archive") > -1) {
-                relativePath = relativePath.Substring(0, relativePath.IndexOf("/archive")); // prendo sull'url che definisce il blog
+            if (context.Request != null && context.Request.RequestContext.RouteData != null && context.Request.RequestContext.RouteData.Values["controller"] != null) {
+                if (context.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "blogpost" && relativePath.IndexOf("/archive") > -1) {
+                    relativePath = relativePath.Substring(0, relativePath.IndexOf("/archive")); // prendo sull'url che definisce il blog
+                }
             }
             RouteValueDictionary routeValueDictionary = _aliasService.Get(relativePath);
 
@@ -78,6 +81,11 @@ namespace Laser.Orchard.CulturePicker.Services {
             ContentItem content = _orchardServices.ContentManager.Get(routeId, VersionOptions.Published);
             if (content == null) {
                 return null;
+            }
+
+            var autoroute = content.As<AutoroutePart>();
+            if (autoroute != null && autoroute.PromoteToHomePage) {
+                return null; //do not handle home page here, because it is a special kind of content
             }
 
             //NOTE: we can't use ILocalizationService.GetContentCulture for this, because it causes circular dependency

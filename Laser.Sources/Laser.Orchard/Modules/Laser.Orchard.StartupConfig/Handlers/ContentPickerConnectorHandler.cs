@@ -25,7 +25,7 @@ namespace Laser.Orchard.StartupConfig.Handlers {
             if (fieldsFilterSettings != null) {
                 var contentTypesFilter = fieldsFilterSettings.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
                 if (contentTypesFilter.Length > 0)
-                    connector._parentContent.Loader(x => _contenExtensionsServices.ContentPickerParents(context.ContentItem.Id, contentTypesFilter));
+                    connector._parentContent.Loader(() => _contenExtensionsServices.ContentPickerParents(context.ContentItem.Id, contentTypesFilter));
                 else
                     return;
             }

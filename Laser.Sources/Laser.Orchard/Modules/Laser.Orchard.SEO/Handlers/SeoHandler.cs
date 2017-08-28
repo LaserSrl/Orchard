@@ -5,6 +5,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Localization.Services;
 using System;
+using Orchard.ContentManagement.Aspects;
 
 namespace Laser.Orchard.SEO.Handlers {
 
@@ -41,7 +42,10 @@ namespace Laser.Orchard.SEO.Handlers {
                 part.GoogleNoSiteLinkSearchBox = settings.GoogleNoSiteLinkSearchBox;
                 part.GoogleNoTranslate = settings.GoogleNoTranslate;
             });
+            
+            
         }
+        
     }
 
 }

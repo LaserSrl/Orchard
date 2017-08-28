@@ -33,7 +33,8 @@
             linkURL = StripHTML(bookToModify.SelectSingleNode("link").InnerXml.ToString());
         } 
         string immagine = "http://www.festivaldellatv.it/www.festivaldellatv.it/img/fdtv_logo_2015.png";
-        if (String.IsNullOrWhiteSpace(bookToModify.SelectSingleNode("foto_images").InnerXml.ToString()) == false) {
+		if (String.IsNullOrWhiteSpace(bookToModify.SelectSingleNode("foto_images").InnerXml.ToString()) == false) {
+			bookToModify.SelectSingleNode("foto_images").InnerXml=bookToModify.SelectSingleNode("foto_images").InnerXml.ToString().Split('|')[0];
             immagine = StripHTML(bookToModify.SelectSingleNode("foto_images").InnerXml.ToString());
         }
         mydoc = AggiungiShareLink(mydoc, bookToModify, "Vieni anche tu a trovare " + artista + " al #FestivaldellaTV2016", linkURL, immagine);

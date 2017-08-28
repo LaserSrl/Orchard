@@ -8,10 +8,10 @@ using Orchard.Messaging.Services;
 using Orchard.Environment.Configuration;
 using Orchard.DisplayManagement;
 using Orchard.Settings;
-using JetBrains.Annotations;
 using Orchard.Users.Models;
 using System;
 using Orchard;
+using JetBrains.Annotations;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     [OrchardSuppressDependency("Orchard.Users.Services.UserService")]

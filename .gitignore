@@ -20,6 +20,7 @@ app.publish/
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/
 
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
@@ -189,3 +190,4 @@ src/Orchard.Web/Modules/Orchard.DynamicForms/node_modules
 #enable all /lib artifacts
 !lib/*/*.*
 */.vs/*
+.vs

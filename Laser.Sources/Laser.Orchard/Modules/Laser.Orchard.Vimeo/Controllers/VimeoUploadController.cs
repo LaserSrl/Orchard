@@ -114,7 +114,7 @@ namespace Laser.Orchard.Vimeo.Controllers {
                                 rAction = VimeoResolutionAction.NoAction;
                                 success = false;
                             }
-                        } catch (Exception ex) {
+                        } catch (Exception) {
                             //we might end up here in the case when the termination was requested at the same time from here and from the task
                             message = T("The upload has completed, but there was an error while handling the finishing touches.").ToString();
                             eCode = VimeoOrchardErrorCode.FinishingErrors;

@@ -58,10 +58,26 @@ namespace Laser.Orchard.Mobile.WorkFlows {
             var device = activityContext.GetState<string>("allDevice");
             var PushMessage = activityContext.GetState<string>("PushMessage");
             bool produzione = activityContext.GetState<string>("Produzione") == "Produzione";
+            var userId = activityContext.GetState<string>("userId") ?? "";
+            int iUser = 0;
+            List<int> iUserList = new List<int>();
+            string users = ""; 
+            int.TryParse(userId, out iUser);
+            string[] userList = userId.Split(',', ' ');
+            foreach (string uId in userList) {
+                if (int.TryParse(uId, out iUser)) {
+                    iUserList.Add(iUser);
+                }
+            }
+            users = string.Join(",", iUserList);
 
             Int32 idRelated = 0;
-            if (activityContext.GetState<string>("idRelated") == "idRelated") {
+            string stateIdRelated = activityContext.GetState<string>("idRelated");
+            if (stateIdRelated == "idRelated") { //caso necessario per il pregresso
                 idRelated = contentItem.Id;
+            }
+            else {
+                int.TryParse(stateIdRelated, out idRelated);
             }
             string language = activityContext.GetState<string>("allLanguage");
             string messageApple = PushMessage;
@@ -92,7 +108,15 @@ namespace Laser.Orchard.Mobile.WorkFlows {
 
                 device = "All";
             }
-            _pushGatewayService.SendPushService(produzione, device, idRelated, language, messageApple, messageAndroid, messageWindows, sound, querydevice);
+            if (device == "UserId") {
+                querydevice = " SELECT  distinct P.* " +
+                                    " FROM  Laser_Orchard_Mobile_PushNotificationRecord AS P " +
+                                    " LEFT OUTER JOIN Laser_Orchard_Mobile_UserDeviceRecord AS U ON P.UUIdentifier = U.UUIdentifier " +
+                                    " Where U.UserPartRecord_Id in (" + users + ")";
+
+                device = "All";
+            }
+            _pushGatewayService.SendPushService(produzione, device, idRelated, contentItem, language, messageApple, messageAndroid, messageWindows, sound, querydevice);
 
             yield return T("Sent");
         }

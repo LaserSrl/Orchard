@@ -1,0 +1,44 @@
+@using Orchard;
+@using Orchard.Security;
+@using Orchard.ContentManagement;
+@using Orchard.ContentManagement.Records;
+@using Orchard.Data;
+@using System.Linq;
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","OK"
+    IContentManager _contentManager = null;
+    IEncryptionService _encryptionService = null;
+    IMembershipService _membershipService = null;
+    Orchard.Workflows.Models.WorkflowContext wfContext = null;
+}
+@{
+    try {
+        wfContext = Model.Tokens["Workflow"];
+        //Resolve services
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _encryptionService = Model.OrchardServices.WorkContext.Resolve<IEncryptionService>();
+        _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
+    
+        Orchard.ContentManagement.ContentItem ciUsr = _contentManager.Get((int)(@Model.ContentItem.CommonPart.Creator.Value));
+        dynamic usr = (dynamic)ciUsr;
+        string userName = usr.UserPart.UserName;
+        string pwd = "";
+        string encodedPwd = usr.User.OriginalPassword.Value ?? "";
+        if(string.IsNullOrWhiteSpace(encodedPwd) == false) {
+            byte[] bEncodedPwd = Convert.FromBase64String(encodedPwd);
+            pwd = System.Text.Encoding.Unicode.GetString(_encryptionService.Decode(bEncodedPwd));
+            // verify pwd
+            if(_membershipService.ValidateUser(userName, pwd) == null) {
+                pwd = "";
+            }
+        }
+        // save informations in workflow State
+        wfContext.SetState("UserName", userName);
+        wfContext.SetState("Password", pwd);
+        retString = "OK";
+    }
+    catch (Exception ex) {
+        wfContext.SetState("ErrorMessage", ex.Message);
+    }
+}
+@retString

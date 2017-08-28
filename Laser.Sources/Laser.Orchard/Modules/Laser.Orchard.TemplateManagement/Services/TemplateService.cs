@@ -13,26 +13,35 @@ using Laser.Orchard.Commons.Extensions;
 using Orchard.Messaging.Services;
 using Orchard.Email.Services;
 using Orchard.JobsQueue.Services;
-using RazorEngine.Templating;
 using Newtonsoft.Json;
 using Orchard.UI.Notify;
 using Orchard.Environment.Configuration;
 using Laser.Orchard.TemplateManagement.ViewModels;
 
-
 namespace Laser.Orchard.TemplateManagement.Services {
+
     public interface ITemplateService : IDependency {
+
         IEnumerable<TemplatePart> GetLayouts();
+
         IEnumerable<TemplatePart> GetTemplates();
+
         IEnumerable<TemplatePart> GetTemplatesWithLayout(int LayoutIdSelected);
+
         TemplatePart GetTemplate(int id);
+
         string ParseTemplate(TemplatePart template, ParseTemplateContext context);
+
         IEnumerable<IParserEngine> GetParsers();
+
         IParserEngine GetParser(string id);
+
         IParserEngine SelectParser(TemplatePart template);
-        bool SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, object viewBag = null, bool queued = true, List<TemplatePlaceHolderViewModel> listaPH = null);
-        string RitornaParsingTemplate(dynamic contentModel, int templateId, object viewBag = null);
-   }
+
+        bool SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, Dictionary<string, object> viewBag = null, bool queued = true, List<TemplatePlaceHolderViewModel> listaPH = null);
+
+        string RitornaParsingTemplate(dynamic contentModel, int templateId, Dictionary<string, object> viewBag = null);
+    }
 
     [OrchardFeature("Laser.Orchard.TemplateManagement")]
     public class TemplateService : Component, ITemplateService {
@@ -99,22 +108,22 @@ namespace Laser.Orchard.TemplateManagement.Services {
             return _parsers;
         }
 
-        public bool SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, object viewBag=null, bool queued = true, List<TemplatePlaceHolderViewModel> listaPH = null) {
+        public bool SendTemplatedEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> bcc, Dictionary<string, object> viewBag = null, bool queued = true, List<TemplatePlaceHolderViewModel> listaPH = null) {
             var template = GetTemplate(templateId);
             string body = RitornaParsingTemplate(contentModel, templateId, viewBag);
 
             if (body.StartsWith("Error On Template")) {
-                _notifier.Add(NotifyType.Error,T("Error on template, mail not sent"));
+                _notifier.Add(NotifyType.Error, T("Error on template, mail not sent"));
                 return false;
             }
 
             // Place Holder - es. [UNSUBSCRIBE]
             if (listaPH != null) {
                 foreach (TemplatePlaceHolderViewModel ph in listaPH) {
-
                     if (body.Contains(ph.Name)) {
                         body = body.Replace(ph.Name, ph.Value);
-                    } else {
+                    }
+                    else {
                         if (ph.ShowForce)
                             body += "<br /><br />" + ph.Value;
                     }
@@ -140,10 +149,11 @@ namespace Laser.Orchard.TemplateManagement.Services {
             //    _messageService.Send(SmtpMessageChannel.MessageType, data);
             //}
             //watch.Stop();
-            //_notifier.Add(NotifyType.Information, T("Sent " + msgsent.ToString()+" email in Milliseconds:" + watch.ElapsedMilliseconds.ToString()));            
+            //_notifier.Add(NotifyType.Information, T("Sent " + msgsent.ToString()+" email in Milliseconds:" + watch.ElapsedMilliseconds.ToString()));
             if (!queued) {
                 _messageService.Send(SmtpMessageChannel.MessageType, data);
-            } else {
+            }
+            else {
                 var priority = 0;//normal 50 to hight -50 to low
 
                 _jobsQueueService.Enqueue("IMessageService.Send", new { type = SmtpMessageChannel.MessageType, parameters = data }, priority);
@@ -152,14 +162,15 @@ namespace Laser.Orchard.TemplateManagement.Services {
             return true;
         }
 
-        public string RitornaParsingTemplate(dynamic contentModel, int templateId, object viewBag = null) {
-
+        public string RitornaParsingTemplate(dynamic contentModel, int templateId, Dictionary<string, object> viewBag = null) {
             ParseTemplateContext templatectx = new ParseTemplateContext();
             var template = GetTemplate(templateId);
 
             var baseUri = new Uri(_services.WorkContext.CurrentSite.BaseUrl);
+            var basePath = GetBasePath(baseUri);
             string host = "";
             string mediaUrl = "";
+            var tenantPrefix = GetTenantUrlPrexix(_shellSettings);
 
             if (_services.WorkContext.HttpContext != null) {
                 var urlHelper = new UrlHelper(_services.WorkContext.HttpContext.Request.RequestContext);
@@ -172,38 +183,36 @@ namespace Laser.Orchard.TemplateManagement.Services {
                                      _services.WorkContext.HttpContext.Request.Url.Port == 80
                                      ? string.Empty
                                      : ":" + _services.WorkContext.HttpContext.Request.Url.Port);
-
                 mediaUrl = urlHelper.MediaExtensionsImageUrl();
-            } else {
+            }
+            else {
                 host = string.Format("{0}://{1}{2}",
                                      baseUri.Scheme,
                                      baseUri.Host,
                                      baseUri.Port == 80 ? string.Empty : ":" + baseUri.Port);
-
-                var tenantPrefix = GetTenantUrlPrexix(_shellSettings);
-                mediaUrl = string.Format("/{0}/{1}{2}", baseUri.GetComponents(UriComponents.Path, UriFormat.Unescaped), tenantPrefix, @"Laser.Orchard.StartupConfig/MediaTransform/Image");
+                mediaUrl = string.Format("{0}{1}{2}", basePath, tenantPrefix, @"Laser.Orchard.StartupConfig/MediaTransform/Image");
             }
-
+            string baseUrl = string.Format("{0}{1}{2}", host, basePath, tenantPrefix);
             var dynamicModel = new {
                 WorkContext = _services.WorkContext,
                 Content = contentModel,
                 Urls = new {
-                    BaseUrl = baseUri,
+                    BaseUrl = baseUrl,
                     MediaUrl = mediaUrl,
                     Domain = host,
-
                 }.ToExpando()
             };
             templatectx.Model = dynamicModel;
 
-            var razorviewBag = viewBag;
-            RazorEngine.Templating.DynamicViewBag vb = new DynamicViewBag();
-            try {
-                foreach (string key in ((Dictionary<string, object>)viewBag).Keys) {
-                    vb.AddValue(key, ((IDictionary<string, object>)viewBag)[key]);
-                }
-            } catch { }
-            templatectx.ViewBag = vb;
+            //  var razorviewBag = viewBag;
+            //RazorEngine.Templating.DynamicViewBag vb = new DynamicViewBag();
+            //try {
+            //    foreach (string key in ((Dictionary<string, object>)viewBag).Keys) {
+            //        vb.AddValue(key, ((IDictionary<string, object>)viewBag)[key]);
+            //    }
+            //} catch { }
+            //templatectx.ViewBag = vb;
+            templatectx.ViewBag = viewBag;
 
             return ParseTemplate(template, templatectx);
         }
@@ -218,6 +227,24 @@ namespace Laser.Orchard.TemplateManagement.Services {
             return tenantPath;
         }
 
-
+        /// <summary>
+        /// Normalize the path so it has always starting and endinf slashes (eg. "/" or "/aaa/").
+        /// </summary>
+        /// <param name="baseUri"></param>
+        /// <returns></returns>
+        private string GetBasePath(Uri baseUri) {
+            var basePath = baseUri.GetComponents(UriComponents.Path, UriFormat.Unescaped); // può essere dei seguenti tipi: vuoto (""), pieno con slash finale("aaa/"), pieno senza slash finale ("aaa"); non ha mai lo slash iniziale.
+            // normalizza basePath in modo che abbia sempre lo slash iniziale e finale
+            if (string.IsNullOrWhiteSpace(basePath)) {
+                basePath = "/";
+            }
+            else if (basePath.EndsWith("/")) {
+                basePath = string.Format("/{0}", basePath);
+            }
+            else {
+                basePath = string.Format("/{0}/", basePath);
+            }
+            return basePath;
+        }
     }
 }

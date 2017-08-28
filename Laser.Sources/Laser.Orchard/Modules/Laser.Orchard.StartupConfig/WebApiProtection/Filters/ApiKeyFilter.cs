@@ -23,6 +23,7 @@ using System.Net;
 using Laser.Orchard.StartupConfig.ViewModels;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using Orchard.OutputCache;
 
 namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
 
@@ -32,7 +33,7 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
     /// Se ApiKey viene passato in QueryString insieme al parametro clear=false invece, viene applicata la logica di cifratura.
     /// </summary>
     [OrchardFeature("Laser.Orchard.StartupConfig.WebApiProtection")]
-    public class ApiKeyFilter : FilterProvider, IActionFilter, IResultFilter, ICachingEventHandler  {
+    public class ApiKeyFilter : FilterProvider, IActionFilter, IResultFilter, ICachingEventHandler {
         private readonly IApiKeyService _apiKeyService;
         private readonly HttpRequest _request;
         private readonly IUtilsServices _utilsServices;
@@ -63,7 +64,7 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
             _additionalCacheKey = _apiKeyService.ValidateRequestByApiKey(_additionalCacheKey);
-            if ((_additionalCacheKey != null)&&(_additionalCacheKey != "AuthorizedApi")) {
+            if ((_additionalCacheKey != null) && (_additionalCacheKey != "AuthorizedApi")) {
                 ErrorResult(filterContext, String.Format("UnauthorizedApi: {0}", _request.QueryString["ApiKey"] ?? _request.Headers["ApiKey"]));
             }
         }
@@ -77,15 +78,15 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Filters {
         public void OnResultExecuting(ResultExecutingContext filterContext) {
         }
 
+
         /// <summary>
         /// Called by OutpuCache after the default cache key has been defined
         /// </summary>
         /// <param name="key">default cache key such as defined in Orchard.OutpuCache</param>
         /// <returns>The new cache key</returns>
-        public System.Text.StringBuilder InflatingCacheKey(System.Text.StringBuilder key) {
+        public void KeyGenerated(StringBuilder key) {
             _additionalCacheKey = _apiKeyService.ValidateRequestByApiKey(_additionalCacheKey);
             key.Append(_additionalCacheKey);
-            return key;
         }
     }
 }

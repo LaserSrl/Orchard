@@ -1,5 +1,5 @@
 # Orchard resource strings - fr-FR
-# Copyright (c) 2016 Laser s.r.l.
+# Copyright (c) 2017 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -147,4 +147,8 @@ msgstr "Token Source"
 msgctxt "Laser.Orchard.StartupConfig.Projections.TaxonomyTokenForm"
 msgid "The token used as a source for term identifiers"
 msgstr "Le token utilisé comme source des identificateurs des termes"
+
+msgctxt "Laser.Orchard.StartupConfig.Services.UtilsServices"
+msgid "It seems you have not yet accepted the required policies"
+msgstr "Vous n'avez pas encore accepté les conditions d’utilisation."
 

@@ -1,23 +1,22 @@
-﻿using Laser.Orchard.Vimeo.Models;
-using Orchard;
-using Orchard.UI.Admin;
-using Orchard.ContentManagement;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
-using System.Reflection;
-using System.IO;
+using Laser.Orchard.Vimeo.Models;
+using Laser.Orchard.Vimeo.Services;
 using Laser.Orchard.Vimeo.ViewModels;
-using Orchard.Security;
-using Orchard.Localization;
 using Orchard;
+using Orchard.ContentManagement;
+using Orchard.Localization;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
-using OMvc = Orchard.Mvc;
+using Orchard.Security;
+using Orchard.UI.Admin;
 using Orchard.UI.Notify;
-using Laser.Orchard.Vimeo.Services;
+using OMvc = Orchard.Mvc;
 
 namespace Laser.Orchard.Vimeo.Controllers {
     [Admin]
