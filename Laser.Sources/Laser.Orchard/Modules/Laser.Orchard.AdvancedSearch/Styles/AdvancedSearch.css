@@ -31,11 +31,11 @@
 }
 
 .ac-li {
-    width: 30em;
+    width: 50em;
 }
 
 .ac-div-name, .ac-div-mail {
-    width: 25em;
+    width: 20em;
     display: inline-block;
     vertical-align: top;
     word-wrap: break-word

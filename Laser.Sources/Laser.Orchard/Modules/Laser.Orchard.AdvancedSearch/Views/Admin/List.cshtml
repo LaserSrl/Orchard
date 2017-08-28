@@ -356,6 +356,38 @@
                                 }
                             </select>
                         </div>
+                        @{
+                            //bool seeAll = Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent);
+                            //bool mayChoose = Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent);
+                            //bool onlyMine = seeAll ? (bool)Model.AdvancedOptions.OwnedByMeSeeAll : (bool)Model.AdvancedOptions.OwnedByMe;
+
+                            if (mayChoose) {
+                                //seeAll implies mayChoose
+                                <div class="col-xs-12 col-md-4">
+                                    <label for="ownerResults" class="bulk-filter">@T("Owner")</label>
+                                    @*for the texbox, we check loads of conditions*@
+                                    @Html.TextBox(
+                                    "AdvancedOptions.SelectedOwner",
+                                    (!onlyMine) ? //(seeAll || !onlyMine) ?
+                                        (string)Model.AdvancedOptions.SelectedOwner :
+                                        (string)WorkContext.CurrentUser.UserName,
+                                    (!onlyMine) ?
+                                        (object)new { id = "ownerResults", @placeholder = @T("User name or e-mail"), @class = "av-textbox" } :
+                                        (object)new { id = "ownerResults", @disabled = "disabled", @class = "av-textbox" }
+                                )
+                                    &nbsp;
+                                    @Html.CheckBox(
+                                    seeAll ?
+                                        "AdvancedOptions.OwnedByMeSeeAll" :
+                                        "AdvancedOptions.OwnedByMe",
+                                    onlyMine,
+                                    new { id = "isOwnedByMe", @onclick = "checkOwnedByMeCheckBox()" }
+                                )
+                                    @T("Owned by me")
+
+                                </div>
+                            }
+                        }
                         <div class="col-xs-12 col-md-4">
                             @try {
                                 if (Model.AdvancedOptions.TaxonomiesOptions != null && Model.AdvancedOptions.TaxonomiesOptions.Count > 0) {
@@ -382,41 +414,6 @@
                                 }
                             } catch { }
                         </div>
-                        @{
-                            //bool seeAll = Authorizer.Authorize(AdvancedSearchPermissions.SeesAllContent);
-                            //bool mayChoose = Authorizer.Authorize(AdvancedSearchPermissions.MayChooseToSeeOthersContent);
-                            //bool onlyMine = seeAll ? (bool)Model.AdvancedOptions.OwnedByMeSeeAll : (bool)Model.AdvancedOptions.OwnedByMe;
-
-                            if (mayChoose) {
-                                //seeAll implies mayChoose
-                            <div class="col-xs-12 col-md-4">
-                                <label for="ownerResults" class="bulk-filter">@T("Owner")</label>
-                                @*for the texbox, we check loads of conditions*@
-                                @Html.TextBox(
-                                    "AdvancedOptions.SelectedOwner",
-                                    (!onlyMine) ? //(seeAll || !onlyMine) ?
-                                        (string)Model.AdvancedOptions.SelectedOwner :
-                                        (string)WorkContext.CurrentUser.UserName,
-                                    (!onlyMine) ?
-                                        (object)new { id = "ownerResults", @placeholder = @T("User name or e-mail"), @class = "av-textbox" } :
-                                        (object)new { id = "ownerResults", @disabled = "disabled", @class = "av-textbox" }
-                                )
-                                &nbsp;
-			                    @Html.CheckBox(
-                                    seeAll ?
-                                        "AdvancedOptions.OwnedByMeSeeAll" :
-                                        "AdvancedOptions.OwnedByMe",
-                                    onlyMine,
-                                    new { id = "isOwnedByMe", @onclick = "checkOwnedByMeCheckBox()" }
-                                )
-                                @T("Owned by me")
-
-                            </div>
-                            }
-                        }
-
-
-
                     </div>
                 </div>
 
@@ -441,8 +438,8 @@
                             @*@Html.TextBox("AdvancedOptions.SelectedToDate", (string)(Model.AdvancedOptions.SelectedToDate != null ? Model.AdvancedOptions.SelectedToDate.ToString() : ""), new { id = "dateToResults" })*@
                         </div>
                         <div class="col-xs-12 col-md-4" id="onlyWithMedia">
-                            <label for="hasMediaResults" class="bulk-filter">@T("Only with media")</label>
                             @Html.CheckBox("AdvancedOptions.HasMedia", (bool)Model.AdvancedOptions.HasMedia, new { id = "hasMediaResults" })
+                            @T("Only with media")
                         </div>
                     </div>
                 </div>
