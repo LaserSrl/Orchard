@@ -24,17 +24,23 @@ namespace Laser.Orchard.GoogleAnalytics.Models {
 		public virtual bool TrackOnAdmin { get; set; }
 
         /// <summary>
+		/// Gets or sets a value indicating whether Google Analytics tracking will be included on front end pages.
+		/// </summary>
+        public virtual bool TrackOnFrontEnd { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether Google Analytics tracking will anonymize IP.
         /// </summary>
         public virtual bool AnonymizeIp { get; set; }
 
         /// <summary>
 		/// Initializes a new instance of the <see cref="GoogleAnalyticsSettingsPartRecord"/> class. Sets the default value
-        /// of <see cref="P:UseAsyncTracking"/> to <c>true</c> and <see cref="P:TrackOnAdmin"/> to <c>false</c> and <see cref="P:AnonymizeIp"/> to <c>true</c>.
+        /// of <see cref="P:UseAsyncTracking"/> to <c>true</c>, <see cref="P:TrackOnAdmin"/> to <c>false</c>, <see cref="P:TrackOnFrontEnd"/> to <c>false</c> and <see cref="P:AnonymizeIp"/> to <c>true</c>.
 		/// </summary>
 		public GoogleAnalyticsSettingsPartRecord() {
 			UseAsyncTracking = true;
 			TrackOnAdmin = false;
+            TrackOnFrontEnd = false;
             AnonymizeIp = true;
 		}
 	}

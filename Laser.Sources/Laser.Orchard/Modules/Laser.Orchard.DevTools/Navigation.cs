@@ -21,7 +21,7 @@ namespace Laser.Orchard.DevTools {
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(item => item
                 .Caption(T("DevTools"))
-                .Position("1.01")
+                .Position("-2")
                 .Action("Index", "Admin", new { area = "Laser.Orchard.DevTools" })
                 .Permission(Permissions.DevTools)
        );

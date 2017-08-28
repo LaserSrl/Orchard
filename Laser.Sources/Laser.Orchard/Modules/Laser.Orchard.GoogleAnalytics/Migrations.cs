@@ -22,5 +22,11 @@ namespace Laser.Orchard.GoogleAnalytics {
                 table => table.AddColumn<bool>("AnonymizeIp"));
             return 2;
         }
-	}
+
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("GoogleAnalyticsSettingsPartRecord",
+                table => table.AddColumn<bool>("TrackOnFrontEnd"));
+            return 3;
+        }
+    }
 }
