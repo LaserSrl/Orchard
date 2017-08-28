@@ -25,7 +25,8 @@ namespace Laser.Orchard.AppDirect.Models
     public virtual string OpenIdCreator { get; set; }
 
     public virtual string UuidCreator { get; set; }
+        public virtual string AccountIdentifier { get; set; }
+        
 
-
-  }
+    }
 }

@@ -66,8 +66,8 @@ namespace Laser.Orchard.AppDirect.Services {
                 httpWebRequest = (HttpWebRequest)WebRequest.Create(str2);
 
                 if (Method == Method.POST) {
-                   
-                       httpWebRequest.ContentType = "application/x-www-form-urlencoded";
+                   httpWebRequest.ContentType = "application/json";
+                 //   httpWebRequest.ContentType = "application/x-www-form-urlencoded";
                    string myheader = String.Format("OAuth oauth_consumer_key=\"{0}\",oauth_nonce=\"{1}\",oauth_signature=\"{2}\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"{3}\",oauth_version=\"1.0\"", ConsumerKey, nonce, str1, timeStamp);
                    httpWebRequest.Headers[HttpRequestHeader.Authorization]= myheader;
                     httpWebRequest.KeepAlive = true;
@@ -79,15 +79,24 @@ namespace Laser.Orchard.AppDirect.Services {
                 }
                 httpWebRequest.Method = Method.ToString();
          
-                if (!(string.IsNullOrEmpty(postData))){
-                    var data = new ASCIIEncoding().GetBytes(postData);
-                    // var data = new Encoding.ASCII.GetBytes(postData);
-                    httpWebRequest.ContentLength = postData.Length;
-                    
-                    
-                    using (var stream = httpWebRequest.GetRequestStream()) {
-                        stream.Write(data, 0, data.Length);
+                if ((Method == Method.POST) && !(string.IsNullOrEmpty(postData))){
+                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream())) {
+                        // string json = "{\"success\":\"true\"," +
+                        //               "\"password\":\"bla\"}";
+                        // string json = "{\"success\":\"true\"}";
+                        // streamWriter.Write(json);
+                        streamWriter.Write(postData);
+                        streamWriter.Flush();
+                        streamWriter.Close();
                     }
+                    //var data = new ASCIIEncoding().GetBytes(postData);
+                    //// var data = new Encoding.ASCII.GetBytes(postData);
+                    //httpWebRequest.ContentLength = postData.Length;
+                    
+                    
+                    //using (var stream = httpWebRequest.GetRequestStream()) {
+                    //    stream.Write(data, 0, data.Length);
+                    //}
                }
     
             string end = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()).ReadToEnd();

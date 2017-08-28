@@ -145,10 +145,12 @@
     <Compile Include="Models\AppDirectUserPartRecord.cs" />
     <Compile Include="Models\EventType.cs" />
     <Compile Include="Models\LogEventsRecord.cs" />
+    <Compile Include="Models\RequestState.cs" />
     <Compile Include="OAuthBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes\Routes.cs" />
     <Compile Include="Services\AppDirectCommunication.cs" />
+    <Compile Include="ViewModels\ButtonVM.cs" />
     <Content Include="Views\EditorTemplates\Parts\AppDirectButton.cshtml" />
     <None Include="Views\EditorTemplates\Parts\AppDirectUser.cshtml" />
   </ItemGroup>

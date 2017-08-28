@@ -11,6 +11,7 @@ using Laser.Orchard.AppDirect.Services;
 using Newtonsoft.Json.Linq;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -315,12 +316,16 @@ namespace Laser.Orchard.AppDirect.Controllers {
                 contentItem.As<AppDirectUserPart>().CompanyUuidCreator = (json["payload"]["company"]["uuid"] ?? "").ToString();
                 contentItem.As<AppDirectUserPart>().CompanyWebSite = (json["payload"]["company"]["website"] ?? "").ToString();
             }
+
             ((dynamic)contentItem).AppDirectRequestPart.Request.Value = jsonstring;
             ((dynamic)contentItem).AppDirectRequestPart.Action.Value = "Create instance.";
-            ((dynamic)contentItem).AppDirectRequestPart.State.Value = "To Create";
+            ((dynamic)contentItem).AppDirectRequestPart.State.Value = RequestState.ToCreate.ToString();
+            ((dynamic)contentItem).AppDirectRequestPart.Edition.Value = (json["payload"]["order"]["editionCode"] ?? "").ToString(); ;
             ((dynamic)contentItem).AppDirectRequestPart.Uri.Value = Request.QueryString["url"];
 
-            _contentManager.Publish(contentItem);
+            var user = _membershipService.GetUser("Market_AppDirect");
+            contentItem.As<CommonPart>().Owner = user;
+ //           _contentManager.Publish(contentItem);
             return contentItem;
         }
 

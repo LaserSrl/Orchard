@@ -44,7 +44,7 @@ namespace Laser.Orchard.AppDirect
       ContentDefinitionManager.AlterPartDefinition( "AppDirectRequestPart", (Action<ContentPartDefinitionBuilder>) (b => MetaDataExtensions.Attachable(b, false)
       .WithField("Request", (Action<ContentPartFieldDefinitionBuilder>) (cfg => cfg.OfType("TextField").WithDisplayName("Json Response")
       .WithSetting("TextFieldSettings.Flavor", "TextArea")))
-      .WithField("Action", (Action<ContentPartFieldDefinitionBuilder>) (x => x.OfType("TextField").WithDisplayName("Action To Execute").WithSetting("TextFieldSettings.Flavor", "TextArea")))));
+      .WithField("Action", (Action<ContentPartFieldDefinitionBuilder>) (x => x.OfType("TextField").WithDisplayName("Action To Execute").WithSetting("TextFieldSettings.Flavor", "Large")))));
       ContentDefinitionManager.AlterTypeDefinition( "AppDirectRequest", (Action<ContentTypeDefinitionBuilder>) (cfg => cfg.WithPart(typeof (AppDirectUserPart).Name).WithPart("CommonPart").WithPart("AppDirectRequestPart")));
       return 5;
     }
@@ -91,9 +91,15 @@ namespace Laser.Orchard.AppDirect
             ContentDefinitionManager.AlterPartDefinition("AppDirectRequestPart", b => b
             .WithField("Uri", cfg => cfg.OfType("TextField")
             .WithDisplayName("Uri to Call")
+            .WithSetting("TextFieldSettings.Flavor", "Large")
             ));
             return 11;
         }
-        
+
+        public int UpdateFrom11() {
+            SchemaBuilder.AlterTable(typeof(AppDirectUserPartRecord).Name, (Action<AlterTableCommand>)(table => table.AddColumn<string>("AccountIdentifier", (Action<AddColumnCommand>)null)));
+
+            return 12;
+        }
     }
-}
+    }

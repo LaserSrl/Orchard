@@ -1,3 +1,4 @@
-﻿<div style="float:right">
-    <button type="submit" name="submit.Save" value="ConfirmOrder">@T("Confirm Subscription Order").ToString()</button>
+﻿@model Laser.Orchard.AppDirect.ViewModels.ButtonVM
+<div style="float:right">
+    <button type="submit" name="submit.Save" value="@Model.ButtonAction">@Model.ButtonText</button>
 </div>

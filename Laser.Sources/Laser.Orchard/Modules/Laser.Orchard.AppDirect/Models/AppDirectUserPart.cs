@@ -81,6 +81,18 @@ namespace Laser.Orchard.AppDirect.Models {
             }
         }
 
+        public string AccountIdentifier {
+            get
+            {
+                return this.Retrieve(r => r.AccountIdentifier);
+            }
+            set
+            {
+                this.Store(r => r.AccountIdentifier, value);
+            }
+        }
+        
+
         public string CompanyWebSite {
             get
             {

@@ -1,51 +1,68 @@
 ﻿@model Laser.Orchard.AppDirect.Models.AppDirectUserPart
 <fieldset>
     <legend>@T("AppDirect User")</legend>
+
     <div>
-        @Html.LabelFor(m => m.Email)
-        @Html.TextBoxFor(m => m.Email)
+        @Html.LabelFor(m => m.Email, new { style = "display:inline;min-width:250px" }): 
+        @Model.Email
+        @Html.HiddenFor(m => m.Email)
     </div>
     <div>
-        @Html.LabelFor(m => m.FirstName)
-        @Html.TextBoxFor(m => m.FirstName)
+        @Html.LabelFor(m => m.AccountIdentifier)
+        @Html.TextBoxFor(m => m.AccountIdentifier)
     </div>
     <div>
-        @Html.LabelFor(m => m.LastName)
-        @Html.TextBoxFor(m => m.LastName)
+        @Html.LabelFor(m => m.FirstName, new { style = "display:inline;min-width:250px" }):
+        @Model.FirstName
+        @Html.HiddenFor(m => m.FirstName)
     </div>
     <div>
-        @Html.LabelFor(m => m.Language)
-        @Html.TextBoxFor(m => m.Language)
+        @Html.LabelFor(m => m.LastName, new { style = "display:inline;min-width:250px" }):
+        @Model.LastName
+        @Html.HiddenFor(m => m.LastName)
+
     </div>
     <div>
-        @Html.LabelFor(m => m.Locale)
-        @Html.TextBoxFor(m => m.Locale)
+        @Html.LabelFor(m => m.Language, new { style = "display:inline;min-width:250px" }):
+        @Model.Language
+        @Html.HiddenFor(m => m.Language)
     </div>
     <div>
-        @Html.LabelFor(m => m.OpenIdCreator)
-        @Html.TextBoxFor(m => m.OpenIdCreator)
+        @Html.LabelFor(m => m.Locale, new { style = "display:inline;min-width:250px" }):
+        @Model.Locale
+        @Html.HiddenFor(m => m.Locale)
     </div>
     <div>
-        @Html.LabelFor(m => m.UuidCreator)
-        @Html.TextBoxFor(m => m.UuidCreator)
+        @Html.LabelFor(m => m.OpenIdCreator, new { style = "display:inline;min-width:250px" }):
+        @Model.OpenIdCreator
+        @Html.HiddenFor(m => m.OpenIdCreator)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.UuidCreator, new { style = "display:inline;min-width:250px" }):
+        @Model.UuidCreator
+        @Html.HiddenFor(m => m.UuidCreator)
     </div>
 </fieldset>
 <fieldset>
     <legend>@T("AppDirect User Company")</legend>
     <div>
-        @Html.LabelFor(m => m.CompanyName)
-        @Html.TextBoxFor(m => m.CompanyName)
+        @Html.LabelFor(m => m.CompanyName, new { style = "display:inline;min-width:250px" }):
+        @Model.CompanyName
+        @Html.HiddenFor(m => m.CompanyName)
     </div>
     <div>
-        @Html.LabelFor(m => m.CompanyCountry)
-        @Html.TextBoxFor(m => m.CompanyCountry)
+        @Html.LabelFor(m => m.CompanyCountry, new { style = "display:inline;min-width:250px" }):
+        @Model.CompanyCountry
+        @Html.HiddenFor(m => m.CompanyCountry)
     </div>
     <div>
-        @Html.LabelFor(m => m.CompanyWebSite)
-        @Html.TextBoxFor(m => m.CompanyWebSite)
+        @Html.LabelFor(m => m.CompanyWebSite, new { style = "display:inline;min-width:250px" }):
+        @Model.CompanyWebSite
+        @Html.HiddenFor(m => m.CompanyWebSite)
     </div>
     <div>
-        @Html.LabelFor(m => m.CompanyUuidCreator)
-        @Html.TextBoxFor(m => m.CompanyUuidCreator)
+        @Html.LabelFor(m => m.CompanyUuidCreator, new { style = "display:inline;min-width:250px" }):
+        @Model.CompanyUuidCreator
+        @Html.HiddenFor(m => m.CompanyUuidCreator)
     </div>
 </fieldset>
