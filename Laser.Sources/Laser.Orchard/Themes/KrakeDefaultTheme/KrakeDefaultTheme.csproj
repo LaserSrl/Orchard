@@ -204,6 +204,18 @@
   <ItemGroup>
     <Content Include="Views\Fields\MediaLibraryPicker.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplate-Nome.cshtml" />
+    <Content Include="Views\EditorTemplate-User-InputField-Cognome.cshtml" />
+    <Content Include="Views\Media_Summary.cshtml" />
+    <Content Include="Views\Parts.Title_Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Common.Body.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Content.Summary.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

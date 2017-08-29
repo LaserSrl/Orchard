@@ -452,3 +452,11 @@ h3{
 .map {
     margin-bottom:20px;
 }
+
+.action-button{
+    width: auto !important;
+}
+
+ul{
+    list-style-type: none;
+}
