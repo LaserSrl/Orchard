@@ -1,11 +1,18 @@
-﻿using Orchard.Data.Migration;
+﻿using Laser.Orchard.GoogleAnalytics.Models;
 using Orchard;
 using Orchard.ContentManagement;
-using Laser.Orchard.GoogleAnalytics.Models;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
+using Orchard.Data.Migration;
 
 namespace Laser.Orchard.GoogleAnalytics {
-	public class Migrations : DataMigrationImpl {
-		public int Create() {
+    public class Migrations : DataMigrationImpl {
+        private readonly IOrchardServices _services;
+
+        public Migrations(IOrchardServices services) {
+            _services = services;
+        }
+
+        public int Create() {
 			SchemaBuilder.CreateTable("GoogleAnalyticsSettingsPartRecord", 
 				table => table
 					.ContentPartRecord()
@@ -25,7 +32,11 @@ namespace Laser.Orchard.GoogleAnalytics {
 
         public int UpdateFrom2() {
             SchemaBuilder.AlterTable("GoogleAnalyticsSettingsPartRecord",
-                table => table.AddColumn<bool>("TrackOnFrontEnd"));
+                table => table.AddColumn<bool>("TrackOnFrontEnd", c => c.NotNull().WithDefault(true)));
+
+            var settings = _services.WorkContext.CurrentSite.As<GoogleAnalyticsSettingsPart>();
+            settings.As<InfosetPart>().Store("GoogleAnalyticsSettingsPart", "TrackOnFrontEnd", true);
+
             return 3;
         }
     }

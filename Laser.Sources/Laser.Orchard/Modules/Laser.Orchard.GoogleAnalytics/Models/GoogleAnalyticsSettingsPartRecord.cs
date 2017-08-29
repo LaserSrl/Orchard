@@ -40,7 +40,7 @@ namespace Laser.Orchard.GoogleAnalytics.Models {
 		public GoogleAnalyticsSettingsPartRecord() {
 			UseAsyncTracking = true;
 			TrackOnAdmin = false;
-            TrackOnFrontEnd = false;
+            TrackOnFrontEnd = true;
             AnonymizeIp = true;
 		}
 	}
