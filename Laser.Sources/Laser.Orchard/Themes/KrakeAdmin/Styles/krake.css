@@ -1387,6 +1387,10 @@ fieldset {
     display: table-row;
 }
 
+.answer-col {
+    width: 80px;
+}
+
 input[type="file"] {
     display: inline;
 }

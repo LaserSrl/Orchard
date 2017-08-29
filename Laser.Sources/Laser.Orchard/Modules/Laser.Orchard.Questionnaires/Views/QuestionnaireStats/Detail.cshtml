@@ -22,6 +22,22 @@
     Style.Require("jqPlot");
     Style.Require("QuestionnaireAdmin");
     var urlBack = Url.Action("Detail", new { idQuestionario = Request.QueryString["idQuestionario"] });
+
+    var width = 0;
+    var height = 0;
+    var maxAnswers = Model.OrderByDescending(o => o.Answers.Count).FirstOrDefault();
+
+    if (maxAnswers != null) {
+        if (maxAnswers.Answers.Count <= 4) {
+            width = 500;
+            height = 300;
+        }
+        else {
+            width = 600;
+            height = 400;
+        }
+    }
+    }
 }
 
 <p class="breadcrumb">
@@ -56,7 +72,7 @@
     <div style="margin-top: 15px;">
         @{
             foreach (var question in Model) {
-                <div id="answer-@question.QuestionId" class="answer">
+                <div id="answer-@question.QuestionId" class="st-answer">
                     <div id="answerlist-@question.QuestionId" class="answerlist">
                         <h5>@question.Question</h5>
                         @{
@@ -78,7 +94,7 @@
                     </div>
 
                     @if (question.QuestionType != Laser.Orchard.Questionnaires.QuestionType.OpenAnswer) {
-                        <div id="answerchart-@question.QuestionId" class="answerchart"></div>
+                        <div id="answerchart-@question.QuestionId" class="answerchart" style="width:@(width + "px"); height:@(height + "px");"></div>
                     }
                 </div>
 
@@ -135,11 +151,13 @@
                             }
                         }
                 $.jqplot('answerchart-@question.QuestionId', [data], {
+                    width: @width,
+                    height: @height,
                     seriesDefaults: {
                         renderer: jQuery.jqplot.PieRenderer,
                         rendererOptions: {
                             showDataLabels: true,
-                            dataLabelFormatString: '%.2f'
+                            //dataLabelFormatString: '%.2f'
                         }
                     },
                     legend: {
