@@ -10,7 +10,7 @@
     </div>
     <div>@Html.LabelFor(m => m.Priority, @T("Priority"))
         @Html.EditorFor(m => m.Priority)
-        <span class="hint">@T("Set a priority. This information is used to order policy textes.")</span>
+        <span class="hint">@T("Set a priority. This information is used to order policy texts in a descending priority order.")</span>
     </div>
     <div>@Html.EditorFor(m => m.UserHaveToAccept)
         @Html.LabelFor(x => x.UserHaveToAccept, @T("User have to accept this policy").Text, new { @class = "forcheckbox" })
