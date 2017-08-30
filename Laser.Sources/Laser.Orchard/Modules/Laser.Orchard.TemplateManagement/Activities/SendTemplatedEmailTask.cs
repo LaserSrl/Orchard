@@ -48,7 +48,7 @@ namespace Laser.Orchard.TemplateManagement.Activities {
         public Localizer T { get; set; }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return new[] { T("Sent") };
+            return new[] { T("Sent"), T("Failed")};
         }
 
         public override string Form {
@@ -143,7 +143,7 @@ namespace Laser.Orchard.TemplateManagement.Activities {
 
                 yield return T("Sent");
             else
-                yield return T("Not Sent");
+                yield return T("Failed");
         }
 
         private static IEnumerable<string> SplitEmail(string commaSeparated) {
