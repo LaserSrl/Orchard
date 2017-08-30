@@ -77,10 +77,18 @@
     width: 100px;
 }
 
+.answer-text {
+    width: auto;
+}
+
+.answer-col {
+    width: 60px;
+}
+
 /*Statistiche*/
 
-.answer {
-    display: inline-block !important;
+.st-answer {
+    display: inline-block;
     width: 100%;
 }
 
