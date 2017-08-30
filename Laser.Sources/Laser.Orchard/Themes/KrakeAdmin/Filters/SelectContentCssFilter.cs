@@ -1,21 +1,13 @@
-﻿using System;
-using System.Web.Mvc;
-using Orchard.Mvc.Filters;
-using Orchard.Themes.Services;
-using Orchard.UI.Admin;
-using Orchard.UI.Resources;
-using System.Web.Routing;
-using System.Text.RegularExpressions;
-using System.IO;
-using Orchard;
-using Orchard.Environment.Extensions;
+﻿using Orchard;
 using Orchard.Environment.Features;
-using System.Collections.Generic;
-using Orchard.FileSystems.VirtualPath;
-using Orchard.Caching;
-using Orchard.Themes;
-using Orchard.Environment.Extensions.Models;
+using Orchard.Mvc.Filters;
+using Orchard.UI.Resources;
+using System;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace KrakeAdmin.Filters {
     public class SelectContentCssFilter : FilterProvider, IResultFilter {
@@ -35,14 +27,14 @@ namespace KrakeAdmin.Filters {
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
-            if (isAdminKrakePicker(filterContext.RouteData)) {
+            if (isAdminKrakePicker(filterContext.RouteData) || isAdminKrakeTranslator(filterContext.RouteData)) {
                 CaptureResponse(filterContext);
             }
         }
 
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {                 
-            if (isAdminKrakePicker(filterContext.RouteData)) {
+            if (isAdminKrakePicker(filterContext.RouteData) || isAdminKrakeTranslator(filterContext.RouteData)) {
                 _resourceManager.Require("stylesheet", ResourceManifest.Site).AtHead();
                 _resourceManager.Require("stylesheet", ResourceManifest.KrakeAdmin).AtHead();
                 _resourceManager.Require("stylesheet", ResourceManifest.Krake).AtHead();
@@ -69,9 +61,23 @@ namespace KrakeAdmin.Filters {
             
             //simple search
             bool isSearchContent = route.Values.ContainsKey("area") && route.Values["area"].Equals("Orchard.Search");
-            bool isContentPiker = route.Values.ContainsKey("controller") && route.Values["controller"].Equals("ContentPicker");
+            bool isContentPicker = route.Values.ContainsKey("controller") && route.Values["controller"].Equals("ContentPicker");
 
-            return isActionIndex && isKrakeTheme && (isAdmin && isPickerContent || isSearchContent && isContentPiker);
+            return isActionIndex && isKrakeTheme && (isAdmin && isPickerContent || isSearchContent && isContentPicker);
+        }
+
+        private bool isAdminKrakeTranslator(RouteData route) {
+            var featureTheme = _featureManager
+                .GetAvailableFeatures()
+                .FirstOrDefault(f => f.Id.Equals("KrakeAdmin", StringComparison.OrdinalIgnoreCase));
+            var isKrakeTheme = featureTheme != null;
+
+            //translator
+            bool isTranslator = route.Values.ContainsKey("area") && route.Values["area"].Equals("Laser.Orchard.Translator");
+            bool isTranslatorController = route.Values.ContainsKey("controller") && route.Values["controller"].Equals("Translator");
+            bool isTranslatorFrame = route.Values.ContainsKey("action") && (route.Values["action"].Equals("TranslatorForm") || route.Values["action"].Equals("TranslatorFolderSettings"));
+
+            return isTranslator && isTranslatorController && isTranslatorFrame;
         }
 
         private void CaptureResponse(ControllerContext filterContext) {
