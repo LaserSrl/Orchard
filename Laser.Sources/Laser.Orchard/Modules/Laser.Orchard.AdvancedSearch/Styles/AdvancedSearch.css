@@ -17,3 +17,30 @@
     display: inline;
     margin-right: 0.2em;
 }
+
+.box-body, .box-footer {
+    padding-top: 10px;
+}
+
+.av-textbox {
+    width: 12em;
+    font-family: inherit;
+    padding: 3px;
+    border: 1px solid #bdbcbc;
+    font-size: inherit;
+}
+
+.ac-li {
+    width: 50em;
+}
+
+.ac-div-name, .ac-div-mail {
+    width: 20em;
+    display: inline-block;
+    vertical-align: top;
+    word-wrap: break-word
+}
+
+.ac-div-mail {
+    margin-left: 0.4em;
+}
