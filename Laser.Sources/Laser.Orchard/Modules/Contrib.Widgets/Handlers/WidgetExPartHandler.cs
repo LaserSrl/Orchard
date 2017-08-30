@@ -17,13 +17,22 @@ namespace Contrib.Widgets.Handlers {
             _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
             OnActivated<WidgetExPart>(SetupFields);
+            OnUpdated<WidgetExPart>(PublishWidget);
         }
+
         private void SetupFields(ActivatedContentContext context, WidgetExPart part) {
             part.HostField.Loader(() => part.Record.HostId != null ? _contentManager.Get(part.Record.HostId.Value) : null);
             part.HostField.Setter(x => {
                 part.Record.HostId = x != null ? x.Id : default(int?);
                 return x;
             });
+        }
+
+        private void PublishWidget(UpdateContentContext context, WidgetExPart part) {
+            if (!context.ContentItem.TypeDefinition.Settings.ContainsKey("Stereotype") || context.ContentItem.TypeDefinition.Settings["Stereotype"] != "Widget")
+                return;
+
+            _contentManager.Publish(part.ContentItem);
         }
 
         protected override void Activated(ActivatedContentContext context) {
