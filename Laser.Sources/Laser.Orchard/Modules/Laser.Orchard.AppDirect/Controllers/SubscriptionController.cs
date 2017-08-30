@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Mvc;
 using Laser.Orchard.AppDirect.Models;
@@ -21,13 +17,10 @@ using Orchard.Workflows.Services;
 
 namespace Laser.Orchard.AppDirect.Controllers {
     public class SubscriptionController : Controller {
-       // public string ConsumerKey= "app-retail-b2c-172476";
-       // public string ConsumerSecret= "wpIwWYppbVM07hIV";
         private readonly IMembershipService _membershipService;
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserEventHandler _userEventHandler;
-       private readonly ILogger Logger;
-   //     private readonly IRepository<LogEventsRecord> _repositoryLog;
+        private readonly ILogger Logger;
         private readonly IContentManager _contentManager;
         private readonly IWorkflowManager _workflowManager;
         private readonly IOrchardServices _orchardServices;
@@ -40,7 +33,6 @@ namespace Laser.Orchard.AppDirect.Controllers {
             IMembershipService membershipService, 
             IAuthenticationService authenticationService, 
             IUserEventHandler userEventHandler, 
-            IRepository<LogEventsRecord> repositoryLog, 
             IContentManager contentManager,
             IWorkflowManager workflowManager,
             IOrchardServices orchardServices,
@@ -51,7 +43,6 @@ namespace Laser.Orchard.AppDirect.Controllers {
             _membershipService = membershipService;
             _authenticationService = authenticationService;
             _userEventHandler = userEventHandler;
-     //       _repositoryLog = repositoryLog;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
             _contentManager = contentManager;
@@ -204,53 +195,53 @@ namespace Laser.Orchard.AppDirect.Controllers {
         //    return _authenticationService.GetAuthenticatedUser() != null;
         //}
 
-    //    public ActionResult LogOn(string loginIdentifier) {
-    //        string stropenid = Request.QueryString["openid"];
-    //        OpenIdRelyingParty rpopenid = new OpenIdRelyingParty();
-           
-    //        var response = rpopenid.GetResponse();
-    //        if (response != null) {
-    //            switch (response.Status) {
-    //                case AuthenticationStatus.Authenticated:
-    //                    var extradata = response.GetExtension<ClaimsResponse>();
-    //                   var email= extradata.Email;
-    //                    // NotLoggedIn.Visible = false;
-    //                    Session["GoogleIdentifier"] = response.ClaimedIdentifier.ToString();
-    //                    //AttributeValues att = new AttributeValues();
-    //                    //Response.Write(Session["GoogleIdentifier"]);
+        //    public ActionResult LogOn(string loginIdentifier) {
+        //        string stropenid = Request.QueryString["openid"];
+        //        OpenIdRelyingParty rpopenid = new OpenIdRelyingParty();
 
-    //                    //Response.Redirect("Main.aspx"); //redirect to main page of your website
-    //                    break;
-    //                case AuthenticationStatus.Canceled:
-    //                    //lblAlertMsg.Text = "Cancelled.";
-    //                    break;
-    //                case AuthenticationStatus.Failed:
-    //                    //lblAlertMsg.Text = "Login Failed.";
-    //                    break;
-    //            }
-    //        }
-    //        // string outresponse;
-    //        // OpenId(openid, out outresponse, "", "");
-    //        //// string str2 = Request.QueryString["accountId"];
-    //        // WebClient webClient = new WebClient();
-    //        // webClient.Credentials = (ICredentials)new NetworkCredential(ConsumerKey, ConsumerSecret);
-    //        // webClient.Headers.Add("Content-Type", "application/json; charset=utf-8");
-    //        // webClient.DownloadString(new Uri(openid));
-    //        using (OpenIdRelyingParty openIdRelyingParty = new OpenIdRelyingParty()) {
-    //            IAuthenticationRequest request = openIdRelyingParty.CreateRequest(stropenid);
-    //            request.AddExtension(new ClaimsRequest {
-    //                Email=DemandLevel.Request,
-    //                Nickname=DemandLevel.Request
-    //            });
-    //            request.RedirectToProvider();
-    ////            openIdRelyingParty.CreateRequest(stropenid).RedirectToProvider();
-    //        }
+        //        var response = rpopenid.GetResponse();
+        //        if (response != null) {
+        //            switch (response.Status) {
+        //                case AuthenticationStatus.Authenticated:
+        //                    var extradata = response.GetExtension<ClaimsResponse>();
+        //                   var email= extradata.Email;
+        //                    // NotLoggedIn.Visible = false;
+        //                    Session["GoogleIdentifier"] = response.ClaimedIdentifier.ToString();
+        //                    //AttributeValues att = new AttributeValues();
+        //                    //Response.Write(Session["GoogleIdentifier"]);
 
-
+        //                    //Response.Redirect("Main.aspx"); //redirect to main page of your website
+        //                    break;
+        //                case AuthenticationStatus.Canceled:
+        //                    //lblAlertMsg.Text = "Cancelled.";
+        //                    break;
+        //                case AuthenticationStatus.Failed:
+        //                    //lblAlertMsg.Text = "Login Failed.";
+        //                    break;
+        //            }
+        //        }
+        //        // string outresponse;
+        //        // OpenId(openid, out outresponse, "", "");
+        //        //// string str2 = Request.QueryString["accountId"];
+        //        // WebClient webClient = new WebClient();
+        //        // webClient.Credentials = (ICredentials)new NetworkCredential(ConsumerKey, ConsumerSecret);
+        //        // webClient.Headers.Add("Content-Type", "application/json; charset=utf-8");
+        //        // webClient.DownloadString(new Uri(openid));
+        //        using (OpenIdRelyingParty openIdRelyingParty = new OpenIdRelyingParty()) {
+        //            IAuthenticationRequest request = openIdRelyingParty.CreateRequest(stropenid);
+        //            request.AddExtension(new ClaimsRequest {
+        //                Email=DemandLevel.Request,
+        //                Nickname=DemandLevel.Request
+        //            });
+        //            request.RedirectToProvider();
+        ////            openIdRelyingParty.CreateRequest(stropenid).RedirectToProvider();
+        //        }
 
 
-    //           return null;
-    //    }
+
+
+        //           return null;
+        //    }
 
         //[AcceptVerbs]
         //public ActionResult LogOn(string loginIdentifier) {
@@ -270,7 +261,39 @@ namespace Laser.Orchard.AppDirect.Controllers {
         //    iauthenticationRequest.AddExtension((IOpenIdMessageExtension)claimsRequest);
         //    return MessagingUtilities.AsActionResult(request.RedirectingResponse);
         //}
-
+        private ContentItem CreateContentItemRequest(string jsonstring, RequestState Action) {
+            JObject json = JObject.Parse(jsonstring);
+            ContentItem contentItem = _contentManager.New("AppDirectRequest");
+            _contentManager.Create(contentItem);
+            if ((json["creator"]).Type != JTokenType.Null) {
+                var appDirectUserPart = contentItem.As<AppDirectUserPart>();
+                appDirectUserPart.Email = (json["creator"]["email"] ?? "").ToString();
+                appDirectUserPart.FirstName = (json["creator"]["firstName"] ?? "").ToString();
+                appDirectUserPart.Language = (json["creator"]["language"] ?? "").ToString();
+                appDirectUserPart.LastName = (json["creator"]["lastName"] ?? "").ToString();
+                appDirectUserPart.Locale = (json["creator"]["locale"] ?? "").ToString();
+                appDirectUserPart.OpenIdCreator = (json["creator"]["openId"] ?? "").ToString();
+                appDirectUserPart.UuidCreator = (json["creator"]["uuid"] ?? "").ToString();
+            }
+            if ((json["payload"]).Type != JTokenType.Null && (json["payload"]["company"]).Type != JTokenType.Null ) {
+                var appDirectUserPart = contentItem.As<AppDirectUserPart>();
+                appDirectUserPart.CompanyCountry = (json["payload"]["company"]["country"] ?? "").ToString();
+                appDirectUserPart.CompanyName = (json["payload"]["company"]["name"] ?? "").ToString();
+                appDirectUserPart.CompanyUuidCreator = (json["payload"]["company"]["uuid"] ?? "").ToString();
+                appDirectUserPart.CompanyWebSite = (json["payload"]["company"]["website"] ?? "").ToString();
+            }
+            var appDirectRequestPart = ((dynamic)contentItem).AppDirectRequestPart;
+            appDirectRequestPart.Request.Value = jsonstring;
+            appDirectRequestPart.Action.Value = EnumHelper< RequestState>.GetDisplayValue(Action);
+            appDirectRequestPart.State.Value = Action.ToString();
+            if ((json["payload"]).Type != JTokenType.Null && (json["payload"]["order"]).Type != JTokenType.Null && (json["payload"]["order"]["editionCode"]).Type != JTokenType.Null) {
+                appDirectRequestPart.Edition.Value = (json["payload"]["order"]["editionCode"] ?? "").ToString();
+            }
+            appDirectRequestPart.Uri.Value = Request.QueryString["url"];
+            var user = _membershipService.GetUser("Market_AppDirect");
+            contentItem.As<CommonPart>().Owner = user;
+            return contentItem;
+        }
         public ActionResult Create() {
             string str = Request.QueryString["url"];
             _appDirectCommunication.WriteEvent(EventType.Input, str);
@@ -283,51 +306,21 @@ namespace Laser.Orchard.AppDirect.Controllers {
             }
             string outresponse;
             if (_appDirectCommunication.MakeRequestToAppdirect(str,Method.GET,"", out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
-                var contentitem=CreateContentItemRequest(outresponse);
-                _workflowManager.TriggerEvent("Subscription_Order", contentitem, () => new Dictionary<string, object> { { "Content", contentitem } });
+                var contentitem=CreateContentItemRequest(outresponse,RequestState.ToCreate);
+                _workflowManager.TriggerEvent("SubscriptionEvent", contentitem, () => new Dictionary<string, object> { { "Content", contentitem }, { "Action", "Create" } });
                 Response.StatusCode = 202; //async
-                var data = new { success = "true" };
-                return Json((object)data, JsonRequestBehavior.AllowGet);
+                var dataResponse = new { success = "true" };
+                return Json((object)dataResponse, JsonRequestBehavior.AllowGet);
             }
             else {
                 Logger.Error(T("Can't retrive order {0}", str).ToString());
                 _appDirectCommunication.WriteEvent(EventType.Input, "Error Can't retrive order "+str);
-                var data = new { success = "false", errorCode= "INVALID_RESPONSE", message="Can't access order" };
-                return Json((object)data, JsonRequestBehavior.AllowGet);
+                var dataResponse = new { success = "false", errorCode= "INVALID_RESPONSE", message="Can't access order" };
+                return Json((object)dataResponse, JsonRequestBehavior.AllowGet);
             }
         }
 
-        private ContentItem CreateContentItemRequest(string jsonstring) {
-            JObject json = JObject.Parse(jsonstring);
-            ContentItem contentItem = _contentManager.New("AppDirectRequest");
-            _contentManager.Create(contentItem);
-            if (json["creator"] != null) {
-                contentItem.As<AppDirectUserPart>().Email = (json["creator"]["email"] ?? "").ToString();
-                contentItem.As<AppDirectUserPart>().FirstName = (json["creator"]["firstName"] ?? "").ToString();
-                contentItem.As<AppDirectUserPart>().Language = (json["creator"]["language"] ?? "").ToString();
-                contentItem.As<AppDirectUserPart>().LastName = (json["creator"]["lastName"] ?? "").ToString();
-                contentItem.As<AppDirectUserPart>().Locale = (json["creator"]["locale"] ??"").ToString();
-                contentItem.As<AppDirectUserPart>().OpenIdCreator = (json["creator"]["openId"] ?? "").ToString();
-                contentItem.As<AppDirectUserPart>().UuidCreator = (json["creator"]["uuid"] ?? "").ToString();
-            }
-            if (json["payload"] != null && json["payload"]["company"] != null) {
-                contentItem.As<AppDirectUserPart>().CompanyCountry = (json["payload"]["company"]["country"] ?? "").ToString();
-                contentItem.As<AppDirectUserPart>().CompanyName = (json["payload"]["company"]["name"] ?? "").ToString();
-                contentItem.As<AppDirectUserPart>().CompanyUuidCreator = (json["payload"]["company"]["uuid"] ?? "").ToString();
-                contentItem.As<AppDirectUserPart>().CompanyWebSite = (json["payload"]["company"]["website"] ?? "").ToString();
-            }
-
-            ((dynamic)contentItem).AppDirectRequestPart.Request.Value = jsonstring;
-            ((dynamic)contentItem).AppDirectRequestPart.Action.Value = "Create instance.";
-            ((dynamic)contentItem).AppDirectRequestPart.State.Value = RequestState.ToCreate.ToString();
-            ((dynamic)contentItem).AppDirectRequestPart.Edition.Value = (json["payload"]["order"]["editionCode"] ?? "").ToString(); ;
-            ((dynamic)contentItem).AppDirectRequestPart.Uri.Value = Request.QueryString["url"];
-
-            var user = _membershipService.GetUser("Market_AppDirect");
-            contentItem.As<CommonPart>().Owner = user;
- //           _contentManager.Publish(contentItem);
-            return contentItem;
-        }
+ 
 
     public ActionResult Edit()
     {
@@ -338,9 +331,29 @@ namespace Laser.Orchard.AppDirect.Controllers {
 
     public ActionResult Cancel()
     {
-      HttpContext.Request.QueryString.ToString();
-      var data = new{ success = "True" };
-      return (ActionResult) Json((object) data, (JsonRequestBehavior) 0);
+           string str = Request.QueryString["url"];
+            _appDirectCommunication.WriteEvent(EventType.Input, str);
+            if (VerifyValidRequest()) {
+                _appDirectCommunication.WriteEvent(EventType.Input, "OpenAuthValidation");
+            }
+            else {
+                _appDirectCommunication.WriteEvent(EventType.Input, "OpenAuthValidation Failed");
+                Response.StatusCode = 404;
+            }
+            string outresponse;
+            if (_appDirectCommunication.MakeRequestToAppdirect(str, Method.GET, "", out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
+                var contentitem = CreateContentItemRequest(outresponse,RequestState.ToCancel);
+                _workflowManager.TriggerEvent("SubscriptionEvent", contentitem, () => new Dictionary<string, object> { { "Content", contentitem }, { "Action", "Cancel" } });
+                Response.StatusCode = 202; //async
+                var dataResponse = new { success = "true" };
+                return Json((object)dataResponse, JsonRequestBehavior.AllowGet);
+            }
+            else {
+                Logger.Error(T("Can't retrive order {0}", str).ToString());
+                _appDirectCommunication.WriteEvent(EventType.Input, "Error Can't retrive order " + str);
+                var dataResponse = new { success = "false", errorCode = "INVALID_RESPONSE", message = "Can't access order" };
+                return Json((object)dataResponse, JsonRequestBehavior.AllowGet);
+            }
     }
 
     public ActionResult Status()

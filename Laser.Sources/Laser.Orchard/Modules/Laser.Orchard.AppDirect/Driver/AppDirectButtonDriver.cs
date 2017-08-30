@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Laser.Orchard.AppDirect.Models;
 using Laser.Orchard.AppDirect.Services;
 using Laser.Orchard.AppDirect.ViewModels;
@@ -27,7 +24,7 @@ namespace Laser.Orchard.AppDirect.Driver {
 
         private ButtonVM GenerateButton(RequestState state) {
             var button = new ButtonVM();
-            if (state==RequestState.ToCreate) {
+            if (state == RequestState.ToCreate) {
                 button.ButtonText = T("Confirm Subscription Order").ToString();
                 button.ButtonAction = "ConfirmOrder";
             }
@@ -35,9 +32,8 @@ namespace Laser.Orchard.AppDirect.Driver {
         }
         protected override DriverResult Editor(AppDirectButtonPart part, dynamic shapeHelper) {
             string state = ((dynamic)part.ContentItem).AppDirectRequestPart.State.Value;
-            var requestState= (RequestState)Enum.Parse(typeof(RequestState), state, true);
+            var requestState = (RequestState)Enum.Parse(typeof(RequestState), state, true);
             var button = GenerateButton(requestState);
-            //
             return ContentShape("Parts_AppDirectButton",
                                () => shapeHelper.EditorTemplate(
                                    TemplateName: "Parts/AppDirectButton",
@@ -45,16 +41,16 @@ namespace Laser.Orchard.AppDirect.Driver {
                                    Prefix: Prefix));
         }
         protected override DriverResult Editor(AppDirectButtonPart part, IUpdateModel updater, dynamic shapeHelper) {
-            if (updater != null &&  _orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "ConfirmOrder" ) {
-                string AccountIdentifier = _orchardServices.WorkContext.HttpContext.Request.Form["Laser.Orchard.AppDirect.AppDirectUserPart.AccountIdentifier"];
+            var button = new ButtonVM();
+            if (updater != null && _orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "ConfirmOrder") {
+                button = GenerateButton(RequestState.ToCreate);
+                var AccountIdentifier = _orchardServices.WorkContext.HttpContext.Request.Form["Laser.Orchard.AppDirect.AppDirectUserPart.AccountIdentifier"];
                 if (!string.IsNullOrEmpty(AccountIdentifier)) {
-                    //part.ContentItem
-                    //  _appDirectCommunication.MakeRequestToAppdirect();
                     string outresponse;
-                    //string data = "success=true&accountIdentifier=teoric";
-                    var data = "{\"success\":\"true\",\"accountIdentifier\":\""+ AccountIdentifier + "\"}";
+                    var data = "{\"success\":\"true\",\"accountIdentifier\":\"" + AccountIdentifier + "\"}";
                     var uri = ((dynamic)part.ContentItem).AppDirectRequestPart.Uri.Value + "/result";
-                    if (_appDirectCommunication.MakeRequestToAppdirect(uri, Method.POST, data, out outresponse, "", "") ) {
+                    if (_appDirectCommunication.MakeRequestToAppdirect(uri, Method.POST, data, out outresponse, "", "")) {
+                        button.ButtonAction = "";
                         _appDirectCommunication.WriteEvent(EventType.Output, "Post async " + data + " " + outresponse + uri);
                         part.ContentItem.As<AppDirectUserPart>().AccountIdentifier = AccountIdentifier;
                         ((dynamic)part.ContentItem).AppDirectRequestPart.State.Value = RequestState.Created.ToString();
@@ -66,7 +62,6 @@ namespace Laser.Orchard.AppDirect.Driver {
                 }
 
             }
-            var button = new ButtonVM();
             return ContentShape("Parts_AppDirectButton",
                                () => shapeHelper.EditorTemplate(
                                    TemplateName: "Parts/AppDirectButton",

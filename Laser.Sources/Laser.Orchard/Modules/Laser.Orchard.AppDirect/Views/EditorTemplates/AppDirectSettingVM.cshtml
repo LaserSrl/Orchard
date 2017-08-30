@@ -1,0 +1,34 @@
+﻿@model Laser.Orchard.AppDirect.ViewModels.AppDirectSettingVM
+@using Laser.Orchard.Commons.Helpers
+<div class="j_btw" style="border: solid #eaeaea 1px; padding: 10px;">
+    <table class="btwtable" style="margin-top:5px; width:100%;">
+        <tr>
+            <td class="leftside" style="width:10%; padding-right:10px;">
+                @Html.HiddenFor(x => x.Delete, new { @class = "mark-for-delete preserve-on-clean" })
+                @Html.HiddenFor(x => x.Id, new { @class = "preserve-on-clean" })
+                <label>@T("Key")</label>
+                @Html.TextBoxFor(m => m.Key)
+            </td>
+            <td style="width:10%; padding-right:10px;">
+                <label>@T("ConsumerKey")</label>
+                @Html.TextBoxFor(m => m.ConsumerKey)
+            </td>
+            <td style="width:10%; padding-right:10px;">
+                <label>@T("ConsumerSecret")</label>
+                @Html.TextBoxFor(m => m.ConsumerSecret)
+            </td>
+            <td style="text-align:right; width:25%;">
+                <i class="fa fa-times" style="color:red; margin-right:2px;"></i>
+                @Html.LinkToRemoveNestedForm(T("Remove").Text, ".j_btw", "input.mark-for-delete", "CleanFieldsOnRemove(this);")
+            </td>
+        </tr>
+        @*<tr>
+            <td class="leftside" colspan="4">
+                <label>@T("Message on button click")</label>
+                @Html.TextBoxFor(m => m.ButtonMessage, new { @class = "text large" })
+            </td>
+            <td></td>
+            <td></td>
+        </tr>*@
+    </table>
+</div>

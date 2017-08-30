@@ -8,4 +8,5 @@ Description: Description for the module
 Features:
     Laser.Orchard.AppDirect:
         Description: To Dialog with the Market Appdirect.
+		Dependencies: Laser.Orchard.jQueryPlugins
 		Category: Market

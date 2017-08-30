@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Laser.Orchard.AppDirect.Models;
+using Laser.Orchard.AppDirect.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Data;
 using Orchard.Environment.Configuration;
 
 namespace Laser.Orchard.AppDirect.Driver {
     public class AppDirectSettingsDriver:ContentPartDriver<AppDirectSettingsPart> {
         private readonly IOrchardServices _orchardServices;
         private readonly ShellSettings _shellSettings;
+        private readonly IRepository<AppDirectSettingsRecord> _repoSetting;
         //private int numeropulsanti = 3;
-        public AppDirectSettingsDriver(IOrchardServices orchardServices, ShellSettings shellSettings) {
+        public AppDirectSettingsDriver(IOrchardServices orchardServices, ShellSettings shellSettings, IRepository<AppDirectSettingsRecord> repoSetting) {
             _orchardServices = orchardServices;
             _shellSettings = shellSettings;
+            _repoSetting = repoSetting;
         }
         protected override string Prefix {
             get { return "Laser.Orchard.AppDirect.Settings"; }
@@ -61,6 +65,15 @@ namespace Laser.Orchard.AppDirect.Driver {
         protected override DriverResult Editor(AppDirectSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
 
             return ContentShape("Parts_AppDirectSettings_Edit", () => {
+                ListAppDirectSettingVM vm = new ListAppDirectSettingVM();
+                 //= null;
+                vm.ListAppDirectSetting = _repoSetting.Table.ToList().Select(s => new AppDirectSettingVM {
+                    Id = s.Id,
+                    ConsumerKey = s.ConsumerKey,
+                    ConsumerSecret = s.ConsumerSecret,
+                    Key = s.TheKey,
+                    Delete = false
+                });
                 //var viewModel = new ButtonToWorkflowsSettingsVM();
                 //var getpart = _orchardServices.WorkContext.CurrentSite.As<ButtonToWorkflowsSettingsPart>();
                 //viewModel = buildmodel(getpart.ButtonsText, getpart.ButtonsAction, getpart.ButtonsDescription, getpart.ButtonsMessage, getpart.ButtonsAsync);
@@ -80,7 +93,10 @@ namespace Laser.Orchard.AppDirect.Driver {
                 ////catch { }
 
                 if (updater != null) {
-                    if (updater.TryUpdateModel(part, Prefix, null, null)) {
+                    vm = new ListAppDirectSettingVM();
+                    if (updater.TryUpdateModel(vm, Prefix, null, null)) {
+
+                        UpdateOAuth(vm);
                         //string _ButtonsText = "";
                         //string _ButtonsAction = "";
                         //foreach (ButtonVM bvm in viewModel.ListButtons) {
@@ -123,10 +139,35 @@ namespace Laser.Orchard.AppDirect.Driver {
                 //emptybvm.ButtonsAction = "";
                 //emptybvm.ButtonsText = "";
                 //viewModel.ListButtons.Add(emptybvm);
-                return shapeHelper.EditorTemplate(TemplateName: "Parts/AppDirectSettings_Edit", Model: part, Prefix: Prefix);
+                return shapeHelper.EditorTemplate(TemplateName: "Parts/AppDirectSettings_Edit", Model: vm, Prefix: Prefix);
             })
           .OnGroup("AppDirect");
         }
+        private void UpdateOAuth(ListAppDirectSettingVM ListOAuth) {
+            foreach (var appDirectSetting in ListOAuth.ListAppDirectSetting) {
+                AppDirectSettingsRecord appSettingRecord = _repoSetting.Get(appDirectSetting.Id);
 
+                if (appDirectSetting.Delete) {
+                    if (appSettingRecord != null)
+                        _repoSetting.Delete(appSettingRecord);
+                }
+                else {
+                    if (appSettingRecord == null)
+                        _repoSetting.Create(new AppDirectSettingsRecord {
+                            TheKey = appDirectSetting.Key,
+                            ConsumerKey = appDirectSetting.ConsumerKey,
+                            ConsumerSecret = appDirectSetting.ConsumerSecret,
+                        });
+                    else {
+                        appSettingRecord.TheKey = appDirectSetting.Key;
+                        appSettingRecord.ConsumerKey = appDirectSetting.ConsumerKey;
+                        appSettingRecord.ConsumerSecret = appDirectSetting.ConsumerSecret;
+                        _repoSetting.Update(appSettingRecord);
+                    }
+                }
+            }
+
+            _repoSetting.Flush();
+        }
     }
 }

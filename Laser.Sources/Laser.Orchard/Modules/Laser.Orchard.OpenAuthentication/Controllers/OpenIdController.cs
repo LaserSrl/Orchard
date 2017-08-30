@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
 using System.Web.Mvc;
 using System.Web.Security;
 using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration;
@@ -11,7 +7,6 @@ using Orchard;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Mvc.Extensions;
 using Orchard.Security;
 using Orchard.Themes;
 using Orchard.UI.Notify;
@@ -56,7 +51,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                             // var email = extradata.Email;
                             var email = extradata.MailAddress.ToString();
                            // string identifierclaim = response.ClaimedIdentifier.ToString();
-                            string orchardUserName = ("AppMarket_" + email).ToLowerInvariant();
+                            string orchardUserName = ("AppDirect_" + email).ToLowerInvariant();
                             if (Login(orchardUserName)) {
                                 _notifier.Information(T("You have been logged using your OpenId account."));
                                 return null;
