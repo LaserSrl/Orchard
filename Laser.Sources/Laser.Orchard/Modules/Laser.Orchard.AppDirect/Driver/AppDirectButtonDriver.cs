@@ -5,6 +5,7 @@ using Laser.Orchard.AppDirect.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Core.Title.Models;
 using Orchard.Localization;
 
 namespace Laser.Orchard.AppDirect.Driver {
@@ -28,6 +29,14 @@ namespace Laser.Orchard.AppDirect.Driver {
                 button.ButtonText = T("Confirm Subscription Order").ToString();
                 button.ButtonAction = "ConfirmOrder";
             }
+            if (state == RequestState.ToCancel) {
+                button.ButtonText = T("Cancel Subscription Order").ToString();
+                button.ButtonAction = "CancelOrder";
+            }
+            if (state == RequestState.ToModify) {
+                button.ButtonText = T("Modify Subscription Order").ToString();
+                button.ButtonAction = "ModifyOrder";
+            }
             return button;
         }
         protected override DriverResult Editor(AppDirectButtonPart part, dynamic shapeHelper) {
@@ -49,11 +58,52 @@ namespace Laser.Orchard.AppDirect.Driver {
                     string outresponse;
                     var data = "{\"success\":\"true\",\"accountIdentifier\":\"" + AccountIdentifier + "\"}";
                     var uri = ((dynamic)part.ContentItem).AppDirectRequestPart.Uri.Value + "/result";
-                    if (_appDirectCommunication.MakeRequestToAppdirect(uri, Method.POST, data, out outresponse, "", "")) {
+                    if (_appDirectCommunication.MakeRequestToAppdirect(uri, Method.POST, data, _orchardServices.WorkContext.HttpContext.Request.Form["AppDirectRequestPart.ProductKey.Text"], out outresponse, "", "")) {
                         button.ButtonAction = "";
                         _appDirectCommunication.WriteEvent(EventType.Output, "Post async " + data + " " + outresponse + uri);
                         part.ContentItem.As<AppDirectUserPart>().AccountIdentifier = AccountIdentifier;
                         ((dynamic)part.ContentItem).AppDirectRequestPart.State.Value = RequestState.Created.ToString();
+                        ((dynamic)part.ContentItem).AppDirectRequestPart.Action.Value = "nothing";
+                       // part.ContentItem.As<TitlePart>().Title = RequestState.Created.ToString()+ " " + AccountIdentifier;
+                    }
+                }
+                else {
+                    updater.AddModelError("NoIdentifier", T("AccountIdentifier must not be empty"));
+                }
+
+            }
+            if (updater != null && _orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "CancelOrder") {
+                button = GenerateButton(RequestState.ToCancel);
+                var AccountIdentifier = _orchardServices.WorkContext.HttpContext.Request.Form["Laser.Orchard.AppDirect.AppDirectUserPart.AccountIdentifier"];
+                if (!string.IsNullOrEmpty(AccountIdentifier)) {
+                    string outresponse;
+                    var data = "{\"success\":\"true\"}";
+                    var uri = ((dynamic)part.ContentItem).AppDirectRequestPart.Uri.Value + "/result";
+                    if (_appDirectCommunication.MakeRequestToAppdirect(uri, Method.POST, data, _orchardServices.WorkContext.HttpContext.Request.Form["AppDirectRequestPart.ProductKey.Text"], out outresponse, "", "")) {
+                        button.ButtonAction = "";
+                        _appDirectCommunication.WriteEvent(EventType.Output, "Post async " + data + " " + outresponse + uri);
+                        //part.ContentItem.As<AppDirectUserPart>().AccountIdentifier = AccountIdentifier;
+                        ((dynamic)part.ContentItem).AppDirectRequestPart.State.Value = RequestState.Cancelled.ToString();
+                        ((dynamic)part.ContentItem).AppDirectRequestPart.Action.Value = "nothing";
+                    }
+                }
+                else {
+                    updater.AddModelError("NoIdentifier", T("AccountIdentifier must not be empty"));
+                }
+
+            }
+            if (updater != null && _orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "ModifyOrder") {
+                button = GenerateButton(RequestState.ToModify);
+                var AccountIdentifier = _orchardServices.WorkContext.HttpContext.Request.Form["Laser.Orchard.AppDirect.AppDirectUserPart.AccountIdentifier"];
+                if (!string.IsNullOrEmpty(AccountIdentifier)) {
+                    string outresponse;
+                    var data = "{\"success\":\"true\"}";
+                    var uri = ((dynamic)part.ContentItem).AppDirectRequestPart.Uri.Value + "/result";
+                    if (_appDirectCommunication.MakeRequestToAppdirect(uri, Method.POST, data, _orchardServices.WorkContext.HttpContext.Request.Form["AppDirectRequestPart.ProductKey.Text"], out outresponse, "", "")) {
+                        button.ButtonAction = "";
+                        _appDirectCommunication.WriteEvent(EventType.Output, "Post async " + data + " " + outresponse + uri);
+                        //part.ContentItem.As<AppDirectUserPart>().AccountIdentifier = AccountIdentifier;
+                        ((dynamic)part.ContentItem).AppDirectRequestPart.State.Value = RequestState.Modified.ToString();
                         ((dynamic)part.ContentItem).AppDirectRequestPart.Action.Value = "nothing";
                     }
                 }

@@ -58,11 +58,11 @@ namespace Laser.Orchard.AppDirect {
             return 7;
         }
         public int UpdateFrom7() {
-            SchemaBuilder.CreateTable(typeof(AppDirectSettingsPartRecord).Name, table => table
-                        .ContentPartRecord()
-                        .Column<string>("ConsumerKey")
-                        .Column<string>("ConsumerSecret")
-         );
+         //   SchemaBuilder.CreateTable(typeof(AppDirectSettingsPartRecord).Name, table => table
+         //               .ContentPartRecord()
+         //               .Column<string>("ConsumerKey")
+         //               .Column<string>("ConsumerSecret")
+         //);
             return 8;
         }
         public int UpdateFrom8() {
@@ -100,6 +100,19 @@ namespace Laser.Orchard.AppDirect {
                  .Column<string>("ConsumerSecret")
              );
             return 13;
+        }
+        public int UpdateFrom13() {
+            ContentDefinitionManager.AlterPartDefinition("AppDirectRequestPart", b => b
+            .WithField("ProductKey", cfg => cfg.OfType("TextField")
+            .WithDisplayName("ProductKey")
+            ));
+            return 14;
+        }
+        public int UpdateFrom14() {
+        //    ContentDefinitionManager.AlterTypeDefinition("AppDirectRequest", x => x
+        //              .WithPart("TitlePart")
+        //             );
+            return 15;
         }
     }
 }

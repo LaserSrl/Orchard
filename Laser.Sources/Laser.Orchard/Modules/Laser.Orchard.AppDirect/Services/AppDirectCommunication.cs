@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Web;
 using Laser.Orchard.AppDirect.Models;
+using Laser.Orchard.AppDirect.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Data;
@@ -15,20 +16,25 @@ using Orchard.Logging;
 
 namespace Laser.Orchard.AppDirect.Services {
     public interface IAppDirectCommunication : IDependency {
-        bool MakeRequestToAppdirect(string uri, Method Method,string postdata, out string outresponse, string token = "", string tokenSecret = "");
+        bool MakeRequestToAppdirect(string uri, Method Method, string postdata, string key, out string outresponse, string token = "", string tokenSecret = "");
         void WriteEvent(EventType type, string log);
-      //  bool MakePostToAppdirect(string uri, Method Method, string postData, out string outresponse, string token = "", string tokenSecret = "");
-
-        }
-        public enum Method { GET,POST};
-    public class AppDirectCommunication: IAppDirectCommunication {
+        //  bool MakePostToAppdirect(string uri, Method Method, string postData, out string outresponse, string token = "", string tokenSecret = "");
+        AppDirectSettingVM Get_oAuthCredential(string key);
+    }
+    public enum Method { GET, POST };
+    public class AppDirectCommunication : IAppDirectCommunication {
         private readonly IOrchardServices _orchardServices;
         private readonly ILogger Logger;
         private readonly IRepository<LogEventsRecord> _repositoryLog;
-        public AppDirectCommunication(IOrchardServices orchardServices,
-            IRepository<LogEventsRecord> repositoryLog) {
+        private readonly IRepository<AppDirectSettingsRecord> _repoSetting;
+
+        public AppDirectCommunication(
+            IOrchardServices orchardServices,
+            IRepository<LogEventsRecord> repositoryLog,
+            IRepository<AppDirectSettingsRecord> repoSetting) {
             _orchardServices = orchardServices;
             _repositoryLog = repositoryLog;
+            _repoSetting = repoSetting;
             Logger = NullLogger.Instance;
         }
         private string UpperCaseUrlEncode(string s) {
@@ -41,45 +47,64 @@ namespace Laser.Orchard.AppDirect.Services {
             }
             return new string(temp);
         }
-        public bool MakeRequestToAppdirect(string uri, Method Method,string postData, out string outresponse, string token = "", string tokenSecret = "") {
+
+        public AppDirectSettingVM Get_oAuthCredential(string key) {
+            var oAuthSetting = new AppDirectSettingVM();
+            var setting_oAuth = new AppDirectSettingsRecord();
+            if (string.IsNullOrEmpty(key))
+                setting_oAuth = _repoSetting.Fetch(x => x.Id > 0).FirstOrDefault();
+            else
+                setting_oAuth = _repoSetting.Fetch(x => x.TheKey.Equals(key)).FirstOrDefault();
+            if (setting_oAuth != null) {
+                oAuthSetting.ConsumerKey = setting_oAuth.ConsumerKey;
+                oAuthSetting.ConsumerSecret = setting_oAuth.ConsumerSecret;
+            }
+            return oAuthSetting;
+        }
+        public bool MakeRequestToAppdirect(string uri, Method Method, string postData, string key, out string outresponse, string token = "", string tokenSecret = "") {
             outresponse = "";
             try {
                 OAuthBase oauthBase = new OAuthBase();
                 if (string.IsNullOrEmpty(uri))
                     return false;
-                var setting = _orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>();
-                string ConsumerKey = setting.ConsumerKey;
-                string ConsumerSecret = setting.ConsumerSecret;
-                string consumerKey = ConsumerKey;
-                string consumerSecret = ConsumerSecret;
+                // var setting = _orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>();
+                var setting_oAuth = Get_oAuthCredential(key);
+                if (setting_oAuth == null) {
+                    WriteEvent(EventType.Output, string.Format("oAuth key not found -> {0}", key));
+                    return false;
+                }
+                string consumerKey = setting_oAuth.ConsumerKey;
+                string consumerSecret = setting_oAuth.ConsumerSecret;
+                //  string consumerKey = ConsumerKey;
+                // string consumerSecret = ConsumerSecret;
                 string timeStamp = oauthBase.GenerateTimeStamp();
                 string nonce = oauthBase.GenerateNonce();
                 string normalizedUrl;
                 string normalizedRequestParameters;
                 var st = oauthBase.GenerateSignature(new Uri(uri), consumerKey, consumerSecret, token, tokenSecret, Method.ToString(), timeStamp, nonce, out normalizedUrl, out normalizedRequestParameters);
                 string str1 = UpperCaseUrlEncode(st);
-               // string str1 = HttpUtility.UrlEncode(oauthBase.GenerateSignature(new Uri(uri), consumerKey, consumerSecret, token, tokenSecret, Method.ToString(), timeStamp, nonce, out normalizedUrl, out normalizedRequestParameters));
-              //  str1 = UpperCaseUrlEncode(str1);
+                // string str1 = HttpUtility.UrlEncode(oauthBase.GenerateSignature(new Uri(uri), consumerKey, consumerSecret, token, tokenSecret, Method.ToString(), timeStamp, nonce, out normalizedUrl, out normalizedRequestParameters));
+                //  str1 = UpperCaseUrlEncode(str1);
                 string str2 = string.Format("{0}?{1}&oauth_signature={2}", (object)normalizedUrl, (object)normalizedRequestParameters, (object)str1);
                 WriteEvent(EventType.Output, str2);
                 HttpWebRequest httpWebRequest;
                 httpWebRequest = (HttpWebRequest)WebRequest.Create(str2);
 
                 if (Method == Method.POST) {
-                   httpWebRequest.ContentType = "application/json";
-                 //   httpWebRequest.ContentType = "application/x-www-form-urlencoded";
-                   string myheader = String.Format("OAuth oauth_consumer_key=\"{0}\",oauth_nonce=\"{1}\",oauth_signature=\"{2}\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"{3}\",oauth_version=\"1.0\"", ConsumerKey, nonce, str1, timeStamp);
-                   httpWebRequest.Headers[HttpRequestHeader.Authorization]= myheader;
+                    httpWebRequest.ContentType = "application/json";
+                    //   httpWebRequest.ContentType = "application/x-www-form-urlencoded";
+                    string myheader = String.Format("OAuth oauth_consumer_key=\"{0}\",oauth_nonce=\"{1}\",oauth_signature=\"{2}\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"{3}\",oauth_version=\"1.0\"", consumerKey, nonce, str1, timeStamp);
+                    httpWebRequest.Headers[HttpRequestHeader.Authorization] = myheader;
                     httpWebRequest.KeepAlive = true;
-                   // httpWebRequest.Accept = "application/json";
+                    // httpWebRequest.Accept = "application/json";
                 }
                 else {
-                   
+
                     httpWebRequest.Accept = "application/json";
                 }
                 httpWebRequest.Method = Method.ToString();
-         
-                if ((Method == Method.POST) && !(string.IsNullOrEmpty(postData))){
+
+                if ((Method == Method.POST) && !(string.IsNullOrEmpty(postData))) {
                     using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream())) {
                         // string json = "{\"success\":\"true\"," +
                         //               "\"password\":\"bla\"}";
@@ -92,14 +117,14 @@ namespace Laser.Orchard.AppDirect.Services {
                     //var data = new ASCIIEncoding().GetBytes(postData);
                     //// var data = new Encoding.ASCII.GetBytes(postData);
                     //httpWebRequest.ContentLength = postData.Length;
-                    
-                    
+
+
                     //using (var stream = httpWebRequest.GetRequestStream()) {
                     //    stream.Write(data, 0, data.Length);
                     //}
-               }
-    
-            string end = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()).ReadToEnd();
+                }
+
+                string end = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()).ReadToEnd();
                 WriteEvent(EventType.Input, end);
                 outresponse = end;
                 return true;
@@ -110,7 +135,7 @@ namespace Laser.Orchard.AppDirect.Services {
             }
         }
 
-   //     public  bool MakePostToAppdirect(string uri, Method Method, string postData, out string outresponse, string token = "", string tokenSecret = "") {
+        //     public  bool MakePostToAppdirect(string uri, Method Method, string postData, out string outresponse, string token = "", string tokenSecret = "") {
         //    outresponse = "";
         //    try {
         //        var setting = _orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>();
@@ -123,7 +148,7 @@ namespace Laser.Orchard.AppDirect.Services {
         //        if (string.IsNullOrEmpty(uri))
         //            return false;
         //        using (var httpClient = new System.Net.Http.HttpClient()) {
-                    
+
         //            string authorizationHeaderParams = String.Empty;
         //            //  authorizationHeaderParams += "OAuth ";
         //            authorizationHeaderParams += "oauth_nonce=" + "\"" + Uri.EscapeDataString(nonce) + "\",";
@@ -142,7 +167,7 @@ namespace Laser.Orchard.AppDirect.Services {
         //    }catch(Exception ex) {
         //        string a = "A";
         //    }
-           
+
         //    return true;
 
 

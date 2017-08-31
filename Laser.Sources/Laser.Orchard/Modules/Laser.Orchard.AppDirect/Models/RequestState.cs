@@ -13,7 +13,11 @@ namespace Laser.Orchard.AppDirect.Models {
         Created,
         [Display(Name = "To Cancel")]
         ToCancel,
-        Cancelled
+        Cancelled,
+        [Display(Name = "To Modify")]
+        ToModify,
+        Modified,
+        Status
     }
     public static class EnumHelper<T> {
         public static IList<T> GetValues(Enum value) {

@@ -8,6 +8,7 @@ namespace Laser.Orchard.AppDirect.Driver {
         protected override string Prefix {
             get { return "Laser.Orchard.AppDirect.AppDirectUserPart"; }
         }
+
         protected override DriverResult Editor(AppDirectUserPart part, dynamic shapeHelper) {
             return ContentShape("Parts_AppDirectUser",
                                () => shapeHelper.EditorTemplate(
