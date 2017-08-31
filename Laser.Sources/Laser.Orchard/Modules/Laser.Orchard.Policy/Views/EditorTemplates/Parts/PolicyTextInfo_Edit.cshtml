@@ -5,7 +5,7 @@
     <div>
         @Html.LabelFor(x => x.PolicyType, T("Policy type").Text, new { })
         @Html.DropDownListFor(m => m.PolicyType, new SelectList(Enum.GetNames(typeof(Laser.Orchard.Policy.PolicyTypeOptions)), Model.PolicyType))
-        <span class="hint">@T("For the \"Policy\", \"CommercialUse\" and \"ThirdParty\" options an Accept/Don't Accept chioice will be proposed to the end user.")</span>
+        <span class="hint">@T("For the \"Policy\", \"CommercialUse\" and \"ThirdParty\" options an Accept/Don't Accept choice will be proposed to the end user.")</span>
         <span class="hint">@T("For the \"Regulation\" option a \"I have read the regulation\" flag will be proposed to the end user.")</span>
     </div>
     <div>@Html.LabelFor(m => m.Priority, @T("Priority"))
