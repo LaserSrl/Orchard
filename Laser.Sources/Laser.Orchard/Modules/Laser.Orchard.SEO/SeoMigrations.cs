@@ -5,7 +5,6 @@ using Orchard.Data;
 using Orchard.Data.Migration;
 using System;
 
-
 namespace Laser.Orchard.SEO {
 
 
@@ -35,6 +34,15 @@ namespace Laser.Orchard.SEO {
             );
 
             return 3; //return 3 to stay aligned with old obsolete migrations
+        }
+
+        public int UpdateFrom3() {
+            SchemaBuilder.CreateTable("RobotsFileRecord",
+                table => table
+                    .Column<int>("Id", col => col.PrimaryKey().Identity())
+                    .Column<string>("FileContent", col => col.Nullable().Unlimited().WithDefault(@"User-agent: *" + Environment.NewLine + @"Disallow: /"))
+                );
+            return 4;
         }
 
         #region Obsolete code
@@ -113,7 +121,7 @@ namespace Laser.Orchard.SEO {
         //         t => t.AddColumn<bool>("GoogleNoSiteLinkSearchBox"));
         //    SchemaBuilder.AlterTable("SeoVersionRecord",
         //         t => t.AddColumn<bool>("GoogleNoTranslate"));
-            
+
         //    return 3;
         //}
         #endregion
