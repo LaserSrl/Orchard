@@ -1454,7 +1454,7 @@ html.media-library-modal-window .button-cancel {
     padding: 5px;
 }
 
-.pager li span {
+.pager span.current-page {
     color: #fff;
     background: #337AB7;
 }
