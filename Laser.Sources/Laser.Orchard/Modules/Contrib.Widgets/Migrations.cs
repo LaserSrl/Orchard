@@ -1,11 +1,20 @@
-﻿using Orchard.ContentManagement.MetaData;
+﻿using Contrib.Widgets.Models;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
+using Orchard.Widgets.Models;
 
 namespace Contrib.Widgets {
     [OrchardFeature("Contrib.Widgets")]
     public class Migrations : DataMigrationImpl {
+        private readonly IContentManager _contentManager;
+
+        public Migrations(IContentManager contentManager) {
+            _contentManager = contentManager;
+        }
+
         public int Create() {
 
             SchemaBuilder.CreateTable("WidgetExPartRecord", table => table
@@ -56,6 +65,21 @@ namespace Contrib.Widgets {
         public int UpdateFrom2() {
             ContentDefinitionManager.AlterTypeDefinition("WidgetsPage", type => type.Listable());
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            var widgets = _contentManager
+                .Query<WidgetExPart, WidgetExPartRecord>(VersionOptions.Latest)
+                .List();
+
+            foreach (var widget in widgets) {
+                var widgetPart = widget.As<WidgetPart>();
+                if (widgetPart != null && widgetPart.ContentItem.VersionRecord != null && !widgetPart.ContentItem.VersionRecord.Published) {
+                    _contentManager.Publish(widget.ContentItem);
+                }
+            }
+
+            return 4;
         }
     }
 }
