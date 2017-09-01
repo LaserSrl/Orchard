@@ -10,7 +10,7 @@ namespace Laser.Orchard.Maps {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();
             // CSS
-            manifest.DefineStyle("AdvancedSearch").SetUrl("AdvancedSearch.css");
+            manifest.DefineStyle("AdvancedSearch").SetUrl("AdvancedSearch.css?v=1.0");
         }
     }
 }
