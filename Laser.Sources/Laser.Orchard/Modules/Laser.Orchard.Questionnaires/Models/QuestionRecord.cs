@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -9,12 +10,14 @@ namespace Laser.Orchard.Questionnaires.Models {
             Answers = new List<AnswerRecord>();
         }
         public virtual int Id { get; set; }
+        [MaxLength(500)]
         public virtual string Question { get; set; }
         public virtual QuestionType QuestionType { get; set; }
         public virtual AnswerType AnswerType { get; set; }
         public virtual bool IsRequired { get; set; }
         public virtual bool Published { get; set; }
         public virtual int Position { get; set; }
+        [MaxLength(200)]
         public virtual string Section { get; set; }
         public virtual string Condition { get; set; }
         public virtual ConditionType ConditionType { get; set; }
