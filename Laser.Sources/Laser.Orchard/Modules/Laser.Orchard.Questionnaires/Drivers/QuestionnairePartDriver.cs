@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using Laser.Orchard.Questionnaires.Models;
+﻿using Laser.Orchard.Questionnaires.Models;
 using Laser.Orchard.Questionnaires.Services;
+using Laser.Orchard.Questionnaires.Settings;
 using Laser.Orchard.Questionnaires.ViewModels;
 using Laser.Orchard.StartupConfig.Services;
 using Orchard;
@@ -12,14 +9,17 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
+using Orchard.OutputCache;
 using Orchard.Security;
-using Laser.Orchard.Questionnaires.Settings;
-using Orchard.Core.Title.Models;
-using Orchard.OutputCache.Filters;
 using Orchard.Tokens;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml.Linq;
 
 namespace Laser.Orchard.Questionnaires.Drivers {
-    public class QuestionnairePartDriver : ContentPartCloningDriver<QuestionnairePart> {
+    public class QuestionnairePartDriver : ContentPartCloningDriver<QuestionnairePart>, ICachingEventHandler {
         private readonly IQuestionnairesServices _questServices;
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IOrchardServices _orchardServices;
@@ -40,8 +40,18 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             _capthcaServices = capthcaServices;
             _currentContentAccessor = currentContentAccessor;
             _tokenizer = tokenizer;
+
+            _isAuthorized = new Lazy<bool>(() => 
+                _orchardServices.Authorizer.Authorize(Permissions.SubmitQuestionnaire)
+            );
         }
 
+        private Lazy<bool> _isAuthorized;
+        private bool IsAuthorized {
+            get {
+                return _isAuthorized.Value;
+            }
+        }
         public Localizer T { get; set; }
         protected override string Prefix
         {
@@ -62,8 +72,8 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                         QuestionsCount: part.Questions.Count(c => c.Published),
                         QuestionsTotalCount: part.Questions.Count()
                         ));
-            var isAuthorized = (_orchardServices.Authorizer.Authorize(Permissions.SubmitQuestionnaire));
-            if (isAuthorized) {
+            
+            if (IsAuthorized) {
                 var viewModel = _questServices.BuildViewModelWithResultsForQuestionnairePart(part); //Modello mappato senza risposte
                 if (_controllerContextAccessor.Context != null) {
                     // valorizza il context
@@ -108,12 +118,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                 if (viewModel.UseRecaptcha) { // se è previsto un recaptcha creo l'html e il js del recaptcha
                     viewModel.CaptchaHtmlWidget = _capthcaServices.GenerateCaptcha();
                 }
-
-                //return ContentShape("Parts_Questionnaire_FrontEnd_Edit",
-                //    () => shapeHelper.Parts_Questionnaire_FrontEnd_Edit(
-                //            Questionnaire: viewModel
-                //        ));
-
+                
                 return ContentShape("Parts_Questionnaire_FrontEnd_Edit",
                                  () => shapeHelper.Parts_Questionnaire_FrontEnd_Edit(
                                      Questionnaire: viewModel,
@@ -121,10 +126,6 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             } else {
                 throw new OrchardSecurityException(T("You have to be logged in, before answering a questionnaire!"));
             }
-            //return ContentShape("Parts_Questionnaire",
-            //    () => shapeHelper.Parts_Questionnaire(
-            //            Questions: viewModel.QuestionsWithResults
-            //            ));
         }
 
         protected override DriverResult Editor(QuestionnairePart part, dynamic shapeHelper) {
@@ -340,17 +341,13 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             _questServices.UpdateForContentItem(clonePart.ContentItem, editModel);
         }
 
-        ///// <summary>
-        ///// Se il ContentItem corrente contiene una QuestionnairePart, invalida di fatto la cache.
-        ///// </summary>
-        ///// <param name="key"></param>
-        ///// <returns></returns>
-        //public System.Text.StringBuilder InflatingCacheKey(System.Text.StringBuilder key) {
-        //    var part = _currentContentAccessor.CurrentContentItem.As<QuestionnairePart>();
-        //    if (part != null) {
-        //        key.AppendFormat("sid={0};rnd={1};", HttpContext.Current.Session.SessionID, new Random().Next(1000000));
-        //    }
-        //    return key;
-        //}
+        public void KeyGenerated(StringBuilder key) {
+            if (IsAuthorized) {
+                key.Append("QuestionnaireAuthorized;");
+            } else {
+                key.Append("QuestionnaireUnauthorized;");
+            }
+        }
+
     }
 }
