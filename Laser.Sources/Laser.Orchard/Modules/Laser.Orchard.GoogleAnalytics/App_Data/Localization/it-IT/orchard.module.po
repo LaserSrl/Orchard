@@ -25,6 +25,10 @@ msgid "Include on /Admin Pages"
 msgstr "Includere sulle pagine /Admin"
 
 msgctxt "~/Modules/Laser.Orchard.GoogleAnalytics/Views/EditorTemplates/Parts/GoogleAnalyticsSettings.cshtml"
+msgid "Include on front end Pages"
+msgstr "Includi nelle pagine di front end."
+
+msgctxt "~/Modules/Laser.Orchard.GoogleAnalytics/Views/EditorTemplates/Parts/GoogleAnalyticsSettings.cshtml"
 msgid "Override Domain Name (optional)"
 msgstr "Sovrascrivere il Nome di Dominio (opzionale)"
 
@@ -39,6 +43,14 @@ msgstr "Usare Async Tracking"
 msgctxt "GoogleAnalytics.Drivers.GoogleAnalyticsSettingsPartDriver"
 msgid "Error on udpate google analytics"
 msgstr "Errore durante l'aggiornamento di Google Analytics"
+
+msgctxt "GoogleAnalytics.Drivers.GoogleAnalyticsSettingsPartDriver"
+msgid "Error on updating Google Analytics settings"
+msgstr "Errore nell'aggiornamento delle impostazioni di Google Analytics"
+
+msgctxt "GoogleAnalytics.Drivers.GoogleAnalyticsSettingsPartDriver"
+msgid "If Google Analytics is enabled for the front end or the back end, the tracking key is required."
+msgstr "Se Google Analytics è abilitato per il front end o il back end, la tracking key è obbligatoria."
 
 msgctxt "Laser.Orchard.GoogleAnalytics.Services.MissingSettingsBanner"
 msgid "The <a href=\"{0}#googleanalitycssetting\"> Google Analytics</a> settings need to be configured."

@@ -176,7 +176,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                             // ListShape = merged;
                         }
 
-                    #endregion Projection
+                        #endregion Projection
                     }
                 } else {
                     //  string tipoCI = item.ContentItem.ContentType;
@@ -281,23 +281,20 @@ namespace Laser.Orchard.WebServices.Controllers {
                         var result = new ContentResult { ContentType = "application/json" };
                         result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidUser));
                         return result;
-                    }
-                    else
+                    } else
                         if (!_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
-                            var result = new ContentResult { ContentType = "application/json" };
-                            result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidXSRF));
-                            return result;
-                            //   Content((Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
-                        }
-                        else {
-                            #region utente validato
-                            item = currentUser.ContentItem;
+                        var result = new ContentResult { ContentType = "application/json" };
+                        result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidXSRF));
+                        return result;
+                        //   Content((Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
+                    } else {
+                        #region utente validato
+                        item = currentUser.ContentItem;
 
-                            #endregion
-                        }
+                        #endregion
+                    }
                     #endregion
-                }
-                else {
+                } else {
                     item = GetContentByAlias(displayAlias);
                 }
                 ContentResult cr = (ContentResult)GetContent(item, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel, complexBehaviour.Split(','));
@@ -307,11 +304,15 @@ namespace Laser.Orchard.WebServices.Controllers {
                     Logger.Error(cr.Content.ToString());
                 }
                 return cr;
-            }
-            catch (System.Security.SecurityException) {
+            } catch (System.Security.SecurityException) {
                 return Json(_utilsServices.GetResponse(ResponseType.InvalidUser), JsonRequestBehavior.AllowGet);
-            }
-            catch {
+            } catch (OrchardSecurityException) {
+                var response = _utilsServices.GetResponse(ResponseType.UnAuthorized);
+                response.ResolutionAction = _authenticationService.GetAuthenticatedUser() == null ?
+                    ResolutionAction.Login :
+                    ResolutionAction.NoAction;
+                return Json(response, JsonRequestBehavior.AllowGet);
+            } catch {
                 return new HttpStatusCodeResult(500);
             }
         }
@@ -668,8 +669,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                         var policy = item.As<Policy.Models.PolicyPart>();
                         if (policy != null && (policy.HasPendingPolicies ?? false)) {
                             key.Append("policy-not-accepted;");
-                        }
-                        else if (policy != null && !(policy.HasPendingPolicies ?? false)) {
+                        } else if (policy != null && !(policy.HasPendingPolicies ?? false)) {
                             key.Append("policy-accepted;");
                         }
                     }
