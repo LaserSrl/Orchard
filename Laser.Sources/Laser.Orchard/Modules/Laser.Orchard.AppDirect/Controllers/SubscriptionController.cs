@@ -223,7 +223,58 @@ namespace Laser.Orchard.AppDirect.Controllers {
                 return Json((object)dataResponse, JsonRequestBehavior.AllowGet);
             }
         }
-
+        public ActionResult AssignUser() {
+            var str = Request.QueryString["url"];
+            var key = Request.QueryString["productKey"];
+            _appDirectCommunication.WriteEvent(EventType.Input, str);
+            if (VerifyValidRequest(key)) {
+                _appDirectCommunication.WriteEvent(EventType.Input, "OpenAuthValidation");
+            }
+            else {
+                _appDirectCommunication.WriteEvent(EventType.Input, "OpenAuthValidation Failed");
+                Response.StatusCode = 404;
+            }
+            string outresponse;
+            if (_appDirectCommunication.MakeRequestToAppdirect(str, Method.GET, "", key, out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
+                var contentitem = CreateContentItemRequest(outresponse, RequestState.ToAssignUser, key);
+                _workflowManager.TriggerEvent("SubscriptionEvent", contentitem, () => new Dictionary<string, object> { { "Content", contentitem }, { "Action", "AssignUser" } });
+                Response.StatusCode = 202; //async
+                var dataResponse = new { success = "true" };
+                return Json((object)dataResponse, JsonRequestBehavior.AllowGet);
+            }
+            else {
+                Logger.Error(T("Can't retrive order {0}", str).ToString());
+                _appDirectCommunication.WriteEvent(EventType.Input, "Error Can't retrive order " + str);
+                var dataResponse = new { success = "false", errorCode = "INVALID_RESPONSE", message = "Can't access order" };
+                return Json((object)dataResponse, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public ActionResult UnAssignUser() {
+            var str = Request.QueryString["url"];
+            var key = Request.QueryString["productKey"];
+            _appDirectCommunication.WriteEvent(EventType.Input, str);
+            if (VerifyValidRequest(key)) {
+                _appDirectCommunication.WriteEvent(EventType.Input, "OpenAuthValidation");
+            }
+            else {
+                _appDirectCommunication.WriteEvent(EventType.Input, "OpenAuthValidation Failed");
+                Response.StatusCode = 404;
+            }
+            string outresponse;
+            if (_appDirectCommunication.MakeRequestToAppdirect(str, Method.GET, "", key, out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
+                var contentitem = CreateContentItemRequest(outresponse, RequestState.ToUnAssignUser, key);
+                _workflowManager.TriggerEvent("SubscriptionEvent", contentitem, () => new Dictionary<string, object> { { "Content", contentitem }, { "Action", "UnAssignUser" } });
+                Response.StatusCode = 202; //async
+                var dataResponse = new { success = "true" };
+                return Json((object)dataResponse, JsonRequestBehavior.AllowGet);
+            }
+            else {
+                Logger.Error(T("Can't retrive order {0}", str).ToString());
+                _appDirectCommunication.WriteEvent(EventType.Input, "Error Can't retrive order " + str);
+                var dataResponse = new { success = "false", errorCode = "INVALID_RESPONSE", message = "Can't access order" };
+                return Json((object)dataResponse, JsonRequestBehavior.AllowGet);
+            }
+        }
         public ActionResult Status() {
             var str = Request.QueryString["url"];
             var key = Request.QueryString["productKey"];

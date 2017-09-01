@@ -36,6 +36,14 @@ namespace Laser.Orchard.AppDirect.Driver {
                 button.ButtonText = T("Modify Subscription Order").ToString();
                 button.ButtonAction = "ModifyOrder";
             }
+            if (state == RequestState.ToAssignUser) {
+                button.ButtonText = T("Assign User").ToString();
+                button.ButtonAction = "AssignUser";
+            }
+            if (state == RequestState.ToUnAssignUser) {
+                button.ButtonText = T("UnAssign User").ToString();
+                button.ButtonAction = "UnAssignUser";
+            }
             return button;
         }
         protected override DriverResult Editor(AppDirectButtonPart part, dynamic shapeHelper) {
@@ -103,6 +111,46 @@ namespace Laser.Orchard.AppDirect.Driver {
                         _appDirectCommunication.WriteEvent(EventType.Output, "Post async " + data + " " + outresponse + uri);
                         //part.ContentItem.As<AppDirectUserPart>().AccountIdentifier = AccountIdentifier;
                         ((dynamic)part.ContentItem).AppDirectRequestPart.State.Value = RequestState.Modified.ToString();
+                        ((dynamic)part.ContentItem).AppDirectRequestPart.Action.Value = "nothing";
+                    }
+                }
+                else {
+                    updater.AddModelError("NoIdentifier", T("AccountIdentifier must not be empty"));
+                }
+
+            }
+            if (updater != null && _orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "AssignUser") {
+                button = GenerateButton(RequestState.ToAssignUser);
+                var AccountIdentifier = _orchardServices.WorkContext.HttpContext.Request.Form["Laser.Orchard.AppDirect.AppDirectUserPart.AccountIdentifier"];
+                if (!string.IsNullOrEmpty(AccountIdentifier)) {
+                    string outresponse;
+                    var data = "{\"success\":\"true\"}";
+                    var uri = ((dynamic)part.ContentItem).AppDirectRequestPart.Uri.Value + "/result";
+                    if (_appDirectCommunication.MakeRequestToAppdirect(uri, Method.POST, data, _orchardServices.WorkContext.HttpContext.Request.Form["AppDirectRequestPart.ProductKey.Text"], out outresponse, "", "")) {
+                        button.ButtonAction = "";
+                        _appDirectCommunication.WriteEvent(EventType.Output, "Post async " + data + " " + outresponse + uri);
+                        //part.ContentItem.As<AppDirectUserPart>().AccountIdentifier = AccountIdentifier;
+                        ((dynamic)part.ContentItem).AppDirectRequestPart.State.Value = RequestState.AssignedUser.ToString();
+                        ((dynamic)part.ContentItem).AppDirectRequestPart.Action.Value = "nothing";
+                    }
+                }
+                else {
+                    updater.AddModelError("NoIdentifier", T("AccountIdentifier must not be empty"));
+                }
+            }
+
+            if (updater != null && _orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "UnAssignUser") {
+                button = GenerateButton(RequestState.ToUnAssignUser);
+                var AccountIdentifier = _orchardServices.WorkContext.HttpContext.Request.Form["Laser.Orchard.AppDirect.AppDirectUserPart.AccountIdentifier"];
+                if (!string.IsNullOrEmpty(AccountIdentifier)) {
+                    string outresponse;
+                    var data = "{\"success\":\"true\"}";
+                    var uri = ((dynamic)part.ContentItem).AppDirectRequestPart.Uri.Value + "/result";
+                    if (_appDirectCommunication.MakeRequestToAppdirect(uri, Method.POST, data, _orchardServices.WorkContext.HttpContext.Request.Form["AppDirectRequestPart.ProductKey.Text"], out outresponse, "", "")) {
+                        button.ButtonAction = "";
+                        _appDirectCommunication.WriteEvent(EventType.Output, "Post async " + data + " " + outresponse + uri);
+                        //part.ContentItem.As<AppDirectUserPart>().AccountIdentifier = AccountIdentifier;
+                        ((dynamic)part.ContentItem).AppDirectRequestPart.State.Value = RequestState.UnAssignedUser.ToString();
                         ((dynamic)part.ContentItem).AppDirectRequestPart.Action.Value = "nothing";
                     }
                 }

@@ -15,7 +15,13 @@ namespace Laser.Orchard.AppDirect.Models {
         [Display(Name = "To Modify")]
         ToModify,
         Modified,
-        Status
+        Status,
+        [Display(Name = "To Assign User")]
+        ToAssignUser,
+        AssignedUser,
+        [Display(Name = "To UnAssign User")]
+        ToUnAssignUser,
+        UnAssignedUser
     }
     public static class EnumHelper<T> {
         public static IList<T> GetValues(Enum value) {

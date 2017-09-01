@@ -7,10 +7,12 @@ using Orchard;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc.Extensions;
 using Orchard.Security;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.Users.Events;
+
 
 namespace Laser.Orchard.OpenAuthentication.Controllers {
     [Themed]
@@ -54,7 +56,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                             string orchardUserName = ("AppDirect_" + email).ToLowerInvariant();
                             if (Login(orchardUserName)) {
                                 _notifier.Information(T("You have been logged using your OpenId account."));
-                                return null;
+                                return this.RedirectLocal(null,"~/admin");
                             }
                             else {
                                 // TODO : Add test if config.autogenerateuser then CreateUserOrchard

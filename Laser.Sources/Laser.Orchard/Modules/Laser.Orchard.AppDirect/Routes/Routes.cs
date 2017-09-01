@@ -82,6 +82,38 @@ namespace Laser.Orchard.AppDirect.Routes {
                 },
                 new MvcRouteHandler())
                 },
+
+                new RouteDescriptor {
+                Priority = 19,
+                Route = new Route(
+                "AppDirect/AssignUser",
+                new RouteValueDictionary {
+                {"area", "Laser.Orchard.AppDirect"},
+                {"controller", "Subscription"},
+                {"action", "AssignUser"}
+                },
+                new RouteValueDictionary(),
+                new RouteValueDictionary {
+                {"area", "Laser.Orchard.AppDirect"}
+                },
+                new MvcRouteHandler())
+                },
+
+                new RouteDescriptor {
+                Priority = 19,
+                Route = new Route(
+                "AppDirect/UnAssignUser",
+                new RouteValueDictionary {
+                {"area", "Laser.Orchard.AppDirect"},
+                {"controller", "Subscription"},
+                {"action", "UnAssignUser"}
+                },
+                new RouteValueDictionary(),
+                new RouteValueDictionary {
+                {"area", "Laser.Orchard.AppDirect"}
+                },
+                new MvcRouteHandler())
+                },
             };
         }
     }

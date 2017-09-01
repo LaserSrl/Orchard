@@ -42,7 +42,7 @@ namespace Laser.Orchard.AppDirect.Activity {
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return new[] { T("Create"), T("Edit"), T("Status"), T("Cancel") };
+            return new[] { T("Create"), T("Edit"), T("Status"), T("Cancel"),T("AssignUser"),T("UnAssignUser") };
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
