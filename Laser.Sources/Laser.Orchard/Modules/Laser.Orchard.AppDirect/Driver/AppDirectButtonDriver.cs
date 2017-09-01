@@ -5,7 +5,6 @@ using Laser.Orchard.AppDirect.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Core.Title.Models;
 using Orchard.Localization;
 
 namespace Laser.Orchard.AppDirect.Driver {
@@ -64,7 +63,7 @@ namespace Laser.Orchard.AppDirect.Driver {
                         part.ContentItem.As<AppDirectUserPart>().AccountIdentifier = AccountIdentifier;
                         ((dynamic)part.ContentItem).AppDirectRequestPart.State.Value = RequestState.Created.ToString();
                         ((dynamic)part.ContentItem).AppDirectRequestPart.Action.Value = "nothing";
-                       // part.ContentItem.As<TitlePart>().Title = RequestState.Created.ToString()+ " " + AccountIdentifier;
+                        // part.ContentItem.As<TitlePart>().Title = RequestState.Created.ToString()+ " " + AccountIdentifier;
                     }
                 }
                 else {

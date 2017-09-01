@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Localization;
@@ -9,7 +6,7 @@ using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 
 namespace Laser.Orchard.AppDirect.Activity {
-    public class SubscriptionEvent:Event {
+    public class SubscriptionEvent : Event {
         protected readonly IOrchardServices _orchardServices;
         private readonly IContentManager _contentManager;
         public SubscriptionEvent(IOrchardServices orchardServices, IContentManager contentManager) {
@@ -18,15 +15,15 @@ namespace Laser.Orchard.AppDirect.Activity {
             _contentManager = contentManager;
         }
         public Localizer T { get; set; }
-      
-       public override bool CanStartWorkflow {
+
+        public override bool CanStartWorkflow {
             get { return true; }
         }
 
         public override string Name {
             get
             {
-                return "SubscriptionEvent";
+                return nameof(SubscriptionEvent);
             }
         }
 
@@ -49,9 +46,8 @@ namespace Laser.Orchard.AppDirect.Activity {
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            string operatore = workflowContext.Tokens["Action"].ToString();
-            LocalizedString messageout = T(operatore);
-            yield return messageout;
+            var operatore = workflowContext.Tokens["Action"].ToString();
+            yield return T(operatore);
         }
     }
 }

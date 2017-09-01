@@ -1,22 +1,9 @@
 ﻿@model Laser.Orchard.AppDirect.ViewModels.ListAppDirectSettingVM
 @using Laser.Orchard.Commons.Helpers
-@*<fieldset>
-    <legend>@T("AppDirect Settings")</legend>
-    <div>
-        @Html.LabelFor(m => m.ConsumerKey)
-        @Html.TextBoxFor(m => m.ConsumerKey)
-    </div>
-    <div>
-        @Html.LabelFor(m => m.ConsumerSecret)
-        @Html.TextBoxFor(m => m.ConsumerSecret)
-    </div>
-</fieldset>*@
-
 @{
     Script.Require("jQuery_NestedModels").AtHead();
     Style.Require("FontAwesome430").AtHead();
 }
-
 <fieldset>
     <legend>@T("Add OAuth Setting")</legend>
     <div id="btw">
@@ -26,23 +13,18 @@
     <p style="margin: 10px 0px 10px 0px;">
         <i class="fa fa-plus" style="color: green; margin-right:5px;"></i>@Html.LinkToAddNestedForm(x => x.ListAppDirectSetting, T("Add OAuth Setting").Text, "#btw", ".j_btw", "btw")
     </p>
-    @*<span class="hint">
-        @T("The Button Name field should be a unique identifier for the button.")
-    </span>*@
 </fieldset>
 
 @{
     using (Script.Head()) {
         <script type="text/javascript">
-                 function CleanFieldsOnRemove(caller)
-                 {
-                     $(caller).parent().parent().find(':text').each(function () {
-                         if (!$(this).hasClass("preserve-on-clean"))
-                         {
-                             $(this).val("");
-                         }
-                     })
-                 }
+            function CleanFieldsOnRemove(caller) {
+                $(caller).parent().parent().find(':text').each(function () {
+                    if (!$(this).hasClass("preserve-on-clean")) {
+                        $(this).val("");
+                    }
+                })
+            }
         </script>
     }
 }

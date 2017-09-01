@@ -14,8 +14,6 @@ using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Users.Events;
 using Orchard.Workflows.Services;
-using System.Linq;
-using Orchard.Core.Title.Models;
 
 namespace Laser.Orchard.AppDirect.Controllers {
     public class SubscriptionController : Controller {
@@ -28,8 +26,6 @@ namespace Laser.Orchard.AppDirect.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IAppDirectCommunication _appDirectCommunication;
         private readonly IRepository<AppDirectSettingsRecord> _repoSetting;
-
-
 
         public Localizer T { get; set; }
 
@@ -54,33 +50,7 @@ namespace Laser.Orchard.AppDirect.Controllers {
             _repoSetting = repoSetting;
         }
 
-        //protected string NormalizeParameters(SortedDictionary<string, string> parameters) {
-        //    StringBuilder stringBuilder = new StringBuilder();
-        //    int num = 0;
-        //    foreach (KeyValuePair<string, string> parameter in parameters) {
-        //        if (num > 0)
-        //            stringBuilder.Append("&");
-        //        stringBuilder.AppendFormat("{0}={1}", (object)parameter.Key, (object)parameter.Value);
-        //        ++num;
-        //    }
-        //    return stringBuilder.ToString();
-        //}
-
-        //private string GenerateBase(string nonce, string timeStamp, Uri url) {
-        //    SortedDictionary<string, string> parameters = new SortedDictionary<string, string>() { { "oauth_consumer_key", ConsumerKey }, { "oauth_signature_method", "HMAC-SHA1" }, { "oauth_timestamp", timeStamp }, { "oauth_nonce", nonce }, { "oauth_version", "1.0" } };
-        //    StringBuilder stringBuilder = new StringBuilder();
-        //    stringBuilder.Append("GET");
-        //    stringBuilder.Append("&" + Uri.EscapeDataString(url.AbsoluteUri));
-        //    stringBuilder.Append("&" + Uri.EscapeDataString(NormalizeParameters(parameters)));
-        //    return stringBuilder.ToString();
-        //}
-
-        //public string GenerateSignature(string nonce, string timeStamp, Uri url) {
-        //    return Convert.ToBase64String(new HMACSHA1(Encoding.ASCII.GetBytes(string.Format("{0}&{1}",  ConsumerSecret, (object)""))).ComputeHash(new ASCIIEncoding().GetBytes(GenerateBase(nonce, timeStamp, url))));
-        //}
-
-
-        private string GetAuthorizationHeaderValue(string Authorization, string key) {
+        private static string GetAuthorizationHeaderValue(string Authorization, string key) {
             var value = "";
             var pieces = Authorization.Split(new[] { " oauth_" }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string piece in pieces) {
@@ -93,7 +63,7 @@ namespace Laser.Orchard.AppDirect.Controllers {
         }
 
         private bool VerifyValidRequest(string key) {
-            string authorization = (Request.Headers["Authorization"] ?? "").ToString();
+            var authorization = (Request.Headers["Authorization"] ?? "").ToString();
             if (string.IsNullOrEmpty(authorization)) {
                 Logger.Error(T("Authorization Header is empty").ToString());
                 return false;
@@ -104,13 +74,8 @@ namespace Laser.Orchard.AppDirect.Controllers {
                 _appDirectCommunication.WriteEvent(EventType.Output, string.Format("oAuth key not found -> {0}", key));
                 return false;
             }
-            string consumerKey = setting_oAuth.ConsumerKey;
-            string consumerSecret = setting_oAuth.ConsumerSecret;
-
-
-            // var setting=_orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>();
-            // string ConsumerKey = setting.ConsumerKey;
-            // string ConsumerSecret = setting.ConsumerSecret;
+            var consumerKey = setting_oAuth.ConsumerKey;
+            var consumerSecret = setting_oAuth.ConsumerSecret;
             var oauth_consumer_key = GetAuthorizationHeaderValue(authorization, "consumer_key");
             var oauth_nonce = GetAuthorizationHeaderValue(authorization, "nonce");
             var oauth_signature = GetAuthorizationHeaderValue(authorization, "signature");
@@ -125,8 +90,9 @@ namespace Laser.Orchard.AppDirect.Controllers {
             var uri = Request.Url;
             // if i use ip then i'm debugging on my pc and i correct uri with the port redirect
             if (uri.ToString().Contains("185.11.22.191")) {
-                var uriBuilder = new UriBuilder(Request.Url);
-                uriBuilder.Port = 1235;
+                var uriBuilder = new UriBuilder(Request.Url) {
+                    Port = 1235
+                };
                 uri = uriBuilder.Uri;
             }
             var oauth_signature_Calculated = oauthBase.GenerateSignature(uri, consumerKey, consumerSecret, "", "", "GET", oauth_timestamp, oauth_nonce, out normalizedUrl, out normalizedRequestParameters);
@@ -139,147 +105,9 @@ namespace Laser.Orchard.AppDirect.Controllers {
             return false;
         }
 
-
-
-        //private bool MakeRequestToAppdirect(string uri, out string outresponse, string token = "", string tokenSecret = "") {
-        //    outresponse = "";
-        //    try {
-        //        OAuthBase oauthBase = new OAuthBase();
-        //        if (string.IsNullOrEmpty(uri))
-        //            return false;
-        //        var setting = _orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>();
-        //        string ConsumerKey = setting.ConsumerKey;
-        //        string ConsumerSecret = setting.ConsumerSecret;
-        //        string consumerKey = ConsumerKey;
-        //        string consumerSecret = ConsumerSecret;
-        //        string timeStamp = oauthBase.GenerateTimeStamp();
-        //        string nonce = oauthBase.GenerateNonce();
-        //        string normalizedUrl;
-        //        string normalizedRequestParameters;
-        //        string str1 = HttpUtility.UrlEncode(oauthBase.GenerateSignature(new Uri(uri), consumerKey, consumerSecret, token, tokenSecret, "GET", timeStamp, nonce, out normalizedUrl, out normalizedRequestParameters));
-        //        string str2 = string.Format("{0}?{1}&oauth_signature={2}", (object)normalizedUrl, (object)normalizedRequestParameters, (object)str1);
-        //        WriteEvent(EventType.Output, str2);
-        //        HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(str2);
-        //        httpWebRequest.Accept = "application/json";
-        //        string end = new StreamReader(httpWebRequest.GetResponse().GetResponseStream()).ReadToEnd();
-        //        WriteEvent(EventType.Input, end);
-        //        outresponse = end;
-        //        return true;
-        //    }
-        //    catch (Exception ex) {
-        //        Logger.Error(ex.Message);
-        //        return false;
-        //    }
-        //}
-
-        //private bool Login(string userName) {
-        //    if (string.IsNullOrWhiteSpace(userName))
-        //        return false;
-        //    IUser user = _membershipService.GetUser(userName);
-        //    if (user != null)
-        //        _authenticationService.SignIn(user, true);
-        //    IUser authenticatedUser = _authenticationService.GetAuthenticatedUser();
-        //    if (authenticatedUser == null)
-        //        return false;
-        //    _userEventHandler.LoggedIn(authenticatedUser);
-        //    return true;
-        //}
-
-        //private bool CreateUserOrchard(string username, string email) {
-        //    try {
-        //        string password = Membership.GeneratePassword(10, 5);
-        //        if (_membershipService.CreateUser(new CreateUserParams(username, password, email, T.Invoke("Auto Registered User", new object[0]).Text, password, true)) != null)
-        //            return true;
-        //        Logger.Error( string.Format("AppDirect => Error Creating user username={0} email={1}", (object)username, (object)email));
-        //        return false;
-        //    }
-        //    catch (Exception ex) {
-        //        Logger.Error(string.Format("AppDirect => Error Creating user username={0} email={1}", (object)username, (object)email) + " " + ex.Message);
-        //        return false;
-        //    }
-        //}
-
-        //private bool CreateOrLoginUser(JObject json) {
-        //    if (json["creator"] == null)
-        //        return false;
-        //    string email = (json["creator"]["email"] ?? "").ToString();
-        //    string lowerInvariant = ("AppDirect_" + (json["creator"]["firstName"] ?? "").ToString() + "." + (json["creator"]["lastName"] ?? "").ToString() + "." + (json["creator"]["uuid"] ?? "").ToString()).ToLowerInvariant();
-        //    if (!Login(lowerInvariant)) {
-        //        CreateUserOrchard(lowerInvariant, email);
-        //        Login(lowerInvariant);
-        //    }
-        //    return _authenticationService.GetAuthenticatedUser() != null;
-        //}
-
-        //    public ActionResult LogOn(string loginIdentifier) {
-        //        string stropenid = Request.QueryString["openid"];
-        //        OpenIdRelyingParty rpopenid = new OpenIdRelyingParty();
-
-        //        var response = rpopenid.GetResponse();
-        //        if (response != null) {
-        //            switch (response.Status) {
-        //                case AuthenticationStatus.Authenticated:
-        //                    var extradata = response.GetExtension<ClaimsResponse>();
-        //                   var email= extradata.Email;
-        //                    // NotLoggedIn.Visible = false;
-        //                    Session["GoogleIdentifier"] = response.ClaimedIdentifier.ToString();
-        //                    //AttributeValues att = new AttributeValues();
-        //                    //Response.Write(Session["GoogleIdentifier"]);
-
-        //                    //Response.Redirect("Main.aspx"); //redirect to main page of your website
-        //                    break;
-        //                case AuthenticationStatus.Canceled:
-        //                    //lblAlertMsg.Text = "Cancelled.";
-        //                    break;
-        //                case AuthenticationStatus.Failed:
-        //                    //lblAlertMsg.Text = "Login Failed.";
-        //                    break;
-        //            }
-        //        }
-        //        // string outresponse;
-        //        // OpenId(openid, out outresponse, "", "");
-        //        //// string str2 = Request.QueryString["accountId"];
-        //        // WebClient webClient = new WebClient();
-        //        // webClient.Credentials = (ICredentials)new NetworkCredential(ConsumerKey, ConsumerSecret);
-        //        // webClient.Headers.Add("Content-Type", "application/json; charset=utf-8");
-        //        // webClient.DownloadString(new Uri(openid));
-        //        using (OpenIdRelyingParty openIdRelyingParty = new OpenIdRelyingParty()) {
-        //            IAuthenticationRequest request = openIdRelyingParty.CreateRequest(stropenid);
-        //            request.AddExtension(new ClaimsRequest {
-        //                Email=DemandLevel.Request,
-        //                Nickname=DemandLevel.Request
-        //            });
-        //            request.RedirectToProvider();
-        ////            openIdRelyingParty.CreateRequest(stropenid).RedirectToProvider();
-        //        }
-
-
-
-
-        //           return null;
-        //    }
-
-        //[AcceptVerbs]
-        //public ActionResult LogOn(string loginIdentifier) {
-        //    if (!Identifier.IsValid(loginIdentifier)) {
-        //    //    get_ModelState().AddModelError("loginIdentifier", "The specified login identifier is invalid");
-        //        return (ActionResult)View();
-        //    }
-        //    IAuthenticationRequest request = new OpenIdRelyingParty().CreateRequest(Identifier.Parse(loginIdentifier));
-        //    IAuthenticationRequest iauthenticationRequest = request;
-        //    ClaimsRequest claimsRequest = new ClaimsRequest();
-        //    //int num1 = 0;
-        //    //claimsRequest.set_BirthDate((DemandLevel)num1);
-        //    //int num2 = 2;
-        //    //claimsRequest.set_Email((DemandLevel)num2);
-        //    //int num3 = 2;
-        //    //claimsRequest.set_FullName((DemandLevel)num3);
-        //    iauthenticationRequest.AddExtension((IOpenIdMessageExtension)claimsRequest);
-        //    return MessagingUtilities.AsActionResult(request.RedirectingResponse);
-        //}
         private ContentItem CreateContentItemRequest(string jsonstring, RequestState Action, string key) {
-            JObject json = JObject.Parse(jsonstring);
-            ContentItem contentItem = _contentManager.New("AppDirectRequest");
+            var json = JObject.Parse(jsonstring);
+            var contentItem = _contentManager.New("AppDirectRequest");
             _contentManager.Create(contentItem);
             if ((json["creator"]).Type != JTokenType.Null) {
                 var appDirectUserPart = contentItem.As<AppDirectUserPart>();
@@ -300,9 +128,6 @@ namespace Laser.Orchard.AppDirect.Controllers {
                 appDirectUserPart.CompanyUuidCreator = (json["payload"]["company"]["uuid"] ?? "").ToString();
                 appDirectUserPart.CompanyWebSite = (json["payload"]["company"]["website"] ?? "").ToString();
             }
-
-
-
             var appDirectRequestPart = ((dynamic)contentItem).AppDirectRequestPart;
             appDirectRequestPart.Request.Value = jsonstring;
             appDirectRequestPart.Action.Value = EnumHelper<RequestState>.GetDisplayValue(Action);
@@ -312,14 +137,13 @@ namespace Laser.Orchard.AppDirect.Controllers {
             }
             appDirectRequestPart.Uri.Value = Request.QueryString["url"];
             appDirectRequestPart.ProductKey.Value = key;
-           // contentItem.As<TitlePart>().Title = EnumHelper<RequestState>.GetDisplayValue(Action) + " " + (json["creator"]["email"] ?? "").ToString(); 
             var user = _membershipService.GetUser("Market_AppDirect");
             contentItem.As<CommonPart>().Owner = user;
             return contentItem;
         }
         public ActionResult Create() {
-            string str = Request.QueryString["url"];
-            string key = Request.QueryString["productKey"];
+            var str = Request.QueryString["url"];
+            var key = Request.QueryString["productKey"];
             _appDirectCommunication.WriteEvent(EventType.Input, str);
             if (VerifyValidRequest(key)) {
                 _appDirectCommunication.WriteEvent(EventType.Input, "OpenAuthValidation");
@@ -347,8 +171,8 @@ namespace Laser.Orchard.AppDirect.Controllers {
 
 
         public ActionResult Edit() {
-            string str = Request.QueryString["url"];
-            string key = Request.QueryString["productKey"];
+            var str = Request.QueryString["url"];
+            var key = Request.QueryString["productKey"];
             _appDirectCommunication.WriteEvent(EventType.Input, str);
             if (VerifyValidRequest(key)) {
                 _appDirectCommunication.WriteEvent(EventType.Input, "OpenAuthValidation");
@@ -374,8 +198,8 @@ namespace Laser.Orchard.AppDirect.Controllers {
         }
 
         public ActionResult Cancel() {
-            string str = Request.QueryString["url"];
-            string key = Request.QueryString["productKey"];
+            var str = Request.QueryString["url"];
+            var key = Request.QueryString["productKey"];
             _appDirectCommunication.WriteEvent(EventType.Input, str);
             if (VerifyValidRequest(key)) {
                 _appDirectCommunication.WriteEvent(EventType.Input, "OpenAuthValidation");
@@ -401,8 +225,8 @@ namespace Laser.Orchard.AppDirect.Controllers {
         }
 
         public ActionResult Status() {
-            string str = Request.QueryString["url"];
-            string key = Request.QueryString["productKey"];
+            var str = Request.QueryString["url"];
+            var key = Request.QueryString["productKey"];
             _appDirectCommunication.WriteEvent(EventType.Input, str);
             if (VerifyValidRequest(key)) {
                 _appDirectCommunication.WriteEvent(EventType.Input, "OpenAuthValidation");

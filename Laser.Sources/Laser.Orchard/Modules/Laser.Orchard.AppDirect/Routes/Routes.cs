@@ -11,7 +11,7 @@ namespace Laser.Orchard.AppDirect.Routes {
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
             using (IEnumerator<RouteDescriptor> enumerator = this.GetRoutes().GetEnumerator()) {
                 while (((IEnumerator)enumerator).MoveNext()) {
-                    RouteDescriptor current = enumerator.Current;
+                    var current = enumerator.Current;
                     routes.Add(current);
                 }
             }
@@ -82,22 +82,6 @@ namespace Laser.Orchard.AppDirect.Routes {
                 },
                 new MvcRouteHandler())
                 },
-
-                new RouteDescriptor {
-                Priority = 19,
-                Route = new Route(
-                "AppDirect/Logon",
-                new RouteValueDictionary {
-                {"area", "Laser.Orchard.AppDirect"},
-                {"controller", "Subscription"},
-                {"action", "LogOn"}
-                },
-                new RouteValueDictionary(),
-                new RouteValueDictionary {
-                {"area", "Laser.Orchard.AppDirect"}
-                },
-                new MvcRouteHandler())
-                }
             };
         }
     }

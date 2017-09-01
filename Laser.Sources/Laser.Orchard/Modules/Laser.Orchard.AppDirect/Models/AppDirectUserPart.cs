@@ -1,5 +1,4 @@
-﻿
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 
 namespace Laser.Orchard.AppDirect.Models {
     public class AppDirectUserPart : ContentPart<AppDirectUserPartRecord> {
@@ -13,7 +12,6 @@ namespace Laser.Orchard.AppDirect.Models {
                 this.Store(r => r.Email, value);
             }
         }
-
 
         public string FirstName {
             get

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 
 namespace Laser.Orchard.AppDirect.Models {
     public enum RequestState {
@@ -22,7 +20,6 @@ namespace Laser.Orchard.AppDirect.Models {
     public static class EnumHelper<T> {
         public static IList<T> GetValues(Enum value) {
             var enumValues = new List<T>();
-
             foreach (FieldInfo fi in value.GetType().GetFields(BindingFlags.Static | BindingFlags.Public)) {
                 enumValues.Add((T)Enum.Parse(value.GetType(), fi.Name, false));
             }
@@ -44,11 +41,10 @@ namespace Laser.Orchard.AppDirect.Models {
         private static string lookupResource(Type resourceManagerProvider, string resourceKey) {
             foreach (PropertyInfo staticProperty in resourceManagerProvider.GetProperties(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)) {
                 if (staticProperty.PropertyType == typeof(System.Resources.ResourceManager)) {
-                    System.Resources.ResourceManager resourceManager = (System.Resources.ResourceManager)staticProperty.GetValue(null, null);
+                    var resourceManager = (System.Resources.ResourceManager)staticProperty.GetValue(null, null);
                     return resourceManager.GetString(resourceKey);
                 }
             }
-
             return resourceKey; // Fallback with the key name
         }
 
