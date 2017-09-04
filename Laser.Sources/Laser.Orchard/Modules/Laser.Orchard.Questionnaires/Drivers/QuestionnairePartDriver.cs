@@ -343,9 +343,9 @@ namespace Laser.Orchard.Questionnaires.Drivers {
 
         public void KeyGenerated(StringBuilder key) {
             if (IsAuthorized) {
-                key.Append("QuestionnaireAuthorized;");
+                key.Append("SubmitQuestionnaire=true;");
             } else {
-                key.Append("QuestionnaireUnauthorized;");
+                key.Append("SubmitQuestionnaire=false;");
             }
         }
 
