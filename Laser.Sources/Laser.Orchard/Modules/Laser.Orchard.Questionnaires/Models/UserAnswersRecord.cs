@@ -13,7 +13,9 @@ namespace Laser.Orchard.Questionnaires.Models {
         public virtual int Id { get; set; }
         public virtual int QuestionRecord_Id { get; set; }
         public virtual int? AnswerRecord_Id { get; set; }
+        [MaxLength(500)]
         public virtual string QuestionText { get; set; }
+        [MaxLength(1200)]
         public virtual string AnswerText { get; set; }
         public virtual int User_Id { get; set; }
         public virtual DateTime AnswerDate { get; set; }

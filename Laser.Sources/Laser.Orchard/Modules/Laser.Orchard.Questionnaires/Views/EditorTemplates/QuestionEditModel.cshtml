@@ -68,13 +68,13 @@
                 }
                 @if (partSettings.AllowSections) {
                     <span class="quest_label">@T("Section")</span>
-                    @Html.TextBoxFor(x => x.Section, new { @placeholder = T("Type a section name") })
+                    @Html.TextBoxFor(x => x.Section, new { @maxlength = "200", @placeholder = T("Type a section name") })
                 }
                 <br />
             </td>
             <td>
                 <span class="quest_label">@T("Question text")</span>
-                @Html.TextAreaFor(x => x.Question, new { @placeholder = T("Type the question"), @class = "domanda " })
+                @Html.TextAreaFor(x => x.Question, new { @maxlength = "500", @placeholder = T("Type the question"), @class = "domanda " })
             </td>
 
             <td class="rightside">
