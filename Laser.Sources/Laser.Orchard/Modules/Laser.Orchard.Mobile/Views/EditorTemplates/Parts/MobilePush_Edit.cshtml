@@ -121,6 +121,13 @@
                 }
             });
         });
+        @if(Model.HideRelated) {
+            <text>
+            $(function () {
+                $("fieldset[data-field-name=RelatedContent][data-part-name=MobilePushPart]").hide();
+            });
+            </text>
+        }
     </script>
 
 }
