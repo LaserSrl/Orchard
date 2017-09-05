@@ -19,13 +19,16 @@ using Orchard.Security;
 using Orchard.Users.Events;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
+using Orchard.Utility.Extensions;
+using Orchard.Mvc.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Text.RegularExpressions;
-
+using System.Web;
+using System.Web.Mvc;
 
 namespace Laser.Orchard.UsersExtensions.Services {
     public interface IUsersExtensionsServices : IDependency {
@@ -122,7 +125,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
                         userRegistrationParams.Email,
                         userRegistrationParams.PasswordQuestion,
                         userRegistrationParams.PasswordAnswer,
-                        !(RegistrationSettings.UsersAreModerated)
+                        (RegistrationSettings.UsersAreModerated == false) && (RegistrationSettings.UsersMustValidateEmail == false)
                         ));
                     var favCulture = createdUser.As<FavoriteCulturePart>();
                     if (favCulture != null) {
@@ -141,13 +144,24 @@ namespace Laser.Orchard.UsersExtensions.Services {
                             //}
                         }
                     }
-                    _authenticationService.SignIn(createdUser, true);
-                    
-                    // solleva l'evento LoggedIn sull'utente
-                    _userEventHandler.LoggedIn(createdUser);
+                    if((RegistrationSettings.UsersAreModerated == false) && (RegistrationSettings.UsersMustValidateEmail == false)) {
+                        _authenticationService.SignIn(createdUser, true);
 
-                    if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy") && UserRegistrationExtensionsSettings.IncludePendingPolicy == Policy.IncludePendingPolicyOptions.Yes) {
-                        _policySerivces.PolicyForUserMassiveUpdate(policyAnswers);
+                        // solleva l'evento LoggedIn sull'utente
+                        _userEventHandler.LoggedIn(createdUser);
+
+                        if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy") && UserRegistrationExtensionsSettings.IncludePendingPolicy == Policy.IncludePendingPolicyOptions.Yes) {
+                            _policySerivces.PolicyForUserMassiveUpdate(policyAnswers);
+                        }
+                    }
+                    if (RegistrationSettings.UsersMustValidateEmail) {
+                        // send challenge e-mail
+                        var siteUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl;
+                        if (string.IsNullOrWhiteSpace(siteUrl)) {
+                            siteUrl = HttpContext.Current.Request.ToRootUrlString();
+                        }
+                        UrlHelper urlHelper = new UrlHelper(HttpContext.Current.Request.RequestContext);
+                        _userService.SendChallengeEmail(createdUser, nonce => urlHelper.MakeAbsolute(urlHelper.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl));
                     }
                 } else {
                     throw new SecurityException(String.Join(", ", registrationErrors));
