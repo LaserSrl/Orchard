@@ -129,8 +129,7 @@
         _taxonomyService = Model.OrchardServices.WorkContext.Resolve<ITaxonomyService>();
         _roleService = Model.OrchardServices.WorkContext.Resolve<IRoleService>();
         _userRolesRepository = Model.OrchardServices.WorkContext.Resolve<IRepository<UserRolesPartRecord>>();
-        //Get the value of the email field out of the SchedaInvito.
-        dynamic item = Model.ContentItem;
+        dynamic item = Model.ContentItem; // Dipendente
         string email = item.Dipendente.Email.Value.Trim();
         string familyName = item.Dipendente.Cognome.Value.Trim();
         string givenName = item.Dipendente.Nome.Value.Trim();
@@ -145,7 +144,7 @@
             //Generate valid password
             string password = GeneratePassword(); //We are going to use the password in the email we send to the employee.
             if (ValidateRegistration(uName, email, password)) {
-                var kUser = _membershipService.CreateUser(new CreateUserParams(uName, password, email, null, null, false));
+                var kUser = _membershipService.CreateUser(new CreateUserParams(uName, password, email, null, null, true));
                 // save encrypted password in a hidden field
                 string encryptedPwd = Encrypt(password);
                 user = kUser.ContentItem;
@@ -158,16 +157,15 @@
                 Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
                 throw new Exception();
             }
-            Model.Tokens["Workflow"].SetState("Password", password);
         }
         // update user
         user.ProfilePart.Nome.Value = givenName;
         user.ProfilePart.Cognome.Value = familyName;
         user.ProfilePart.Store.Ids = item.Dipendente.Store.Ids;
-        // assign taxo field
-        var terms = _taxonomyService.GetTermsForContentItem(item.Id, "Categoria");
-        _taxonomyService.UpdateTerms(user, terms, "Categoria");
         user.ProfilePart.TipoUtente.Value = "dipendente";
+        if(user.ProfilePart.Datadinascita.DateTime == DateTime.MinValue) {
+            user.ProfilePart.Datadinascita.DateTime = new DateTime(1970, 1, 1);
+        }
         user.VersionRecord.Published = false;
         _contentManager.Publish(user);
         _communicationService.UserToContact((IUser)user.UserPart);
