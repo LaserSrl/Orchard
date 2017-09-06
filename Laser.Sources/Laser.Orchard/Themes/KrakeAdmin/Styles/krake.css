@@ -705,6 +705,11 @@ input[type="number"]:focus {
     margin: 2px 0 2px 0;
 }
 
+.media-library-picker-item img {
+    width: 100%;
+    height: 100%;
+}
+
 #site a, #site a:visited, #site a:active {
     color: #fff;
     float: none;
@@ -1560,3 +1565,4 @@ div#appliedFilters {
     float: initial;
     margin-top: 0px;
 }
+
