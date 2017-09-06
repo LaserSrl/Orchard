@@ -25,9 +25,9 @@
                 var settings = _contentManager.GetContentTypeDefinitions().First(x => x.Name == "Prodotto").Parts.First(x => x.PartDefinition.Name == "Prodotto").PartDefinition.Fields.First(x => x.Name == "ScriptNascondiPrezzo").Settings;
                 var script = settings["InsertStuffFieldSettings.RawHtml"];
                 // update script if necesssary
-                if (enumField.Value.Contains("B2C") && string.IsNullOrWhiteSpace(script)) {
+                if (enumField.Value.Contains("B2C") == false && string.IsNullOrWhiteSpace(script)) {
                     settings["InsertStuffFieldSettings.RawHtml"] = "<script type='text/javascript'>\r\n$('label[for=Prodotto_NascondiPrezzo_Value]').parent().hide();\r\n</script>";
-                } else if (enumField.Value.Contains("B2C") == false && string.IsNullOrWhiteSpace(script) == false) {
+                } else if (enumField.Value.Contains("B2C") && string.IsNullOrWhiteSpace(script) == false) {
                     settings["InsertStuffFieldSettings.RawHtml"] = "";
                 }
                 retString = "Ok";
