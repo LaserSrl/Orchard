@@ -1,7 +1,4 @@
 ﻿<Placement>
   <Place Parts_ShareLink="Content:4" />
   <Place Parts_ShareLinkModuleSetting="Content:4" />
-  <Match DisplayType="Detail">
-    <Place Parts_ShareLink_Detail="Content:4.1" />
-  </Match>
 </Placement>
