@@ -109,12 +109,17 @@ namespace Contrib.Widgets.Controllers {
             var widgetPart = _widgetsService.CreateWidget(layer.Id, widgetType, "", "", "");
             if (widgetPart == null)
                 return HttpNotFound();
+            else
+                _contentManager.Publish(widgetPart.ContentItem);
 
             var contentItem = _services.ContentManager.Get(hostId, VersionOptions.Latest);
+
             var contentMetadata = _services.ContentManager.GetItemMetadata(contentItem);
             var returnUrl = Url.RouteUrl(contentMetadata.EditorRouteValues);
             var model = _services.ContentManager.UpdateEditor(widgetPart, this).HostId(hostId);
+
             var widgetExPart = widgetPart.As<WidgetExPart>();
+
             try {
                 widgetPart.LayerPart = _widgetManager.GetContentLayer();
                 widgetExPart.Host = contentItem;

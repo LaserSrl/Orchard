@@ -69,8 +69,16 @@ msgid "Policy part behaviour"
 msgstr "Comportamento part informativa"
 
 msgctxt "~/Modules/Laser.Orchard.Policy/Views/EditorTemplates/Parts/PolicyTextInfo_Edit.cshtml"
+msgid "For the \"Policy\" \"CommercialUse\" and \"ThirdParty\" options an Accept/Don't Accept choice will be proposed to the end user."
+msgstr "Per le opzioni \"Policy\", \"CommercialUse\" e \"ThirdParty\" verrà proposta all'utente finale una scelta Accetto/Non Accetto."
+
+msgctxt "~/Modules/Laser.Orchard.Policy/Views/EditorTemplates/Parts/PolicyTextInfo_Edit.cshtml"
 msgid "For the \"Policy\" option an Accept/Don't Accept option will be proposed to end user."
 msgstr "Per l'opzione \"Informativa\" verrà proposta all'utente finale una opzione Accetto/Non Accetto."
+
+msgctxt "~/Modules/Laser.Orchard.Policy/Views/EditorTemplates/Parts/PolicyTextInfo_Edit.cshtml"
+msgid "For the \"Regulation\" option a \"I have read the regulation\" flag will be proposed to the end user."
+msgstr "Per l'opzione "Regulation" verrà proposta all'utente finale una casella "Ho letto il regolamento" da spuntare."
 
 msgctxt "~/Modules/Laser.Orchard.Policy/Views/EditorTemplates/Parts/PolicyTextInfo_Edit.cshtml"
 msgid "For the \"Regulation\" option a \"I have read the regulation\" option will be proposed to end user."
@@ -82,13 +90,15 @@ msgstr "Tipo di informativa"
 
 msgctxt "~/Modules/Laser.Orchard.Policy/Views/EditorTemplates/Parts/PolicyTextInfo_Edit.cshtml"
 msgid "Priority"
-msgstr "Priorità
-
-msgctxt "
+msgstr "Priorità"
 
 msgctxt "~/Modules/Laser.Orchard.Policy/Views/EditorTemplates/Parts/PolicyTextInfo_Edit.cshtml"
 msgid "Set a priority. This information is used to order policy textes."
 msgstr "Impostare una priorità. Questa informazione viene utilizzata per ordinare i testi dell'informativa."
+
+msgctxt "~/Modules/Laser.Orchard.Policy/Views/EditorTemplates/Parts/PolicyTextInfo_Edit.cshtml"
+msgid "Set a priority. This information is used to order policy texts in a descending priority order."
+msgstr "Impostare una priorità. Questa informazione viene utilizzata per ordinare i testi dell'informativa in ordine di priorità decrescente."
 
 msgctxt "~/Modules/Laser.Orchard.Policy/Views/EditorTemplates/Parts/PolicyTextInfo_Edit.cshtml"
 msgid "User have to accept this policy"

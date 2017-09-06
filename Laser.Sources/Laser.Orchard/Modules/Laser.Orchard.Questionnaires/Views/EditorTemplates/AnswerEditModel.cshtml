@@ -4,16 +4,16 @@
 @using Orchard.ContentManagement;
 @{ var contentManager = WorkContext.Resolve<IContentManager>();}
 <tr class="answer">
-    <td>
+    <td class="answer-col">
         <label><i class="fa fa-arrows"></i>@T("Answer")</label>
     </td>
-    <td>
+    <td class="answer-text">
         <div>
             @Html.HiddenFor(x => x.Id)
             @Html.HiddenFor(x => x.Position, new { @class = "answers-position-field" })
             @Html.HiddenFor(x => x.Delete, new { @class = "mark-for-delete" })
             @Html.HiddenFor(x => x.QuestionRecord_Id)
-            @Html.TextBoxFor(x => x.Answer, new { @class = "j_risposta" })
+            @Html.TextBoxFor(x => x.Answer, new { @maxlength = "1200", @class = "j_risposta" })
             @{
                 if ((bool)TempData["ShowCorrectResponseFlag"]) {
                 @Html.CheckBoxFor(x => x.CorrectResponse) @Html.Raw("Right answer")
@@ -46,7 +46,7 @@
 
         </div>
     </td>
-    <td>@Html.CheckBoxFor(m => m.Published) Visible</td>
-    <td><i class="fa fa-times" style="color: red"></i>@Html.LinkToRemoveNestedForm(T("Remove").Text, "tr.answer", "input.mark-for-delete", "RefreshAnswerPostions('#'+$(this).closest('tbody').attr('id'))")</td>
+    <td class="answer-col">@Html.CheckBoxFor(m => m.Published) Visible</td>
+    <td class="answer-col"><i class="fa fa-times" style="color: red"></i>@Html.LinkToRemoveNestedForm(T("Remove").Text, "tr.answer", "input.mark-for-delete", "RefreshAnswerPostions('#'+$(this).closest('tbody').attr('id'))")</td>
     @*Prendo il più vicino tbody per decrementare la position*@
 </tr>
