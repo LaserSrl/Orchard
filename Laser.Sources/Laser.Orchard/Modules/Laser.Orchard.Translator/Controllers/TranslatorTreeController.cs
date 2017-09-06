@@ -113,7 +113,11 @@ namespace Laser.Orchard.Translator.Controllers
 
                 additionalData.Add("type", folderType);
 
-                treeList.Add(new TranslationTreeNodeViewModel { id = "translatortree-child-" + item.Replace('.','-'), text = item, data = additionalData });
+                string deprecatedType = "";
+                if (IsDeprecated(item, folderType))
+                    deprecatedType = "deprecated";
+
+                treeList.Add(new TranslationTreeNodeViewModel { id = "translatortree-child-" + item.Replace('.','-'), text = item, data = additionalData, type = deprecatedType });
             }
 
             return treeList;
@@ -136,6 +140,12 @@ namespace Laser.Orchard.Translator.Controllers
             {
                 return !countDictionary.ContainsKey(false) ? 100 : (int)Math.Floor((double)countDictionary[true] / (countDictionary[true] + countDictionary[false]) * 100);
             }
+        }
+
+        private bool IsDeprecated(string containerName, string containerType) {
+            var folderSettings = _translatorServices.GetTranslationFoldersSettings().Where(t => t.ContainerName == containerName && t.ContainerType == containerType).FirstOrDefault();
+
+            return folderSettings == null ? false : folderSettings.Deprecated;
         }
     }
 }

@@ -3,9 +3,7 @@ using Laser.Orchard.Translator.Services;
 using Laser.Orchard.Translator.ViewModels;
 using Orchard.Localization;
 using Orchard.Mvc;
-using Orchard.Themes;
 using Orchard.UI.Admin;
-using System;
 using System.Linq;
 using System.Web.Mvc;
 
