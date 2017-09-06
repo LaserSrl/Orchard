@@ -1,6 +1,5 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
-using Orchard.Core.Common.Utilities;
 using Orchard.Widgets.Models;
 
 namespace Contrib.Widgets.Models {
@@ -28,6 +27,26 @@ namespace Contrib.Widgets.Models {
                     return this.As<WidgetPart>().Position;
                 } else {
                     return "";
+                }
+            }
+        }
+
+        public bool IsPublished {
+            get {
+                if (this.As<WidgetPart>() != null) {
+                    return this.As<WidgetPart>().HasPublished();
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        public bool HasDraft {
+            get {
+                if (this.As<WidgetPart>() != null) {
+                    return this.As<WidgetPart>().HasDraft();
+                } else {
+                    return false;
                 }
             }
         }

@@ -790,9 +790,11 @@ label input {
 
 .hint {
     display: block;
-    font-size: 0.923em;
+    font-size: 0.85em;
     color: #7c7c7c;
+    margin: 0.4em 0 0.6em 0em;
 }
+
 /* todo: (heskew) try to get .text on stuff like .text-box */
 /* Official classes to use: 'text', 'text small', 'text medium', 'text large'. No more 'textMedium', 'text-medium', 'text-small', 'text-large' */
 select, textarea, input.text, input.textMedium, input.text-medium, input.text-small, input.text-box {

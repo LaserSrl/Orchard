@@ -836,6 +836,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                     QuestionnaireTitle = questionnaireData.As<TitlePart>().Title,
                     QuestionId = s.Questions.Id,
                     Question = s.Questions.Question,
+                    Position = s.Questions.Position,
                     QuestionType = s.Questions.QuestionType,
                     Answers = new List<AnswerStatsViewModel>()
                 })
@@ -855,7 +856,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                     question.Answers.AddRange(answers.OrderBy(o => o.Answer));
                 }
 
-                return aggregatedStats.OrderBy(o => o.Question).ToList();
+                return aggregatedStats.OrderBy(o => o.Position).ToList();
             }
         }
 

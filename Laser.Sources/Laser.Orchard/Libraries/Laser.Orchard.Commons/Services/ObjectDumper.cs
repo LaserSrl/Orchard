@@ -61,7 +61,7 @@ namespace Laser.Orchard.Commons.Services {
                 "InfosetPart","FieldIndexPart","IdentityPart","UserPart","UserRolesPart", "AdminMenuPart", "MenuPart"};
             }
             _skipMembers = new string[]{
-               "*/Storage", "*/Settings","*/Zones","LocalizationPart/CultureField","LocalizationPart/MasterContentItemField"/*,"LocalizationPart/MasterContentItem"*/
+               "*/Storage", "*/Settings","*/Zones","LocalizationPart/CultureField","LocalizationPart/MasterContentItemField","DisplayName"/*,"LocalizationPart/MasterContentItem"*/
             };
             _keepOnlyTheeseMembers = new string[]{
                 "MasterContentItem/Id"

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.Questionnaires.Models {
     public class AnswerRecord {
         public virtual int Id { get; set; }
+        [MaxLength(1200)]
         public virtual string Answer { get; set; }
         public virtual bool Published { get; set; }
         public virtual int Position { get; set; }

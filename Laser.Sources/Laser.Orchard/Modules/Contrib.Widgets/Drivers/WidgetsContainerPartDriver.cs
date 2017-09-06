@@ -90,7 +90,7 @@ namespace Contrib.Widgets.Drivers {
                 var widgetTypes = _widgetsService.GetWidgetTypeNames().ToList();
                 if (!string.IsNullOrWhiteSpace(settings.AllowedWidgets))
                     widgetTypes = widgetTypes.Where(x => settings.AllowedWidgets.Split(',').Contains(x)).ToList();
-                var widgets = _widgetManager.GetWidgets(part.Id, part.ContentItem.IsPublished());
+                var widgets = _widgetManager.GetWidgets(part.Id, false);
 
                 var zonePreviewImagePath = string.Format("{0}/{1}/ThemeZonePreview.png", currentTheme.Location, currentTheme.Id);
                 var zonePreviewImage = _virtualPathProvider.FileExists(zonePreviewImagePath) ? zonePreviewImagePath : null;

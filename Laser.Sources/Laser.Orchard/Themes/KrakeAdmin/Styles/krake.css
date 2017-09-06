@@ -1387,6 +1387,10 @@ fieldset {
     display: table-row;
 }
 
+.answer-col {
+    width: 80px;
+}
+
 input[type="file"] {
     display: inline;
 }
@@ -1450,7 +1454,7 @@ html.media-library-modal-window .button-cancel {
     padding: 5px;
 }
 
-.pager li span {
+.pager span.current-page {
     color: #fff;
     background: #337AB7;
 }
@@ -1534,7 +1538,8 @@ input#AdvancedOptions_SelectedToDateEditor_Date, input#AdvancedOptions_SelectedF
 }
 
 #onlyWithMedia{
-    padding-left: 180px;
+    padding-left: 140px;
+    padding-top: 25px;
 }
 
 

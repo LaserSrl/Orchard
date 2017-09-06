@@ -33,8 +33,44 @@ msgid "Back"
 msgstr "Indietro"
 
 msgctxt "~/Modules/Laser.Orchard.Translator/Views/Translator/Index.cshtml"
+msgid "Settings"
+msgstr "Impostazioni"
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/Translator/Index.cshtml"
+msgid "Translations"
+msgstr "Traduzioni"
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/Translator/Index.cshtml"
 msgid "Translator"
 msgstr "Traduttore"
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/Translator/TranslatorFolderSettings.cshtml"
+msgid "Deprecated"
+msgstr "Deprecata"
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/Translator/TranslatorFolderSettings.cshtml"
+msgid "If checked, translations for this module won't be exported anymore."
+msgstr "Se selezionato, le traduzioni per questo modulo non verranno più esportate."
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/Translator/TranslatorFolderSettings.cshtml"
+msgid "If checked, translations for this theme won't be exported anymore."
+msgstr "Se selezionato, le traduzioni per questo tema non verranno più esportate."
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/Translator/TranslatorFolderSettings.cshtml"
+msgid "Save"
+msgstr "Salva"
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/Translator/TranslatorFolderSettings.cshtml"
+msgid "Settings"
+msgstr "Impostazioni"
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/Translator/TranslatorFolderSettings.cshtml"
+msgid "Translations settings"
+msgstr "Impostazioni di traduzione"
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/Translator/TranslatorFolderSettings.cshtml"
+msgid "WARNING: this setting is applied to all languages."
+msgstr "ATTENZIONE: questa impostazione verrà applicata a tutte le lingue."
 
 msgctxt "~/Modules/Laser.Orchard.Translator/Views/Translator/TranslatorForm.cshtml"
 msgid "Click to use this translation"
@@ -111,6 +147,10 @@ msgstr "Traduttore"
 msgctxt "Laser.Orchard.Translator.AdminMenu"
 msgid "Translator"
 msgstr "Traduttore"
+
+msgctxt "Laser.Orchard.Translator.Controllers.TranslatorController"
+msgid "An error occurred while saving the translation folder settings. Please reload the page and retry."
+msgstr "Si è verificato un errore nel salvataggio delle impostazioni di traduzione della cartella. Ricaricare la pagina prima di riprovare."
 
 msgctxt "Laser.Orchard.Translator.Controllers.TranslatorController"
 msgid "An error occurred while saving the translation. Please reload the page and retry."
