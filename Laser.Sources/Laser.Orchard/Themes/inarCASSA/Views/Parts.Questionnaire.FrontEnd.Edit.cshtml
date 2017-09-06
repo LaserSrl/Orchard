@@ -174,7 +174,7 @@ else {
                 <div class="row">
 
                     @if (Questionnaire.QuestionsWithResults[j].QuestionType == Laser.Orchard.Questionnaires.QuestionType.OpenAnswer) {
-                        @Html.TextAreaFor(m => Questionnaire.QuestionsWithResults[j].OpenAnswerAnswerText, new { @class="textarea-box form-control text-pink", @style="border: 1px solid #EE3360" })
+                        @Html.TextAreaFor(m => Questionnaire.QuestionsWithResults[j].OpenAnswerAnswerText, new { @maxlength = "1200", @class ="textarea-box form-control text-pink", @style="border: 1px solid #EE3360" })
                     }
                     else if (Questionnaire.QuestionsWithResults[j].QuestionType == Laser.Orchard.Questionnaires.QuestionType.SingleChoice) {
                         var numeroRisposte = Questionnaire.QuestionsWithResults[j].AnswersWithResult.Count();

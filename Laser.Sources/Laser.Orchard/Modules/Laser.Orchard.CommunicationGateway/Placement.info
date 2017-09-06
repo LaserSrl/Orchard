@@ -27,6 +27,7 @@
       <Place Parts_FavoriteCulturePart="Content:4"/>
       <Place Parts_ProfilePart="Content:5"/>
       <Place Parts_CommunicationContact="Content:6"/>
+      <Place Parts_ContactInfo="Content:7"/>
       <!-- hide all other fields -->
       <Place Fields_Numeric="-"/>
       <Place Fields_Boolean="-"/>

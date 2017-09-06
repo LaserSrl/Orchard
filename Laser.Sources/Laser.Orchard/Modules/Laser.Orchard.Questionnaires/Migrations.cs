@@ -222,5 +222,15 @@ namespace Laser.Orchard.Questionnaires {
         public int UpdateFrom23() {
             SchemaBuilder.AlterTable("UserAnswersRecord", t => t.AlterColumn("QuestionText", col => col.WithType(System.Data.DbType.String).WithLength(500)));
             return 24;        }
+
+        /// <summary>
+        /// Updates some Columns Length in order to fit more cases
+        /// </summary>
+        /// <returns></returns>
+        public int UpdateFrom24() {
+            SchemaBuilder.AlterTable("AnswerRecord", t => t.AlterColumn("Answer", col => col.WithType(System.Data.DbType.String).WithLength(1200)));
+            SchemaBuilder.AlterTable("UserAnswersRecord", t => t.AlterColumn("AnswerText", col => col.WithType(System.Data.DbType.String).WithLength(1200)));
+            return 25;
+        }
     }
 }
