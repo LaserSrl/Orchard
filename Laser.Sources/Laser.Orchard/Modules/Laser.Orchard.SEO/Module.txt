@@ -20,3 +20,8 @@ Features:
 		Description: This module is used by content creators to generate recommended keywords to use.
 		Dependencies: Laser.Orchard.jQueryPlugins,Orchard.Resources
 		Category: SEO
+	Laser.Orchard.Redirects:
+		Name: Laser SEO Redirects
+		Description: This module enables management of 301 and 302 redirects
+		Dependencies: Laser.Orchard.SEO
+		Category: SEO

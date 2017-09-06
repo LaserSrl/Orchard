@@ -115,30 +115,37 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\RedirectsAdminController.cs" />
     <Compile Include="Controllers\RobotsAdminController.cs" />
     <Compile Include="Controllers\KeywordHelperController.cs" />
     <Compile Include="Controllers\RobotsController.cs" />
     <Compile Include="Drivers\FaviconSettingsPartDriver.cs" />
     <Compile Include="Drivers\KeywordHelperDriver.cs" />
     <Compile Include="Drivers\SeoDriver.cs" />
-    <Compile Include="FaviconMigrations.cs" />
+    <Compile Include="Migrations\FaviconMigrations.cs" />
     <Compile Include="Handlers\FaviconSettingsPartHandler.cs" />
     <Compile Include="Handlers\KeywordHelperHandler.cs" />
     <Compile Include="Handlers\SeoHandler.cs" />
-    <Compile Include="KeywordHelperMigrations.cs" />
+    <Compile Include="Migrations\KeywordHelperMigrations.cs" />
+    <Compile Include="Migrations\RedirectsMigrations.cs" />
     <Compile Include="Models\KeywordHelperPart.cs" />
     <Compile Include="Models\KeywordHelperPartVersionRecord.cs" />
+    <Compile Include="Models\RedirectRule.cs" />
     <Compile Include="Models\RobotsFileRecord.cs" />
     <Compile Include="Models\SeoPartSettings.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
+    <Compile Include="Navigation\RedirectsMenu.cs" />
     <Compile Include="Permissions\Permissions.cs" />
+    <Compile Include="Permissions\RedirectPermissions.cs" />
     <Compile Include="Routes\Routes.cs" />
-    <Compile Include="SeoMigrations.cs" />
+    <Compile Include="Migrations\SeoMigrations.cs" />
     <Compile Include="Models\FaviconSettingsPart.cs" />
     <Compile Include="Models\FaviconSettingsRecord.cs" />
     <Compile Include="Models\SeoPart.cs" />
     <Compile Include="Models\SeoRecord.cs" />
     <Compile Include="Services\FaviconService.cs" />
+    <Compile Include="Services\IRedirectService.cs" />
+    <Compile Include="Services\RedirectService.cs" />
     <Compile Include="Services\RobotsFileValidatingReader.cs" />
     <Compile Include="Services\RobotsService.cs" />
     <Compile Include="Services\SEOServices.cs" />
@@ -195,6 +202,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\RobotsAdmin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\RedirectsAdmin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\RedirectsAdmin\ListPartial.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
