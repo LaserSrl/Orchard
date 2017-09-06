@@ -1208,6 +1208,7 @@ fieldset {
 
 .pager {
     margin: 0px;
+    float: right;
 }
 
 .pager li {
@@ -1225,6 +1226,8 @@ fieldset {
 
 .pagination > li > a, .pagination > li > span, .pager > li > a, .pager > li > span {
     color: #1c2a37;
+    font-size: 12pt;
+    border-radius: 1px;
 }
 
 .page-size-options {
@@ -1455,8 +1458,9 @@ html.media-library-modal-window .button-cancel {
 }
 
 .pager span.current-page {
-    color: #fff;
-    background: #337AB7;
+    border-radius: 1px;
+    background-color:#337AB7;
+
 }
 
 html {
