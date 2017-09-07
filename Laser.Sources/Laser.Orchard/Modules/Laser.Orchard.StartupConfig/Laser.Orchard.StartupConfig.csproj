@@ -215,7 +215,7 @@
     <Content Include="Recipes\AppRetailB2B.recipe.xml" />
     <Content Include="Recipes\AppRetailB2B2C.recipe.xml" />
     <Content Include="Recipes\AppRetailB2C.recipe.xml" />
-    <Content Include="Recipes\AppRetailBase.recipe.xml" />
+    <Content Include="Recipes\AppRetailBaseB2B.recipe.xml" />
     <Content Include="Recipes\Laser.recipe.xml">
       <SubType>Designer</SubType>
     </Content>
