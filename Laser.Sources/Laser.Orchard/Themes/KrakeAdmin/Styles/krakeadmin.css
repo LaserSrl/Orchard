@@ -9641,10 +9641,9 @@ input#adminfilter {
     margin-bottom: 20px;
 }
 
-/*search content picker field*/
+/*content picker field*/
 .content-picker-tab #searchText {
     margin-top: 10px;
-    margin-right: 40px;
     margin-left: 10px;
 }
 
