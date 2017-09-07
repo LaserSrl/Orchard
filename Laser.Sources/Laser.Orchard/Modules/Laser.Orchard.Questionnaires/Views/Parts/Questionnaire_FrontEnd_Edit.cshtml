@@ -155,7 +155,7 @@ else {
            }
        } 
                     @if (Questionnaire.QuestionsWithResults[j].QuestionType == Laser.Orchard.Questionnaires.QuestionType.OpenAnswer) {
-                        @Html.TextAreaFor(m => Questionnaire.QuestionsWithResults[j].OpenAnswerAnswerText)
+                        @Html.TextAreaFor(m => Questionnaire.QuestionsWithResults[j].OpenAnswerAnswerText, new { @maxlength = "1200" })
                     }
                     else if (Questionnaire.QuestionsWithResults[j].QuestionType == Laser.Orchard.Questionnaires.QuestionType.SingleChoice) {
                         var numeroRisposte = Questionnaire.QuestionsWithResults[j].AnswersWithResult.Count();

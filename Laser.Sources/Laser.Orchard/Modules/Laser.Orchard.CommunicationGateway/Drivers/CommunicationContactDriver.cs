@@ -15,10 +15,12 @@ using System.Linq;
 using System.Web;
 using Orchard.ContentManagement;
 using Orchard.Users.Models;
+using Orchard.OutputCache;
+using System.Text;
 
 namespace Laser.Orchard.CommunicationGateway.Drivers {
 
-    public class CommunicationContactDriver : ContentPartDriver<CommunicationContactPart> {
+    public class CommunicationContactDriver : ContentPartDriver<CommunicationContactPart>, ICachingEventHandler {
         private readonly IOrchardServices _orchardServices;
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IContentManager _contentManager;
@@ -39,12 +41,23 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
             _contentManager = contentManager;
+
+            _isAuthorized = new Lazy<bool>(() =>
+                _orchardServices.Authorizer.Authorize(Permissions.ShowContacts)
+            );
+        }
+
+        private Lazy<bool> _isAuthorized;
+        private bool IsAuthorized {
+            get {
+                return _isAuthorized.Value;
+            }
         }
 
         protected override DriverResult Display(CommunicationContactPart part, string displayType, dynamic shapeHelper) {
             // check sulle permission (esclude il modulo Generator)
             if (_controllerContextAccessor.Context.Controller.GetType().Namespace != "Laser.Orchard.Generator.Controllers") {
-                if (_orchardServices.Authorizer.Authorize(Permissions.ShowContacts) == false) {
+                if (!IsAuthorized) {
                     throw new System.Security.SecurityException("You do not have permission to access this content.");
                 }
             }
@@ -119,6 +132,14 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
             }
             root.SetAttributeValue("Master", part.Master);
             root.SetAttributeValue("Logs", part.Logs);
+        }
+
+        public void KeyGenerated(StringBuilder key) {
+            if (IsAuthorized) {
+                key.Append("ShowContacts=true;");
+            } else {
+                key.Append("ShowContacts=false;");
+            }
         }
     }
 }
