@@ -1476,8 +1476,7 @@
       <TaxonomyPart TermTypeName="PreferenzeTerm" />
       <TitlePart Title="Preferenze" />
     </Taxonomy>
-    <User Id="/Identifier=/User.UserName=brandAdmin" Status="Published">
-      <ContentPickerField.Store />
+    <User Id="/Identifier=e2970c18fbe749e9884c9f0ad2d119f7/User.UserName=brandAdmin" Status="Published">
       <ProfilePart.Datadinascita Value="1970-01-01T00:00:00Z" />
       <HiddenStringField.TipoUtente />
       <HiddenStringField.OriginalPassword />
@@ -1485,7 +1484,7 @@
       <TextField.Nome Text="Admin" />
       <TextField.Cognome Text="Brand" />
       <FavoriteCulturePart Culture_Id="it-IT" />
-      <IdentityPart Identifier="" />
+      <IdentityPart Identifier="e2970c18fbe749e9884c9f0ad2d119f7" />
       <UserPart Email="app.retail@laser-group.com" EmailStatus="Approved" HashAlgorithm="PBKDF2" NormalizedUserName="brandadmin" Password="AKhp6ytfFjS0qCeWadVW63LW0jl+y5DD8r1gPQp2zQUCbJKEV+PISUEXhrddAZk/fQ==" PasswordFormat="Hashed" PasswordSalt="IpDE0PgRAXfnMC+LQsu8ag==" RegistrationStatus="Approved" UserName="brandAdmin" />
       <UserRolesPart Roles="BrandAdminB2B,UserB2B" />
     </User>
