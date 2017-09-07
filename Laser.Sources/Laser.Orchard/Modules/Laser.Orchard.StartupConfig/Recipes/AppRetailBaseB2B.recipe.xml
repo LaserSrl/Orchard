@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0"?>
 <Orchard>
   <Recipe>
-    <Name>AppRetailBase</Name>
+    <Name>AppRetailBaseB2B</Name>
     <Description>Run this recipe to set things up for AppRetail base tenant.</Description>
     <Author>Laser</Author>
     <WebSite>laser-group.com</WebSite>
