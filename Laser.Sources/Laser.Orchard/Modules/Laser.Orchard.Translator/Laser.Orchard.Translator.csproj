@@ -124,6 +124,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Styles\images\ajax-loader.gif" />
     <Content Include="Styles\laser-orchard-translator.css" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
