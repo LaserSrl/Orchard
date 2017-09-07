@@ -1,13 +1,14 @@
 ﻿@using Orchard.Utility.Extensions;
 @{
     Style.Require("Contrib_Stars");
-    Script.Require("jQuery");
+    Script.Require("jQuery").AtHead();
     Script.Require("Contrib_Stars");
 
     const string viewName = "ConfirmRatingDelete";
     if (!HttpContext.Current.Items.Contains(viewName)) {
         HttpContext.Current.Items[viewName] = true;
-        WorkContext.Layout.AfterContent.Add(New.Partial(TemplateName: viewName));
+        @Display(New.ConfirmRatingDelete())
+        //WorkContext.Layout.AfterContent.Add(New.Partial(TemplateName: viewName));
     }
 
     var roundedResult = Math.Round(Model.ContentPart.Rating.CurrentVotingResult.Value * 2, MidpointRounding.AwayFromZero) / 2;
