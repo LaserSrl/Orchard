@@ -124,7 +124,7 @@
                 } else {
                     $('#translation-message-id').hide();
                     $("#translation-form h2").show();
-                    $('#translation-message-id').val("@Model.Message");
+                    $('#translation-message-id').val("@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.Message))");
                     $('#edit-message').text("Edit Message ID");
                 }
             });
