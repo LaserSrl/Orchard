@@ -1,0 +1,20 @@
+﻿<?xml version="1.0"?>
+<Orchard>
+  <Recipe>
+    <Name>AppRetailB2B2C</Name>
+    <Description>Run this recipe to enable B2B and B2C on an AppRetail tenant.</Description>
+    <Author>Laser</Author>
+    <WebSite>laser-group.com</WebSite>
+    <Tags></Tags>
+    <Version>1.0</Version>
+  </Recipe>
+
+  <Content>
+    <ConfigurazioneBase Id="/alias=config\/base/Identifier=d0828843c80f4c6a985ed81b69a643d2" Status="Published">
+      <EnumerationField.Type Value="B2B+B2C" />
+    </ConfigurazioneBase>
+    <User Id="/Identifier=/User.UserName=brandAdmin" Status="Published">
+      <UserRolesPart Roles="BrandAdminB2B,BrandAdminB2C,UserB2B" />
+    </User>
+  </Content>
+</Orchard>
