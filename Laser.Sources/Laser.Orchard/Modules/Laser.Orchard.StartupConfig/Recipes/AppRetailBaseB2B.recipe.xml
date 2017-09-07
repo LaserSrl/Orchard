@@ -1478,7 +1478,7 @@
     </Taxonomy>
     <User Id="/Identifier=/User.UserName=brandAdmin" Status="Published">
       <ContentPickerField.Store />
-      <ProfilePart.Datadinascita Value="2017-01-01T00:00:00Z" />
+      <ProfilePart.Datadinascita Value="1970-01-01T00:00:00Z" />
       <HiddenStringField.TipoUtente />
       <HiddenStringField.OriginalPassword />
       <TaxonomyField.Preferenze Terms="" />
@@ -1486,7 +1486,7 @@
       <TextField.Cognome Text="Brand" />
       <FavoriteCulturePart Culture_Id="it-IT" />
       <IdentityPart Identifier="" />
-      <UserPart Email="app.retail@laser-group.com" EmailChallengeToken="" EmailStatus="Approved" HashAlgorithm="PBKDF2" NormalizedUserName="brandAdmin" Password="ADUYidnD33tUaxIhN3ZNhPaIQMVo6VKyO1XDulKszS0RDcTitXIwC7qHt+6IwTmMUg==" PasswordFormat="Hashed" PasswordSalt="/f6oBMcAaz//rZIz+4Yw9A==" RegistrationStatus="Approved" UserName="brandAdmin" />
+      <UserPart Email="app.retail@laser-group.com" EmailStatus="Approved" HashAlgorithm="PBKDF2" NormalizedUserName="brandadmin" Password="AKhp6ytfFjS0qCeWadVW63LW0jl+y5DD8r1gPQp2zQUCbJKEV+PISUEXhrddAZk/fQ==" PasswordFormat="Hashed" PasswordSalt="IpDE0PgRAXfnMC+LQsu8ag==" RegistrationStatus="Approved" UserName="brandAdmin" />
       <UserRolesPart Roles="BrandAdminB2B,UserB2B" />
     </User>
   </Content>
