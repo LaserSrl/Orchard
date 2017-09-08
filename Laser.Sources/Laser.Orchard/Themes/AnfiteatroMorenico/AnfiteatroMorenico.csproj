@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\banner.js" />
+    <Content Include="Styles\banner.css" />
     <Content Include="Styles\fonts\slick.eot" />
     <Content Include="Styles\fonts\slick.ttf" />
     <Content Include="Styles\fonts\slick.woff" />
@@ -107,6 +108,7 @@
     <Content Include="Styles\images\slide2.jpg" />
     <Content Include="Styles\images\trekking.png" />
     <Content Include="Styles\style-contrasto.css" />
+    <Content Include="Styles\widgetami.html" />
     <Content Include="Views\Layout.cshtml" />
     <Content Include="Views\Content-CalendarEvent-BeforeContent-Summary.cshtml" />
     <Content Include="Views\Content-Prodotti.Detail.cshtml" />
