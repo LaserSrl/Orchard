@@ -43,6 +43,7 @@
     <None Include="AppRetailN\Code\SignalRichiestaProdotto.cshtml" />
     <None Include="AppRetailN\Code\UnpublishRichiesteProdotto.cshtml" />
     <None Include="AppRetailN\Code\UnpublishStores.cshtml" />
+    <None Include="AppRetailN\Code\UpdateConfigurazioneBase.cshtml" />
     <None Include="AppRetailN\Code\UpdateContatto.cshtml" />
     <None Include="AppRetailN\Code\UpdateMessaggioPromozionale.cshtml" />
     <None Include="AppRetailN\Code\UpdatePush.cshtml" />

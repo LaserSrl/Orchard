@@ -133,6 +133,8 @@
     <Compile Include="PartSettings\ShareLinkEditEvents.cs" />
     <Compile Include="Models\ShareLinkModuleSettingPart.cs" />
     <Compile Include="PartSettings\ShareLinkPartSettingVM.cs" />
+    <Compile Include="Servicies\CurrentContentPriorityProvider.cs" />
+    <Compile Include="Servicies\IShareLinkPriorityProvider.cs" />
     <Compile Include="Servicies\ShareLinkService.cs" />
     <Compile Include="ViewModels\OpenGraphVM.cs" />
     <Compile Include="ViewModels\OptionList.cs" />
@@ -141,7 +143,7 @@
     <Content Include="packages.config" />
     <None Include="Views\DefinitionTemplates\ShareLinkPartSettingVM.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\ShareLinkModuleSetting.cshtml" />
-    <Content Include="Views\Parts\ShareLink_Detail.cshtml" />
+    <Content Include="Views\ShareLinkMeta.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
