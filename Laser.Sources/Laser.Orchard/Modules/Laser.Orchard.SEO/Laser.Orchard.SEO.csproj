@@ -122,6 +122,7 @@
     <Compile Include="Drivers\FaviconSettingsPartDriver.cs" />
     <Compile Include="Drivers\KeywordHelperDriver.cs" />
     <Compile Include="Drivers\SeoDriver.cs" />
+    <Compile Include="Filters\RedirectFilter.cs" />
     <Compile Include="Migrations\FaviconMigrations.cs" />
     <Compile Include="Handlers\FaviconSettingsPartHandler.cs" />
     <Compile Include="Handlers\KeywordHelperHandler.cs" />
