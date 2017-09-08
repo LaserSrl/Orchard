@@ -24,12 +24,13 @@ namespace Laser.Orchard.SEO.Services {
             var result = _repository.Table.Skip(startIndex >= 0 ? startIndex : 0);
 
             if (pageSize > 0) {
-                return result.Take(pageSize);
+                return RedirectRule.Copy(result.Take(pageSize));
             }
-            return result;
+            return RedirectRule.Copy(result.ToList());
         }
+
         public IEnumerable<RedirectRule> GetRedirects(int[] itemIds) {
-            return _repository.Fetch(x => itemIds.Contains(x.Id));
+            return RedirectRule.Copy(_repository.Fetch(x => itemIds.Contains(x.Id)));
         }
 
         public int GetRedirectsTotalCount() {
@@ -55,24 +56,28 @@ namespace Laser.Orchard.SEO.Services {
         }
 
         public void Delete(RedirectRule redirectRule) {
-            _repository.Delete(redirectRule);
+            Delete(redirectRule.Id);
         }
 
         public void Delete(int id) {
-            var redirect = GetRedirect(id);
+            var redirect = _repository.Get(id);
 
             _repository.Delete(redirect);
         }
 
         public RedirectRule GetRedirect(string path) {
             path = path.TrimStart('/');
-            return _repository.Get(x => x.SourceUrl == path);
+            var rule = _repository.Get(x => x.SourceUrl == path);
+            return rule == null ? null :
+                RedirectRule.Copy(rule);
         }
 
         public RedirectRule GetRedirect(int id) {
-            return _repository.Get(id);
+            var rule = _repository.Get(id);
+            return rule == null ? null :
+                RedirectRule.Copy(rule);
         }
-
+        
         private static void FixRedirect(RedirectRule redirectRule) {
             redirectRule.SourceUrl = redirectRule.SourceUrl.TrimStart('/');
             redirectRule.DestinationUrl = redirectRule.DestinationUrl.TrimStart('/');

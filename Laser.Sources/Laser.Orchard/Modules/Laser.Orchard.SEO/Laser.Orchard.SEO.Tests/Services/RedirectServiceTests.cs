@@ -46,6 +46,13 @@ namespace Laser.Orchard.SEO.Tests.Services {
 
         [Test]
         public void RedirectsAreCreatedCorrectly() {
+            Assert.That(_redirectService.GetRedirectsTotalCount(), Is.EqualTo(0));
+            var role = new RedirectRule {
+                SourceUrl = "sourceUrl",
+                DestinationUrl = "destinationUrl",
+                IsPermanent = false
+            };
+            Assert.That(_redirectService.GetRedirectsTotalCount(), Is.EqualTo(0));
 
             PopulateTable(6);
             Assert.That(_redirectService.GetRedirectsTotalCount(), Is.EqualTo(6));
@@ -72,6 +79,7 @@ namespace Laser.Orchard.SEO.Tests.Services {
             PopulateTable(6);
 
             Assert.That(_redirectService.GetRedirectsTotalCount(), Is.EqualTo(6));
+            Assert.That(_redirectService.GetRedirects().Count(), Is.EqualTo(6));
         }
 
         [Test]
@@ -142,6 +150,7 @@ namespace Laser.Orchard.SEO.Tests.Services {
         public void CannotCreateRedirectRulesWithSameSourceUrl() {
             PopulateTable(1);
             Assert.Throws<RedirectRuleDuplicateException>(() => PopulateTable(1));
+            Assert.That(_redirectService.GetRedirectsTotalCount(), Is.EqualTo(1));
         }
 
         [Test]
@@ -152,6 +161,23 @@ namespace Laser.Orchard.SEO.Tests.Services {
             rule.SourceUrl = "sourceUrl1";
 
             Assert.Throws<RedirectRuleDuplicateException>(() => _redirectService.Update(rule));
+            Assert.That(_redirectService.GetRedirects().Count(rr => rr.SourceUrl == "sourceUrl1"), Is.EqualTo(1));
+
+            rule = _redirectService.GetRedirect(1);
+            rule.SourceUrl = "sourceUrl1";
+
+            Assert.Throws<RedirectRuleDuplicateException>(() => _redirectService.Update(rule));
+            Assert.That(_redirectService.GetRedirects().Count(rr => rr.SourceUrl == "sourceUrl1"), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void CannotGetNonExistingRulById() {
+            Assert.That(_redirectService.GetRedirect(5), Is.EqualTo(null));
+        }
+
+        [Test]
+        public void CannotGetNonExistingRuleByPath() {
+            Assert.That(_redirectService.GetRedirect("source"), Is.EqualTo(null));
         }
 
     }

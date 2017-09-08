@@ -103,7 +103,7 @@ namespace Laser.Orchard.SEO.Controllers {
             try {
                 var resultRule = doOnSuccess(redirect);
             } catch (RedirectRuleDuplicateException) {
-                _orchardServices.Notifier.Warning(T("A rule for this Source URL already exists."));
+                _orchardServices.Notifier.Error(T("A rule for this Source URL already exists."));
             }
             
 
