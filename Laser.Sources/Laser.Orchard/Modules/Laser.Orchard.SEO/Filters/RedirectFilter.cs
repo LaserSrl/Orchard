@@ -33,6 +33,9 @@ namespace Laser.Orchard.SEO.Filters {
             if (AdminFilter.IsApplied(new RequestContext(filterContext.HttpContext, new RouteData()))) {
                 return; //no automated redirects from admin
             }
+            if (filterContext.HttpContext.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase)) {
+                return; //do not redirect POST requests
+            }
 
             var urlPrefix = _shellSettings.RequestUrlPrefix;
             var applicationPath = filterContext.HttpContext.Request.ApplicationPath;
