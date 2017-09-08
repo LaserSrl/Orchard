@@ -67,6 +67,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\banner.js" />
     <Content Include="Styles\fonts\slick.eot" />
     <Content Include="Styles\fonts\slick.ttf" />
     <Content Include="Styles\fonts\slick.woff" />
@@ -76,8 +77,21 @@
     <Content Include="Styles\images\app-apple.png" />
     <Content Include="Styles\images\app-google-play.png" />
     <Content Include="Styles\images\attachment.png" />
+    <Content Include="Styles\images\banner\android.png" />
+    <Content Include="Styles\images\banner\apple.png" />
+    <Content Include="Styles\images\banner\bg_orizzontale.jpg" />
+    <Content Include="Styles\images\banner\bg_quadrato.jpg" />
+    <Content Include="Styles\images\banner\bg_verticale.jpg" />
+    <Content Include="Styles\images\banner\es1.png" />
+    <Content Include="Styles\images\banner\es2.png" />
+    <Content Include="Styles\images\banner\logo.png" />
+    <Content Include="Styles\images\banner\phone.gif" />
+    <Content Include="Styles\images\banner\phone.png" />
+    <Content Include="Styles\images\banner\phone_orizzontale_stretto.gif" />
+    <Content Include="Styles\images\banner\phone_orizzontale_stretto.png" />
     <Content Include="Styles\images\bg.jpg" />
     <Content Include="Styles\images\close.png" />
+    <Content Include="Styles\images\E015-Logo.png" />
     <Content Include="Styles\images\ivrea.png" />
     <Content Include="Styles\images\loading.gif" />
     <Content Include="Styles\images\logo-mobile.png" />
