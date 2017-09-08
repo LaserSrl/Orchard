@@ -9,6 +9,7 @@ using Autofac;
 using Laser.Orchard.SEO.Services;
 using Orchard.Data;
 using Laser.Orchard.SEO.Models;
+using Laser.Orchard.SEO.Exceptions;
 
 namespace Laser.Orchard.SEO.Tests.Services {
     [TestFixture]
@@ -113,7 +114,7 @@ namespace Laser.Orchard.SEO.Tests.Services {
             rule.IsPermanent = false;
 
             var updated = _redirectService.Update(rule);
-            
+
             Assert.That(updated.SourceUrl, Is.EqualTo("sourceUrl0x"));
             Assert.That(updated.DestinationUrl, Is.EqualTo("destinationUrl0x"));
             Assert.That(updated.IsPermanent, Is.EqualTo(false));
@@ -121,7 +122,6 @@ namespace Laser.Orchard.SEO.Tests.Services {
 
         [Test]
         public void DeleteCorrectRule() {
-
             PopulateTable(10);
             var rules = _redirectService.GetRedirects();
 
@@ -138,6 +138,21 @@ namespace Laser.Orchard.SEO.Tests.Services {
             Assert.That(rules.First().SourceUrl, Is.EqualTo("sourceUrl2"));
         }
 
+        [Test]
+        public void CannotCreateRedirectRulesWithSameSourceUrl() {
+            PopulateTable(1);
+            Assert.Throws<RedirectRuleDuplicateException>(() => PopulateTable(1));
+        }
+
+        [Test]
+        public void CannotEditRedirectRuleToHaveSameSourceUrl() {
+            PopulateTable(2);
+
+            var rule = _redirectService.GetRedirects().First();
+            rule.SourceUrl = "sourceUrl1";
+
+            Assert.Throws<RedirectRuleDuplicateException>(() => _redirectService.Update(rule));
+        }
 
     }
 }

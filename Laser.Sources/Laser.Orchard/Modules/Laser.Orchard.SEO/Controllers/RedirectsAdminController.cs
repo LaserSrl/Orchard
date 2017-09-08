@@ -1,4 +1,5 @@
-﻿using Laser.Orchard.SEO.Models;
+﻿using Laser.Orchard.SEO.Exceptions;
+using Laser.Orchard.SEO.Models;
 using Laser.Orchard.SEO.Services;
 using Orchard;
 using Orchard.DisplayManagement;
@@ -92,14 +93,19 @@ namespace Laser.Orchard.SEO.Controllers {
             return RedirectIfUrlsAreSame(redirect, (red) => _redirectService.Update(red));
         }
         
-        private ActionResult RedirectIfUrlsAreSame(RedirectRule redirect, Action<RedirectRule> doOnSuccess) {
+        private ActionResult RedirectIfUrlsAreSame(RedirectRule redirect, Func<RedirectRule, RedirectRule> doOnSuccess) {
             if (redirect.SourceUrl == redirect.DestinationUrl) {
                 ModelState.AddModelError("SourceUrl", T("Source url is equal to Destination url").Text);
                 _orchardServices.TransactionManager.Cancel();
                 return View(redirect);
             }
 
-            doOnSuccess(redirect);
+            try {
+                var resultRule = doOnSuccess(redirect);
+            } catch (RedirectRuleDuplicateException) {
+                _orchardServices.Notifier.Warning(T("A rule for this Source URL already exists."));
+            }
+            
 
             return RedirectToAction("Index");
         }

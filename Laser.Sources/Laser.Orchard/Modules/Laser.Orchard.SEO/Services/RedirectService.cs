@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using Laser.Orchard.SEO.Models;
 using Orchard.Data;
+using Laser.Orchard.SEO.Exceptions;
+using Orchard.Localization;
 
 namespace Laser.Orchard.SEO.Services {
     public class RedirectService : IRedirectService {
@@ -12,7 +14,11 @@ namespace Laser.Orchard.SEO.Services {
             IRepository<RedirectRule> repository) {
 
             _repository = repository;
+
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         public IEnumerable<RedirectRule> GetRedirects(int startIndex = 0, int pageSize = 0) {
             var result = _repository.Table.Skip(startIndex >= 0 ? startIndex : 0);
@@ -32,12 +38,18 @@ namespace Laser.Orchard.SEO.Services {
 
         public RedirectRule Update(RedirectRule redirectRule) {
             FixRedirect(redirectRule);
+            if (_repository.Table.Any(rr => rr.Id != redirectRule.Id && rr.SourceUrl == redirectRule.SourceUrl)) {
+                throw new RedirectRuleDuplicateException(T("Rules with same SourceURL are not valid."));
+            }
             _repository.Update(redirectRule);
             return redirectRule;
         }
 
         public RedirectRule Add(RedirectRule redirectRule) {
             FixRedirect(redirectRule);
+            if (_repository.Table.Any(rr => rr.SourceUrl == redirectRule.SourceUrl)) {
+                throw new RedirectRuleDuplicateException(T("Rules with same SourceURL are not valid."));
+            }
             _repository.Create(redirectRule);
             return redirectRule;
         }
