@@ -4,15 +4,6 @@
     var items = (IEnumerable<RedirectRule>)Model.Redirects;
 }
 @using (Html.BeginFormAntiForgeryPost()) {
-    <fieldset class="bulk-actions">
-        <label><input type="checkbox" class="check-all" />@T("Select all")</label>@T(" | ")
-        <label for="publishActions">@T("Actions:")</label>
-        <select id="publishActions" name="BulkAction">
-            @Html.SelectOption("None", "None", T("Choose action...").ToString())
-            @Html.SelectOption("None", "Move", T("Move to web.config").ToString())
-        </select>
-        <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
-    </fieldset>
     <fieldset class="contentItems bulk-items">
         <table class="items" summary="@T("Redirect rules table")">
             <thead>
@@ -34,8 +25,8 @@
                     <td>@redirectRule.DestinationUrl</td>
                     <td>@redirectRule.IsPermanent</td>
                     <td>
-                        @Html.ActionLink(T("Edit").Text, "Edit", "RedirectRule", new { id = redirectRule.Id }, null) |
-                        @Html.ActionLink(T("Delete").Text, "Delete", "RedirectRule", new { id = redirectRule.Id }, new { itemprop = "RemoveUrl UnsafeUrl" })
+                        @Html.ActionLink(T("Edit").Text, "Edit", "RedirectsAdmin", new { id = redirectRule.Id }, null) |
+                        @Html.ActionLink(T("Delete").Text, "Delete", "RedirectsAdmin", new { id = redirectRule.Id }, new { itemprop = "RemoveUrl UnsafeUrl" })
                     </td>
                 </tr>
             }
