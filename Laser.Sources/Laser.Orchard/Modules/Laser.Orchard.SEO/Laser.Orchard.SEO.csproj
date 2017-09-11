@@ -61,6 +61,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Roles, Version=1.10.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Roles\bin\Orchard.Roles.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
