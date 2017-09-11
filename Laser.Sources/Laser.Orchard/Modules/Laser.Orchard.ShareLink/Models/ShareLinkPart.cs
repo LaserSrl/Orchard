@@ -1,5 +1,6 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
+using Orchard.Data.Conventions;
 
 namespace Laser.Orchard.ShareLink.Models {
 
@@ -31,10 +32,14 @@ namespace Laser.Orchard.ShareLink.Models {
     }
 
     public class ShareLinkPartRecord : ContentPartRecord {
+        [StringLengthMax]
         public virtual string SharedBody { get; set; }
+        [StringLengthMax]
         public virtual string SharedLink { get; set; }
+        [StringLengthMax]
         public virtual string SharedText { get; set; }
         public virtual string SharedImage { get; set; }
+        [StringLengthMax]
         public virtual string SharedIdImage { get; set; }
     }
 }
