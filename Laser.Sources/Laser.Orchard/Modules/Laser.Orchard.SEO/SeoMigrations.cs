@@ -1,14 +1,18 @@
-using Laser.Orchard.SEO.Models;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
-using Orchard.Data;
 using Orchard.Data.Migration;
+using Orchard.Roles.Services;
 using System;
+using System.Linq;
 
 namespace Laser.Orchard.SEO {
-
-
     public class SeoMigrations : DataMigrationImpl {
+
+        private readonly IRoleService _roleService;
+
+        public SeoMigrations(IRoleService roleService) {
+            _roleService = roleService;
+        }
 
         public int Create() {
             SchemaBuilder.CreateTable("SeoVersionRecord", table => table
@@ -43,6 +47,18 @@ namespace Laser.Orchard.SEO {
                     .Column<string>("FileContent", col => col.Nullable().Unlimited().WithDefault(@"User-agent: *" + Environment.NewLine + @"Disallow: /"))
                 );
             return 4;
+        }
+
+        public int UpdateFrom4() {
+            var roles = _roleService.GetRoles().Where(r => _roleService.GetPermissionsForRole(r.Id).Contains("AccessAdminPanel"));
+
+            foreach (var role in roles) {
+                if (!_roleService.GetPermissionsForRole(role.Id).Contains("ManageSEO")) {
+                    _roleService.CreatePermissionForRole(role.Name, Permissions.ManageSEO.Name);
+                }
+            }
+
+            return 5;
         }
 
         #region Obsolete code
