@@ -114,12 +114,16 @@
            TinyMce, 
            Title" />
   <Settings>
-    <ButtonToWorkflowsSettingsPart ButtonsAction="InviaCredenzialiDipendente££" ButtonsAsync="False£False£False" ButtonsDescription="££" ButtonsMessage="££" ButtonsText="Invia Credenziali££" />
     <CacheSettingsPart CacheAuthenticatedRequests="false" DebugMode="false" DefaultCacheDuration="3600" DefaultCacheGraceTime="60" DefaultMaxAge="0" IgnoredUrls="" IgnoreNoCache="false" VaryByAuthenticationState="false" VaryByCulture="false" VaryByQueryStringParameters="" VaryByRequestCookies="" VaryByRequestHeaders="">
       <Routes />
     </CacheSettingsPart>
     <CaptchaSettingsPart CustomCaptchaMarkup="" PrivateKey="" PublicKey="" Theme="" />
     <CommentSettingsPart ClosedCommentsDelay="0" ModerateComments="false" NotificationEmail="false" />
+    <DynamicButtonToWorkflowsSettingsPart>
+      <ButtonSettings ButtonName="InviaCredenziali" ButtonText="Invia Credenziali" ButtonDescription="Invia credenziali al dipendente" ButtonAsync="false" />
+      <ButtonSettings ButtonName="ConfermaConfig" ButtonText="Conferma" ButtonAsync="false" />
+      <ButtonSettings ButtonName="DeliverApp" ButtonText="Richiedi pubblicazione app" ButtonAsync="false" />
+    </DynamicButtonToWorkflowsSettingsPart>
     <GoogleAnalyticsSettingsPart AnonymizeIp="true" DomainName="" GoogleAnalyticsKey="UA-37701956-23" TrackOnAdmin="false" TrackOnFrontEnd="true" UseAsyncTracking="true" />
     <MapsSiteSettingsPart MaxZoom="0" />
     <OpenAuthenticationSettingsPart AutoRegistrationEnabled="true" />
@@ -286,7 +290,7 @@
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;config/graphics&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <ConfigurazioneGrafica />
-        <DynamicButtonToWorkflowsPart DynamicButtonsSetting.Buttons="{2}" />
+        <DynamicButtonToWorkflowsPart DynamicButtonsSetting.Buttons="{2},{3}" />
         <IdentityPart />
       </ConfigurazioneGrafica>
       <ConfigurazioneMarketplace ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" DisplayName="Configurazione Marketplace">
@@ -899,6 +903,27 @@
     </Parts>
   </ContentDefinition>
   <Content>
+    <CustomTemplate Id="/Identifier=5b73ecc0a41c480c9d3e583bf328320a" Status="Published">
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-11T10:01:29.3381944Z" PublishedUtc="2017-09-11T10:37:39.9781787Z" ModifiedUtc="2017-09-11T10:37:39.960574Z" />
+      <IdentityPart Identifier="5b73ecc0a41c480c9d3e583bf328320a" />
+      <TemplatePart Title="Richiesta pubblicazione app" Subject="Richiesta pubblicazione app" Text="Si richiede la pubblicazione dell'app &quot;@Model.WorkContext.CurrentSite.SiteName&quot;.&#xD;&#xA;&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
+    </CustomTemplate>
+    <CustomTemplate Id="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" Status="Published">
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-11T08:55:31.6105684Z" PublishedUtc="2017-09-11T09:54:31.7239037Z" ModifiedUtc="2017-09-11T09:54:31.3198943Z" />
+      <IdentityPart Identifier="ca0a0ee70bb44d25afb170a6cea75241" />
+      <TemplatePart Title="Master Template" Subject="Master Template" Text="&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt;&#xD;&#xA;&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;&#xD;&#xA;&#xD;&#xA;  &lt;head&gt;&#xD;&#xA;    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;&#xD;&#xA;    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;&#xD;&#xA;    &lt;title&gt;Vodafone Experience Center&lt;/title&gt;&#xD;&#xA;    &lt;style&gt;&#xD;&#xA;body {&#xD;&#xA;  width: 100% !important;&#xD;&#xA;  min-width: 100%;&#xD;&#xA;  -webkit-text-size-adjust: 100%;&#xD;&#xA;  -ms-text-size-adjust: 100%;&#xD;&#xA;  margin: 0;&#xD;&#xA;  Margin: 0;&#xD;&#xA;  padding: 0;&#xD;&#xA;  -moz-box-sizing: border-box;&#xD;&#xA;  -webkit-box-sizing: border-box;&#xD;&#xA;  box-sizing: border-box; &#xD;&#xA;}&#xD;&#xA;.reflink {&#xD;&#xA;  color:white;&#xD;&#xA;  font-weight:bold;&#xD;&#xA;  text-decoration:none;&#xD;&#xA;}&#xD;&#xA;    &lt;/style&gt;  &#xD;&#xA;  &lt;/head&gt;&#xD;&#xA;  &lt;body&gt;&#xD;&#xA;    &lt;h1 style=&quot;background-image:url('https://pre-multitenant10.mykrake.com/Themes/KrakeAdmin/Styles/images/krake-orizontal.png');background-repeat:no-repeat;height:100px;text-align:center;font-size:32px;font-weight:700;&quot;&gt;&#xD;&#xA;      App Retail&#xD;&#xA;    &lt;/h1&gt;&#xD;&#xA;	@RenderBody()&#xD;&#xA;    &lt;div style=&quot;background-color:rgb(230,0,0);margin-top:20px;text-align:center;color:white&quot;&gt;&#xD;&#xA;      &lt;a href=&quot;http://www.laser-group.com&quot; class=&quot;reflink&quot;&gt;Laser s.r.l.&lt;/a&gt;&#xD;&#xA;      &lt;span style=&quot;width:20%&quot;&gt;&amp;nbsp;-&amp;nbsp;&lt;/span&gt;&#xD;&#xA;      &lt;a href=&quot;http://www.vodafone.it&quot; class=&quot;reflink&quot;&gt;Vodafone&lt;/a&gt;&#xD;&#xA;    &lt;/div&gt;&#xD;&#xA;  &lt;/body&gt;&#xD;&#xA;&lt;/html&gt;" IsLayout="true" />
+    </CustomTemplate>
+    <CustomTemplate Id="/Identifier=de0e15ed8b0040d296f41d1f4c526585" Status="Published">
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-07-31T08:46:09.6198211Z" PublishedUtc="2017-09-11T09:55:32.765459Z" ModifiedUtc="2017-09-11T09:55:32.7541045Z" />
+      <IdentityPart Identifier="de0e15ed8b0040d296f41d1f4c526585" />
+      <TemplatePart Title="Invio credenziali dipendente" Subject="Invio credenziali utente" Text="@{&#xD;&#xA;    dynamic item = Model.Content.ContentItem;&#xD;&#xA;    string usr = Model.Content.WorkflowContext.GetState(&quot;UserName&quot;);&#xD;&#xA;    string pwd = Model.Content.WorkflowContext.GetState(&quot;Password&quot;);&#xD;&#xA;}&#xD;&#xA;Gentile @item.Dipendente.Nome.Value @item.Dipendente.Cognome.Value,&lt;br/&gt;&#xD;&#xA;le tue credenziali per accedere all'App Retail sono:&lt;br/&gt;&#xD;&#xA;Utente: @usr&lt;br/&gt;&#xD;&#xA;Password: @pwd&lt;br/&gt;&#xD;&#xA;&lt;br/&gt;&#xD;&#xA;Buon lavoro!&lt;br/&gt;&#xD;&#xA;&lt;br/&gt;&#xD;&#xA;Il Brand Administrator&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
+    </CustomTemplate>
     <CategoriaNewsDipendentiTerm Id="/alias=categoria-news-dipendenti\/unica" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
@@ -1496,8 +1521,8 @@
     <Role Name="Anonymous" Permissions="ViewContent,AccessFrontEnd,AddComment,MaySeeHiddenFields" />
     <Role Name="Authenticated" Permissions="ViewContent,AccessFrontEnd,AddComment,ViewOwnProfile,SubmitQuestionnaire,MaySeeHiddenFields" />
     <Role Name="Author" Permissions="PublishOwnContent,EditOwnContent,DeleteOwnContent,PreviewOwnContent,AccessAdminPanel,CreateTaxonomy,AddComment,ManageOwnMedia,ManageOwnBlogs,ViewOwnProfile,CanSeeOwnContents,MaySeeHiddenFields" />
-    <Role Name="BrandAdminB2B" Permissions="AccessAdminPanel,Delete_PolicyText,Edit_PolicyText,Preview_PolicyText,Publish_PolicyText,Delete_Colore,Edit_Colore,Preview_Colore,Publish_Colore,Delete_Store,Edit_Store,Preview_Store,Delete_NewsDipendenti,Edit_NewsDipendenti,Preview_NewsDipendenti,Publish_NewsDipendenti,Edit_Prodotto,Preview_Prodotto,Publish_Prodotto,Delete_RichiestaProdotto,Edit_RichiestaProdotto,Preview_RichiestaProdotto,Publish_RichiestaProdotto,Delete_PushDipendenti,Edit_PushDipendenti,Preview_PushDipendenti,Publish_PushDipendenti,Edit_Dipendente,Preview_Dipendente,Publish_Dipendente,Edit_ConfigurazioneAppStore,Edit_ConfigurazioneGrafica,ManageOwnMedia,CanSeeOwnContents,Laser.DynamicButtonToWorkflows.Permissions/ConfermaConfig,Laser.DynamicButtonToWorkflows.Permissions/InviaCredenziali" />
-    <Role Name="BrandAdminB2C" Permissions="AccessAdminPanel,Delete_PolicyText,Edit_PolicyText,Preview_PolicyText,Publish_PolicyText,Delete_Colore,Edit_Colore,Preview_Colore,Publish_Colore,Delete_MessaggioPromozionale,Edit_MessaggioPromozionale,Preview_MessaggioPromozionale,Publish_MessaggioPromozionale,Delete_PuntoVendita,Edit_PuntoVendita,Preview_PuntoVendita,Publish_PuntoVendita,Delete_NewsClienti,Edit_NewsClienti,Preview_NewsClienti,Publish_NewsClienti,Delete_PushClienti,Edit_PushClienti,Preview_PushClienti,Publish_PushClienti,Edit_ConfigurazioneAppStore,Edit_ConfigurazioneGrafica,CanSeeOwnContents,Laser.DynamicButtonToWorkflows.Permissions/ConfermaConfig" />
+    <Role Name="BrandAdminB2B" Permissions="AccessAdminPanel,Delete_PolicyText,Edit_PolicyText,Preview_PolicyText,Publish_PolicyText,Delete_Colore,Edit_Colore,Preview_Colore,Publish_Colore,Delete_Store,Edit_Store,Preview_Store,Delete_NewsDipendenti,Edit_NewsDipendenti,Preview_NewsDipendenti,Publish_NewsDipendenti,Edit_Prodotto,Preview_Prodotto,Publish_Prodotto,Delete_RichiestaProdotto,Edit_RichiestaProdotto,Preview_RichiestaProdotto,Publish_RichiestaProdotto,Delete_PushDipendenti,Edit_PushDipendenti,Preview_PushDipendenti,Publish_PushDipendenti,Edit_Dipendente,Preview_Dipendente,Publish_Dipendente,Edit_ConfigurazioneAppStore,Edit_ConfigurazioneGrafica,ManageOwnMedia,CanSeeOwnContents,Laser.DynamicButtonToWorkflows.Permissions/ConfermaConfig,Laser.DynamicButtonToWorkflows.Permissions/DeliverApp,Laser.DynamicButtonToWorkflows.Permissions/InviaCredenziali" />
+    <Role Name="BrandAdminB2C" Permissions="AccessAdminPanel,Delete_PolicyText,Edit_PolicyText,Preview_PolicyText,Publish_PolicyText,Delete_Colore,Edit_Colore,Preview_Colore,Publish_Colore,Delete_MessaggioPromozionale,Edit_MessaggioPromozionale,Preview_MessaggioPromozionale,Publish_MessaggioPromozionale,Delete_PuntoVendita,Edit_PuntoVendita,Preview_PuntoVendita,Publish_PuntoVendita,Delete_NewsClienti,Edit_NewsClienti,Preview_NewsClienti,Publish_NewsClienti,Delete_PushClienti,Edit_PushClienti,Preview_PushClienti,Publish_PushClienti,Edit_ConfigurazioneAppStore,Edit_ConfigurazioneGrafica,CanSeeOwnContents,Laser.DynamicButtonToWorkflows.Permissions/ConfermaConfig,Laser.DynamicButtonToWorkflows.Permissions/DeliverApp" />
     <Role Name="Contributor" Permissions="EditOwnContent,PreviewOwnContent,AccessAdminPanel,AddComment,ManageOwnMedia,EditOwnBlogPost,ViewOwnProfile,CanSeeOwnContents,MaySeeHiddenFields" />
     <Role Name="Editor" Permissions="PublishContent,EditContent,DeleteContent,PreviewContent,SetHomePage,AccessAdminPanel,ManageTaxonomies,ManageQueries,AddComment,ManageMediaContent,ManageTags,PublishBlogPost,EditBlogPost,DeleteBlogPost,ManageLayouts,ViewOwnProfile,SeesAllContent,AccessStatistics,GameRanking,MaySeeHiddenFields" />
     <Role Name="MobileAdmin" Permissions="AccessAdminPanel,View_ConfigurazioneBase" />
@@ -1506,6 +1531,23 @@
     <Role Name="UserB2B" Permissions="" />
   </Roles>
   <Workflows>
+    <Workflow Name="DeliverApp" Enabled="true">
+      <Activities>
+        <Activity Id="262" Name="DynamicButtonEvent" Start="true" X="130" Y="6">
+          <State>{"DynamicButton":"3"}</State>
+        </Activity>
+        <Activity Id="263" Name="SendTemplatedEmail" Start="false" X="130" Y="140">
+          <State>{"Recipient":"other","RecipientOther":"giuseppe.musso@laser-group.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"244"}</State>
+        </Activity>
+        <Activity Id="264" Name="Notify" Start="false" X="177" Y="253">
+          <State>{"Notification":"Information","Message":"La richiesta di pubblicazione dell'app è stata inviata."}</State>
+        </Activity>
+      </Activities>
+      <Transitions>
+        <Transition SourceActivityId="262" SourceEndpoint="Done" DestinationActivityId="263" DestinationEndpoint="" />
+        <Transition SourceActivityId="263" SourceEndpoint="Sent" DestinationActivityId="264" DestinationEndpoint="" />
+      </Transitions>
+    </Workflow>
     <Workflow Name="Dipendente" Enabled="true">
       <Activities>
         <Activity Id="28" Name="ContentUpdated" Start="true" X="164" Y="37">
@@ -1571,42 +1613,42 @@
     </Workflow>
     <Workflow Name="PublishConfigs" Enabled="true">
       <Activities>
-        <Activity Id="179" Name="ContentUpdated" Start="true" X="93" Y="33">
+        <Activity Id="249" Name="ContentUpdated" Start="true" X="93" Y="33">
           <State>{"ContentTypes":"ConfigurazioneAppStore,ConfigurazioneGrafica"}</State>
         </Activity>
-        <Activity Id="180" Name="IsInRole" Start="false" X="120" Y="146">
+        <Activity Id="250" Name="IsInRole" Start="false" X="120" Y="146">
           <State>{"Roles":"BrandAdminB2B,BrandAdminB2C"}</State>
         </Activity>
-        <Activity Id="181" Name="IsInRole" Start="false" X="490" Y="148">
+        <Activity Id="251" Name="IsInRole" Start="false" X="490" Y="148">
           <State>{"Roles":"BrandAdminB2B,BrandAdminB2C"}</State>
         </Activity>
-        <Activity Id="182" Name="RazorExecute" Start="false" X="91" Y="292">
+        <Activity Id="252" Name="RazorExecute" Start="false" X="91" Y="292">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"CheckUpdatedConfig.cshtml"}</State>
         </Activity>
-        <Activity Id="183" Name="RazorExecute" Start="false" X="460" Y="305">
+        <Activity Id="253" Name="RazorExecute" Start="false" X="460" Y="305">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"LockConfig.cshtml"}</State>
         </Activity>
-        <Activity Id="184" Name="Logging" Start="false" X="705" Y="311">
-          <State>{"Level":"Error","Message":"Errore durante il cambiamento di owner della configurazione \"{Content.ContentType}\" (id: {Content.Id})."}</State>
+        <Activity Id="254" Name="Logging" Start="false" X="705" Y="310">
+          <State>{"Level":"Error","Message":"Error in workflow PublishConfigs LockConfig. Errore durante il cambiamento di owner della configurazione \"{Content.ContentType}\" (id: {Content.Id}). {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="185" Name="Notify" Start="false" X="697" Y="490">
+        <Activity Id="255" Name="Notify" Start="false" X="697" Y="490">
           <State>{"Notification":"Error","Message":"Si è verificato un errore. Provare a pubblicare nuovamente la configurazione."}</State>
         </Activity>
-        <Activity Id="186" Name="Notify" Start="false" X="152" Y="501">
+        <Activity Id="256" Name="Notify" Start="false" X="152" Y="501">
           <State>{"Notification":"Error","Message":"Non è possibile modificare la configurazione dopo averla pubblicata. Contattare l'assistenza."}</State>
         </Activity>
-        <Activity Id="187" Name="DynamicButtonEvent" Start="true" X="451" Y="31">
+        <Activity Id="257" Name="DynamicButtonEvent" Start="true" X="451" Y="31">
           <State>{"DynamicButton":"2"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="179" SourceEndpoint="Done" DestinationActivityId="180" DestinationEndpoint="" />
-        <Transition SourceActivityId="180" SourceEndpoint="Yes" DestinationActivityId="182" DestinationEndpoint="" />
-        <Transition SourceActivityId="181" SourceEndpoint="Yes" DestinationActivityId="183" DestinationEndpoint="" />
-        <Transition SourceActivityId="182" SourceEndpoint="Error" DestinationActivityId="186" DestinationEndpoint="" />
-        <Transition SourceActivityId="183" SourceEndpoint="Error" DestinationActivityId="184" DestinationEndpoint="" />
-        <Transition SourceActivityId="184" SourceEndpoint="Done" DestinationActivityId="185" DestinationEndpoint="" />
-        <Transition SourceActivityId="187" SourceEndpoint="Done" DestinationActivityId="181" DestinationEndpoint="" />
+        <Transition SourceActivityId="249" SourceEndpoint="Done" DestinationActivityId="250" DestinationEndpoint="" />
+        <Transition SourceActivityId="250" SourceEndpoint="Yes" DestinationActivityId="252" DestinationEndpoint="" />
+        <Transition SourceActivityId="251" SourceEndpoint="Yes" DestinationActivityId="253" DestinationEndpoint="" />
+        <Transition SourceActivityId="252" SourceEndpoint="Error" DestinationActivityId="256" DestinationEndpoint="" />
+        <Transition SourceActivityId="253" SourceEndpoint="Error" DestinationActivityId="254" DestinationEndpoint="" />
+        <Transition SourceActivityId="254" SourceEndpoint="Done" DestinationActivityId="255" DestinationEndpoint="" />
+        <Transition SourceActivityId="257" SourceEndpoint="Done" DestinationActivityId="251" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Richiesta Prodotto" Enabled="true">
