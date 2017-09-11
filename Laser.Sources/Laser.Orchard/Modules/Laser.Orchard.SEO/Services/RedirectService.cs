@@ -60,9 +60,6 @@ namespace Laser.Orchard.SEO.Services {
             if (GetSameSourceUrlIds(redirectRule).Any(id => id != redirectRule.Id)) {
                 throw new RedirectRuleDuplicateException(T("Rules with same SourceURL are not valid."));
             }
-            //if (_repository.Table.Any(rr => rr.Id != redirectRule.Id && rr.SourceUrl == redirectRule.SourceUrl)) {
-            //    throw new RedirectRuleDuplicateException(T("Rules with same SourceURL are not valid."));
-            //}
             _repository.Update(redirectRule);
             return redirectRule;
         }
@@ -72,9 +69,6 @@ namespace Laser.Orchard.SEO.Services {
             if (GetSameSourceUrlIds(redirectRule).Any()) {
                 throw new RedirectRuleDuplicateException(T("Rules with same SourceURL are not valid."));
             }
-            //if (_repository.Table.Any(rr => rr.SourceUrl == redirectRule.SourceUrl)) {
-            //    throw new RedirectRuleDuplicateException(T("Rules with same SourceURL are not valid."));
-            //}
             _repository.Create(redirectRule);
             return redirectRule;
         }
