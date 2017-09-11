@@ -87,6 +87,9 @@ namespace Laser.Orchard.ShareLink.Drivers {
                 }
                 vm.ListOption = optionList;
             }
+            else {
+                vm.ShowSharedImage = false;
+            }
 
             return ContentShape("Parts_ShareLink",
                                 () => shapeHelper.EditorTemplate(TemplateName: "Parts/ShareLink",
