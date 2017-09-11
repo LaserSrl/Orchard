@@ -1,28 +1,26 @@
-﻿using System;
+﻿using Laser.Orchard.SEO.Models;
+using Laser.Orchard.SEO.Services;
+using Laser.Orchard.SEO.ViewModels;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.UI.Resources;
-using Laser.Orchard.SEO.Models;
-using System.Data.SqlTypes;
-using Orchard.Localization.Services;
-using Laser.Orchard.StartupConfig.Localization;
-using Laser.Orchard.SEO.ViewModels;
-using Laser.Orchard.SEO.Services;
 using Orchard.ContentManagement.Handlers;
+using Orchard.UI.Resources;
+using System;
 
 namespace Laser.Orchard.SEO.Drivers {
 
 
     public class SeoDriver : ContentPartCloningDriver<SeoPart> {
 
-
-        private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IOrchardServices _orchardServices;
         private readonly ISEOServices _seoServices;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
-        public SeoDriver(IWorkContextAccessor workContextAccessor, ISEOServices seoServices) {
-            _workContextAccessor = workContextAccessor;
+        public SeoDriver(IOrchardServices orchardServices, ISEOServices seoServices, IWorkContextAccessor workContextAccessor) {
+            _orchardServices = orchardServices;
             _seoServices = seoServices;
+            _workContextAccessor = workContextAccessor;
         }
 
 
@@ -84,11 +82,13 @@ namespace Laser.Orchard.SEO.Drivers {
             return null;
         }
 
-
         /// <summary>
         /// GET Editor.
         /// </summary>
         protected override DriverResult Editor(SeoPart part, dynamic shapeHelper) {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.ManageSEO))
+                return null;
+
             return ContentShape("Parts_SEO_Edit",
                                 () => shapeHelper.EditorTemplate(
                                   TemplateName: "Parts/SEO",
@@ -96,15 +96,18 @@ namespace Laser.Orchard.SEO.Drivers {
                                   Prefix: Prefix));
         }
 
-
         /// <summary>
         /// POST Editor.
         /// </summary>
         protected override DriverResult Editor(SeoPart part, IUpdateModel updater, dynamic shapeHelper) {
-            var vm = new SeoPartViewModel(_seoServices);
-            updater.TryUpdateModel(vm, Prefix, null, null);
-            vm.UpdatePart(part);
-            return Editor(part, shapeHelper);
+
+            if (_orchardServices.Authorizer.Authorize(Permissions.ManageSEO)) {
+                var vm = new SeoPartViewModel(_seoServices);
+                updater.TryUpdateModel(vm, Prefix, null, null);
+                vm.UpdatePart(part);
+                return Editor(part, shapeHelper);
+            } else
+                return null;
         }
 
         protected override void Cloning(SeoPart originalPart, SeoPart clonePart, CloneContentContext context) {
@@ -190,8 +193,7 @@ namespace Laser.Orchard.SEO.Drivers {
 
         }
 
-        protected override void Exporting(SeoPart part, ExportContentContext context) 
-        {
+        protected override void Exporting(SeoPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("TitleOverride", part.TitleOverride);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Keywords", part.Keywords);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Description", part.Description);
