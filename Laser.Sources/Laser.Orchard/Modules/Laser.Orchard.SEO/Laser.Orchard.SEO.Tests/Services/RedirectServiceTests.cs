@@ -1,15 +1,13 @@
-﻿using NUnit.Framework;
+﻿using Autofac;
+using Laser.Orchard.SEO.Exceptions;
+using Laser.Orchard.SEO.Models;
+using Laser.Orchard.SEO.Services;
+using NUnit.Framework;
+using Orchard.Data;
 using Orchard.Tests.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac;
-using Laser.Orchard.SEO.Services;
-using Orchard.Data;
-using Laser.Orchard.SEO.Models;
-using Laser.Orchard.SEO.Exceptions;
 
 namespace Laser.Orchard.SEO.Tests.Services {
     [TestFixture]
@@ -173,11 +171,13 @@ namespace Laser.Orchard.SEO.Tests.Services {
         [Test]
         public void CannotGetNonExistingRulById() {
             Assert.That(_redirectService.GetRedirect(5), Is.EqualTo(null));
+            Assert.That(_redirectService.GetRedirect(-5), Is.EqualTo(null));
         }
 
         [Test]
         public void CannotGetNonExistingRuleByPath() {
             Assert.That(_redirectService.GetRedirect("source"), Is.EqualTo(null));
+            Assert.That(_redirectService.GetRedirect(""), Is.EqualTo(null));
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using Orchard.Environment.Extensions;
+﻿using Orchard.Data.Conventions;
+using Orchard.Environment.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,11 +20,13 @@ namespace Laser.Orchard.SEO.Models {
         [Required]
         [RegularExpression(ValidRelativeUrlPattern, ErrorMessage = "Do not start with '~/'")]
         [Display(Name = "Source URL")]
+        [StringLengthMax]
         public virtual string SourceUrl { get; set; }
 
         [Required]
         [RegularExpression(ValidRelativeUrlPattern, ErrorMessage = "Do not start with '~/'")]
         [Display(Name = "Destination URL")]
+        [StringLengthMax]
         public virtual string DestinationUrl { get; set; }
 
         public virtual bool IsPermanent { get; set; }

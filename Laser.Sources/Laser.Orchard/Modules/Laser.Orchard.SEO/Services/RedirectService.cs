@@ -37,20 +37,44 @@ namespace Laser.Orchard.SEO.Services {
             return _repository.Table.Count();
         }
 
+        private IEnumerable<int> GetSameSourceUrlIds(RedirectRule redirectRule) {
+            try {
+                return _repository.Table
+                    .Where(rr => rr.SourceUrl == redirectRule.SourceUrl)
+                    .ToList() //need to force execution of the query, so that it can fail in sqlCE
+                    .Select(rr => rr.Id);
+            } catch (Exception) {
+                //sqlCE doe not support using strings properly when their length is such that the column
+                //in the record is of type ntext.
+                var rules = _repository.Fetch(rr =>
+                    rr.SourceUrl.StartsWith(redirectRule.SourceUrl) && 
+                    rr.SourceUrl.EndsWith(redirectRule.SourceUrl));
+                return rules.ToList()
+                    .Where(rr => rr.SourceUrl == redirectRule.SourceUrl)
+                    .Select(rr => rr.Id);
+            }
+        }
+
         public RedirectRule Update(RedirectRule redirectRule) {
             FixRedirect(redirectRule);
-            if (_repository.Table.Any(rr => rr.Id != redirectRule.Id && rr.SourceUrl == redirectRule.SourceUrl)) {
+            if (GetSameSourceUrlIds(redirectRule).Any(id => id != redirectRule.Id)) {
                 throw new RedirectRuleDuplicateException(T("Rules with same SourceURL are not valid."));
             }
+            //if (_repository.Table.Any(rr => rr.Id != redirectRule.Id && rr.SourceUrl == redirectRule.SourceUrl)) {
+            //    throw new RedirectRuleDuplicateException(T("Rules with same SourceURL are not valid."));
+            //}
             _repository.Update(redirectRule);
             return redirectRule;
         }
 
         public RedirectRule Add(RedirectRule redirectRule) {
             FixRedirect(redirectRule);
-            if (_repository.Table.Any(rr => rr.SourceUrl == redirectRule.SourceUrl)) {
+            if (GetSameSourceUrlIds(redirectRule).Any()) {
                 throw new RedirectRuleDuplicateException(T("Rules with same SourceURL are not valid."));
             }
+            //if (_repository.Table.Any(rr => rr.SourceUrl == redirectRule.SourceUrl)) {
+            //    throw new RedirectRuleDuplicateException(T("Rules with same SourceURL are not valid."));
+            //}
             _repository.Create(redirectRule);
             return redirectRule;
         }
@@ -67,9 +91,19 @@ namespace Laser.Orchard.SEO.Services {
 
         public RedirectRule GetRedirect(string path) {
             path = path.TrimStart('/');
-            var rule = _repository.Get(x => x.SourceUrl == path);
-            return rule == null ? null :
-                RedirectRule.Copy(rule);
+            try {
+                var rule = _repository.Get(x => x.SourceUrl == path);
+                return rule == null ? null :
+                    RedirectRule.Copy(rule);
+            } catch (Exception) {
+                //sqlCE doe not support using strings properly when their length is such that the column
+                //in the record is of type ntext.
+                var rules = _repository.Fetch(rr => 
+                    rr.SourceUrl.StartsWith(path) && rr.SourceUrl.EndsWith(path));
+                var rule = rules.ToList().Where(rr => rr.SourceUrl == path).FirstOrDefault();
+                return rule == null ? null :
+                    RedirectRule.Copy(rule);
+            }
         }
 
         public RedirectRule GetRedirect(int id) {
