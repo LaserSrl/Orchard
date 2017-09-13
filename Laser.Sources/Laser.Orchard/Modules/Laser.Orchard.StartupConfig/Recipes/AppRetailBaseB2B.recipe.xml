@@ -503,6 +503,7 @@
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <IdentityPart />
         <Prodotto />
+        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedBody="{Content.Fields.Prodotto.Descrizione}" ShareLinkPartSettingVM.SharedText="{Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowBodyChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
         <TagsPart />
         <TitlePart />
       </Prodotto>
