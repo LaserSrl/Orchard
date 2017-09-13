@@ -16,13 +16,16 @@ namespace Laser.Orchard.SEO.Filters {
     public class RedirectFilter : FilterProvider, IActionFilter {
         private readonly IRedirectService _redirectService;
         private readonly ShellSettings _shellSettings;
+        private readonly IWorkContextAccessor _wca;
 
         public RedirectFilter(
             IRedirectService redirectService,
-            ShellSettings shellSettings) {
+            ShellSettings shellSettings,
+            IWorkContextAccessor wca) {
 
             _redirectService = redirectService;
             _shellSettings = shellSettings;
+            _wca = wca;
         }
         
         public void OnActionExecuting(ActionExecutingContext filterContext) {
@@ -61,7 +64,7 @@ namespace Laser.Orchard.SEO.Filters {
             if (redirect == null)
                 return;
 
-            var destination = applicationPath +
+            var destination = _wca.GetContext().CurrentSite.BaseUrl + //not a fan of this, since BaseUrl can be edited by admin
                 (string.IsNullOrWhiteSpace(urlPrefix) ? "" : "/" + urlPrefix) +
                 "/" + redirect.DestinationUrl;
             filterContext.Result = new RedirectResult(destination + url.Query, redirect.IsPermanent);
