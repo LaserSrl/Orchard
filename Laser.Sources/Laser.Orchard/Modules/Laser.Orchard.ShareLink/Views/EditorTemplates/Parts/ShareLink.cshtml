@@ -13,7 +13,7 @@
     </script>
 }
 <fieldset>
-    @if (Model.ShowSharedLink || Model.ShowSharedText || Model.ShowSharedImage || Model.ShowSharedBody) {
+    @if (Model.ShowSharedLink || Model.ShowSharedText || (Model.ShowSharedImage && Model.ListOption != null && Model.ListOption.Count > 0) || Model.ShowSharedBody) {
         <legend>
             @T("Sharing")
         </legend>
@@ -22,42 +22,37 @@
 
         <div class="editor-label">@Html.LabelFor(m => m.SharedLink, T("Link"))</div>
         <div class="editor-label">@Html.TextBoxFor(m => m.SharedLink, new { @class = "text large" })</div>
-    }
-    else {
+    } else {
         @Html.HiddenFor(m => m.SharedLink)
     }
     @if (Model.ShowSharedBody) {
         <div class="editor-label">@Html.LabelFor(m => m.SharedBody, T("Description - OpenGraph"))</div>
         <div class="editor-label">@Html.TextBoxFor(m => m.SharedBody, new { @class = "text large", rows = "5" })</div>
-    }
-    else {
+    } else {
         @Html.HiddenFor(m => m.SharedBody)
     }
     @if (Model.ShowSharedText) {
         <div class="editor-label">@Html.LabelFor(m => m.SharedText, T("Text"))</div>
         <div class="editor-label">@Html.TextBoxFor(m => m.SharedText, new { @class = "text large" })</div>
-    }
-    else {
+    } else {
         @Html.HiddenFor(m => m.SharedText)
     }
 
     @if (Model.ShowSharedImage) {
-@*   <div class="editor-label">@Html.LabelFor(m => m.SharedImage, T("Image"))</div>
-        <div class="editor-label">@Html.TextBoxFor(m => m.SharedImage, new { @class = "text large" })</div>*@
+        @*   <div class="editor-label">@Html.LabelFor(m => m.SharedImage, T("Image"))</div>
+            <div class="editor-label">@Html.TextBoxFor(m => m.SharedImage, new { @class = "text large" })</div>*@
 
-        if (Model.ListOption!=null && Model.ListOption.Count > 0) {
+    if (Model.ListOption != null && Model.ListOption.Count > 0) {
         <div class="editor-label">@Html.LabelFor(m => m.SharedImage, T("ImageList"))</div>
-        <select name="@Html.FieldNameFor(m => m.SharedImage)" id="@Html.FieldIdFor(m => m.SharedImage)"  class="image-picker show-labels show-html">
+        <select name="@Html.FieldNameFor(m => m.SharedImage)" id="@Html.FieldIdFor(m => m.SharedImage)" class="image-picker show-labels show-html">
             @foreach (var item in Model.ListOption) {
-                <option data-img-src="@(item.ImageUrl)" data-img-label="@item.Text"   value="@item.Value" @(item.Selected)>@item.Text</option>
+                <option data-img-src="@(item.ImageUrl)" data-img-label="@item.Text" value="@item.Value" @(item.Selected)>@item.Text</option>
             }
         </select>
-        }
-        else {
+    } else {
         @Html.HiddenFor(m => m.SharedImage)
         }
-    }
-    else {
+    } else {
         @Html.HiddenFor(m => m.SharedImage)
     }
     @Display.TokenHint()
