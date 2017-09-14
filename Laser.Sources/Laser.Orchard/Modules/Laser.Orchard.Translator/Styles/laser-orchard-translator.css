@@ -103,3 +103,49 @@
 .jstree-grid-column {
     width: 100% !important;
 }
+
+#translation-tree-lang-selector {
+    padding: 10px 0px 10px 0px;
+    display: inline-block;
+}
+
+#translation-tree-legend {
+    padding: 10px 0px 10px 0px;
+    float: right;
+}
+
+#translation-tree-legend label {
+    display: inline;
+}
+
+.translation-tree-legend-desc {
+    float: right;
+}
+
+ .translation-tree-legend-icon {
+     padding: 5px;
+     float: right;
+ }
+
+ .translation-tree-elem {
+    display: inline-block;
+    /*border: solid 1px #C0C0C0;*/
+    float: right;
+    padding-right: 5px;
+    margin-left: 5px;
+ }
+
+ #translation-tree-choice-message {
+    text-align: center;
+    vertical-align: middle;
+ }
+
+ #translation-tree-load {
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) url('images/ajax-loader.gif') 50% 50% no-repeat;
+ }

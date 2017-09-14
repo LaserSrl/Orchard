@@ -27,6 +27,24 @@ namespace Laser.Orchard.StartupConfig.Services {
             _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
             _cacheStorage = cacheManager;
+
+            _defaultApplication = new Lazy<ExternalApplication>(() => {
+                var name = "";
+                while (name.Length < 22)
+                    name += _shellSettings.Name;
+                var apikey = Convert.ToBase64String(
+                    EncryptStringToBytes_Aes(
+                        name,
+                        _shellSettings.EncryptionKey.ToByteArray(),
+                        Encoding.UTF8.GetBytes(string.Format("{0}{0}", DateTime.UtcNow.ToString("ddMMyyyy").Substring(0, 8)))),
+                    Base64FormattingOptions.None);
+                return new ExternalApplication {
+                    Name = "DefaultApplication",
+                    ApiKey = apikey,
+                    EnableTimeStampVerification = true,
+                    Validity = 5
+                };
+            });
         }
         public string ValidateRequestByApiKey(string additionalCacheKey, bool protectAlways = false) {
             _request = HttpContext.Current.Request;
@@ -77,7 +95,7 @@ namespace Laser.Orchard.StartupConfig.Services {
             byte[] myiv = Convert.FromBase64String(sIV);
             try {
                 var settings = _orchardServices.WorkContext.CurrentSite.As<ProtectionSettingsPart>();
-                var defaulApp = settings.ExternalApplicationList.ExternalApplications.First();
+                var defaulApp = DefaultApplication;
                 string aux = defaulApp.ApiKey;
                 if (useTimeStamp) {
                     Random rnd = new Random();
@@ -91,6 +109,12 @@ namespace Laser.Orchard.StartupConfig.Services {
             }
             return key;
         }
+
+        private Lazy<ExternalApplication> _defaultApplication;
+        private ExternalApplication DefaultApplication {
+            get { return _defaultApplication.Value; }
+        }
+
 
         private bool TryValidateKey(string token, string akiv, bool clearText) {
             byte[] mykey = _shellSettings.EncryptionKey.ToByteArray();

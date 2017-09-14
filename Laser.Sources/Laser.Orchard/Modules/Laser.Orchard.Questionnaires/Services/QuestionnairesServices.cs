@@ -772,10 +772,11 @@ namespace Laser.Orchard.Questionnaires.Services {
                 System.IO.Directory.CreateDirectory(fi.DirectoryName);
             }
             using (FileStream fStream = new FileStream(filePath, FileMode.Create)) {
-                using (BinaryWriter bWriter = new BinaryWriter(fStream)) {
+                using (BinaryWriter bWriter = new BinaryWriter(fStream, Encoding.UTF8)) {
                     byte[] buffer = null;
                     string row = string.Format("\"Utente\"{0}\"Data\"{0}\"Domanda\"{0}\"Risposta\"{0}\"Contesto\"\r\n", separator);
-                    buffer = Encoding.Unicode.GetBytes(row);
+                    buffer = Encoding.UTF8.GetBytes(row);
+                    buffer = Encoding.UTF8.GetPreamble().Concat(buffer).ToArray(); //GetPreamble è necessario per aggiungere un header UTF8 riconoscibile da Excel
                     bWriter.Write(buffer);
                     foreach (var line in elenco) {
                         row = string.Format("\"{1}\"{0}\"{2:yyyy-MM-dd}\"{0}\"{3}\"{0}\"{4}\"{0}\"{5}\"\r\n",
@@ -785,7 +786,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                             EscapeString(line.Question),
                             EscapeString(line.Answer),
                             EscapeString(line.Contesto));
-                        buffer = Encoding.Unicode.GetBytes(row);
+                        buffer = Encoding.UTF8.GetBytes(row);
                         bWriter.Write(buffer);
                     }
                 }
