@@ -75,6 +75,10 @@
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Tokens, Version=1.10.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Tokens\bin\Orchard.Tokens.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Users">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
     </Reference>
@@ -151,6 +155,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes\Routes.cs" />
     <Compile Include="Services\AppDirectCommunication.cs" />
+    <Compile Include="Tokens\AppDirectEmail.cs" />
     <Compile Include="ViewModels\AppDirectSettingVM.cs" />
     <Compile Include="ViewModels\ButtonVM.cs" />
     <None Include="Views\EditorTemplates\AppDirectSettingVM.cshtml" />
@@ -186,6 +191,7 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\AppDirectSettings_Edit.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
