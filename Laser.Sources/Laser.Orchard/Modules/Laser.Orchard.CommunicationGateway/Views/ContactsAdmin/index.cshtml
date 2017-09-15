@@ -34,9 +34,9 @@
                         @Html.DropDownListFor(m => m.Search.Field, new SelectList(Enum.GetValues(typeof(SearchFieldEnum))), new { @id = "searchTypeList" })
                     </div>
                 </div>
-                <div style="float: right;">
-                    <div>
-                        <button type="submit" name="submit.Search" value="search">@T("Search")</button>
+                <div style="float: right; display: flex;">
+                    <div >
+                        <button id="buttonContactSearch" type="submit" name="submit.Search" value="search">@T("Search")</button>
                         <a href="@Url.Action("Index")">@T("Clear")</a>
                     </div>
                     <div class="manage-export" id="manage-export">

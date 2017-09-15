@@ -153,6 +153,10 @@ msgid "Around Me"
 msgstr "Intorno a me"
 
 msgctxt "Laser.Orchard.Maps.Projections.AroundMeFilter"
+msgid "Content Items contained in area with center {0} , {1} and distance {2}"
+msgstr "ContentItems contenuti in un area con centro {0} , {1} e distanza {2}"
+
+msgctxt "Laser.Orchard.Maps.Projections.AroundMeFilter"
 msgid "Content Items contained in the specified area"
 msgstr "Contenuti compresi in una determinata area"
 

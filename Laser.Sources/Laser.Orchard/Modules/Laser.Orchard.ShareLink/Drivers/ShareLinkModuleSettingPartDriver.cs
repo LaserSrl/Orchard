@@ -31,20 +31,25 @@ namespace Laser.Orchard.ShareLink.Drivers {
             return ContentShape("Parts_ShareLinkModuleSetting", () => {
                 var viewModel = new ShareLinkModuleSettingVM();
                 var getpart = _orchardServices.WorkContext.CurrentSite.As<ShareLinkModuleSettingPart>();
+                viewModel.SharedBody = getpart.SharedBody;
                 viewModel.SharedText = getpart.SharedText;
                 viewModel.SharedLink = getpart.SharedLink;
                 viewModel.SharedImage = getpart.SharedImage;
+                viewModel.Fb_App = getpart.Fb_App;
                 if (updater != null) {
                     if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
+                        part.SharedBody = viewModel.SharedBody;
                         part.SharedText = viewModel.SharedText;
                         part.SharedLink = viewModel.SharedLink;
                         part.SharedImage = viewModel.SharedImage;
+                        part.Fb_App = viewModel.Fb_App;
                     }
                 }
                 else {
                     viewModel.SharedText = part.SharedText;
                     viewModel.SharedLink = part.SharedLink;
                     viewModel.SharedImage = part.SharedImage;
+                    viewModel.Fb_App = part.Fb_App;
                 }
                 return shapeHelper.EditorTemplate(TemplateName: "Parts/ShareLinkModuleSetting", Model: viewModel, Prefix: Prefix);
             })

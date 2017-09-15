@@ -9,11 +9,14 @@ namespace Laser.Orchard.NwazetIntegration.Handlers {
         private readonly IPaymentService _paymentService;
         private readonly IShoppingCart _shoppingCart;
         private readonly IPosServiceIntegration _posServiceIntegration;
-        public PaymentEventHandler(IOrderService orderService, IPaymentService paymentService, IShoppingCart shoppingCart, IPosServiceIntegration posServiceIntegration) {
+        private readonly INwazetCommunicationService _nwazetCommunicationService;
+
+        public PaymentEventHandler(IOrderService orderService, IPaymentService paymentService, IShoppingCart shoppingCart, IPosServiceIntegration posServiceIntegration, INwazetCommunicationService nwazetCommunicationService) {
             _orderService = orderService;
             _paymentService = paymentService;
             _shoppingCart = shoppingCart;
             _posServiceIntegration = posServiceIntegration;
+            _nwazetCommunicationService = nwazetCommunicationService;
         }
         public void OnError(int paymentId, int contentItemId) {
             var payment = _paymentService.GetPayment(paymentId);
@@ -26,7 +29,7 @@ namespace Laser.Orchard.NwazetIntegration.Handlers {
 
         public void OnSuccess(int paymentId, int contentItemId) {
             var payment = _paymentService.GetPayment(paymentId);
-            if(payment != null) {
+            if (payment != null) {
                 var order = _orderService.Get(payment.ContentItemId);
                 // agggiorna l'odine in base al pagamento effettuato
                 order.Status = OrderPart.Pending;
@@ -36,7 +39,8 @@ namespace Laser.Orchard.NwazetIntegration.Handlers {
                 order.LogActivity(OrderPart.Event, string.Format("Payed on POS {0}.", payment.PosName));
                 // svuota il carrello
                 _shoppingCart.Clear();
+                _nwazetCommunicationService.OrderToContact(order);
             }
-        }
+        }   
     }
 }

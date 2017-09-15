@@ -1,9 +1,6 @@
 ﻿using Orchard.Mvc.Routes;
 using Orchard.WebApi.Routes;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -16,7 +13,7 @@ namespace Laser.Orchard.Questionnaires {
         }
 
         public IEnumerable<RouteDescriptor> GetRoutes() {
-            return new[] { 
+            return new[] {
                 new HttpRouteDescriptor {
                     Priority = 5,
                     RouteTemplate = "api/laser.questionnaireresponse/{qContext}",
@@ -25,6 +22,20 @@ namespace Laser.Orchard.Questionnaires {
                         controller = "QuestionnaireResponse",
                         action = "PostContext"
                     }
+                },
+                new RouteDescriptor {
+                    Route = new Route(
+                        "{area}/{controller}/{action}/{idQuestionario}/{idDomanda}",
+                        new RouteValueDictionary {
+                                                     {"area", "Laser.Orchard.Questionnaires"},
+                                                     {"controller", "QuestionnaireStats"},
+                                                     {"action", "QuestionDetail"}
+                                                 },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                                                     {"area", "Laser.Orchard.Questionnaires"}
+                                                 },
+                        new MvcRouteHandler())
                 }
             };
         }

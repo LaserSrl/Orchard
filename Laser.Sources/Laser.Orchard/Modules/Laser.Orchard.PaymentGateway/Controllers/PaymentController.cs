@@ -47,12 +47,14 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IEnumerable<IPosService> _posServices;
         private readonly PosServiceEmpty _posServiceEmpty;
+        private readonly IPaymentService _paymentService;
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public PaymentController(IRepository<PaymentRecord> repository, IOrchardServices orchardServices, IEnumerable<IPosService> posServices) {
+        public PaymentController(IRepository<PaymentRecord> repository, IOrchardServices orchardServices, IEnumerable<IPosService> posServices, IPaymentService paymentService) {
             _repository = repository;
             _orchardServices = orchardServices;
+            _paymentService = paymentService;
             _posServices = posServices;
             _posServiceEmpty = new PosServiceEmpty(orchardServices, repository, null);
             T = NullLocalizer.Instance;
@@ -68,18 +70,18 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
         /// <param name="newPaymentGuid">Guid to be associated with this payment. No previous payment should have this value.</param>
         /// <returns>A page proposing the paymet options</returns>
         [Themed]
-        public ActionResult Pay(string reason, decimal amount, string currency, int itemId = 0, string newPaymentGuid = null) {
+        public ActionResult Pay(string nonce, string newPaymentGuid = null) {
+            var record = _paymentService.DecryptPaymentNonce(nonce);
+            if(record == null) {
+                Logger.Error("Error decrypting payment nonce.");
+                return new HttpUnauthorizedResult();
+            }
             ContentItem item = null;
-            if (itemId > 0) {
-                item = _orchardServices.ContentManager.Get(itemId);
+            if (record.ContentItemId > 0) {
+                item = _orchardServices.ContentManager.Get(record.ContentItemId);
             }
             PaymentVM model = new PaymentVM {
-                Record = new PaymentRecord {
-                    Reason = reason,
-                    Amount = amount,
-                    Currency = currency,
-                    ContentItemId = itemId
-                },
+                Record = record,
                 PosList = _posServices.ToList(),
                 ContentItem = item
             };
@@ -123,7 +125,10 @@ namespace Laser.Orchard.PaymentGateway.Controllers {
             if (unauthorized) {
                 return new HttpUnauthorizedResult();
             }
-            return View("Info", payment);
+            var model = new PaymentVM();
+            model.Record = payment;
+            model.PaymentNonce = _paymentService.CreatePaymentNonce(payment);
+            return View("Info", model);
         }
 
         /// <summary>

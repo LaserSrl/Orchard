@@ -134,6 +134,8 @@
     <Compile Include="HiddenFieldsMigrations.cs" />
     <Compile Include="HiddenFieldsPermissions.cs" />
     <Compile Include="Projections\HiddenStringFieldFilter.cs" />
+    <Compile Include="Services\HiddenStringFieldUpdateProcessor.cs" />
+    <Compile Include="Services\IHiddenStringFieldUpdateProcessor.cs" />
     <Compile Include="Settings\HiddenStringFieldSettings.cs" />
     <Compile Include="Settings\HiddenStringFieldsSettingsEvents.cs" />
     <Compile Include="ViewModels\HiddenStringFieldViewModels.cs" />

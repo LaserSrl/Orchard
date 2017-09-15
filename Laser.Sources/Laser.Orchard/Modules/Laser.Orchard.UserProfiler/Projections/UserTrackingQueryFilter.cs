@@ -1,6 +1,7 @@
 ﻿using Laser.Orchard.StartupConfig.Projections;
 using Orchard.Localization;
 using Orchard.Projections.Descriptors.Filter;
+using System.Collections.Generic;
 using OrchardProjections = Orchard.Projections;
 
 namespace Laser.Orchard.UserProfiler.Projections {
@@ -29,14 +30,19 @@ namespace Laser.Orchard.UserProfiler.Projections {
             var Tag = (string)context.State.UserProfillingTag;
             if (string.IsNullOrEmpty(Tag))
                 Tag = (string)context.State.UserProfillinglist;
+
             if (!string.IsNullOrEmpty(Tag)) {
-                string subquery = string.Format(@"select distinct contact.Id as contactId
+                string subquery = @"select distinct contact.Id as contactId
                 from Laser.Orchard.CommunicationGateway.Models.CommunicationContactPartRecord as contact,
                 Laser.Orchard.UserProfiler.Models.UserProfilingSummaryRecord as usertrack
                 where usertrack.UserProfilingPartRecord.Id = contact.UserPartRecord_Id
-                and usertrack.SourceType='Tag'
-                and usertrack.Text='{0}'", Tag.Replace("'", "''"));
-                context.Query.Where(a => a.Named("ci"), x => x.InSubquery("Id", subquery));
+                and usertrack.SourceType = 'Tag'
+                and usertrack.Text = :tagtext";
+
+                Dictionary<string, object> parameters = new Dictionary<string, object>();
+                parameters.Add("tagtext", Tag);
+
+                context.Query.Where(a => a.Named("ci"), x => x.InSubquery("Id", subquery, parameters));
             }
         }
     }

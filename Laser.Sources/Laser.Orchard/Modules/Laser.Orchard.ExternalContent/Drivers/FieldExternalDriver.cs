@@ -10,7 +10,6 @@ using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
 using System.Web.Hosting;
-using Orchard.ContentManagement.Handlers;
 
 namespace Laser.Orchard.ExternalContent.Drivers {
     public class FieldExternalDriver : ContentFieldCloningDriver<FieldExternal> {

@@ -1,4 +1,5 @@
 ﻿using Orchard.ContentManagement;
+using System;
 using System.Collections.Generic;
 
 namespace Laser.Orchard.Questionnaires.ViewModels {
@@ -14,6 +15,7 @@ namespace Laser.Orchard.Questionnaires.ViewModels {
     public class AnswerStatsViewModel {
         public string Answer { get; set; }
         public int Count { get; set; }
+        public DateTime LastDate { get; set; }
     }
 
     public class QuestionnaireStatsViewModel {

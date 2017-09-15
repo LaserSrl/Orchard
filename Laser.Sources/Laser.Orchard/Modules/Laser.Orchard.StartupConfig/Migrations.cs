@@ -66,6 +66,10 @@ namespace Laser.Orchard.StartupConfig {
                 );
             return 5;
         }
+        public int UpdateFrom5() {
+            ContentDefinitionManager.AlterPartDefinition("DisplayTextPart", p => p.Attachable(true));
+            return 6;
+        }
     }
 
     [OrchardFeature("Laser.Orchard.StartupConfig.PermissionExtension")]

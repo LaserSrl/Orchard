@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Laser.Orchard.NwazetIntegration.Services;
 using Laser.Orchard.NwazetIntegration.ViewModels;
@@ -12,6 +10,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Title.Models;
 using Laser.Orchard.NwazetIntegration.Models;
 using Orchard;
+using Laser.Orchard.PaymentGateway.Models;
 
 namespace Laser.Orchard.NwazetIntegration.Controllers {
     public class AddressesController : Controller {
@@ -20,16 +19,28 @@ namespace Laser.Orchard.NwazetIntegration.Controllers {
         private readonly IShoppingCart _shoppingCart;
         private readonly IOrchardServices _orchardServices;
         private readonly ICurrencyProvider _currencyProvider;
-        public AddressesController(IOrderService orderService, IPosServiceIntegration posServiceIntegration, IShoppingCart shoppingCart, IOrchardServices orchardServices, ICurrencyProvider currencyProvider) {
+        private readonly INwazetCommunicationService _nwazetCommunicationService;
+        private readonly IPaymentService _paymentService;
+        public AddressesController(
+            IOrderService orderService
+            , IPosServiceIntegration posServiceIntegration
+            , IPaymentService paymentService
+            , IShoppingCart shoppingCart
+            , IOrchardServices orchardServices
+            , ICurrencyProvider currencyProvider
+            , INwazetCommunicationService nwazetCommunicationService) {
             _orderService = orderService;
             _posServiceIntegration = posServiceIntegration;
+            _paymentService = paymentService;
             _shoppingCart = shoppingCart;
             _orchardServices = orchardServices;
             _currencyProvider = currencyProvider;
+            _nwazetCommunicationService = nwazetCommunicationService;
         }
         [Themed]
         public ActionResult Index(AddressesVM model) {
             ActionResult result = null;
+
             switch (model.Submit) {
                 case "cart":
                     result = RedirectToAction("Index", "ShoppingCart", new { area = "Nwazet.Commerce" });
@@ -60,31 +71,51 @@ namespace Laser.Orchard.NwazetIntegration.Controllers {
 
                     var currency = _currencyProvider.CurrencyCode;
                     var order = _orderService.CreateOrder(
-                        charge, 
-                        items, 
-                        _shoppingCart.Subtotal(), 
-                        _shoppingCart.Total(), 
-                        _shoppingCart.Taxes(), 
-                        _shoppingCart.ShippingOption, 
-                        model.ShippingAddress, 
-                        model.BillingAddress, 
-                        model.Email, 
-                        model.Phone, 
-                        model.SpecialInstructions, 
-                        OrderPart.Cancelled, 
-                        null, 
-                        false, 
-                        userId, 
-                        0, 
-                        "", 
+                        charge,
+                        items,
+                        _shoppingCart.Subtotal(),
+                        _shoppingCart.Total(),
+                        _shoppingCart.Taxes(),
+                        _shoppingCart.ShippingOption,
+                        model.ShippingAddress,
+                        model.BillingAddress,
+                        model.Email,
+                        model.PhonePrefix + " " + model.Phone,
+                        model.SpecialInstructions,
+                        OrderPart.Cancelled,
+                        null,
+                        false,
+                        userId,
+                        0,
+                        "",
                         currency);
                     order.LogActivity(OrderPart.Event, "Order created");
                     var reason = string.Format("Purchase Order {0}", _posServiceIntegration.GetOrderNumber(order.Id));
-                    result = RedirectToAction("Pay", "Payment", new { area = "Laser.Orchard.PaymentGateway", reason = reason, amount = order.Total, currency = order.CurrencyCode, itemId = order.Id, newPaymentGuid = paymentGuid });
+                    var payment = new PaymentRecord {
+                        Reason = reason,
+                        Amount = order.Total,
+                        Currency = order.CurrencyCode,
+                        ContentItemId = order.Id
+                    };
+                    var nonce = _paymentService.CreatePaymentNonce(payment);
+                    result = RedirectToAction("Pay", "Payment", new { area = "Laser.Orchard.PaymentGateway", nonce = nonce, newPaymentGuid = paymentGuid });
                     break;
                 default:
                     model.ShippingAddress = new Address();
                     model.BillingAddress = new Address();
+                    var thecurrentUser = _orchardServices.WorkContext.CurrentUser;
+                    if (thecurrentUser != null) {
+                        model.ListAvailableBillingAddress = _nwazetCommunicationService.GetBillingByUser(thecurrentUser);
+                        model.ListAvailableShippingAddress = _nwazetCommunicationService.GetShippingByUser(thecurrentUser);
+                        model.Email = thecurrentUser.Email;
+                        var cel = _nwazetCommunicationService.GetPhone(thecurrentUser);
+                        if (cel.Length == 2) {
+                            model.PhonePrefix = cel[0];
+                            model.Phone = cel[1];
+                        }
+
+
+                    }
                     result = View("Index", model);
                     break;
             }

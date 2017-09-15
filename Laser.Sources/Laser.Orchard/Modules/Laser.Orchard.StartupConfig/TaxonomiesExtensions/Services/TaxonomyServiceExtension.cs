@@ -17,7 +17,7 @@ using Orchard.UI.Notify;
 
 namespace Laser.Orchard.StartupConfig.TaxonomiesExtensions.Services {
     [OrchardFeature("Laser.Orchard.StartupConfig.TaxonomiesExtensions")]
-    public class TaxonomyServiceExtension : TaxonomyService, ITaxonomyService {
+    public class TaxonomyServiceExtension : TaxonomyServiceDraftable, ITaxonomyService {
         private readonly TaxonomyService _taxonomyService;
 
         

@@ -110,6 +110,25 @@
       <TermPart>
         <Icon.MediaLibraryPickerField DisplayName="Icon" MediaLibraryPickerFieldSettings.Required="False" MediaLibraryPickerFieldSettings.Multiple="False" />
       </TermPart>
+	  <SocialPart ContentPartSettings.Attachable="True" ContentPartSettings.Description="Provides a group of fields for social data">
+		<Facebook.InputField DisplayName="Facebook" InputFieldSettings.Required="False" InputFieldSettings.Type="Text" 
+		InputFieldSettings.Pattern="http[s]?://(www|[a-zA-Z]{2}-[a-zA-Z]{2})\.facebook\.com/(pages/[a-zA-Z0-9\.-]+/[0-9]+|[a-zA-Z0-9\.-]+)[/]?$"
+		InputFieldSettings.Hint="Inserire un indirizzo Facebook valido (preceduto da http://)." />
+		<Twitter.InputField DisplayName="Twitter" InputFieldSettings.Required="False" InputFieldSettings.Type="Text" 
+		InputFieldSettings.Pattern="http[s]?:\/\/twitter\.com\/(#!\/)?[a-zA-Z0-9_]{1,15}$"
+		InputFieldSettings.Hint="Inserire un indirizzo Twitter valido (preceduto da http://)." />
+		<Instagram.InputField DisplayName="Instagram" InputFieldSettings.Required="False" InputFieldSettings.Type="Text" 
+		InputFieldSettings.Hint="Inserire un indirizzo Instragram valido (preceduto da http://)." />
+		<Pinterest.InputField DisplayName="Pinterest" InputFieldSettings.Required="False" InputFieldSettings.Type="Text" 
+		InputFieldSettings.Hint="Inserire un indirizzo Pinterest valido (preceduto da http://)." />
+	  </SocialPart>
+	  <ContactPart ContentPartSettings.Attachable="True" ContentPartSettings.Description="Provides a group of fields for contact data">
+		<SitoWeb.InputField DisplayName="Sito Web" InputFieldSettings.Required="False" InputFieldSettings.Type="Url" 
+		InputFieldSettings.Hint="Inserire un indirizzo web valido (preceduto da http://)." />
+		<Telefono.InputField DisplayName="Telefono" InputFieldSettings.Required="False" InputFieldSettings.Type="Text" 
+		InputFieldSettings.Pattern="^[\+]?[0-9;]+$"
+		InputFieldSettings.Hint="Inserire il numero di telefono come sequenza di cifre senza spazi (il primo carattere può essere il segno +)." />
+	  </ContactPart>
     </Parts>
   </Metadata>
   <Settings>

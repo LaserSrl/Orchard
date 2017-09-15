@@ -3,6 +3,7 @@ using Laser.Orchard.StartupConfig.RazorCodeExecution.Services;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
+using Laser.Orchard.UsersExtensions.Filters;
 using Orchard;
 using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Services;
@@ -31,6 +32,7 @@ using System.Linq;
 using System.Web.Hosting;
 using System.Web.Http;
 using OrchardCore = Orchard.Core;
+using Orchard.UI.Notify;
 
 namespace Laser.Orchard.ContentExtension.Controllers {
 
@@ -52,10 +54,12 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         private readonly ITransactionManager _transactionManager;
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private readonly IRazorTemplateManager _razorTemplateManager;
+        private readonly INotifier _notifier;
         public Localizer T { get; set; }
 
         public ContentItemController(
            ShellSettings shellSettings,
+            INotifier notifier,
            ICsrfTokenHelper csrfTokenHelper,
            IOrchardServices orchardServices,
            IAuthenticationService authenticationService,
@@ -67,6 +71,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
            IContentDefinitionManager contentDefinitionManager,
            ITaxonomyService taxonomyService,
            ILocalizedStringManager localizedStringManager,
+
            ITransactionManager transactionManager,
             Lazy<IEnumerable<IContentHandler>> handlers,
             IRazorTemplateManager razorTemplateManager
@@ -88,6 +93,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             Logger = NullLogger.Instance;
             _transactionManager = transactionManager;
             _handlers = handlers;
+            _notifier = notifier;
         }
 
         public IEnumerable<IContentHandler> Handlers
@@ -364,6 +370,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         /// </summary>
         /// <param name="eObj"></param>
         /// <returns></returns>
+        [PolicyApiFilter]
         public Response Post(ExpandoObject eObj) {
             var currentUser = _orchardServices.WorkContext.CurrentUser;
             if (currentUser == null)
@@ -490,6 +497,16 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                 // propaga l'evento Updated per il ContentItem
                 var context = new UpdateContentContext(NewOrModifiedContent);
                 Handlers.Invoke(handler => handler.Updated(context), Logger);
+
+                foreach (var notifi in _notifier.List()) {
+                    if (notifi.Type == NotifyType.Error) {
+                        _transactionManager.Cancel();
+                        rsp.Success = false;
+                        rsp.Message = "Error on update";
+                        Logger.Error(notifi.Message.ToString());
+                        break;
+                    }
+                }
             }
             return rsp;
         }

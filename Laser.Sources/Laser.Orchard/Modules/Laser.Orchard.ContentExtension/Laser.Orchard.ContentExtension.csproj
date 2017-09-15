@@ -182,6 +182,7 @@
     <Compile Include="ViewModels\DynamicProjectionVM.cs" />
     <Compile Include="ViewModels\ContentTypePermissionVM.cs" />
     <Compile Include="ViewModels\UploadFileVM.cs" />
+    <None Include="Views\DynamicProjectionDisplay\AjaxList.cshtml" />
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
@@ -200,6 +201,10 @@
     <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
       <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>
       <Name>Laser.Orchard.StartupConfig</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.UsersExtensions\Laser.Orchard.UsersExtensions.csproj">
+      <Project>{a65d8bc6-6d65-41aa-b409-8faed243f432}</Project>
+      <Name>Laser.Orchard.UsersExtensions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
