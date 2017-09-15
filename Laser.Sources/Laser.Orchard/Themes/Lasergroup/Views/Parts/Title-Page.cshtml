@@ -23,8 +23,8 @@
     <canvas id="intro-canvas"></canvas>
     <div class="container container-desc clearfix">
         <div class="@classeDivTitolo">
-            <h1 class="handel-got-d title">@((sottotitolo == "SOCIETÀ") ? sottotitolo : Model.Title)</h1>
-            <h2 class="page-claim">@((sottotitolo == "SOCIETÀ") ? Model.Title : sottotitolo)</h2>
+            <h1 class="handel-got-d title">@Model.Title</h1>
+            <h2 class="page-claim">@sottotitolo</h2>
             <div class="page-desc">
                 @Html.Raw(item.BodyPart.Text)
             </div>
