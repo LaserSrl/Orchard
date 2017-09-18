@@ -9,3 +9,7 @@ Features:
 		Description: Provides OAuth functionality to orchard Site
 		Dependencies: Laser.Orchard.StartupConfig
 		Category:Content
+	Laser.Orchard.OpenAuthentication.AppDirect:
+		Description: Provides OpenId SSO AppDirect functionality to orchard Site
+		Dependencies: Laser.Orchard.StartupConfig
+		Category:Content
