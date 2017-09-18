@@ -89,6 +89,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Layouts, Version=1.10.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Layouts\bin\Orchard.Layouts.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Localization, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Localization\bin\Orchard.Localization.dll</HintPath>
@@ -100,6 +104,10 @@
     <Reference Include="Orchard.Modules, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Modules\bin\Orchard.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.OutputCache, Version=1.10.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.OutputCache\bin\Orchard.OutputCache.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Projections, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -191,11 +199,13 @@
     <Compile Include="Drivers\CommunicationAdvertisingPartDriver.cs" />
     <Compile Include="Drivers\CommunicationCampaignPartDriver.cs" />
     <Compile Include="Drivers\CommunicationContactDriver.cs" />
+    <Compile Include="Drivers\ContactInfoPartDriver.cs" />
     <Compile Include="Drivers\EmailContactPartDriver.cs" />
     <Compile Include="Drivers\QueryFilterDriver.cs" />
     <Compile Include="Drivers\SmsContactPartDriver.cs" />
     <Compile Include="Events\ICommunicationEventHandler.cs" />
     <Compile Include="Features\CommunicationFeature.cs" />
+    <Compile Include="Handlers\AuthorizationEventHandler.cs" />
     <Compile Include="Handlers\CommunicationAdvertisingPartHandler.cs" />
     <Compile Include="Handlers\CommunicationCampaignPartHandler.cs" />
     <Compile Include="Handlers\CommunicationContactPartHandler.cs" />
@@ -214,6 +224,7 @@
     <Compile Include="Models\CommunicationEmailRecord.cs" />
     <Compile Include="Models\CommunicationRetryRecord.cs" />
     <Compile Include="Models\CommunicationSmsRecord.cs" />
+    <Compile Include="Models\ContactInfoPart.cs" />
     <Compile Include="Models\EmailContactPart.cs" />
     <Compile Include="Models\QueryFilterPart.cs" />
     <Compile Include="Models\SmsContactPart.cs" />
@@ -285,6 +296,7 @@
     <Content Include="Views\Fields\InputField-CommunicationContact-AdminFilter.cshtml" />
     <Content Include="Views\Fields\ContentPicker-CommunicationAdvertising-CommunicationAdvertisingPart-ContentLinked.cshtml" />
     <Content Include="Views\Fields\Link-CommunicationAdvertising-CommunicationAdvertisingPart-UrlLinked.cshtml" />
+    <Content Include="Views\Parts\ContactInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">

@@ -3,10 +3,7 @@ using Laser.Orchard.Translator.Services;
 using Laser.Orchard.Translator.ViewModels;
 using Orchard.Localization;
 using Orchard.Mvc;
-using Orchard.Themes;
 using Orchard.UI.Admin;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -31,7 +28,7 @@ namespace Laser.Orchard.Translator.Controllers {
                                                                 .Select(x => new StringSummaryViewModel {
                                                                     id = x.Id,
                                                                     message = x.Message,
-                                                                    localized = !String.IsNullOrWhiteSpace(x.TranslatedMessage)
+                                                                    localized = !string.IsNullOrWhiteSpace(x.TranslatedMessage)
                                                                 });
 
             translationDetailVM.containerName = folderName;
@@ -42,7 +39,6 @@ namespace Laser.Orchard.Translator.Controllers {
             return View(translationDetailVM);
         }
 
-        [Themed(false)]
         public ActionResult TranslatorForm(int id) {
             TranslationRecord messageRecord = _translatorServices.GetTranslations().Where(m => m.Id == id).FirstOrDefault();
             if (messageRecord != null) {
@@ -51,7 +47,21 @@ namespace Laser.Orchard.Translator.Controllers {
             } else {
                 return View(new TranslationRecord());
             }
+        }
 
+        public ActionResult TranslatorFolderSettings(string language, string folderName, string folderType) {
+            TranslationFolderSettingsRecord settings = _translatorServices.GetTranslationFoldersSettings().Where(m => m.ContainerName == folderName
+                                                                                                              && m.ContainerType == folderType
+                                                                                                              /*&& m.Language == language*/).FirstOrDefault();
+
+            if (settings == null) {
+                settings = new TranslationFolderSettingsRecord();
+                settings.ContainerName = folderName;
+                settings.ContainerType = folderType;
+                //settings.Language = language;
+            }
+
+            return View(settings);
         }
 
         [HttpPost]
@@ -87,6 +97,21 @@ namespace Laser.Orchard.Translator.Controllers {
                 ViewBag.DeleteSuccess = true;
                 return View(new TranslationRecord { Id = 0 });
             }
+        }
+
+        [HttpPost]
+        [ActionName("TranslatorFolderSettings")]
+        public ActionResult SaveTranslationFolderSettings(TranslationFolderSettingsRecord translationSettings) {
+            bool success = _translatorServices.TryAddOrUpdateTranslationFolderSettings(translationSettings);
+
+            if (!success) {
+                ModelState.AddModelError("SaveTranslationError", T("An error occurred while saving the translation folder settings. Please reload the page and retry.").ToString());
+                ViewBag.SaveSuccess = false;
+            } else {
+                ViewBag.SaveSuccess = true;
+            }
+
+            return View(translationSettings);
         }
     }
 }

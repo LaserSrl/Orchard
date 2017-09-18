@@ -17,7 +17,7 @@ namespace GoogleAnalytics.Drivers {
             _notifier = notifier;
         }
 
-        
+
         protected override string Prefix { get { return "GoogleAnalyticsSettings"; } }
 
         //GET
@@ -31,18 +31,14 @@ namespace GoogleAnalytics.Drivers {
 
         //POST
         protected override DriverResult Editor(GoogleAnalyticsSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
-   
-                if (updater.TryUpdateModel(part, Prefix, null, null)) {
+
+            if (updater.TryUpdateModel(part, Prefix, null, null)) {
+                if (string.IsNullOrWhiteSpace(part.GoogleAnalyticsKey) && (part.TrackOnFrontEnd || part.TrackOnAdmin)) {
+                    updater.AddModelError("TrackingKeyMissing", T("If Google Analytics is enabled for the front end or the back end, the tracking key is required."));
                 }
-                else {
-                    //foreach (var modelState in ModelState.Values) {
-                    //    foreach (var error in modelState.Errors) {
-                    //        Debug.WriteLine(error.ErrorMessage);
-                    //    }
-                    //}
-                    _notifier.Add(NotifyType.Error, T("Error on udpate google analytics"));
-                   
-                }
+            } else {
+                _notifier.Add(NotifyType.Error, T("Error on updating Google Analytics settings"));
+            }
             return Editor(part, shapeHelper);
         }
     }

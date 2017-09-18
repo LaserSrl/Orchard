@@ -36,7 +36,12 @@
     @Html.TextBoxFor(m => m.QuestionnaireContext, new { @class = "text medium tokenized" })
     <span class="hint">@T("The Context this questionnaire refers to (eg. a commercial campaign name). It is usually usefull '{Content.DisplayText}'.")</span>
 </fieldset>
- <h2>@T("Settings - Questionnaire Part - Images")</h2>
+<div class="checkbox-and-label">
+    @Html.EditorFor(m => m.ForceAnonymous)
+    <label for="@Html.FieldIdFor(m => m.ForceAnonymous)">@T("Force anonymous responses for authenticated users.") </label>
+    <span class="hint">@T("Check if you don't want to save the username in the answers.")</span>
+</div>
+<h2>@T("Settings - Questionnaire Part - Images")</h2>
 <fieldset>
     <div class="checkbox-and-label">
         @Html.CheckBoxFor(m => m.EnableQuestionImage)

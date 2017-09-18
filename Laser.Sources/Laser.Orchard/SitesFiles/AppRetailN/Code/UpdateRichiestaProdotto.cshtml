@@ -1,17 +1,15 @@
 @using Orchard;
 @using Orchard.ContentManagement;
 @using Orchard.Data;
-@using Orchard.Projections.Models;
 @using System.Collections.Generic;
 @using System.Linq;
 
 @functions{
     // Model.ContentItem is a RichiestaProdotto
-    string retString = "Error"; //possible outcomes: Error,NonEvasa,Evasa,Annullata
+    string retString = "Error"; //possible outcomes: Error,NonEvasa,Evasa,Annullata,Rifiutata
     string eMsg = "";
     //services
     IContentManager _contentManager;
-    IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
     // methods
     private string GetIdUserOfStoreAssistants(ContentItem store) {
         int[] idsDipendenti = ((dynamic)store).Store.StoreAssistants.Ids;
@@ -28,14 +26,11 @@
     try {
         // resolve services
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
-        _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         // get richiesta
         dynamic richiesta = Model.ContentItem;
-        // get current user
-        var usr = Model.OrchardServices.WorkContext.CurrentUser;
-        dynamic dUsr = usr.ContentItem;
-        // get store list
-        //var storeList = _contentManager.Query("Store").List();
+        // get creator
+        int idCreator = Convert.ToInt32(richiesta.CommonPart.Creator.Value);
+        dynamic dUsr = _contentManager.Get(idCreator);
         // get store mittente
         dynamic mittente = null;
         int idMittente = 0;
@@ -52,8 +47,11 @@
         dynamic destinatario = _contentManager.Get(idDestinatario);
         // set title of richiesta
         richiesta.TitlePart.Title = string.Format("{0} - {1} - {2} {3}", mittente.TitlePart.Title, destinatario.TitlePart.Title, dUsr.ProfilePart.Cognome.Value, dUsr.ProfilePart.Nome.Value);
+        richiesta.VersionRecord.Published = false;
+        _contentManager.Publish(richiesta);
         // get status
         string status = richiesta.RichiestaProdotto.Stato.Value;
+        int idOwner = 0;
         switch (status) {
             case "Non evasa":
                 retString = "NonEvasa";
@@ -61,13 +59,19 @@
                 break;
             case "Evasa":
                 // get owner of richiesta
-                int idOwner = richiesta.CommonPart.Owner.Id;
+                idOwner = richiesta.CommonPart.Owner.Id;
                 retString = "Evasa";
                 Model.Tokens["Workflow"].SetState("UserIdToNotify", idOwner.ToString());
                 break;
             case "Annullata":
                 retString = "Annullata";
                 Model.Tokens["Workflow"].SetState("UserIdToNotify", GetIdUserOfStoreAssistants(destinatario));
+                break;
+            case "Rifiutata":
+                // get owner of richiesta
+                idOwner = richiesta.CommonPart.Owner.Id;
+                retString = "Rifiutata";
+                Model.Tokens["Workflow"].SetState("UserIdToNotify", idOwner.ToString());
                 break;
         }
     } catch (Exception ex) {

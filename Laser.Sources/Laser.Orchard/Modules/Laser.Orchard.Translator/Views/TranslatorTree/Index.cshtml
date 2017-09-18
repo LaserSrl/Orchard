@@ -4,16 +4,18 @@
 
 @{
     Script.Require("jsTreeGrid").AtHead();
+
+    Style.Require("FontAwesome");
     Style.Require("jsTree_Default").AtHead();
     Style.Require("Laser.Orchard.Translator");
 
     Layout.Title = T("Translator").ToString();
 
     var authorized = AuthorizedFor(TranslatorPermission.ManageTranslations);
-    var displayAdvancedButtons = authorized ? String.Empty : "display:none";
+    var displayAdvancedButtons = authorized ? string.Empty : "display:none";
 
     var modifiedFolderName = "";
-    if (!String.IsNullOrWhiteSpace(Model.selectedFolderName)) {
+    if (!string.IsNullOrWhiteSpace(Model.selectedFolderName)) {
         modifiedFolderName = Model.selectedFolderName.Replace(".", "-");
     }
 
@@ -23,12 +25,25 @@
 
 <fieldset>
     <legend>@T("Translation Status")</legend>
-
-    <div style="padding: 10px 0px 10px 0px;">
-        @T("Language: ")
-        @Html.DropDownList("SelectLanguage", new SelectList(CultureList, Model.selectedCulture))
+    <div>
+        <div id="translation-tree-lang-selector">
+            <label>@T("Language")</label>
+            @Html.DropDownList("SelectLanguage", new SelectList(CultureList, Model.selectedCulture))
+        </div>
+        <div id="translation-tree-legend">
+            <label>@T("Legend")</label>
+            <div class="jstree-default translation-tree-elem">
+                <span class="translation-tree-legend-desc">@T("Deprecated")</span>
+                <i class="translation-tree-legend-icon fa fa-times"></i>
+                <span class="translation-tree-legend-desc">@T("Used")</span>
+                <i class="translation-tree-legend-icon jstree-icon jstree-themeicon"></i>
+            </div>
+        </div>
     </div>
-
+    <div id="translation-tree-choice-message">
+        <h4>@T("Please select a language")</h4>
+    </div>
+    <div id="translation-tree-load"></div>
     <div id="folderTree"></div>
 </fieldset>
 
@@ -63,6 +78,18 @@
     {
     <script type="text/javascript">
         $(function () {
+            var $loading = $('#translation-tree-load').hide();
+            $(document)
+                .ajaxStart(function () {
+                    $loading.show();
+            })
+                .ajaxStop(function () {
+                    if ($('#SelectLanguage').val() != '')
+                        $('#translation-tree-choice-message').hide();
+                    
+                    $loading.hide();
+            });
+
             $('#SelectLanguage').change(function () {
                 $.getJSON('@Url.Action("CreateJsonForTree", "TranslatorTree")', { language: $(this).val() }, function (response) {
                     var tree = $.jstree.reference('#folderTree');
@@ -72,7 +99,10 @@
                             "data": response,
                             "themes": { "dots": false }
                         },
-                        "plugins": ["grid"],
+                        "types": {
+                            "deprecated": { "icon": "fa fa-times" }
+                        },
+                        "plugins": ["grid", "types"],
                         "grid": {
                             columns: [
                                 { width: "auto" },
@@ -80,14 +110,21 @@
                             ]
                         }
                     });
+
+                    $('#folderTree').on('select_node.jstree', function () {
+                        $('#folderName').val($('#folderTree').jstree().get_selected(true)[0].text);
+                        $('#folderType').val($('#folderTree').jstree().get_selected(true)[0].data.type);
+                    });
                 })
 
                 if ($(this).val() != '') {
                     $('#showDetailsForm').show();
                     $('#language').val($(this).val());
                 }
-                else
+                else {
                     $('#showDetailsForm').hide();
+                    $('#translation-tree-choice-message').show();
+                }
             });
 
             if ($('#SelectLanguage').val() != '') {
@@ -95,14 +132,9 @@
             }
 
             $('#folderTree').bind("loaded.jstree", function (e, data) {
-                if ('@String.IsNullOrWhiteSpace(Model.selectedFolderName)' == 'False' && '@String.IsNullOrWhiteSpace(Model.selectedFolderType)' == 'False')
+                if ('@string.IsNullOrWhiteSpace(Model.selectedFolderName)' == 'False' && '@string.IsNullOrWhiteSpace(Model.selectedFolderType)' == 'False')
                     $('#folderTree').jstree("select_node", '#translatortree-child-@modifiedFolderName');
             })
-
-            $('#folderTree').on('select_node.jstree', function () {
-                $('#folderName').val($('#folderTree').jstree().get_selected(true)[0].text);
-                $('#folderType').val($('#folderTree').jstree().get_selected(true)[0].data.type);
-            });
 
             $('#showDetailsForm').submit(function () {
                 var selectedNodes = $('#folderTree').jstree().get_selected(true);
@@ -121,6 +153,10 @@
             });
 
             $('#importForm').submit(function () { return confirm("@T("This operation will delete all current translations and replace them with the translations currently contained in the .po files. Do You want to continue?")"); });
+
+            $('#folderTree').on('dblclick','.jstree-anchor', function (e) {
+                $('#showDetailsForm').submit();
+            });
         });
     </script>
     }

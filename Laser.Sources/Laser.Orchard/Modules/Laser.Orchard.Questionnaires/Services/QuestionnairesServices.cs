@@ -449,6 +449,7 @@ namespace Laser.Orchard.Questionnaires.Services {
         public bool Save(QuestionnaireWithResultsViewModel editModel, IUser currentUser, string SessionID) {
             bool result = false;
             var questionnaireModuleSettings = _orchardServices.WorkContext.CurrentSite.As<QuestionnaireModuleSettingsPart>();
+            var questionnairePartSettings = _orchardServices.ContentManager.Get<QuestionnairePart>(editModel.Id).Settings.GetModel<QuestionnairesPartSettingVM>();
             bool exit = false;
             if (questionnaireModuleSettings.Disposable) {
                 if (currentUser != null) {
@@ -456,7 +457,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                         exit = true;
                     }
                 }
-                else { // anonymous user => check SesionID
+                else { // anonymous user => check SessionID
                     if (_repositoryUserAnswer.Fetch(x => x.SessionID == SessionID && x.QuestionnairePartRecord_Id == editModel.Id && x.Context == editModel.Context).Count() > 0) {
                         exit = true;
                     }
@@ -470,7 +471,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                             userAnswer.AnswerText = q.OpenAnswerAnswerText;
                             userAnswer.QuestionText = q.Question;
                             userAnswer.QuestionRecord_Id = q.Id;
-                            userAnswer.User_Id = (currentUser == null) ? 0 : currentUser.Id;
+                            userAnswer.User_Id = (currentUser == null || questionnairePartSettings.ForceAnonymous) ? 0 : currentUser.Id;
                             userAnswer.QuestionnairePartRecord_Id = editModel.Id;
                             userAnswer.SessionID = SessionID;
                             userAnswer.Context = editModel.Context;
@@ -483,7 +484,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                             userAnswer.AnswerRecord_Id = q.SingleChoiceAnswer;
                             userAnswer.AnswerText = GetAnswer(q.SingleChoiceAnswer).Answer;
                             userAnswer.QuestionRecord_Id = q.Id;
-                            userAnswer.User_Id = (currentUser == null) ? 0 : currentUser.Id;
+                            userAnswer.User_Id = (currentUser == null || questionnairePartSettings.ForceAnonymous) ? 0 : currentUser.Id;
                             userAnswer.QuestionText = q.Question;
                             userAnswer.QuestionnairePartRecord_Id = editModel.Id;
                             userAnswer.SessionID = SessionID;
@@ -498,7 +499,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                             userAnswer.AnswerRecord_Id = a.Id;
                             userAnswer.AnswerText = GetAnswer(a.Id).Answer;
                             userAnswer.QuestionRecord_Id = q.Id;
-                            userAnswer.User_Id = (currentUser == null) ? 0 : currentUser.Id;
+                            userAnswer.User_Id = (currentUser == null || questionnairePartSettings.ForceAnonymous) ? 0 : currentUser.Id;
                             userAnswer.QuestionText = q.Question;
                             userAnswer.QuestionnairePartRecord_Id = editModel.Id;
                             userAnswer.SessionID = SessionID;
@@ -771,10 +772,11 @@ namespace Laser.Orchard.Questionnaires.Services {
                 System.IO.Directory.CreateDirectory(fi.DirectoryName);
             }
             using (FileStream fStream = new FileStream(filePath, FileMode.Create)) {
-                using (BinaryWriter bWriter = new BinaryWriter(fStream)) {
+                using (BinaryWriter bWriter = new BinaryWriter(fStream, Encoding.UTF8)) {
                     byte[] buffer = null;
                     string row = string.Format("\"Utente\"{0}\"Data\"{0}\"Domanda\"{0}\"Risposta\"{0}\"Contesto\"\r\n", separator);
-                    buffer = Encoding.Unicode.GetBytes(row);
+                    buffer = Encoding.UTF8.GetBytes(row);
+                    buffer = Encoding.UTF8.GetPreamble().Concat(buffer).ToArray(); //GetPreamble è necessario per aggiungere un header UTF8 riconoscibile da Excel
                     bWriter.Write(buffer);
                     foreach (var line in elenco) {
                         row = string.Format("\"{1}\"{0}\"{2:yyyy-MM-dd}\"{0}\"{3}\"{0}\"{4}\"{0}\"{5}\"\r\n",
@@ -784,7 +786,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                             EscapeString(line.Question),
                             EscapeString(line.Answer),
                             EscapeString(line.Contesto));
-                        buffer = Encoding.Unicode.GetBytes(row);
+                        buffer = Encoding.UTF8.GetBytes(row);
                         bWriter.Write(buffer);
                     }
                 }
@@ -835,6 +837,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                     QuestionnaireTitle = questionnaireData.As<TitlePart>().Title,
                     QuestionId = s.Questions.Id,
                     Question = s.Questions.Question,
+                    Position = s.Questions.Position,
                     QuestionType = s.Questions.QuestionType,
                     Answers = new List<AnswerStatsViewModel>()
                 })
@@ -854,7 +857,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                     question.Answers.AddRange(answers.OrderBy(o => o.Answer));
                 }
 
-                return aggregatedStats.OrderBy(o => o.Question).ToList();
+                return aggregatedStats.OrderBy(o => o.Position).ToList();
             }
         }
 

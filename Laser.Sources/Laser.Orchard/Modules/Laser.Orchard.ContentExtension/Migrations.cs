@@ -36,7 +36,7 @@ namespace Laser.Orchard.ContentExtension {
             //ContentDefinitionManager.AlterPartDefinition("DynamicProjectionPart", builder => builder
             //        .Attachable()
             //        .WithDescription("Adds a menu item to the Admin menu that links to this content item."));
-            return 2;
+            return 3;
         }
         public int UpdateFrom2() {
             SchemaBuilder.DropTable("DynamicProjectionPartRecord");

@@ -71,6 +71,7 @@
     <Compile Include="Drivers\QuestionnairePartDriver.cs" />
     <Compile Include="Drivers\RankingPartDriver.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Handlers\AuthorizationEventHandler.cs" />
     <Compile Include="Handlers\GamePartHandler.cs" />
     <Compile Include="Handlers\QuestionnaireContextFilter.cs" />
     <Compile Include="Handlers\QuestionnaireContextFilterForm.cs" />

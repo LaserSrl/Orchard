@@ -61,25 +61,30 @@ namespace Laser.Orchard.Policy.Filters {
         }
 
         private void SetPendingPolicies() {
-            if (pendingPolicies != null) return;
-            string areaName = HttpContext.Current.Request.RequestContext.RouteData.Values["area"].ToString();
-            string controllerName = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
-            string actionName = HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString();
+            if (pendingPolicies != null)
+                return;
+            var routeData = HttpContext.Current.Request.RequestContext.RouteData;
+            string areaName = (routeData.Values["area"] ?? string.Empty).ToString();
+            string controllerName = (routeData.Values["controller"] ?? string.Empty).ToString();
+            string actionName = (routeData.Values["action"] ?? string.Empty).ToString();
             if (areaName.Equals("Laser.Orchard.WebServices", StringComparison.InvariantCultureIgnoreCase) &&
                 controllerName.Equals("WebApi", StringComparison.InvariantCultureIgnoreCase) &&
                 actionName.Equals("display", StringComparison.InvariantCultureIgnoreCase)) {
-                string alias = HttpContext.Current.Request.Params["alias"].ToString();
+                string alias = (HttpContext.Current.Request.Params["alias"] ?? string.Empty).ToString();
 
                 var content = _commonServices.GetContentByAlias(alias);
                 //_maxLevel = maxLevel;
-                var policy = content.As<Laser.Orchard.Policy.Models.PolicyPart>();
-                if (policy != null && (policy.HasPendingPolicies ?? false)) { // Se l'oggetto ha delle pending policies allora devo serivre la lista delle pending policies
-                    pendingPolicies = policy.PendingPolicies;
-                } else {
-                    pendingPolicies = new List<IContent>();
+                if (content != null) {
+                    var policy = content.As<Models.PolicyPart>();
+                    if (policy != null && (policy.HasPendingPolicies ?? false)) { // Se l'oggetto ha delle pending policies allora devo serivre la lista delle pending policies
+                        pendingPolicies = policy.PendingPolicies;
+                    } else {
+                        pendingPolicies = new List<IContent>();
+                    }
                 }
             }
         }
+
     }
 
 }

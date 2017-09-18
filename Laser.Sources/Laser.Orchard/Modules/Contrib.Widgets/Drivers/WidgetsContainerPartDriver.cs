@@ -90,7 +90,7 @@ namespace Contrib.Widgets.Drivers {
                 var widgetTypes = _widgetsService.GetWidgetTypeNames().ToList();
                 if (!string.IsNullOrWhiteSpace(settings.AllowedWidgets))
                     widgetTypes = widgetTypes.Where(x => settings.AllowedWidgets.Split(',').Contains(x)).ToList();
-                var widgets = _widgetManager.GetWidgets(part.Id, part.ContentItem.IsPublished());
+                var widgets = _widgetManager.GetWidgets(part.Id, false);
 
                 var zonePreviewImagePath = string.Format("{0}/{1}/ThemeZonePreview.png", currentTheme.Location, currentTheme.Id);
                 var zonePreviewImage = _virtualPathProvider.FileExists(zonePreviewImagePath) ? zonePreviewImagePath : null;
@@ -100,13 +100,10 @@ namespace Contrib.Widgets.Drivers {
                 // recupero i contenuti localizzati una try è necessaria in quanto non è detto che un contenuto sia localizzato
                 dynamic contentLocalizations;
                 try {
-                    contentLocalizations = _localizationService.GetLocalizations(part.ContentItem, VersionOptions.Latest)
-                        .Select(c => {
-                            var localized = c.ContentItem.As<LocalizationPart>();
-                            if (localized.Culture == null)
-                                localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture());
-                            return c;
-                        })
+                    contentLocalizations = _localizationService
+                        .GetLocalizations(part.ContentItem, VersionOptions.Latest) //the other cultures
+                        .Where(lp => //as long as a culture has been assigned
+                            lp.Culture != null && !string.IsNullOrWhiteSpace(lp.Culture.Culture))
                         .OrderBy(o => o.Culture.Culture)
                         .ToList();
                 }

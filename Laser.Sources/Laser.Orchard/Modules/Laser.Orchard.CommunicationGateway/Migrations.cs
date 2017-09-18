@@ -1,7 +1,9 @@
-﻿using Laser.Orchard.StartupConfig.Services;
+﻿using Laser.Orchard.CommunicationGateway.Models;
+using Laser.Orchard.StartupConfig.Services;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
+using Orchard.Layouts.Helpers;
 using System;
 using System.Data;
 
@@ -371,6 +373,21 @@ namespace Laser.Orchard.CommunicationGateway {
                 table => table.AddColumn<bool>("PendingErrors", column => column.WithDefault(false))
             );
             return 27;
+        }
+        public int UpdateFrom27() {
+            ContentDefinitionManager.AlterPartDefinition(typeof(ContactInfoPart).Name, p => p.Attachable(true));
+            return 28;
+        }
+        public int UpdateFrom28() {
+            ContentDefinitionManager.AlterPartDefinition(typeof(ContactInfoPart).Name, p => p.Attachable(true).Placeable(true));
+            return 29;
+        }
+        public int UpdateFrom29() {
+            ContentDefinitionManager.AlterPartDefinition(typeof(ContactInfoPart).Name, p => 
+                p.Attachable(true)
+                .Placeable(true)
+                .WithDescription("Fields that are not synchronized with related user."));
+            return 30;
         }
     }
 }
