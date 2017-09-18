@@ -702,8 +702,8 @@
         <ConfigStatus.HiddenStringField DisplayName="ConfigStatus" HiddenStringFieldSettings.Tokenized="True" />
         <Descrizione.TextField DisplayName="Descrizione" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="False" TextFieldSettings.Hint="Descrizione dell'app." />
         <DescrizioneCorta.TextField DisplayName="Descrizione Corta" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="False" TextFieldSettings.Hint="Breve descrizione dell'app." />
-        <emailTesterAndroid.TextField DisplayName="e-mail Tester Android" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="False" />
-        <emailTesteriOS.TextField DisplayName="e-mail Tester iOS" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="False" />
+        <emailTesterAndroid.TextField DisplayName="e-mail Tester Android" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="False" TextFieldSettings.Hint="Indirizzi e-mail da utilizzare per testare la versione Android dell'app. Devono corrispondere a utenti del Play Store." />
+        <emailTesteriOS.TextField DisplayName="e-mail Tester iOS" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="False" TextFieldSettings.Hint="Indirizzi e-mail da utilizzare per testare la versione iOS dell'app. Devono corrispondere a utenti dell'Apple Store." />
         <IconaApp.MediaLibraryPickerField DisplayName="Icona App" MediaLibraryPickerFieldSettings.Required="False" MediaLibraryPickerFieldSettings.Multiple="False" MediaLibraryPickerFieldSettings.Hint="Icona che identificherà l'app sui dispositivi degli utenti." />
         <Nome.TextField DisplayName="Nome" TextFieldSettings.Required="False" TextFieldSettings.Hint="Nome dell'app che apparirà nell'Apple Store e nel Google Play Store." />
         <ParoleChiave.TextField DisplayName="Parole Chiave" TextFieldSettings.Flavor="Wide" TextFieldSettings.Required="False" TextFieldSettings.Hint="Settori a cui l'app si riferisce." />
