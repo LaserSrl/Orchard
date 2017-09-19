@@ -4,7 +4,7 @@
     Script.Require("spectrum").AtHead();
 }
 <fieldset>
-    <label for="@Html.FieldIdFor(m => Model.Value)">@Model.Name</label>
+    <label>@Model.DisplayName</label>
     <input type="color" id="@Html.FieldIdFor(m => m.Value)" name="@Html.FieldNameFor(m => m.Value)" value="@Model.Value" title="@Model.Value" />
     <script type="text/javascript">
         $("#@Html.FieldIdFor(m => m.Value)").spectrum({showInput:true,showPalette:true,showInitial:true,preferredFormat:"hex",showButtons:false});
