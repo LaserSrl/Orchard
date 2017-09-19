@@ -12,7 +12,6 @@ namespace Laser.Orchard.NwazetIntegration.Handlers {
         public NwazetContactPartHandler(IRepository<NwazetContactPartRecord> repository, IRepository<AddressRecord> addressRepository) {
             _addressRepository = addressRepository;
             Filters.Add(StorageFilter.For(repository));
-            //Filters.Add(new ActivatingFilter<NwazetContactPart>("CommunicationContact"));
         }
     }
 }
