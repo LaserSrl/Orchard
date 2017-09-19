@@ -134,7 +134,7 @@
     <SearchSettingsPart DisplayType="Summary" FilterCulture="false" />
     <ShareLinkModuleSettingPart Fb_App="" SharedBody="" SharedImage="" SharedLink="" SharedText="" />
     <ShortLinksSettingsPart GoogleApiKey="" />
-    <SiteSettingsPart SupportedCultures="en-US;it-IT" DefaultParserEngine="Laser.Orchard.TemplateManagement.Parsers.RazorParserEngine" BaseUrl="http://localhost/Laser.Orchard" MaxPagedCount="0" MaxPageSize="0" PageSize="10" PageTitleSeparator=" - " SiteCalendar="" SiteCulture="it-IT" SiteName="App Retail" SiteSalt="ca962f8f8dde4dc2b3d8198ba6b5cb61" SiteTimeZone="W. Europe Standard Time" SuperUser="admin" UseCdn="false" DefaultParserIdSelected="Laser.Orchard.TemplateManagement.Parsers.RazorParserEngine" />
+    <SiteSettingsPart SupportedCultures="en-US;it-IT" DefaultParserEngine="Laser.Orchard.TemplateManagement.Parsers.RazorParserEngine" MaxPagedCount="0" MaxPageSize="0" PageSize="10" PageTitleSeparator=" - " SiteCalendar="" SiteCulture="it-IT" SiteName="App Retail" SiteSalt="ca962f8f8dde4dc2b3d8198ba6b5cb61" SiteTimeZone="W. Europe Standard Time" SuperUser="admin" UseCdn="false" DefaultParserIdSelected="Laser.Orchard.TemplateManagement.Parsers.RazorParserEngine" />
     <SmtpSettingsPart Address="krake.ao@gmail.com" EnableSsl="true" Host="smtp.gmail.com" Password="laseradmin" Port="25" RequireCredentials="true" UseDefaultCredentials="false" UserName="krake.ao@gmail.com" />
     <SslSettingsPart CustomEnabled="false" Enabled="false" InsecureHostName="pre-multitenant10.mykrake.com" SecureEverything="true" SecureHostName="pre-multitenant10.mykrake.com" SendStrictTransportSecurityHeaders="false" StrictTransportSecurityIncludeSubdomains="false" StrictTransportSecurityMaxAge="31536000" StrictTransportSecurityPreload="false" Urls="" />
     <ThemeSiteSettingsPart CurrentThemeName="KrakeDefaultTheme" />
@@ -1009,7 +1009,7 @@
       <AutoroutePart Alias="home" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="true" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-07T08:14:00Z" PublishedUtc="2017-09-18T12:46:33.6710221Z" ModifiedUtc="2017-09-18T12:46:33.6431738Z" />
       <LayoutPart>
-        <LayoutData>{"elements":[{"typeName":"Orchard.Layouts.Elements.Canvas","data":"","exportableData":"","index":0,"elements":[{"typeName":"Orchard.Layouts.Elements.Html","data":"Content=%3cp%3eSe+sei+un+utente+autorizzato%2c+procedi+con+la+login+e+accedi+al+%3ca+href%3d%22%2fadmin%22%3ePannello+di+amministrazione%3c%2fa%3e%26nbsp%3bper+operare+sulla+piattaforma+digitale.%3c%2fp%3e","exportableData":"","index":0,"elements":[],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""},{"typeName":"Orchard.Layouts.Elements.Grid","data":"","exportableData":"","index":1,"elements":[{"typeName":"Orchard.Layouts.Elements.Row","data":"","exportableData":"","index":0,"elements":[{"typeName":"Orchard.Layouts.Elements.Column","data":"Width=12&amp;Offset=0&amp;Collapsible=null","exportableData":"","index":0,"elements":[],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""}],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""}],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""}],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""}]}</LayoutData>
+        <LayoutData>{"elements":[{"typeName":"Orchard.Layouts.Elements.Canvas","data":"","exportableData":"","index":0,"elements":[{"typeName":"Orchard.Layouts.Elements.Html","data":"Content=%3cp%3eSe+sei+un+utente+autorizzato%2c+procedi+con+la+login+e+accedi+al+Pannello+di+controllo+per+operare+sulla+piattaforma+digitale.%3c%2fp%3e","exportableData":"","index":0,"elements":[],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""},{"typeName":"Orchard.Layouts.Elements.Grid","data":"","exportableData":"","index":1,"elements":[{"typeName":"Orchard.Layouts.Elements.Row","data":"","exportableData":"","index":0,"elements":[{"typeName":"Orchard.Layouts.Elements.Column","data":"Width=12&amp;Offset=0&amp;Collapsible=null","exportableData":"","index":0,"elements":[],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""}],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""}],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""}],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""}]}</LayoutData>
       </LayoutPart>
       <LocalizationPart Culture="it-IT" />
       <TagsPart Tags="" />
@@ -1821,4 +1821,11 @@
       </Transitions>
     </Workflow>
   </Workflows>
+  <Command>
+      layer create Default /LayerRule:"true" /Description:"The widgets in this layer are displayed on all pages"
+      site setting set baseurl
+      menu create /MenuName:"Main Menu"
+      menuitem create /MenuPosition:"0" /MenuText:"Home" /Url:"~/" /MenuName:"Main Menu"
+      widget create MenuWidget /Title:"Main Menu" /RenderTitle:false /Zone:"Navigation" /Position:"1" /Layer:"Default" /Identity:"MenuWidget1" /MenuName:"Main Menu"
+  </Command>
 </Orchard>
