@@ -135,11 +135,37 @@ namespace Laser.Orchard.AppDirect.Controllers {
             if ((json["payload"]).Type != JTokenType.Null && (json["payload"]["order"]).Type != JTokenType.Null && (json["payload"]["order"]["editionCode"]).Type != JTokenType.Null) {
                 appDirectRequestPart.Edition.Value = (json["payload"]["order"]["editionCode"] ?? "").ToString();
             }
+            if ((json["type"]).Type != JTokenType.Null) {
+                switch ((json["type"] ?? "").ToString()) {
+                    case "USER_ASSIGNMENT":
+                        appDirectRequestPart.PayloadSubject.Value = GetJsonValue(json, "payload=>user=>email");
+                        break;
+                    case "USER_UNASSIGNMENT":
+                        appDirectRequestPart.PayloadSubject.Value = GetJsonValue(json, "payload=>user=>email");
+                        break;
+                }
+            }
             appDirectRequestPart.Uri.Value = Request.QueryString["url"];
             appDirectRequestPart.ProductKey.Value = key;
             var user = _membershipService.GetUser("Market_AppDirect");
             contentItem.As<CommonPart>().Owner = user;
             return contentItem;
+        }
+        private string GetJsonValue(JObject json, string path) {
+            // if (json["payload"]).Type != JTokenType.Null
+            var keys = path.Split(new string[] { "=>" }, StringSplitOptions.None);
+            JToken ob = json;
+            foreach (string key in keys) {
+                ob = ScanToken(ob, key);
+            }
+            return (ob??"").ToString();
+        }
+
+        private JToken ScanToken(JToken token, string key) {
+            if (token.Type != JTokenType.Null)
+                if (token[key].Type != JTokenType.Null)
+                    return token[key];
+            return null;
         }
         public ActionResult Create() {
             var str = Request.QueryString["url"];

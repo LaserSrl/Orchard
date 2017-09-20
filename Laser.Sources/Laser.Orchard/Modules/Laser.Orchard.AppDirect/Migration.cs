@@ -41,6 +41,9 @@ namespace Laser.Orchard.AppDirect {
             );
             ContentDefinitionManager.AlterPartDefinition("AppDirectRequestPart", cfg => cfg
                  .Attachable(false)
+                 .WithField("PayloadSubject", b => b.OfType("TextField")
+                    .WithDisplayName("Payload Subject")
+                    .WithSetting("TextFieldSettings.Flavor", "Large"))
                  .WithField("Request", b => b.OfType("TextField")
                     .WithDisplayName("Json Response")
                     .WithSetting("TextFieldSettings.Flavor", "TextArea"))
@@ -74,6 +77,8 @@ namespace Laser.Orchard.AppDirect {
                 var password = Membership.GeneratePassword(10, 5);
                 _membershipService.CreateUser(new CreateUserParams("Market_AppDirect", password, "Market_AppDirect@laser-group.com", "Auto Registered User", password, true));
             }
-            return 1;        }
+            return 1;
+        }
+
     }
 }
