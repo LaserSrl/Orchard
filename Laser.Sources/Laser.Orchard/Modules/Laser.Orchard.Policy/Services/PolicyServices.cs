@@ -24,7 +24,9 @@ using OrchardNS = Orchard;
 namespace Laser.Orchard.Policy.Services {
     public interface IPolicyServices : IDependency {
         PoliciesForUserViewModel GetPoliciesForUserOrSession(bool writeMode, string language = null);
+        void PolicyForItemUpdate(PolicyForUserViewModel viewModel, ContentItem item);
         void PolicyForUserUpdate(PolicyForUserViewModel viewModel, IUser user = null);
+        void PolicyForItemMassiveUpdate(IList<PolicyForUserViewModel> viewModelCollection, ContentItem item);
         void PolicyForUserMassiveUpdate(IList<PolicyForUserViewModel> viewModelCollection, IUser user = null);
         IList<PolicyForUserViewModel> GetCookieOrVolatileAnswers();
         void CreateAndAttachPolicyCookie(IList<PolicyForUserViewModel> viewModelCollection, bool writeMode);
@@ -118,16 +120,19 @@ namespace Laser.Orchard.Policy.Services {
             return new PoliciesForUserViewModel { Policies = model };
         }
 
-
         public void PolicyForUserUpdate(PolicyForUserViewModel viewModel, IUser user = null) {
-            UserPolicyAnswersRecord record = null;
             var loggedUser = user ?? _workContext.GetContext().CurrentUser;
+            PolicyForItemUpdate(viewModel, loggedUser.ContentItem);
+        }
 
-            // Recupero la risposta precedente dell'utente, se esiste
+        public void PolicyForItemUpdate(PolicyForUserViewModel viewModel, ContentItem item) {
+            UserPolicyAnswersRecord record = null;
+
+            // Recupero la risposta precedente, se esiste
             if (viewModel.AnswerId > 0)
                 record = _userPolicyAnswersRepository.Get(viewModel.AnswerId);
             else
-                record = _userPolicyAnswersRepository.Table.Where(w => w.PolicyTextInfoPartRecord.Id == viewModel.PolicyTextId && w.UserPolicyPartRecord.Id == loggedUser.Id).SingleOrDefault();
+                record = _userPolicyAnswersRepository.Table.Where(w => w.PolicyTextInfoPartRecord.Id == viewModel.PolicyTextId && w.UserPolicyPartRecord.Id == item.Id).SingleOrDefault();
 
             bool oldAnswer = record != null ? record.Accepted : false;
 
@@ -136,46 +141,37 @@ namespace Laser.Orchard.Policy.Services {
                 var policyText = _contentManager.Get<PolicyTextInfoPart>(viewModel.PolicyTextId).Record;
                 if ((policyText.UserHaveToAccept && viewModel.Accepted) || !policyText.UserHaveToAccept) {
                     var shouldCreateRecord = false;
-                    if (loggedUser != null) {
-                        
+                    if (item != null) {
                         if (viewModel.AnswerId <= 0 && record == null) {
                             record = new UserPolicyAnswersRecord();
                             shouldCreateRecord = true;
                         }
-
                         UserPolicyAnswersHistoryRecord recordForHistory = CopyForHistory(record);
 
                         //date should be updated only if it is a new record, or the answer has actually changed
                         record.AnswerDate = (shouldCreateRecord || oldAnswer != viewModel.Accepted) ? DateTime.UtcNow : record.AnswerDate;
                         record.Accepted = viewModel.Accepted;
-                        record.UserPolicyPartRecord = loggedUser.As<UserPolicyPart>().Record;
+                        record.UserPolicyPartRecord = item.As<UserPolicyPart>().Record;
                         record.PolicyTextInfoPartRecord = policyText;
-
                         if (shouldCreateRecord) {
                             _userPolicyAnswersRepository.Create(record);
-
                             _policyEventHandler.PolicyChanged(new PolicyEventViewModel {
                                 policyType = record.PolicyTextInfoPartRecord.PolicyType,
                                 accepted = record.Accepted
                             });
-                        }
-                        else if (record.Accepted != recordForHistory.Accepted) {
+                        } else if (record.Accepted != recordForHistory.Accepted) {
                             _userPolicyAnswersHistoryRepository.Create(recordForHistory);
                             _userPolicyAnswersRepository.Update(record);
-
                             _policyEventHandler.PolicyChanged(new PolicyEventViewModel {
                                 policyType = record.PolicyTextInfoPartRecord.PolicyType,
                                 accepted = record.Accepted
                             });
                         }
                     }
-                }
-                else if (policyText.UserHaveToAccept && !viewModel.Accepted && record != null) {
+                } else if (policyText.UserHaveToAccept && !viewModel.Accepted && record != null) {
                     UserPolicyAnswersHistoryRecord recordForHistory = CopyForHistory(record);
-
                     _userPolicyAnswersHistoryRepository.Create(recordForHistory);
                     _userPolicyAnswersRepository.Delete(record);
-
                     _policyEventHandler.PolicyChanged(new PolicyEventViewModel {
                         policyType = recordForHistory.PolicyTextInfoPartRecord.PolicyType,
                         accepted = false
@@ -183,7 +179,6 @@ namespace Laser.Orchard.Policy.Services {
                 }
             }
         }
-
         public void PolicyForUserMassiveUpdate(IList<PolicyForUserViewModel> viewModelCollection, IUser user = null) {
             var loggedUser = user ?? _workContext.GetContext().CurrentUser;
             if (loggedUser != null) {
@@ -195,6 +190,13 @@ namespace Laser.Orchard.Policy.Services {
             CreateAndAttachPolicyCookie(viewModelCollection, true);
         }
 
+        public void PolicyForItemMassiveUpdate(IList<PolicyForUserViewModel> viewModelCollection, ContentItem item) {
+            if (item != null) {
+                foreach (var policy in viewModelCollection) {
+                    PolicyForItemUpdate(policy, item);
+                }
+            }
+        }
 
         public IList<PolicyForUserViewModel> GetCookieOrVolatileAnswers() {
             var viewModelCollection = _controllerContextAccessor.Context != null ? _controllerContextAccessor.Context.Controller.ViewBag.PoliciesAnswers : null;

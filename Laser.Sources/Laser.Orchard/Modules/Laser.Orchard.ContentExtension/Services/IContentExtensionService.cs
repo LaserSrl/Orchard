@@ -1,4 +1,5 @@
 ﻿using Laser.Orchard.ContentExtension.Models;
+using Laser.Orchard.StartupConfig.Handlers;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Orchard;
@@ -55,13 +56,15 @@ namespace Laser.Orchard.ContentExtension.Services {
         public ILogger Log { get; set; }
         private readonly IOrchardServices _orchardServices;
         private readonly IRoleService _roleService;
+        private readonly IEnumerable<IDumperHandler> _dumperHandlers;
 
         public ContentExtensionService(IContentManager contentManager,
             ITaxonomyService taxonomyService,
             IUtilsServices utilsServices,
              IContentTypePermissionSettingsService contentTypePermissionSettingsService,
              IOrchardServices orchardServices,
-            IRoleService roleService) {
+            IRoleService roleService,
+            IEnumerable<IDumperHandler> dumperHandlers) {
             _contentManager = contentManager;
             _taxonomyService = taxonomyService;
             Log = NullLogger.Instance;
@@ -69,6 +72,7 @@ namespace Laser.Orchard.ContentExtension.Services {
             _contentTypePermissionSettingsService = contentTypePermissionSettingsService;
             _orchardServices = orchardServices;
             _roleService = roleService;
+            _dumperHandlers = dumperHandlers;
         }
 
         #region [Content Permission]
@@ -317,20 +321,31 @@ namespace Laser.Orchard.ContentExtension.Services {
                 dynamic subobject = TheContentItem.Parts.Where(x => x.PartDefinition.Name == ListProperty[0]).FirstOrDefault();
                 if (subobject == null)
                     throw new Exception("Part " + ListProperty[0] + " not exist");
-                Int32 numparole = ListProperty.Count();
-                for (int i = 1; i < numparole; i++) {
-                    string property = ListProperty[i];
-                    if (i != numparole - 1)
-                        subobject = subobject.GetType().GetProperty(property);
-                    else {
-                        try { // é una proprietà
-                            subobject.GetType().GetProperty(property).SetValue(subobject, Convert.ChangeType(value, subobject.GetType().GetProperty(property).PropertyType), null);
-                            // potrei ancora tentare di scrivere direttamente con
-                            // subobject.GetType().GetProperty(property).SetValue(subobject, value, null);
-                        } catch { // é un field della parte
-                            List<ContentPart> lcp = new List<ContentPart>();
-                            lcp.Add((ContentPart)subobject);
-                            StoreInspectExpandoFields(lcp, property, value, TheContentItem);
+
+                bool done = false;
+                foreach(var dumper in _dumperHandlers) {
+                    if(dumper.StoreLikeDynamic(subobject.ContentItem, ListProperty, value)) {
+                        done = true;
+                    }
+                }
+
+                if(done == false) {
+                    // fallback if no suitable dumperHandler was found
+                    Int32 numparole = ListProperty.Count();
+                    for (int i = 1; i < numparole; i++) {
+                        string property = ListProperty[i];
+                        if (i != numparole - 1)
+                            subobject = subobject.GetType().GetProperty(property);
+                        else {
+                            try { // é una proprietà
+                                subobject.GetType().GetProperty(property).SetValue(subobject, Convert.ChangeType(value, subobject.GetType().GetProperty(property).PropertyType), null);
+                                // potrei ancora tentare di scrivere direttamente con
+                                // subobject.GetType().GetProperty(property).SetValue(subobject, value, null);
+                            } catch { // é un field della parte
+                                List<ContentPart> lcp = new List<ContentPart>();
+                                lcp.Add((ContentPart)subobject);
+                                StoreInspectExpandoFields(lcp, property, value, TheContentItem);
+                            }
                         }
                     }
                 }
