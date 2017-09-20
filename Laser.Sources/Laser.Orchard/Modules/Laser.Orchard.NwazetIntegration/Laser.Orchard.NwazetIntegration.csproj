@@ -107,6 +107,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AddressesController.cs" />
     <Compile Include="Drivers\NwazetContactPartDriver.cs" />
+    <Compile Include="Features\NwazetIntegrationFeature.cs" />
     <Compile Include="Handlers\NwazetContactPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\NwazetContactPart.cs" />
