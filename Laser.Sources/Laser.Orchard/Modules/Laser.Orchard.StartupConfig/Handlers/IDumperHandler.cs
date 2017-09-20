@@ -15,6 +15,6 @@ namespace Laser.Orchard.StartupConfig.Handlers {
         /// <param name="listProperty">Array of segments of a property, usually [part_name, field_name]</param>
         /// <param name="value">Value to set on item property</param>
         /// <returns>True if item was handled, false otherwise</returns>
-        bool StoreLikeDynamic(ContentItem item, string[] listProperty, object value);
+        void StoreLikeDynamic(ContentItem item, string[] listProperty, object value);
     }
 }

@@ -10,6 +10,15 @@ using System.Linq;
 using System.Web.Hosting;
 using System.Collections.Generic;
 using Orchard.Localization;
+using Orchard.Fields.Settings;
+using Orchard.ContentManagement;
+using Orchard.ContentPicker.Fields;
+using Orchard.MediaLibrary.Fields;
+using Orchard.Taxonomies.Fields;
+using Orchard.Fields.Fields;
+using Orchard.Taxonomies.Models;
+using Orchard.Localization.Models;
+using Orchard.Taxonomies.Services;
 
 namespace Laser.Orchard.StartupConfig.Services {
 
@@ -39,6 +48,14 @@ namespace Laser.Orchard.StartupConfig.Services {
         void UpdateStereotypesPermissions(IEnumerable<PermissionStereotype> stereotypes);
 
         Response GetResponse(ResponseType rsptype, string message = "", dynamic data = null);
+        /// <summary>
+        /// Set values on a field in a content item.
+        /// </summary>
+        /// <param name="listpart"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="theContentItem"></param>
+        void StoreInspectExpandoFields(List<ContentPart> listpart, string key, object value, ContentItem theContentItem);
     }
 
     public class UtilsServices : IUtilsServices {
@@ -50,10 +67,12 @@ namespace Laser.Orchard.StartupConfig.Services {
         private readonly string _virtualMediaPath; // ~/Media/Default/
         private readonly string _publicMediaPath; // /Orchard/Media/Default/
         private readonly IRoleService _roleService;
+        private readonly ITaxonomyService _taxonomyService;
 
-        public UtilsServices(IModuleService moduleService, ShellSettings settings, IRoleService roleService) {
+        public UtilsServices(IModuleService moduleService, ShellSettings settings, IRoleService roleService, ITaxonomyService taxonomyService) {
             _moduleService = moduleService;
             _roleService = roleService;
+            _taxonomyService = taxonomyService;
 
             var mediaPath = HostingEnvironment.IsHosted
                                 ? HostingEnvironment.MapPath("~/Media/") ?? ""
@@ -216,6 +235,140 @@ namespace Laser.Orchard.StartupConfig.Services {
                     }
                 }
             }
+        }
+        public void StoreInspectExpandoFields(List<ContentPart> listpart, string key, object value, ContentItem theContentItem) {
+            var fields = listpart.SelectMany(x => x.Fields.Where(f => f.Name == key));
+            if (fields != null) {
+                var fieldObj = fields.FirstOrDefault();
+                if (fieldObj != null) {
+                    // provo a registrare il dato in uno dei fields
+                    // non posso fare questo
+                    //      fieldObj.GetType().GetProperty("Value").SetValue(fieldObj, value, null);
+                    // perchè non regge il tipo nullabile
+                    string tipofield = fieldObj.GetType().Name;
+                    if (tipofield == typeof(EnumerationField).Name) {
+                        RegistraValoreEnumerator(fieldObj, "SelectedValues", value);
+                    } else
+                        if (tipofield == typeof(DateTimeField).Name) {
+                        RegistraValore(fieldObj, "DateTime", value);
+                    } else {
+                        if (tipofield == typeof(ContentPickerField).Name || tipofield == typeof(MediaLibraryPickerField).Name) {
+                            RegistraValoreContentPickerField(fieldObj, "Ids", value);
+                        } else {
+                            if (tipofield == typeof(TaxonomyField).Name) {
+                                var taxobase = _taxonomyService.GetTaxonomyByName(fieldObj.PartFieldDefinition.Settings["TaxonomyFieldSettings.Taxonomy"]);
+
+                                List<TaxoVM> second = ConvertToVM((List<dynamic>)value);
+
+                                List<Int32> ElencoCategorie = second.Select(x => x.Id).ToList();
+                                List<TermPart> ListTermPartToAdd = new List<TermPart>();
+                                if (_taxonomyService.GetTerm(ElencoCategorie.FirstOrDefault()) == null && ElencoCategorie.Count > 0)
+                                    throw new Exception("Field " + key + " Taxonomy term with id=" + ElencoCategorie[0].ToString() + " not exist");
+                                else {
+                                    // Se l'elenco delle categorie è nullo salta questa parte e aggiorna
+                                    if (_taxonomyService.GetTerm(ElencoCategorie.FirstOrDefault()) != null) {
+                                        var taxo_sended_user = _taxonomyService.GetTaxonomy(_taxonomyService.GetTerm(ElencoCategorie.FirstOrDefault()).TaxonomyId);
+
+                                        foreach (Int32 idtermine in ElencoCategorie) {
+                                            TermPart termine_selezionato = taxo_sended_user.Terms.Where(x => x.Id == idtermine).FirstOrDefault();
+
+                                            #region [ Tassonomia in Lingua ]
+
+                                            if (theContentItem.As<LocalizationPart>() == null || theContentItem.ContentType == "User") { // se il contenuto non ha localization oppure è user salvo il mastercontent del termine
+                                                Int32 idmaster = 0;
+                                                if (termine_selezionato.ContentItem.As<LocalizationPart>() == null) {
+                                                    idmaster = termine_selezionato.ContentItem.Id;
+                                                } else if (termine_selezionato.ContentItem.As<LocalizationPart>().MasterContentItem == null)
+                                                    idmaster = termine_selezionato.ContentItem.As<LocalizationPart>().Id;
+                                                else
+                                                    idmaster = termine_selezionato.ContentItem.As<LocalizationPart>().MasterContentItem.Id;
+                                                TermPart toAdd = taxobase.Terms.Where(x => x.Id == idmaster).FirstOrDefault();
+                                                if (toAdd == null)
+                                                    toAdd = taxobase.Terms.Where(x => x.ContentItem.As<LocalizationPart>().MasterContentItem.Id == idmaster).FirstOrDefault();
+                                                ListTermPartToAdd.Add(toAdd);
+                                            } else { // se il contenuto ha localization e non è user salvo il termine come mi viene passato
+                                                     // TODO: testare pertinenza della lingua Contenuto in italianao=>termine in italiano
+                                                TermPart toAdd = termine_selezionato;
+                                                ListTermPartToAdd.Add(toAdd);
+                                            }
+
+                                            #endregion [ Tassonomia in Lingua ]
+                                        }
+                                    }
+                                }
+                                _taxonomyService.UpdateTerms(theContentItem, ListTermPartToAdd, fieldObj.Name);
+                            } else {
+                                RegistraValore(fieldObj, "Value", value);
+                            }
+                        }
+                    }
+                } else {
+                    //provo a registrare il dato nella proprieta del current user
+                    if (!(key.IndexOf(".") > 0) && key.ToLower() != "contenttype" && key.ToLower() != "id" && key.ToLower() != "language") {
+                        throw new Exception("Field " + key + " not in contentitem");
+                    }
+                }
+            } else {
+                //provo a registrare il dato nella proprieta del current user
+                if (!(key.IndexOf(".") > 0) && key.ToLower() != "contenttype" && key.ToLower() != "id" && key.ToLower() != "language") {
+                    throw new Exception("Field " + key + " not in contentitem");
+                }
+            }
+        }
+        private void RegistraValoreEnumerator(object obj, string key, object value) {
+            ListMode listmode = ((dynamic)obj).PartFieldDefinition.Settings.GetModel<EnumerationFieldSettings>().ListMode;
+            if (listmode != ListMode.Listbox && listmode != ListMode.Checkbox) {
+                key = "Value";
+            }
+            var property = obj.GetType().GetProperty(key);
+            if (property != null) {
+                Type t = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                //   ListMode listmode = ((dynamic)obj).PartFieldDefinition.Settings.GetModel<EnumerationFieldSettings>().ListMode;
+                if (listmode != ListMode.Listbox && listmode != ListMode.Checkbox) {
+                    try {
+                        if (((dynamic)value).Count == 1) {
+                            value = ((dynamic)value)[0];
+                        }
+                    } catch { }
+                    RegistraValore(obj, key, value);
+                } else {
+                    if (t.Name == "String[]") { // caso di enumerationfield con multivalue
+                        object safeValue = (value == null) ? null : ((List<object>)value).Select(x => x.ToString()).ToArray();
+                        property.SetValue(obj, safeValue, null);
+                    }
+                }
+            }
+        }
+
+        private void RegistraValore(object obj, string key, object value) {
+            // non posso fare questo
+            //      fieldObj.GetType().GetProperty("Value").SetValue(fieldObj, value, null);
+            // perchè non regge il tipo nullabile
+            var property = obj.GetType().GetProperty(key);
+            if (property != null) {
+                Type t = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
+                property.SetValue(obj, safeValue, null);
+            }
+        }
+
+        private void RegistraValoreContentPickerField(object obj, string key, object value) {
+            // Convert ha varie implementazioni e non sa castare il tipo correttamente
+            var property = obj.GetType().GetProperty(key);
+            if (property != null) {
+                Type t = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                object safeValue = (value == null) ? null : Convert.ChangeType(((List<object>)value).Select(x => Convert.ToInt32(x)).ToArray(), t);
+                property.SetValue(obj, safeValue, null);
+            }
+        }
+        private List<TaxoVM> ConvertToVM(List<dynamic> obj) {
+            List<TaxoVM> listatvm = new List<TaxoVM>();
+            foreach (dynamic el in obj) {
+                TaxoVM newel = new TaxoVM();
+                newel.Id = Convert.ToInt32(el);
+                listatvm.Add(newel);
+            }
+            return listatvm;
         }
     }
 }

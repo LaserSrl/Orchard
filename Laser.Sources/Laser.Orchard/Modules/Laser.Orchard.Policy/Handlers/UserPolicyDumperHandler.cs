@@ -15,8 +15,7 @@ namespace Laser.Orchard.Policy.Handlers {
         public UserPolicyDumperHandler(IPolicyServices policyServices) {
             _policyServices = policyServices;
         }
-        public bool StoreLikeDynamic(ContentItem item, string[] listProperty, object value) {
-            bool result = false;
+        public void StoreLikeDynamic(ContentItem item, string[] listProperty, object value) {
             var part = item.As<UserPolicyPart>();
             if (part != null) {
                 if (listProperty.Length == 2) {
@@ -31,12 +30,10 @@ namespace Laser.Orchard.Policy.Handlers {
                                 });
                             }
                             _policyServices.PolicyForItemMassiveUpdate(newValues, item);
-                            result = true;
                         }
                     }
                 }
             }
-            return result;
         }
     }
 }
