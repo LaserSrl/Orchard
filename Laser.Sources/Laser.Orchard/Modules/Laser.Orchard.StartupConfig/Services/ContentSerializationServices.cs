@@ -4,8 +4,11 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Fields;
 using Orchard.Fields.Fields;
+using Orchard.Localization.Models;
+using Orchard.Localization.Services;
 using Orchard.Projections.Services;
 using Orchard.Taxonomies.Fields;
+using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using System;
 using System.Collections;
@@ -25,6 +28,7 @@ namespace Laser.Orchard.StartupConfig.Services {
         private readonly IOrchardServices _orchardServices;
         private readonly IProjectionManager _projectionManager;
         private readonly ITaxonomyService _taxonomyService;
+        private readonly ILocalizationService _localizationService;
 
         private readonly string[] _skipAlwaysProperties;
         private readonly string _skipAlwaysPropertiesEndWith;
@@ -41,10 +45,12 @@ namespace Laser.Orchard.StartupConfig.Services {
         private List<string> processedItems;
 
         public ContentSerializationServices(IOrchardServices orchardServices,
-            IProjectionManager projectionManager, ITaxonomyService taxonomyService) {
+            IProjectionManager projectionManager, ITaxonomyService taxonomyService,
+            ILocalizationService localizationService) {
             _orchardServices = orchardServices;
             _projectionManager = projectionManager;
             _taxonomyService = taxonomyService;
+            _localizationService = localizationService;
 
             _skipAlwaysProperties = new string[] { "ContentItemRecord", "ContentItemVersionRecord" };
             _skipAlwaysPropertiesEndWith =  "Proxy" ;
@@ -180,7 +186,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                 .Where(cp => !cp.PartDefinition.Name.Contains("`") && !_skipPartNames.Contains(cp.PartDefinition.Name)
                 );
             foreach (var part in parts) {
-                jsonProps.Add(SerializePart(part, actualLevel + 1));
+                jsonProps.Add(SerializePart(part, actualLevel + 1, item));
             }
 
             jsonItem = new JProperty(item.ContentType,
@@ -190,7 +196,7 @@ namespace Laser.Orchard.StartupConfig.Services {
             return jsonItem;
         }
 
-        private JProperty SerializePart(ContentPart part, int actualLevel) {
+        private JProperty SerializePart(ContentPart part, int actualLevel, ContentItem item = null) {
             // ciclo sulle properties delle parti
             var properties = part.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(prop =>
                 !_skipPartTypes.Contains(prop.Name) //skip 
@@ -213,7 +219,7 @@ namespace Laser.Orchard.StartupConfig.Services {
 
             //// now add the fields to the json object....
             foreach (var contentField in part.Fields) {
-                var fieldObject = SerializeField(contentField, actualLevel);
+                var fieldObject = SerializeField(contentField, actualLevel, item);
                 partObject.Add(fieldObject);
             }
 
@@ -228,7 +234,44 @@ namespace Laser.Orchard.StartupConfig.Services {
             }
         }
 
-        private JProperty SerializeField(ContentField field, int actualLevel) {
+        private void SerializeTaxonomyField(TaxonomyField taxoField, int actualLevel, ref JObject fieldObject, ContentItem item) {
+            var localizationPart = item?.As<LocalizationPart>();
+            fieldObject.Add("Terms", JToken.FromObject(taxoField.Terms.Select(x => x.Id).ToList()));
+            var taxo = taxoField.PartFieldDefinition.Settings["TaxonomyFieldSettings.Taxonomy"];
+            var taxoPart = _taxonomyService.GetTaxonomyByName(taxo);
+            if (localizationPart != null && localizationPart.Culture != null) {
+                var taxoLocalization = taxoPart.ContentItem?.As<LocalizationPart>();
+                if (taxoLocalization != null && taxoLocalization.Culture != null) {
+                    if (localizationPart.Culture.Culture != taxoLocalization.Culture.Culture) {
+                        //try to find the correctly localized taxonomy
+                        taxoPart = _localizationService
+                          .GetLocalizedContentItem(taxoPart.ContentItem, localizationPart.Culture.Culture)
+                          ?.ContentItem?.As<TaxonomyPart>() ?? taxoPart;
+                    }
+                }
+            }
+            JArray arr = new JArray();
+            fieldObject.Add("Taxonomy", arr);
+            foreach (var term in taxoPart.Terms) {
+                CustomTermPart customTermPart = new CustomTermPart {
+                    Id = term.Id,
+                    Name = term.Name,
+                    Path = term.Path,
+                    Selectable = term.Selectable,
+                    Slug = term.Slug
+                };
+                JToken jObj = JToken.FromObject(customTermPart);
+                arr.Add(jObj);
+                var contentPartList = term.ContentItem.Parts.Where(x => (x.GetType().Name == "ContentPart") && (x.PartDefinition.Name == term.ContentItem.TypeDefinition.Name)); // part aggiunta da Orchard per contenere i fields diretti
+                foreach (var contentPart in contentPartList) {
+                    foreach (var innerField in contentPart.Fields) {
+                        jObj.Last.AddAfterSelf(SerializeField(innerField, actualLevel));
+                    }
+                }
+            }
+        }
+
+        private JProperty SerializeField(ContentField field, int actualLevel, ContentItem item = null) {
             var fieldObject = new JObject();
             if (field.FieldDefinition.Name == "EnumerationField") {
                 var enumField = (EnumerationField)field;
@@ -237,49 +280,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                 fieldObject.Add("Options", JToken.FromObject(options));
                 fieldObject.Add("SelectedValues", JToken.FromObject(selected));
             } else if (field.FieldDefinition.Name == "TaxonomyField") {
-                var taxoField = (TaxonomyField)field;
-                fieldObject.Add("Terms", JToken.FromObject(taxoField.Terms.Select(x => x.Id).ToList()));
-                var taxo = taxoField.PartFieldDefinition.Settings["TaxonomyFieldSettings.Taxonomy"];
-                var taxoPart = _taxonomyService.GetTaxonomyByName(taxo);
-                JArray arr = new JArray();
-                fieldObject.Add("Taxonomy", arr);
-                foreach (var term in taxoPart.Terms) {
-                    CustomTermPart customTermPart = new CustomTermPart {
-                        Id = term.Id,
-                        Name = term.Name,
-                        Path = term.Path,
-                        Selectable = term.Selectable,
-                        Slug = term.Slug
-                    };
-                    JToken jObj = JToken.FromObject(customTermPart);
-                    arr.Add(jObj);
-                    var contentPartList = term.ContentItem.Parts.Where(x => (x.GetType().Name == "ContentPart") && (x.PartDefinition.Name == term.ContentItem.TypeDefinition.Name)); // part aggiunta da Orchard per contenere i fields diretti
-                    foreach (var contentPart in contentPartList) {
-                        foreach (var innerField in contentPart.Fields) {
-                            jObj.Last.AddAfterSelf(SerializeField(innerField, actualLevel));
-                        }
-                    }
-                }
-            //} else if (field.FieldDefinition.Name == "BooleanField") {
-            //    var properties = field.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(prop =>
-            //        !_skipFieldTypes.Contains(prop.Name) //skip 
-            //        );
-
-            //    foreach (var property in properties) {
-            //        try {
-            //            if (!_skipFieldProperties.Contains(property.Name)) {
-            //                object val = property.GetValue(field, BindingFlags.GetProperty, null, null, null);
-            //                if (property.Name == "Value") { //handle the case where the value is set to null, by setting the value to default
-            //                    val = val ?? false;
-            //                }
-            //                if (val != null) {
-            //                    PopulateJObject(ref fieldObject, property, val, _skipFieldProperties, actualLevel);
-            //                }
-            //            }
-            //        } catch {
-
-            //        }
-            //    }
+                SerializeTaxonomyField((TaxonomyField)field, actualLevel, ref fieldObject, item);
             }
             else if (field.FieldDefinition.Name == "NumericField") {
                 var numericField = field as NumericField;
