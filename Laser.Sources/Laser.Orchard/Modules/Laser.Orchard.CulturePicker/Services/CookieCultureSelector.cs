@@ -47,13 +47,18 @@ namespace Laser.Orchard.CulturePicker.Services {
                 return null;
             }
 
-            if (context.Request.Url != null && context.Request.Url.IsDefaultPort) {
+            if (UseSubdomainCookie(context)) {
                 // '.' prefix means, that cookie will be shared to sub-domains
                 cultureCookie.Domain = "." + context.Request.Url.Host;
             }
 
             string currentCultureName = cultureCookie[CurrentCultureFieldName];
             return String.IsNullOrEmpty(currentCultureName) ? null : new CultureSelectorResult {Priority = SelectorPriority, CultureName = currentCultureName};
+        }
+
+        private bool UseSubdomainCookie(HttpContextBase context) {
+            //TODO: write an actual implementation based, e.g., on a site setting
+            return false;
         }
 
         #endregion
