@@ -30,17 +30,21 @@ namespace Laser.Orchard.Questionnaires.Settings {
         public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(
             ContentTypePartDefinitionBuilder builder,
             IUpdateModel updateModel) {
-            if (builder.Name != "GamePart") yield break;
+
+            if (builder.Name != "GamePart")
+                yield break;
+
             var model = new GamePartSettingVM();
-            updateModel.TryUpdateModel(model, "GamePartSettingVM", null, null);
-            builder.WithSetting("GamePartSettingVM.Ranking",
-            ((Boolean)model.Ranking).ToString());
-            builder.WithSetting("GamePartSettingVM.SendEmail",
-            ((Boolean)model.SendEmail).ToString());
-            builder.WithSetting("GamePartSettingVM.template",
-           ((int)model.Template).ToString());
-            builder.WithSetting("GamePartSettingVM.EmailRecipe",
-           ((string)model.EmailRecipe).ToString());
+            if (updateModel.TryUpdateModel(model, "GamePartSettingVM", null, null)) {
+                builder.WithSetting("GamePartSettingVM.Ranking",
+                    model.Ranking.ToString());
+                builder.WithSetting("GamePartSettingVM.SendEmail",
+                    model.SendEmail.ToString());
+                builder.WithSetting("GamePartSettingVM.template",
+                    model.Template.ToString());
+                builder.WithSetting("GamePartSettingVM.EmailRecipe",
+                    model.EmailRecipe ?? string.Empty);
+            }
         }
     }
 }

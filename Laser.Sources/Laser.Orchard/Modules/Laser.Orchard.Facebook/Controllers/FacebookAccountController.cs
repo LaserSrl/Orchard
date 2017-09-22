@@ -187,22 +187,14 @@ namespace Laser.Orchard.Facebook.Controllers {
                     app_id, Request.Url.AbsoluteUri, scope, Request["code"].ToString(), app_secret);
 
                 HttpWebRequest request = System.Net.WebRequest.Create(url) as HttpWebRequest;
-
+                string access_token = "";
                 using (HttpWebResponse response = request.GetResponse() as HttpWebResponse) {
                     StreamReader reader = new StreamReader(response.GetResponseStream());
-
                     string vals = reader.ReadToEnd();
-
-                    foreach (string token in vals.Split('&')) {
-                        tokens.Add(token.Substring(0, token.IndexOf("=")),
-                            token.Substring(token.IndexOf("=") + 1, token.Length - token.IndexOf("=") - 1));
-                    }
+                    var json = JObject.Parse(vals);
+                    if ((json["access_token"]).Type != JTokenType.Null)
+                         access_token =( json["access_token"]??"").ToString();
                 }
-
-                string access_token = tokens["access_token"];
-
-
-
                 var client = new FacebookClient(access_token);
 
                 //  FacebookPostSettingPart getpart = _orchardServices.WorkContext.CurrentSite.As<FacebookPostSettingPart>();
