@@ -343,18 +343,4 @@ namespace Laser.Orchard.StartupConfig.Services {
                 return false;
         }
     }
-    public class TaxoVM {
-        public TaxoVM() {
-            testo = "";
-            valore = "";
-            flag = false;
-            child = new List<TaxoVM>();
-        }
-        public Int32 Id { get; set; }
-        public string testo { get; set; }
-        public string valore { get; set; }
-        public bool flag { get; set; }
-        public List<TaxoVM> child { get; set; }
-    }
-
 }

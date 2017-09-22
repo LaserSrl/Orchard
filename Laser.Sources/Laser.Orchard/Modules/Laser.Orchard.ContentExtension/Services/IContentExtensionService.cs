@@ -147,7 +147,7 @@ namespace Laser.Orchard.ContentExtension.Services {
                     if (kvp.Value is ExpandoObject) {
                         StoreInspectExpando(kvp.Value as ExpandoObject, theContentItem);
                     }
-                    _utilsServices.StoreInspectExpandoFields(theContentItem.Parts.ToList(), key, value, theContentItem);
+                    _utilsServices.StoreInspectExpandoFields(theContentItem.Parts.ToList(), key, value);
                 }
             } catch (Exception ex) {
                 Log.Error("ContentExtension -> ContentExtensionService -> StoreInspectExpando : " + ex.Message + " <Stack> " + ex.StackTrace);
@@ -188,18 +188,5 @@ namespace Laser.Orchard.ContentExtension.Services {
             else
                 return false;
         }
-    }
-
-    public class TaxoVM {
-        public TaxoVM() {
-            testo = "";
-            valore = "";
-            child = new List<TaxoVM>();
-        }
-
-        public Int32 Id { get; set; }
-        public string testo { get; set; }
-        public string valore { get; set; }
-        public List<TaxoVM> child { get; set; }
     }
 }

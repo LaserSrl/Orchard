@@ -34,7 +34,7 @@ namespace Laser.Orchard.ContentExtension.Handlers {
                     try {
                         List<ContentPart> lcp = new List<ContentPart>();
                         lcp.Add((ContentPart)subobject);
-                        _utilsServices.StoreInspectExpandoFields(lcp, property, value, item);
+                        _utilsServices.StoreInspectExpandoFields(lcp, property, value);
                     } catch {
                         // ignora volutamente eventuali errori
                     }
