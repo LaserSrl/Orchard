@@ -61,7 +61,7 @@ namespace Contrib.Widgets.Controllers {
         public ActionResult ListWidgets(int hostId, string zone) {
             var widgetTypes = _widgetsService.GetWidgetTypeNames().OrderBy(x => x).ToList();
 
-            var widgetsContainerPart = _contentManager.Get(hostId).As<WidgetsContainerPart>();
+            var widgetsContainerPart = _contentManager.Get(hostId, VersionOptions.Latest).As<WidgetsContainerPart>();
             var settings = widgetsContainerPart.Settings.GetModel<WidgetsContainerSettings>();
 
             if (!string.IsNullOrWhiteSpace(settings.AllowedWidgets))
