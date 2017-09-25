@@ -11,13 +11,14 @@ namespace Laser.Orchard.AppDirect.Driver {
     public class AppDirectButtonDriver : ContentPartDriver<AppDirectButtonPart> {
         private readonly IOrchardServices _orchardServices;
         private readonly IAppDirectCommunication _appDirectCommunication;
-        public Localizer T { get; set; }
+        
         public AppDirectButtonDriver(IOrchardServices orchardServices,
             IAppDirectCommunication appDirectCommunication) {
             T = NullLocalizer.Instance;
             _orchardServices = orchardServices;
             _appDirectCommunication = appDirectCommunication;
         }
+        public Localizer T { get; set; }
         protected override string Prefix {
             get { return "Laser.Orchard.AppDirect.AppDirectButtonPart"; }
         }

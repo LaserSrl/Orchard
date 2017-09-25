@@ -141,6 +141,7 @@
     <Compile Include="Driver\AppDirectButtonDriver.cs" />
     <Compile Include="Driver\AppDirectSettingsDriver.cs" />
     <Compile Include="Driver\AppDirectUserDriver.cs" />
+    <Compile Include="Handlers\AppDirectTaskScheduleHandler.cs" />
     <Compile Include="Handlers\AppDirectSettingsHandler.cs" />
     <Compile Include="Handlers\AppDirectUserHandler.cs" />
     <Compile Include="Migration.cs" />
