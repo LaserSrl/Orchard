@@ -1,7 +1,6 @@
 ﻿@using Orchard.UI.Resources;
 @using Orchard.MediaLibrary.Fields;
 @using Orchard.ContentManagement;
-
 @{
     var themeBasePath = Url.Content(Html.ThemePath(WorkContext.CurrentTheme, ""));
     var latitude = Model.ContentItem.MapPart.Latitude.ToString(System.Globalization.CultureInfo.InvariantCulture);
@@ -10,6 +9,7 @@
     var locationsList = new List<string>();
     var masterMapSourceFile = (MediaLibraryPickerField)((Laser.Orchard.Maps.Models.MapPart)Model.ContentItem.MapPart).Fields.SingleOrDefault(w => w.Name == "MapSourceFile");
     var masterMediaUrl = "";
+	Script.Include("https://maps.googleapis.com/maps/api/js?v=3.exp").AtHead();
     if (masterMapSourceFile != null && masterMapSourceFile.Ids.Length > 0 && masterMapSourceFile.MediaParts != null && masterMapSourceFile.MediaParts.Count() > 0) {
         masterMediaUrl = ((Orchard.MediaLibrary.Models.MediaPart)masterMapSourceFile.MediaParts.FirstOrDefault()).MediaUrl;
     }
