@@ -14,6 +14,7 @@ using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Users.Events;
 using Orchard.Workflows.Services;
+using Orchard.Tasks.Scheduling;
 
 namespace Laser.Orchard.AppDirect.Controllers {
     public class SubscriptionController : Controller {
@@ -26,8 +27,8 @@ namespace Laser.Orchard.AppDirect.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IAppDirectCommunication _appDirectCommunication;
         private readonly IRepository<AppDirectSettingsRecord> _repoSetting;
-
-        public Localizer T { get; set; }
+        private readonly IScheduledTaskManager _scheduledTaskManager;
+    
 
         public SubscriptionController(
             IMembershipService membershipService,
@@ -37,7 +38,9 @@ namespace Laser.Orchard.AppDirect.Controllers {
             IWorkflowManager workflowManager,
             IOrchardServices orchardServices,
             IAppDirectCommunication appDirectCommunication,
-            IRepository<AppDirectSettingsRecord> repoSetting) {
+            IRepository<AppDirectSettingsRecord> repoSetting,
+            IScheduledTaskManager scheduledTaskManager) {
+            _scheduledTaskManager = scheduledTaskManager;
             _appDirectCommunication = appDirectCommunication;
             _orchardServices = orchardServices;
             _workflowManager = workflowManager;
@@ -49,7 +52,7 @@ namespace Laser.Orchard.AppDirect.Controllers {
             _contentManager = contentManager;
             _repoSetting = repoSetting;
         }
-
+        public Localizer T { get; set; }
         private static string GetAuthorizationHeaderValue(string Authorization, string key) {
             var value = "";
             var pieces = Authorization.Split(new[] { " oauth_" }, StringSplitOptions.RemoveEmptyEntries);
@@ -181,7 +184,7 @@ namespace Laser.Orchard.AppDirect.Controllers {
             string outresponse;
             if (_appDirectCommunication.MakeRequestToAppdirect(str, Method.GET, "", key, out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
                 var contentitem = CreateContentItemRequest(outresponse, RequestState.ToCreate, key);
-                _workflowManager.TriggerEvent("SubscriptionEvent", contentitem, () => new Dictionary<string, object> { { "Content", contentitem }, { "Action", "Create" } });
+                _scheduledTaskManager.CreateTask("Laser.Orchard.AppDirect.Task", DateTime.UtcNow.AddMinutes(1), contentitem);
                 Response.StatusCode = 202; //async
                 var dataResponse = new { success = "true" };
                 return Json((object)dataResponse, JsonRequestBehavior.AllowGet);
@@ -210,7 +213,7 @@ namespace Laser.Orchard.AppDirect.Controllers {
             string outresponse;
             if (_appDirectCommunication.MakeRequestToAppdirect(str, Method.GET, "", key, out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
                 var contentitem = CreateContentItemRequest(outresponse, RequestState.ToModify, key);
-                _workflowManager.TriggerEvent("SubscriptionEvent", contentitem, () => new Dictionary<string, object> { { "Content", contentitem }, { "Action", "Edit" } });
+                _scheduledTaskManager.CreateTask("Laser.Orchard.AppDirect.Task", DateTime.UtcNow.AddMinutes(1), contentitem);
                 Response.StatusCode = 202; //async
                 var dataResponse = new { success = "true" };
                 return Json((object)dataResponse, JsonRequestBehavior.AllowGet);
@@ -237,7 +240,7 @@ namespace Laser.Orchard.AppDirect.Controllers {
             string outresponse;
             if (_appDirectCommunication.MakeRequestToAppdirect(str, Method.GET, "", key, out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
                 var contentitem = CreateContentItemRequest(outresponse, RequestState.ToCancel, key);
-                _workflowManager.TriggerEvent("SubscriptionEvent", contentitem, () => new Dictionary<string, object> { { "Content", contentitem }, { "Action", "Cancel" } });
+                _scheduledTaskManager.CreateTask("Laser.Orchard.AppDirect.Task", DateTime.UtcNow.AddMinutes(1), contentitem);
                 Response.StatusCode = 202; //async
                 var dataResponse = new { success = "true" };
                 return Json((object)dataResponse, JsonRequestBehavior.AllowGet);
@@ -263,7 +266,7 @@ namespace Laser.Orchard.AppDirect.Controllers {
             string outresponse;
             if (_appDirectCommunication.MakeRequestToAppdirect(str, Method.GET, "", key, out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
                 var contentitem = CreateContentItemRequest(outresponse, RequestState.ToAssignUser, key);
-                _workflowManager.TriggerEvent("SubscriptionEvent", contentitem, () => new Dictionary<string, object> { { "Content", contentitem }, { "Action", "AssignUser" } });
+                _scheduledTaskManager.CreateTask("Laser.Orchard.AppDirect.Task", DateTime.UtcNow.AddMinutes(1), contentitem);
                 Response.StatusCode = 202; //async
                 var dataResponse = new { success = "true" };
                 return Json((object)dataResponse, JsonRequestBehavior.AllowGet);
@@ -289,7 +292,7 @@ namespace Laser.Orchard.AppDirect.Controllers {
             string outresponse;
             if (_appDirectCommunication.MakeRequestToAppdirect(str, Method.GET, "", key, out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
                 var contentitem = CreateContentItemRequest(outresponse, RequestState.ToUnAssignUser, key);
-                _workflowManager.TriggerEvent("SubscriptionEvent", contentitem, () => new Dictionary<string, object> { { "Content", contentitem }, { "Action", "UnAssignUser" } });
+                _scheduledTaskManager.CreateTask("Laser.Orchard.AppDirect.Task", DateTime.UtcNow.AddMinutes(1), contentitem);
                 Response.StatusCode = 202; //async
                 var dataResponse = new { success = "true" };
                 return Json((object)dataResponse, JsonRequestBehavior.AllowGet);
@@ -315,7 +318,7 @@ namespace Laser.Orchard.AppDirect.Controllers {
             string outresponse;
             if (_appDirectCommunication.MakeRequestToAppdirect(str, Method.GET, "", key, out outresponse, "", "") && !string.IsNullOrEmpty(outresponse)) {
                 var contentitem = CreateContentItemRequest(outresponse, RequestState.Status, key);
-                _workflowManager.TriggerEvent("SubscriptionEvent", contentitem, () => new Dictionary<string, object> { { "Content", contentitem }, { "Action", "Status" } });
+                _scheduledTaskManager.CreateTask("Laser.Orchard.AppDirect.Task", DateTime.UtcNow.AddMinutes(1), contentitem);
                 Response.StatusCode = 200; //NOT async
                 var dataResponse = new { success = "true" };
                 return Json((object)dataResponse, JsonRequestBehavior.AllowGet);
