@@ -580,7 +580,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                 _orchardServices.WorkContext.TryResolve<IPolicyServices>(out policyServices);
                 if(policyServices != null) {
                     var policyList = new List<PolicyForUserViewModel>();
-                    foreach (var policy in srcPolicy.UserPolicyAnswers) {
+                    var srcAnswers = policyServices.GetPolicyAnswersForContent(srcPolicy.Id);
+                    foreach (var policy in srcAnswers) {
                         policyList.Add(new PolicyForUserViewModel {
                             PolicyTextId = policy.PolicyTextInfoPartRecord.Id,
                             Accepted = policy.Accepted,

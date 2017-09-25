@@ -36,6 +36,7 @@ namespace Laser.Orchard.Policy.Services {
         List<PolicyHistoryViewModel> GetPolicyHistoryForUser(int userId);
         string PoliciesLMNVSerialization(IEnumerable<PolicyTextInfoPart> policies);
         string PoliciesPureJsonSerialization(IEnumerable<PolicyTextInfoPart> policies);
+        IEnumerable<UserPolicyAnswersRecord> GetPolicyAnswersForContent(int contentId);
     }
 
     public class PolicyServices : IPolicyServices {
@@ -162,6 +163,11 @@ namespace Laser.Orchard.Policy.Services {
                         //date and user should be updated only if it is a new record, or the answer has actually changed
                         record.AnswerDate = (shouldCreateRecord || oldAnswer != viewModel.Accepted) ? DateTime.UtcNow : record.AnswerDate;
                         if(shouldCreateRecord || oldAnswer != viewModel.Accepted) {
+                            if (currentUserPartRecord == null && viewModel.UserId.HasValue) {
+                                // utilizza il valore del viewModel
+                                var userPart = _contentManager.Get<UserPart>(viewModel.UserId.Value);
+                                currentUserPartRecord = (userPart == null) ? null : userPart.Record;
+                            }
                             record.UserPartRecord = currentUserPartRecord;
                         }
                         record.Accepted = viewModel.Accepted;
@@ -451,6 +457,10 @@ namespace Laser.Orchard.Policy.Services {
             recordForHistory.UserPolicyPartRecord = originalRecord.UserPolicyPartRecord;
             recordForHistory.UserPartRecord = originalRecord.UserPartRecord;
             return recordForHistory;
+        }
+        public IEnumerable<UserPolicyAnswersRecord> GetPolicyAnswersForContent(int contentId) {
+            var answers = _userPolicyAnswersRepository.Fetch(x => x.UserPolicyPartRecord.Id == contentId);
+            return answers.ToList();
         }
     }
 }
