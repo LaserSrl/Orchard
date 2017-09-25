@@ -35,7 +35,9 @@
     </fieldset>
 
 }
-
+@if (Model.Option.Campaign.Id > 0 && !contentIsActive) {
+    <div class="message message-Warning">@T("The campaign '{0}' is no more active. You will not be able to Add new advertsing.", Model.Option.Campaign.TitlePart.Title)</div>
+}
 <fieldset class="contentItems bulk-items">
     <ul>
 
