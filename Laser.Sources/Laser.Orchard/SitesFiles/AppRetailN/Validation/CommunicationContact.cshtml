@@ -1,0 +1,38 @@
+﻿@using Laser.Orchard.CommunicationGateway.Models;
+@using Laser.Orchard.StartupConfig.Models;
+@using Orchard.Data;
+@*@using Orchard.Localization.Records;
+@using Orchard.Localization.Services;
+@using Orchard.Projections.Models;
+@using Orchard.Projections.Services;*@
+@using Orchard.ContentManagement;
+@using System;
+@using System.Linq;
+@functions{
+    string retstring = "";
+    IRepository<CommunicationEmailRecord> _emailRepository;
+    IRepository<CommunicationSmsRecord> _smsRepository;
+}
+@{
+    _smsRepository = Model.OrchardServices.WorkContext.Resolve<IRepository<CommunicationSmsRecord>>();
+    _emailRepository = Model.OrchardServices.WorkContext.Resolve<IRepository<CommunicationEmailRecord>>();
+    dynamic communicationContact = Model.ContentItem;
+
+    string email = (string)communicationContact.ContactInfoPart.EmailInfo.Value;
+    string prefisso = (string)communicationContact.ContactInfoPart.PrefissotelefonicoInfo.Value;
+    if (string.IsNullOrWhiteSpace(prefisso)) {
+        prefisso = "+39"; // default value
+    }
+    string telefono = (string)communicationContact.ContactInfoPart.NumerotelefonicoInfo.Value;
+    int contactid = communicationContact.Id;
+
+    var emailRecord = _emailRepository.Fetch(x => x.Email == email && x.EmailContactPartRecord_Id != contactid).FirstOrDefault();
+    if (emailRecord != null) {
+        retstring = "e-mail non univoca";
+    }
+
+    var smsRecord = _smsRepository.Fetch(x => x.Prefix == prefisso && x.Sms == telefono && x.SmsContactPartRecord_Id != contactid).FirstOrDefault();
+    if (smsRecord != null) {
+        retstring = "Telefono non univoco";
+    }
+}@retstring
