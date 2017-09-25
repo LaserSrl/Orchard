@@ -20,6 +20,7 @@ using Orchard.Localization.Records;
 using Orchard.Localization.Services;
 using Orchard.Security;
 using OrchardNS = Orchard;
+using Orchard.Users.Models;
 
 namespace Laser.Orchard.Policy.Services {
     public interface IPolicyServices : IDependency {
@@ -97,6 +98,7 @@ namespace Laser.Orchard.Policy.Services {
                         AnswerDate = answer != null ? answer.AnswerDate : DateTime.MinValue,
                         OldAccepted = answer != null ? answer.Accepted : false,
                         Accepted = answer != null ? answer.Accepted : false,
+                        UserId = (answer != null && answer.UserPartRecord != null) ? (int?)answer.UserPartRecord.Id : null
                     };
                 }).ToList();
             }
@@ -111,6 +113,7 @@ namespace Laser.Orchard.Policy.Services {
                         AnswerDate = answer != null ? answer.AnswerDate : DateTime.MinValue,
                         OldAccepted = answer != null ? answer.Accepted : false,
                         Accepted = answer != null ? answer.Accepted : false,
+                        UserId = answer != null ? answer.UserId : null
                     };
                 }).ToList();
             }
@@ -127,6 +130,14 @@ namespace Laser.Orchard.Policy.Services {
 
         public void PolicyForItemUpdate(PolicyForUserViewModel viewModel, ContentItem item) {
             UserPolicyAnswersRecord record = null;
+            var currentUser = _workContext.GetContext().CurrentUser;
+            UserPartRecord currentUserPartRecord = null;
+            if(currentUser != null) {
+                currentUserPartRecord = currentUser.ContentItem.As<UserPart>().Record;
+            } else if (item.ContentType == "User") {
+                // in fase di registrazione di un nuovo utente
+                currentUserPartRecord = item.As<UserPart>().Record;
+            }
 
             // Recupero la risposta precedente, se esiste
             if (viewModel.AnswerId > 0)
@@ -148,8 +159,11 @@ namespace Laser.Orchard.Policy.Services {
                         }
                         UserPolicyAnswersHistoryRecord recordForHistory = CopyForHistory(record);
 
-                        //date should be updated only if it is a new record, or the answer has actually changed
+                        //date and user should be updated only if it is a new record, or the answer has actually changed
                         record.AnswerDate = (shouldCreateRecord || oldAnswer != viewModel.Accepted) ? DateTime.UtcNow : record.AnswerDate;
+                        if(shouldCreateRecord || oldAnswer != viewModel.Accepted) {
+                            record.UserPartRecord = currentUserPartRecord;
+                        }
                         record.Accepted = viewModel.Accepted;
                         record.UserPolicyPartRecord = item.As<UserPolicyPart>().Record;
                         record.PolicyTextInfoPartRecord = policyText;
@@ -313,7 +327,6 @@ namespace Laser.Orchard.Policy.Services {
 
         public List<PolicyHistoryViewModel> GetPolicyHistoryForUser(int userId) {
             List<PolicyHistoryViewModel> policyHistory = new List<PolicyHistoryViewModel>();
-            
             var currentAnswers = _userPolicyAnswersRepository.Table.Where(w => w.UserPolicyPartRecord.Id == userId);
             var oldAnswers = _userPolicyAnswersHistoryRepository.Table.Where(w => w.UserPolicyPartRecord.Id == userId);
 
@@ -326,7 +339,8 @@ namespace Laser.Orchard.Policy.Services {
                         PolicyType = s.PolicyTextInfoPartRecord.PolicyType,
                         Accepted = s.Accepted,
                         AnswerDate = s.AnswerDate,
-                        EndValidity = null
+                        EndValidity = null,
+                        UserName = (s.UserPartRecord != null)? s.UserPartRecord.UserName : ""
                     };
                 else
                     return null;
@@ -341,7 +355,8 @@ namespace Laser.Orchard.Policy.Services {
                         PolicyType = s.PolicyTextInfoPartRecord.PolicyType,
                         Accepted = s.Accepted,
                         AnswerDate = s.AnswerDate,
-                        EndValidity = s.EndValidity
+                        EndValidity = s.EndValidity,
+                        UserName = (s.UserPartRecord != null)? s.UserPartRecord.UserName : ""
                     };
                 else
                     return null;
@@ -434,7 +449,7 @@ namespace Laser.Orchard.Policy.Services {
             recordForHistory.EndValidity = DateTime.UtcNow.AddSeconds(-1);
             recordForHistory.PolicyTextInfoPartRecord = originalRecord.PolicyTextInfoPartRecord;
             recordForHistory.UserPolicyPartRecord = originalRecord.UserPolicyPartRecord;
-
+            recordForHistory.UserPartRecord = originalRecord.UserPartRecord;
             return recordForHistory;
         }
     }

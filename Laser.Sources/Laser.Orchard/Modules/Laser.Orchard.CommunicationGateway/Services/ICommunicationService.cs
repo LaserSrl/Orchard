@@ -584,7 +584,8 @@ namespace Laser.Orchard.CommunicationGateway.Services {
                         policyList.Add(new PolicyForUserViewModel {
                             PolicyTextId = policy.PolicyTextInfoPartRecord.Id,
                             Accepted = policy.Accepted,
-                            AnswerDate = policy.AnswerDate
+                            AnswerDate = policy.AnswerDate,
+                            UserId = (policy.UserPartRecord == null) ? null : (int?)policy.UserPartRecord.Id
                         });
                     }
                     policyServices.PolicyForItemMassiveUpdate(policyList, dest);
