@@ -7,6 +7,7 @@ using Orchard.UI.Admin;
 namespace Laser.Orchard.CulturePicker.Services {
     public class CookieCultureSelector : ICultureSelector {
         private readonly IOrchardServices _orchardServices;
+        private readonly ICulturePickerServices _cpServices;
         public const string CultureCookieName = "cultureData";
         public const string CurrentCultureFieldName = "currentCulture";
         public const int SelectorPriority = -2; //priority is higher than SiteCultureSelector priority (-5), But lower than ContentCultureSelector (0) 
@@ -15,9 +16,12 @@ namespace Laser.Orchard.CulturePicker.Services {
         private bool _isEvaluated;
 
         #region ICultureSelector Members
-        public CookieCultureSelector(IOrchardServices orchardServices) {
+        public CookieCultureSelector(
+            IOrchardServices orchardServices,
+            ICulturePickerServices cpServices) {
+
             _orchardServices = orchardServices;
-            
+            _cpServices = cpServices;
         }
 
         public CultureSelectorResult GetCulture(HttpContextBase context) {
@@ -47,13 +51,13 @@ namespace Laser.Orchard.CulturePicker.Services {
                 return null;
             }
 
-            if (UseSubdomainCookie(context)) {
-                // '.' prefix means, that cookie will be shared to sub-domains
-                cultureCookie.Domain = "." + context.Request.Url.Host;
+            string currentCultureName = cultureCookie[CurrentCultureFieldName];
+            if (String.IsNullOrEmpty(currentCultureName)) {
+                return null;
             }
 
-            string currentCultureName = cultureCookie[CurrentCultureFieldName];
-            return String.IsNullOrEmpty(currentCultureName) ? null : new CultureSelectorResult {Priority = SelectorPriority, CultureName = currentCultureName};
+            _cpServices.SaveCultureCookie(currentCultureName, context);
+            return new CultureSelectorResult { Priority = SelectorPriority, CultureName = currentCultureName };
         }
 
         private bool UseSubdomainCookie(HttpContextBase context) {
