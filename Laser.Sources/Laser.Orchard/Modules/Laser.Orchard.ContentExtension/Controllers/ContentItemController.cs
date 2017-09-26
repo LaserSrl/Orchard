@@ -27,7 +27,6 @@ using Orchard.Taxonomies.Services;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using System.Web.Http;
@@ -129,7 +128,6 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             }
             else
                 return _utilsServices.GetResponse(ResponseType.None, T("No content with this Id").ToString());
-            //return (_utilsServices.GetResponse(ResponseType.Success));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
         }
 
         /// <summary>
@@ -140,13 +138,6 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         /// <param name="Language"></param>
         /// <returns></returns>
         public dynamic Get(string ContentType, string Language = "it-IT") {
-            // _authorizationService.TryCheckAccess(Core.Contents.Permissions.EditOwnContent, UserSimulation.Create(x), null) })
-
-            //var currentUser = _authenticationService.GetAuthenticatedUser();
-            //if (currentUser == null){
-            //       return (_utilsServices.GetResponse(ResponseType.InvalidUser));// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
-            //}
-            //   var aa = _contentDefinitionManager.ListTypeDefinitions().Where(x => x.DisplayName.Contains("eport"));
             ContentTypeDefinition contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(ContentType);
             if (contentTypeDefinition == null) {
                 Response resp = new Response() {
@@ -161,7 +152,6 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             #region Tutti i field
 
             foreach (ContentTypePartDefinition ctpd in contentTypeDefinition.Parts) {
-                // var fields = contentTypeDefinition.Parts.SelectMany(x => x.PartDefinition.Fields).ToList();
                 var fields = ctpd.PartDefinition.Fields.ToList();
                 string tipofield = "";
                 foreach (ContentPartFieldDefinition singleField in fields) {
@@ -255,8 +245,6 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         }
 
         private class ResponseElement {
-
-            //     public object Default { get; set; }
             public object Values { get; set; }
 
             public ResponseSetting Setting { get; set; }
@@ -378,10 +366,10 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         public Response Post(ExpandoObject eObj) {
             var currentUser = _orchardServices.WorkContext.CurrentUser;
             if (currentUser == null)
-                return StoreNewContentItem(eObj, null);
+                return StoreNewContentItem(eObj);
             else
                 if (_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
-                return StoreNewContentItem(eObj, currentUser.ContentItem);
+                return StoreNewContentItem(eObj);
             }
             else
                 return (_utilsServices.GetResponse(ResponseType.InvalidXSRF));// { Message = "Invalid Token/csrfToken", Success = false, ErrorCode=ErrorCode.InvalidXSRF,ResolutionAction=ResolutionAction.Login });
@@ -395,10 +383,9 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         /// <param name="eObj"></param>
         /// <param name="TheContentItem"></param>
         /// <returns></returns>
-        private Response StoreNewContentItem(ExpandoObject eObj, ContentItem TheContentItem = null) {
+        private Response StoreNewContentItem(ExpandoObject eObj) {
             string tipoContent = ((dynamic)eObj).ContentType;
             Int32 IdContentToModify = 0; // new content
-            // NewContent.As<TitlePart>.Title = "Creazione";
             try {
                 if ((Int32)(((dynamic)eObj).Id) > 0) {
                     IdContentToModify = (Int32)(((dynamic)eObj).Id);
@@ -424,10 +411,6 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     else {
                         NewOrModifiedContent = _orchardServices.ContentManager.Get(IdContentToModify, VersionOptions.Latest);
                     }
-                    //if (li.Count() == 1)
-                    //    NewOrModifiedContent = li[0];
-                    //else
-                    //    NewOrModifiedContent = _orchardServices.ContentManager.Get(IdContentToModify, VersionOptions.DraftRequired); // quando edito estraggo sempre il draftrequired (come in Orchard.Core.Contents.Controllers)
                 }
                 if (!_orchardServices.Authorizer.Authorize(OrchardCore.Contents.Permissions.EditContent, NewOrModifiedContent))
                     if (!_contentExtensionService.HasPermission(tipoContent, Methods.Post, NewOrModifiedContent))
@@ -460,16 +443,10 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                         NewOrModifiedContent.As<LocalizationPart>().MasterContentItem = NewOrModifiedContent;
                     }
                     validateMessage = ValidateMessage(NewOrModifiedContent, "");
-                    if (string.IsNullOrEmpty(validateMessage)) {
-                        //    _orchardServices.ContentManager.Create(NewOrModifiedContent, VersionOptions.DraftRequired);
-                    }
-                    else {
+                    if (string.IsNullOrEmpty(validateMessage) == false) {
                         rsp = _utilsServices.GetResponse(ResponseType.None, validateMessage);
                     }
                     if (NewOrModifiedContent.As<AutoroutePart>() != null) {
-                        //           ((dynamic)NewOrModifiedContent).AutoroutePart.DisplayAlias = _autorouteService.Value.GenerateAlias(((dynamic)NewOrModifiedContent).AutoroutePart);
-                        //           _autorouteService.Value.ProcessPath(((dynamic)NewOrModifiedContent).AutoroutePart);
-                        //           _autorouteService.Value.PublishAlias(((dynamic)NewOrModifiedContent).AutoroutePart);
                         dynamic data = new ExpandoObject();
                         data.DisplayAlias = ((dynamic)NewOrModifiedContent).AutoroutePart.DisplayAlias;
                         data.Id = (Int32)(((dynamic)NewOrModifiedContent).Id);
@@ -481,14 +458,6 @@ namespace Laser.Orchard.ContentExtension.Controllers {
                     rsp = _utilsServices.GetResponse(ResponseType.None, ex.Message);
                 }
             }
-            //   else {
-            //try {
-            //    _orchardServices.ContentManager.Remove(NewOrModifiedContent);
-            //}
-            //catch (Exception ex2) {
-            //    rsp = _utilsServices.GetResponse(ResponseType.None, ex2.Message);
-            //}
-            //      }
             if (!rsp.Success)
                 _transactionManager.Cancel();
             else {
@@ -515,7 +484,6 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             return rsp;
         }
 
-        //public event EventHandler ExternalContentCreated;
         private string ValidateMessage(ContentItem ci, string postfix) {
             string validate_folder = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSettings.Name + @"\Validation\";
             if (!System.IO.Directory.Exists(validate_folder))
@@ -534,51 +502,6 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             }
             return null;
         }
-
-        private bool TryValidate(ContentItem ci) {
-            //var context = new ValidationContext(ci.Parts.FirstOrDefault(), serviceProvider: null, items: null);
-            //var results = new List<ValidationResult>();
-            //var isValid = Validator.TryValidateObject(ci.Parts.FirstOrDefault(), context, results);
-            //if (!isValid)
-            //    return false;
-            //else
-            return true;
-        }
-
         #endregion private method
     }
-
-    //internal class MyIReferenceResolver : IReferenceResolver {
-    //    //public string FindLoaded(IEnumerable<string> refs, string find) {
-    //    //    return refs.First(r => r.EndsWith(System.IO.Path.DirectorySeparatorChar + find));
-    //    //}
-    //    public IEnumerable<CompilerReference> GetReferences(TypeContext context, IEnumerable<CompilerReference> includeAssemblies) {
-    //        return new[]{
-    //             CompilerReference.From(HostingEnvironment.MapPath("~/")+  @"bin\Orchard.Framework.dll")
-    //            //CompilerReference.From(HostingEnvironment.MapPath("~/")+  @"App_Data\Dependencies\Orchard.dll")
-    //                    };
-    //        // TypeContext gives you some context for the compilation (which templates, which namespaces and types)
-
-    //        // You must make sure to include all libraries that are required!
-    //        // Mono compiler does add more standard references than csc!
-    //        // If you want mono compatibility include ALL references here, including mscorlib!
-    //        // If you include mscorlib here the compiler is called with /nostdlib.
-    //        //IEnumerable<string> loadedAssemblies = (new UseCurrentAssembliesReferenceResolver())
-    //        //    .GetReferences(context, includeAssemblies)
-    //        //    .Select(r => r.GetFile())
-    //        //    .ToArray();
-
-    //        //    yield return CompilerReference.From(FindLoaded(loadedAssemblies, "mscorlib.dll"));
-    //        //    yield return CompilerReference.From(FindLoaded(loadedAssemblies, "System.dll"));
-    //        //      yield return CompilerReference.From(FindLoaded(loadedAssemblies, "System.Core.dll"));
-    //        //     yield return CompilerReference.From(typeof(MyIReferenceResolver).Assembly); // Assembly
-
-    //        // There are several ways to load an assembly:
-    //        //yield return CompilerReference.From("Path-to-my-custom-assembly"); // file path (string)
-    //        //byte[] assemblyInByteArray = --- Load your assembly ---;
-    //        //yield return CompilerReference.From(assemblyInByteArray); // byte array (roslyn only)
-    //        //string assemblyFile = --- Get the path to the assembly ---;
-    //        //yield return CompilerReference.From(File.OpenRead(assemblyFile)); // stream (roslyn only)
-    //    }
-    //}
 }

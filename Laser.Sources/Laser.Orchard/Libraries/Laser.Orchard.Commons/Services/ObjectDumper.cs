@@ -54,7 +54,7 @@ namespace Laser.Orchard.Commons.Services {
             _contentRendered = new List<ContentFlags>();
             if (tinyResponse) {
                 _skipParts = new string[]{"CommonPart", "Version","LocalizationPart","Storage", "Taxonomy",
-                             "Ids","LayerPart","CommentsPart","QrCodePart","MobilePushPart","InfosetPart","FieldIndexPart","IdentityPart","UserPart","UserPart","UserPolicyPart",
+                             "Ids","LayerPart","CommentsPart","QrCodePart","MobilePushPart","InfosetPart","FieldIndexPart","IdentityPart","UserPart",
                              "UserRolesPart", "AdminMenuPart", "MenuPart", "TermsPart","FieldStorageEventStorage","ButtonToWorkflowsPart" };
             } else {
                 _skipParts = new string[]{

@@ -170,6 +170,7 @@
     <Compile Include="Controllers\ContentItemController.cs" />
     <Compile Include="Controllers\UploadFileController.cs" />
     <Compile Include="Drivers\DynamicProjectionPartDriver.cs" />
+    <Compile Include="Handlers\DefaultPartDumperHandler.cs" />
     <Compile Include="Handlers\DynamicProjectionPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\DynamicProjectionPart.cs" />

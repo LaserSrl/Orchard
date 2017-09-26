@@ -45,7 +45,7 @@ namespace Laser.Orchard.CommunicationGateway.Handlers {
                 _communicationService.RemoveMailsAndSms(part.Id);
                 _contactEventHandler.ContactRemoved(part.Id);
             });
-
+            OnUpdated<CommunicationContactPart>((context, part) => _communicationService.ContactToUser(part.ContentItem));
             #endregion sync user profile
         }
 
