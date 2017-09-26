@@ -15,7 +15,7 @@
         int[] idsDipendenti = ((dynamic)store).Store.StoreAssistants.Ids;
         List<int> idsUsers = new List<int>();
         dynamic dipendente = null;
-        foreach(int id in idsDipendenti) {
+        foreach (int id in idsDipendenti) {
             dipendente = _contentManager.Get(id);
             idsUsers.Add(Convert.ToInt32(dipendente.Dipendente.UserID.Value));
         }
@@ -35,7 +35,7 @@
         dynamic mittente = null;
         int idMittente = 0;
         var checkMittente = richiesta.RichiestaProdotto.StoreMittente.Ids;
-        if(checkMittente.Length > 0) {
+        if (checkMittente.Length > 0) {
             idMittente = checkMittente[0];
         } else {
             idMittente = dUsr.ProfilePart.Store.Ids[0];
@@ -73,9 +73,13 @@
                 retString = "Rifiutata";
                 Model.Tokens["Workflow"].SetState("UserIdToNotify", idOwner.ToString());
                 break;
+            default:
+                eMsg += string.Format("\r\nStato '{0}' non riconosciuto.", status);
+                Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+                break;
         }
     } catch (Exception ex) {
-        eMsg += string.Format("\r\n{0}", ex.Message);
+        eMsg += string.Format("\r\n(test) {0}", ex.Message);
         Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
     }
 }@retString

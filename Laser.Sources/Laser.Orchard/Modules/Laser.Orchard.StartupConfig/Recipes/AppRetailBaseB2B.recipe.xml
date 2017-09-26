@@ -1714,6 +1714,7 @@
         <Transition SourceActivityId="219" SourceEndpoint="Rifiutata" DestinationActivityId="231" DestinationEndpoint="" />
         <Transition SourceActivityId="232" SourceEndpoint="Done" DestinationActivityId="227" DestinationEndpoint="" />
         <Transition SourceActivityId="233" SourceEndpoint="Done" DestinationActivityId="219" DestinationEndpoint="" />
+        <Transition SourceActivityId="230" SourceEndpoint="Done" DestinationActivityId="219" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Unpublish Richieste Prodotto" Enabled="true">
