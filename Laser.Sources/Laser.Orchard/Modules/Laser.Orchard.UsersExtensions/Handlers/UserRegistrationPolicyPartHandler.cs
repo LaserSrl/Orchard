@@ -51,6 +51,7 @@ namespace Laser.Orchard.UsersExtensions.Handlers {
                             Accepted = answers.Split(',').Contains(x.PolicyId.ToString()),
                             AnswerDate = DateTime.MinValue, // verrà automaticamente valorizzata in fase di salvataggio
                             OldAccepted = false
+                            // non valorizza UserId in caso di nuove policy perché viene valorizzato dal metodo che le salva
                         }).ToList();
                         _policyServices.PolicyForUserMassiveUpdate(updateModel, (IUser)context.ContentItem.As<UserPart>());
                         _controllerAccessor.Context.Controller.TempData["VolatileAnswers"] = null;

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Laser.Orchard.Policy.Models;
+using Orchard.Users.Models;
 
 namespace Laser.Orchard.Policy.Models {
     public class UserPolicyAnswersRecord {
@@ -11,6 +8,7 @@ namespace Laser.Orchard.Policy.Models {
         public virtual PolicyTextInfoPartRecord PolicyTextInfoPartRecord { get; set; }
         public virtual DateTime AnswerDate { get; set; }
         public virtual bool Accepted { get; set; }
+        public virtual UserPartRecord UserPartRecord { get; set; }
     }
 
     public class UserPolicyAnswersHistoryRecord {
@@ -20,5 +18,6 @@ namespace Laser.Orchard.Policy.Models {
         public virtual DateTime AnswerDate { get; set; }
         public virtual DateTime EndValidity { get; set; }
         public virtual bool Accepted { get; set; }
+        public virtual UserPartRecord UserPartRecord { get; set; }
     }
 }

@@ -19,6 +19,7 @@
                 <th>@T("Policy Text")</th>
                 <th>@T("Accepted")</th>
                 <th>@T("Answer date")</th>
+                <th>@T("User")</th>
             </tr>
         </thead>
         <tbody>
@@ -48,6 +49,7 @@
                             }
                         }</td>
                     <td>@item.AnswerDate</td>
+                    <td>@item.UserPartRecord.UserName</td>
                 </tr>
                 }
             }

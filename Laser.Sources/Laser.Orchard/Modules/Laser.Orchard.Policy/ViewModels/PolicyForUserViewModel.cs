@@ -37,7 +37,7 @@ namespace Laser.Orchard.Policy.ViewModels {
         public DateTime AnswerDate { get; set; }
         public bool OldAccepted { get; set; }
         public bool Accepted { get; set; }
-    
+        public int? UserId { get; set; }
     }
 
     public class PolicyHistoryViewModel {
@@ -47,5 +47,6 @@ namespace Laser.Orchard.Policy.ViewModels {
         public bool Accepted { get; set; }
         public DateTime AnswerDate { get; set; }
         public DateTime? EndValidity { get; set; }
+        public string UserName { get; set; }
     }
 }

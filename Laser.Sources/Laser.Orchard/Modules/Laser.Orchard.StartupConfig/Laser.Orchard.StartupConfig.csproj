@@ -258,6 +258,7 @@
     <Compile Include="Drivers\MaintenancePartDriver.cs" />
     <Compile Include="Drivers\PublishExtensionPartDriver.cs" />
     <Compile Include="Handlers\DisplayTextPartHandler.cs" />
+    <Compile Include="Handlers\IDumperHandler.cs" />
     <Compile Include="Models\AuthenticationRequiredPart.cs" />
     <Compile Include="Models\DisplayTextPart.cs" />
     <Compile Include="Models\DisplayTextPartSettings.cs" />
