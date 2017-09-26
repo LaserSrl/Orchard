@@ -45,8 +45,11 @@
         // get store destinatario
         int idDestinatario = richiesta.RichiestaProdotto.StoreDestinatario.Ids[0];
         dynamic destinatario = _contentManager.Get(idDestinatario);
+        // get product
+        int idProdotto = richiesta.RichiestaProdotto.Prodotto.Ids[0];
+        dynamic prodotto = _contentManager.Get(idProdotto);
         // set title of richiesta
-        richiesta.TitlePart.Title = string.Format("Richiesta di {0} {1}", dUsr.ProfilePart.Cognome.Value, dUsr.ProfilePart.Nome.Value);
+        richiesta.TitlePart.Title = string.Format("Richiesta {0}", prodotto.TitlePart.Title);
         richiesta.VersionRecord.Published = false;
         _contentManager.Publish(richiesta);
         // get status
