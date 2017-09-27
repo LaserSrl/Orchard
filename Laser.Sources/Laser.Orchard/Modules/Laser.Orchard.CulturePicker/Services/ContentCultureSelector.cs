@@ -71,21 +71,14 @@ namespace Laser.Orchard.CulturePicker.Services {
                 return null;
             }
 
-            int routeId = Convert.ToInt32(routeValueDictionary["Id"]);
+            int routeId = Convert.ToInt32(routeValueDictionary["Id"]); //Convert.ToInt32(null) == 0
             if (routeId == 0) {
                 routeId = Convert.ToInt32(routeValueDictionary["blogId"]); //forse è un blog?
-            } if (routeId == 0) {
-
             }
 
             ContentItem content = _orchardServices.ContentManager.Get(routeId, VersionOptions.Published);
             if (content == null) {
                 return null;
-            }
-
-            var autoroute = content.As<AutoroutePart>();
-            if (autoroute != null && autoroute.PromoteToHomePage) {
-                return null; //do not handle home page here, because it is a special kind of content
             }
 
             //NOTE: we can't use ILocalizationService.GetContentCulture for this, because it causes circular dependency

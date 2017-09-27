@@ -203,6 +203,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{43B44FB0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.SEO.Tests", "Modules\Laser.Orchard.SEO\Laser.Orchard.SEO.Tests\Laser.Orchard.SEO.Tests.csproj", "{F8D22E0E-539F-4579-8B72-B33386E63676}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nwazet.Commerce.Tests", "..\..\Nwazet.Commerce\Nwazet.Commerce.Tests\Nwazet.Commerce.Tests.csproj", "{F33D9F18-B69D-4512-A6A9-3D4E585ACE01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -565,6 +567,9 @@ Global
 		{314EC563-FE70-443C-BCBC-77D3051A62C8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F8D22E0E-539F-4579-8B72-B33386E63676}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F8D22E0E-539F-4579-8B72-B33386E63676}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F33D9F18-B69D-4512-A6A9-3D4E585ACE01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F33D9F18-B69D-4512-A6A9-3D4E585ACE01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F33D9F18-B69D-4512-A6A9-3D4E585ACE01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -660,5 +665,6 @@ Global
 		{10A94642-E871-483B-A7A7-3881BDAF171F} = {142C1A4D-CD11-419D-88CE-ED97548901AA}
 		{314EC563-FE70-443C-BCBC-77D3051A62C8} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{F8D22E0E-539F-4579-8B72-B33386E63676} = {43B44FB0-ECDC-4552-8D02-302983E0AC0A}
+		{F33D9F18-B69D-4512-A6A9-3D4E585ACE01} = {43B44FB0-ECDC-4552-8D02-302983E0AC0A}
 	EndGlobalSection
 EndGlobal
