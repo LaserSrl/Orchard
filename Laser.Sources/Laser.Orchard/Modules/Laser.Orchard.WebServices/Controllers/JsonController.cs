@@ -302,6 +302,10 @@ namespace Laser.Orchard.WebServices.Controllers {
                 if (!_orchardServices.Authorizer.Authorize(Permissions.ViewContent, item))
                     return Json(UnauthorizedResponse(), JsonRequestBehavior.AllowGet);
 
+                if(item == null) {
+                    return new HttpStatusCodeResult(404);
+                }
+
                 ContentResult cr = (ContentResult)GetContent(item, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel, complexBehaviour.Split(','));
                 //    Logger.Error("Fine:"+DateTime.Now.ToString());
 
