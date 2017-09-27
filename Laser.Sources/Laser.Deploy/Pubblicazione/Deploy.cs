@@ -87,9 +87,15 @@ namespace Pubblicazione {
             }
             foreach (var a in this.clbModules.CheckedItems) {
                 DirectoryInfo parentDir = Directory.GetParent(elencoModuli[a.ToString()]);
-                //  ProcessXcopy(parentDir.FullName + @"\*.*", deploypath + @"\Modules\" + a.ToString());
-                ProcessXcopy(parentDir.Parent.FullName + @"\*" + a.ToString() + ".dll", deploypath + @"\Modules\");
-                ProcessXcopy(parentDir.Parent.Parent.FullName + @"\Themes\*" + a.ToString() + ".dll", deploypath + @"\Themes\");
+                var modulesPath = parentDir.Parent.FullName;
+                var themesPath = parentDir.Parent.Parent.FullName + @"\Themes";
+                if (modulesPath == Directory.GetParent(basepath).FullName) {
+                    modulesPath += @"\Laser.Sources\Laser.Orchard";
+                    themesPath = modulesPath + @"\Themes";
+                    modulesPath += @"\Modules";
+                }
+                ProcessXcopy(modulesPath + @"\*" + a.ToString() + ".dll", deploypath + @"\Modules\");
+                ProcessXcopy(themesPath + @"\*" + a.ToString() + ".dll", deploypath + @"\Themes\");
                 progressstep++;
                 bw.ReportProgress(100 * progressstep / totaleprogress);
                 Thread.Sleep(100);
