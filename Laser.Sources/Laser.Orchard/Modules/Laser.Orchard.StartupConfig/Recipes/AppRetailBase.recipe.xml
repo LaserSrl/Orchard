@@ -29,7 +29,6 @@
            Laser.Orchard.CulturePicker, 
            Laser.Orchard.DevTools, 
            Laser.Orchard.Events, 
-           Laser.Orchard.Generator, 
            Laser.Orchard.GoogleAnalytics, 
            Laser.Orchard.HiddenFields, 
            Laser.Orchard.InsertStuff, 
