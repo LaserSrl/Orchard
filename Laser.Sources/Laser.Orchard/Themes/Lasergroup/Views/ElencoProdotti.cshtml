@@ -22,7 +22,7 @@
             <div class="text-center">
                 <div class="space-20" ></div>
                 <div id="load-showcase-div-button">
-                    <a id="load_showcase" class="btn btn-primary" href="laser.orchard.webservices/webapi/display">@T("Show more showcases")</a>
+                    <a id="load_showcase" class="btn btn-primary" href="@Url.Action("display", "webapi", new { area = "Laser.Orchard.webservices"})">@T("Show more showcases")</a>
                     <div id="load_posts_loader"></div>
                 </div>         
             </div>

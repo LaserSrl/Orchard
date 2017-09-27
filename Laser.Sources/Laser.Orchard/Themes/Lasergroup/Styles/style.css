@@ -353,7 +353,7 @@ body.navbar-fixed.home{ padding-top:95px; }
 @media(max-width:991px){ 
     #intro{ padding:40px 0; }
 }
-#main-menu-home{ position:absolute; bottom:25px; left:0; width:100%; z-index:1031; background: rgba(255,255,255,0.6);}
+#main-menu-home{ position:absolute; bottom:25px; left:0; width:90%; z-index:1031; background: rgba(255,255,255,0.6); margin: 0 100px;}
 body.navbar-fixed #main-menu-home{ position:fixed; top:35px; height:45px; background: none;}
 
 
