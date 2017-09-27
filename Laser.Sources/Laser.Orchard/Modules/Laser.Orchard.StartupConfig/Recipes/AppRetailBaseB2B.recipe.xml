@@ -36,7 +36,8 @@
            Laser.Orchard.jQueryPlugins, 
            Laser.Orchard.Maps, 
            Laser.Orchard.Mobile, 
-           Laser.Orchard.OpenAuthentication, 
+           Laser.Orchard.OpenAuthentication,
+           Laser.Orchard.OpenAuthentication.AppDirect,
            Laser.Orchard.Policy, 
            Laser.Orchard.PushGateway, 
            Laser.Orchard.Queries, 
@@ -282,7 +283,7 @@
         <IdentityPart />
       </ConfigurazioneAppStore>
       <ConfigurazioneBase ContentTypeSettings.Creatable="False" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" DisplayName="Configurazione Base">
-        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;config/base&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;config/base&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <ConfigurazioneBase />
         <IdentityPart />
@@ -1505,7 +1506,6 @@
     </Taxonomy>
   </Content>
   <CurrentTheme id="KrakeDefaultTheme" />
-  <HomeAlias Id="/alias=home" />
   <Roles>
     <Role Name="Administrator" Permissions="ManageSettings,ManageUsers,ApplyTheme,PublishContent,EditContent,DeleteContent,PreviewContent,ManageMenus,ManageRoles,AssignRoles,SetHomePage,ManageFeatures,SiteOwner,AccessAdminPanel,ManageWidgets,ManageTaxonomies,ManageQueries,ViewContentTypes,EditContentTypes,ManageComments,AddComment,ManageMediaContent,ManageTags,ManageBlogs,ManageLayouts,ViewProfiles,ConfigureGoogleAnalytics,SeesAllContent,UserQuery,ManageAssociations,Import,Export,ManageCampaigns,ManageCommunicationAdv,ManageContact,ShowMenuCommunication,PublishCommunicationAdv,AccessStatistics,GameRanking,MayEditHiddenFields,MaySeeHiddenFields" />
     <Role Name="Anonymous" Permissions="ViewContent,AccessFrontEnd,AddComment,ManageOwnMedia" />
