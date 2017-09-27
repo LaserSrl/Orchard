@@ -19,7 +19,7 @@
     <div>
         <select multiple="multiple" name="@Html.FieldNameFor(m => m.List)" id="@Html.FieldIdFor(m => m.List)" style="min-width:300px;">
             @foreach (var button in items) {
-                <option value="{@button.Id}" @(selectedItems.Contains("{" + button.Id + "}") ? "selected=\"selected\"" : "")>
+                <option value="{@button.Guid}" @(selectedItems.Contains("{" + button.Guid + "}") ? "selected=\"selected\"" : "")>
                     @(button.ButtonName + " (" + button.ButtonDescription + ")")
                 </option>
             }

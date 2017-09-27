@@ -49,6 +49,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
                             ButtonDescription = s.ButtonDescription,
                             ButtonMessage = s.ButtonMessage,
                             ButtonAsync = s.ButtonAsync,
+                            Guid = s.Guid,
                             Delete = false
                         });
                     else

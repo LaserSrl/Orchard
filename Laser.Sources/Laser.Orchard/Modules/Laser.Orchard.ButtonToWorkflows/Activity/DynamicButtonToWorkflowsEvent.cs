@@ -27,14 +27,17 @@ namespace Laser.Orchard.ButtonToWorkflows.Activity {
 
         public override bool CanExecute(WorkflowContext workflowContext, ActivityContext activityContext) {
             try {
+                // Recupero il bottone associato all'evento
                 var buttonSelected = activityContext.GetState<string>("DynamicButton");
 
+                // Verifico che all'evento sia effettivamente associato un bottone e di avere le informazioni sul bottone cliccato nel workflowContext
                 if (!string.IsNullOrWhiteSpace(buttonSelected) && workflowContext.Tokens.ContainsKey("ButtonName")) {
+                    // Recupero il bottone che è stato cliccato. Se esiste, ne ottengo il Guid e lo confronto con quello del bottone selezionato.
                     var clickedButtonName = workflowContext.Tokens["ButtonName"].ToString();
 
                     if (!string.IsNullOrWhiteSpace(clickedButtonName)) {
-                        var clickedButtonId = _dynamicButtonToWorkflowsService.GetButtons().Where(w => w.ButtonName == clickedButtonName).Select(s => s.Id).FirstOrDefault();
-                        return clickedButtonId.ToString() == buttonSelected;
+                        var clickedButtonGuid = _dynamicButtonToWorkflowsService.GetButtons().Where(w => w.ButtonName == clickedButtonName).Select(s => s.Guid).FirstOrDefault();
+                        return clickedButtonGuid.ToString() == buttonSelected;
                     }
                 }
 
