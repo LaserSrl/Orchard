@@ -15,6 +15,9 @@ using Orchard.Security;
 using Orchard.Users.Events;
 using Orchard.Workflows.Services;
 using Orchard.Tasks.Scheduling;
+using DotNetOpenAuth.OpenId.RelyingParty;
+using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration;
+using System.Linq;
 
 namespace Laser.Orchard.AppDirect.Controllers {
     public class SubscriptionController : Controller {
@@ -27,8 +30,9 @@ namespace Laser.Orchard.AppDirect.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IAppDirectCommunication _appDirectCommunication;
         private readonly IRepository<AppDirectSettingsRecord> _repoSetting;
+        private readonly IRepository<UserTenantRecord> _repoUserTenant;
         private readonly IScheduledTaskManager _scheduledTaskManager;
-    
+
 
         public SubscriptionController(
             IMembershipService membershipService,
@@ -39,6 +43,7 @@ namespace Laser.Orchard.AppDirect.Controllers {
             IOrchardServices orchardServices,
             IAppDirectCommunication appDirectCommunication,
             IRepository<AppDirectSettingsRecord> repoSetting,
+            IRepository<UserTenantRecord> repoUserTenant,
             IScheduledTaskManager scheduledTaskManager) {
             _scheduledTaskManager = scheduledTaskManager;
             _appDirectCommunication = appDirectCommunication;
@@ -51,6 +56,7 @@ namespace Laser.Orchard.AppDirect.Controllers {
             Logger = NullLogger.Instance;
             _contentManager = contentManager;
             _repoSetting = repoSetting;
+            _repoUserTenant = repoUserTenant;
         }
         public Localizer T { get; set; }
         private static string GetAuthorizationHeaderValue(string Authorization, string key) {
@@ -161,7 +167,7 @@ namespace Laser.Orchard.AppDirect.Controllers {
             foreach (string key in keys) {
                 ob = ScanToken(ob, key);
             }
-            return (ob??"").ToString();
+            return (ob ?? "").ToString();
         }
 
         private JToken ScanToken(JToken token, string key) {
@@ -197,7 +203,39 @@ namespace Laser.Orchard.AppDirect.Controllers {
             }
         }
 
+        public ActionResult LogOnManager() {
+            string stropenid = Request.QueryString["openid"];
+            if (stropenid != null && stropenid.StartsWith("https://marketplace.appdirect.com/openid/id")) {
+                //  string accountIdentifier = Request.QueryString["accountIdentifier"];
+                var product = Request.QueryString["productKey"];
+                OpenIdRelyingParty rpopenid = new OpenIdRelyingParty();
+                var response = rpopenid.GetResponse();
+                if (response != null && response.Status == AuthenticationStatus.Authenticated) {
+                    var extradata = response.GetExtension<ClaimsResponse>();
+                    var email = extradata.MailAddress.ToString();
+                    var usertenant = _repoUserTenant.Fetch(x => x.Enabled == true && x.Email == email && x.Product == product).FirstOrDefault();
+                    if (usertenant != null) {
+                        var accountIdentifier = usertenant.AccountIdentifier;
+                        //      accountIdentifier = "185.11.22.191:1235/Laser.Orchard";
+                        Response.Redirect(string.Format("http://{0}/OpenId/LogOn?openid={1}&productKey={2}", accountIdentifier, stropenid, product));
+                    }
+                    else
+                        Logger.Error(T("Can't login user {0}, openid :", email, stropenid).ToString());
+                }
 
+                else {
+                    using (OpenIdRelyingParty openIdRelyingParty = new OpenIdRelyingParty()) {
+                        IAuthenticationRequest request = openIdRelyingParty.CreateRequest(stropenid);
+                        request.AddExtension(new ClaimsRequest {
+                            Email = DemandLevel.Request,
+                            Nickname = DemandLevel.Request
+                        });
+                        request.RedirectToProvider();
+                    }
+                }
+            }
+            return null;
+        }
 
         public ActionResult Edit() {
             var str = Request.QueryString["url"];

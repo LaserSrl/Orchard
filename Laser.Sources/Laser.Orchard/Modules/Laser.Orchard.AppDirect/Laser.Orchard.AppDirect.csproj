@@ -152,6 +152,7 @@
     <Compile Include="Models\EventType.cs" />
     <Compile Include="Models\LogEventsRecord.cs" />
     <Compile Include="Models\RequestState.cs" />
+    <Compile Include="Models\UserTenantRecord.cs" />
     <Compile Include="OAuthBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes\Routes.cs" />

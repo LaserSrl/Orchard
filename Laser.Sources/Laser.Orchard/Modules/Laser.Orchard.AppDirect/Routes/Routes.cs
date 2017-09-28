@@ -54,6 +54,21 @@ namespace Laser.Orchard.AppDirect.Routes {
                 new RouteDescriptor {
                 Priority = 19,
                 Route = new Route(
+                "AppDirect/LogOnManager",
+                new RouteValueDictionary {
+                {"area", "Laser.Orchard.AppDirect"},
+                {"controller", "Subscription"},
+                {"action", "LogOnManager"}
+                },
+                new RouteValueDictionary(),
+                new RouteValueDictionary {
+                {"area", "Laser.Orchard.AppDirect"}
+                },
+                new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                Priority = 19,
+                Route = new Route(
                 "AppDirect/Cancel",
                 new RouteValueDictionary {
                 {"area", "Laser.Orchard.AppDirect"},
