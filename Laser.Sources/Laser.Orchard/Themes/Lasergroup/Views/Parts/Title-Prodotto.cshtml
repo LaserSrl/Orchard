@@ -1,7 +1,7 @@
 @{
     Layout.Title = Model.Title;
     dynamic item = Model.ContentItem;
-    WorkContext.Layout.Zones["AfterContentProdotto"].Add(New.ShowcaseBackLink(item:null), "9999");
+    WorkContext.Layout.Zones["AfterContentProdotto"].Add(New.ShowcaseBackLink(ContentItem: Model.ContentItem), "9999");
     Layout.BaseClass = "single single-showcase navbar-fixed";
 }
 <div id="intro" class="showcase-intro">

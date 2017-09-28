@@ -1,11 +1,16 @@
-﻿@using Orchard.Mvc.Extensions
+﻿@using Orchard.Environment.Configuration;
 @{
     dynamic item = Model.ContentItem;
 
     var medias = item.ElementoFasciaKrake.Gallery.MediaParts;
 
+    var settings = WorkContext.Resolve<ShellSettings>();
+    var prefix = settings.RequestUrlPrefix;
     var url = (string)(item.ElementoFasciaKrake.Link.Value);
-    url = Url.MakeAbsolute(url);
+    url = (url.StartsWith("~/") && !string.IsNullOrWhiteSpace(prefix)) ?
+        ("~/" + prefix + "/" + url.Substring(2)) :
+        url;
+    url = Url.Content(url);
 }
 <div id="krake" class="container-fluid">
     <div class="row">
