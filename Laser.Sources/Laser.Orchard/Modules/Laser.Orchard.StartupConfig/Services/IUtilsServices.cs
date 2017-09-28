@@ -165,6 +165,17 @@ namespace Laser.Orchard.StartupConfig.Services {
                     rsp.Data = data;
                     rsp.ResolutionAction = ResolutionAction.AcceptPolicies;
                     break;
+
+                case ResponseType.MissingParameters:
+                    rsp.Success = false;
+                    if (message != "")
+                        rsp.Message = message;
+                    else
+                        rsp.Message = T("One or more parameters are null").ToString();
+                    rsp.ErrorCode = ErrorCode.MissingParameters;
+                    rsp.Data = data;
+                    rsp.ResolutionAction = ResolutionAction.AddParameter;
+                    break;
             }
             return rsp;
         }
