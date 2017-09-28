@@ -72,6 +72,12 @@ namespace Laser.Orchard.WebServices.Controllers {
             try {
                 JObject json;
 
+                if (alias == null) {
+                    var result = new ContentResult { ContentType = "application/json" };
+                    result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.MissingParameters));
+                    return result;
+                }
+
                 IContent content;
                 if (alias.ToLower() == "user+info" || alias.ToLower() == "user info") {
                     #region [ Richiesta dati di uno user ]
@@ -100,6 +106,11 @@ namespace Laser.Orchard.WebServices.Controllers {
                 else {
                     content = _commonServices.GetContentByAlias(alias);
                 }
+
+                if (content == null) {
+                    return new HttpStatusCodeResult(404);
+                }
+
                 //_maxLevel = maxLevel;
                 json = _contentSerializationServices.GetJson(content, page, pageSize);
                 //_contentSerializationServices.NormalizeSingleProperty(json);
