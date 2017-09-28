@@ -53,7 +53,12 @@ namespace Laser.Orchard.Policy.Handlers {
                 part.IncludePendingPolicy = settings.IncludePendingPolicy;
             }
         }
-
+        /// <summary>
+        /// Get pending policies: policies for which the user has not yet expressed his opinion
+        /// </summary>
+        /// <param name="context">Context of the showing content</param>
+        /// <param name="part">the PolicyPart that describe which policies should be checked</param>
+        /// <returns>The IContentQuery that returns the list of the pending policies</returns>
         private IContentQuery GetPendingPolicies(LoadContentContext context, PolicyPart part) {
             var loggedUser = _workContext.GetContext().CurrentUser;
             int currentLanguageId;
@@ -102,7 +107,7 @@ namespace Laser.Orchard.Policy.Handlers {
                 }
             }
 
-            return items;
+            return items.OrderByDescending(x=>x.Priority);
         }
 
     }
