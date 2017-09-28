@@ -273,6 +273,11 @@ namespace Laser.Orchard.WebServices.Controllers {
         public ActionResult GetByAlias(string displayAlias, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour = "") {
             //   Logger.Error("inizio"+DateTime.Now.ToString());
             IContent item = null;
+
+            if (displayAlias == null) {
+                return Json(_utilsServices.GetResponse(ResponseType.MissingParameters), JsonRequestBehavior.AllowGet);
+            }
+
             try {
                 if (displayAlias.ToLower() == "user+info" || displayAlias.ToLower() == "user info") {
                     #region richiesta dati di uno user
