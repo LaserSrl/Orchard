@@ -77,10 +77,10 @@ namespace Laser.Orchard.ButtonToWorkflows {
 
         public int UpdateFrom6() {
             SchemaBuilder.AlterTable("DynamicButtonToWorkflowsRecord", table => table
-                .AddColumn<string>("Guid")
+                .AddColumn<string>("GlobalIdentifier")
             );
 
-            var buttonsWithoutGuid = _dynamicButtonToWorkflowsService.GetButtons().Where(w => String.IsNullOrWhiteSpace(w.Guid));
+            var buttonsWithoutGuid = _dynamicButtonToWorkflowsService.GetButtons().Where(w => String.IsNullOrWhiteSpace(w.GlobalIdentifier));
 
             if (buttonsWithoutGuid.Count() > 0) {
                 List<DynamicButtonToWorkflowsEdit> buttonList = new List<DynamicButtonToWorkflowsEdit>();
@@ -96,7 +96,7 @@ namespace Laser.Orchard.ButtonToWorkflows {
                     buttonData.ButtonDescription = button.ButtonDescription;
                     buttonData.ButtonMessage = button.ButtonMessage;
                     buttonData.ButtonName = button.ButtonName;
-                    buttonData.Guid = Guid.NewGuid().ToString();
+                    buttonData.GlobalIdentifier = Guid.NewGuid().ToString();
                     buttonData.Delete = false;
 
                     buttonList.Add(buttonData);
@@ -107,7 +107,7 @@ namespace Laser.Orchard.ButtonToWorkflows {
                     foreach (var type in typesWithButtons) {
                         var part = type.Parts.Where(w => w.PartDefinition.Name == "DynamicButtonToWorkflowsPart").FirstOrDefault();
                         if (part != null) {
-                            part.Settings["DynamicButtonsSetting.Buttons"] = part.Settings["DynamicButtonsSetting.Buttons"].Replace(partSettingToEdit, string.Format("{{{0}}}", buttonData.Guid));
+                            part.Settings["DynamicButtonsSetting.Buttons"] = part.Settings["DynamicButtonsSetting.Buttons"].Replace(partSettingToEdit, string.Format("{{{0}}}", buttonData.GlobalIdentifier));
                             _contentDefinitionManager.StoreTypeDefinition(type);
                         }
                     }
@@ -117,7 +117,7 @@ namespace Laser.Orchard.ButtonToWorkflows {
                     var activitiesWithButton = activities.Where(w => w.State.Contains(activitySettingToEdit));
 
                     foreach (var activity in activitiesWithButton) {
-                        activity.State = activity.State.Replace(activitySettingToEdit, string.Format("\"DynamicButton\":\"{0}\"", buttonData.Guid));
+                        activity.State = activity.State.Replace(activitySettingToEdit, string.Format("\"DynamicButton\":\"{0}\"", buttonData.GlobalIdentifier));
                         _activityRepository.Update(activity);
                     }
                 }

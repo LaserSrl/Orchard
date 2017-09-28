@@ -15,7 +15,7 @@ namespace Laser.Orchard.ButtonToWorkflows.ViewModels {
 
         public bool ButtonAsync { get; set; }
 
-        public string Guid { get; set; }
+        public string GlobalIdentifier { get; set; }
 
         public bool Delete { get; set; }
     }

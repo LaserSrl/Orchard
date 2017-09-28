@@ -36,8 +36,8 @@ namespace Laser.Orchard.ButtonToWorkflows.Activity {
                     var clickedButtonName = workflowContext.Tokens["ButtonName"].ToString();
 
                     if (!string.IsNullOrWhiteSpace(clickedButtonName)) {
-                        var clickedButtonGuid = _dynamicButtonToWorkflowsService.GetButtons().Where(w => w.ButtonName == clickedButtonName).Select(s => s.Guid).FirstOrDefault();
-                        return clickedButtonGuid.ToString() == buttonSelected;
+                        var clickedButtonIdentifier = _dynamicButtonToWorkflowsService.GetButtons().Where(w => w.ButtonName == clickedButtonName).Select(s => s.GlobalIdentifier).FirstOrDefault();
+                        return clickedButtonIdentifier.ToString() == buttonSelected;
                     }
                 }
 

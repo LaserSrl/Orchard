@@ -53,7 +53,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
                             ButtonDescription = s.ButtonDescription,
                             ButtonMessage = s.ButtonMessage,
                             ButtonAsync = s.ButtonAsync,
-                            Guid = s.Guid,
+                            GlobalIdentifier = s.GlobalIdentifier,
                             Delete = false
                         });
                     else
@@ -100,7 +100,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
                 buttonSettings.SetAttributeValue("ButtonDescription", button.ButtonDescription);
                 buttonSettings.SetAttributeValue("ButtonMessage", button.ButtonMessage);
                 buttonSettings.SetAttributeValue("ButtonAsync", button.ButtonAsync);
-                buttonSettings.SetAttributeValue("Guid", button.Guid);
+                buttonSettings.SetAttributeValue("GlobalIdentifier", button.GlobalIdentifier);
                 root.Add(buttonSettings);
             }
         }
@@ -128,7 +128,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
                     ButtonDescription = button.Attribute("ButtonDescription") != null ? button.Attribute("ButtonDescription").Value : "",
                     ButtonMessage = button.Attribute("ButtonMessage") != null ? button.Attribute("ButtonMessage").Value : "",
                     ButtonAsync = button.Attribute("ButtonAsync") != null ? bool.Parse(button.Attribute("ButtonAsync").Value) : false,
-                    Guid = button.Attribute("Guid") != null ? button.Attribute("Guid").Value : "",
+                    GlobalIdentifier = button.Attribute("GlobalIdentifier") != null ? button.Attribute("GlobalIdentifier").Value : "",
                     Delete = false
                 });
             }

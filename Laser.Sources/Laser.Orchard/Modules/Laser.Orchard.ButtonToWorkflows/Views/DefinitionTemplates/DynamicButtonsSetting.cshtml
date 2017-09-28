@@ -24,7 +24,7 @@
                     buttonLabel = buttonLabel + " (" + button.ButtonDescription + ")";
                 }
 
-                <option value="{@button.Guid}" @(selectedItems.Contains("{" + button.Guid + "}") ? "selected=\"selected\"" : "")>
+                <option value="{@button.GlobalIdentifier}" @(selectedItems.Contains("{" + button.GlobalIdentifier + "}") ? "selected=\"selected\"" : "")>
                     @buttonLabel
                 </option>
             }

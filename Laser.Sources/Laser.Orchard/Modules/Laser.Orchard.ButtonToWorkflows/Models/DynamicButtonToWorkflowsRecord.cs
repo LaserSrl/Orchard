@@ -6,6 +6,6 @@
         public virtual string ButtonDescription { get; set; }
         public virtual string ButtonMessage { get; set; }
         public virtual bool ButtonAsync { get; set; }
-        public virtual string Guid { get; set; }
+        public virtual string GlobalIdentifier { get; set; }
     }
 }
