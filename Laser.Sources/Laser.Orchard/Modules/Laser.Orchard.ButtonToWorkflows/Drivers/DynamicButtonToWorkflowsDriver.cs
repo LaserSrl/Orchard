@@ -39,7 +39,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
             if (updater.TryUpdateModel(model, Prefix, null, null)) {
                 if (part.ContentItem.Id != 0) {
                     foreach (DynamicButtonToWorkflowsRecord button in model) {
-                        if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.DynamicCustomButton." + button.ButtonText) {
+                        if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.DynamicCustomButton." + button.Guid) {
                             part.ButtonName = button.ButtonName;
                             part.MessageToWrite = button.ButtonMessage;
                             part.ActionAsync = button.ButtonAsync;
