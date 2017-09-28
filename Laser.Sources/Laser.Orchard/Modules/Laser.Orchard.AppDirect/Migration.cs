@@ -79,6 +79,17 @@ namespace Laser.Orchard.AppDirect {
             }
             return 1;
         }
-
+        public int UpdateFrom1() {
+            SchemaBuilder.CreateTable(typeof(UserTenantRecord).Name, table => table
+               .Column<int>("Id", t => t.PrimaryKey().Identity())
+               .Column<string>("Product")
+               .Column<string>("Email")
+               .Column<string>("AccountIdentifier")
+               .Column<string>("UuidCreator")
+               .Column<DateTime>("TimeStamp")
+               .Column<bool>("Enabled")
+           );
+           return 2;
+        }
     }
 }

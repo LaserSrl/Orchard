@@ -1,22 +1,27 @@
 ﻿using System;
+using System.Linq;
 using Laser.Orchard.AppDirect.Models;
 using Laser.Orchard.AppDirect.Services;
 using Laser.Orchard.AppDirect.ViewModels;
+using Newtonsoft.Json.Linq;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Data;
 using Orchard.Localization;
 
 namespace Laser.Orchard.AppDirect.Driver {
     public class AppDirectButtonDriver : ContentPartDriver<AppDirectButtonPart> {
         private readonly IOrchardServices _orchardServices;
         private readonly IAppDirectCommunication _appDirectCommunication;
-        
+        private readonly IRepository<UserTenantRecord> _repoUserTenant;
         public AppDirectButtonDriver(IOrchardServices orchardServices,
-            IAppDirectCommunication appDirectCommunication) {
+            IAppDirectCommunication appDirectCommunication,
+            IRepository<UserTenantRecord> repoUserTenant) {
             T = NullLocalizer.Instance;
             _orchardServices = orchardServices;
             _appDirectCommunication = appDirectCommunication;
+            _repoUserTenant = repoUserTenant;
         }
         public Localizer T { get; set; }
         protected override string Prefix {
@@ -73,6 +78,7 @@ namespace Laser.Orchard.AppDirect.Driver {
                         ((dynamic)part.ContentItem).AppDirectRequestPart.State.Value = RequestState.Created.ToString();
                         ((dynamic)part.ContentItem).AppDirectRequestPart.Action.Value = "nothing";
                         // part.ContentItem.As<TitlePart>().Title = RequestState.Created.ToString()+ " " + AccountIdentifier;
+                        _repoUserTenant.Create(new UserTenantRecord() { UuidCreator = part.ContentItem.As<AppDirectUserPart>().UuidCreator, Email = part.ContentItem.As<AppDirectUserPart>().Email, AccountIdentifier = AccountIdentifier, Product = _orchardServices.WorkContext.HttpContext.Request.Form["AppDirectRequestPart.ProductKey.Text"], TimeStamp = DateTime.UtcNow,Enabled=true });
                     }
                 }
                 else {
@@ -93,6 +99,10 @@ namespace Laser.Orchard.AppDirect.Driver {
                         //part.ContentItem.As<AppDirectUserPart>().AccountIdentifier = AccountIdentifier;
                         ((dynamic)part.ContentItem).AppDirectRequestPart.State.Value = RequestState.Cancelled.ToString();
                         ((dynamic)part.ContentItem).AppDirectRequestPart.Action.Value = "nothing";
+                        var usertenant= _repoUserTenant.Fetch(x => x.Enabled == true && x.Email.Equals(part.ContentItem.As<AppDirectUserPart>().Email) && x.Product.Equals(_orchardServices.WorkContext.HttpContext.Request.Form["AppDirectRequestPart.ProductKey.Text"])).FirstOrDefault();
+                        if (usertenant != null)
+                            usertenant.Enabled = false;
+                        _repoUserTenant.Update(usertenant);
                     }
                 }
                 else {
@@ -133,6 +143,23 @@ namespace Laser.Orchard.AppDirect.Driver {
                         //part.ContentItem.As<AppDirectUserPart>().AccountIdentifier = AccountIdentifier;
                         ((dynamic)part.ContentItem).AppDirectRequestPart.State.Value = RequestState.AssignedUser.ToString();
                         ((dynamic)part.ContentItem).AppDirectRequestPart.Action.Value = "nothing";
+                        string subjectmail = ((dynamic)part.ContentItem).AppDirectRequestPart.PayloadSubject.Value;
+                        ((dynamic)part.ContentItem).AppDirectRequestPart.State.Value = RequestState.AssignedUser.ToString();
+                        string jsonstring=((dynamic)part.ContentItem).AppDirectRequestPart.Request.Value;
+                        var json = JObject.Parse(jsonstring);
+                        if ((json["payload"]).Type != JTokenType.Null) {
+                            if ((json["payload"]["user"]).Type != JTokenType.Null) {
+                                if ((json["payload"]["email"]).Type != JTokenType.Null) {
+                                    if ((json["payload"]["user"]["uuid"]).Type != JTokenType.Null) {
+                                        if ((json["payload"]["account"]).Type != JTokenType.Null) {
+                                            if ((json["payload"]["account"]["accountIdentifier"]).Type != JTokenType.Null) {
+                                                _repoUserTenant.Create(new UserTenantRecord() { UuidCreator = json["payload"]["user"]["uuid"].ToString(), Email = json["payload"]["email"].ToString(), AccountIdentifier = json["payload"]["account"]["accountIdentifier"].ToString(), Product = _orchardServices.WorkContext.HttpContext.Request.Form["AppDirectRequestPart.ProductKey.Text"], TimeStamp = DateTime.UtcNow, Enabled = true });
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 else {
@@ -153,6 +180,12 @@ namespace Laser.Orchard.AppDirect.Driver {
                         //part.ContentItem.As<AppDirectUserPart>().AccountIdentifier = AccountIdentifier;
                         ((dynamic)part.ContentItem).AppDirectRequestPart.State.Value = RequestState.UnAssignedUser.ToString();
                         ((dynamic)part.ContentItem).AppDirectRequestPart.Action.Value = "nothing";
+                        string subjectmail=((dynamic)part.ContentItem).AppDirectRequestPart.PayloadSubject.Value;
+                        var usertenant = _repoUserTenant.Fetch(x => x.Enabled == true && x.Email.Equals(subjectmail) && x.Product.Equals(_orchardServices.WorkContext.HttpContext.Request.Form["AppDirectRequestPart.ProductKey.Text"])).FirstOrDefault();
+                        if (usertenant != null) {
+                            usertenant.Enabled = false;
+                            _repoUserTenant.Update(usertenant);
+                        }
                     }
                 }
                 else {
