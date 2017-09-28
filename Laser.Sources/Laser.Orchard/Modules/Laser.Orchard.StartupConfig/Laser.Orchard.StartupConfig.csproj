@@ -212,10 +212,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Recipes\AppRetailB2B.recipe.xml" />
-    <Content Include="Recipes\AppRetailB2B2C.recipe.xml" />
-    <Content Include="Recipes\AppRetailB2C.recipe.xml" />
-    <Content Include="Recipes\AppRetailBase.recipe.xml" />
+    <Content Include="Recipes\AppRetailBase.recipe.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Recipes\Laser.recipe.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -247,6 +246,8 @@
     <Compile Include="Activities\UserEventActivity.cs" />
     <Compile Include="ColorPicker\ColorPickerField.cs" />
     <Compile Include="ColorPicker\ColorPickerFieldDriver.cs" />
+    <Compile Include="ColorPicker\ColorPickerFieldEditorEvents.cs" />
+    <Compile Include="ColorPicker\ColorPickerFieldSettings.cs" />
     <Compile Include="Controllers\CommandsController.cs" />
     <Compile Include="Controllers\MaintenanceAdminController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -441,6 +442,7 @@
     <Content Include="Styles\font-awesome\scss\_spinning.scss" />
     <Content Include="Styles\font-awesome\scss\_stacked.scss" />
     <Content Include="Styles\font-awesome\scss\_variables.scss" />
+    <Content Include="Views\DefinitionTemplates\ColorPickerFieldSettings.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
