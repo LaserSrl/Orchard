@@ -38,7 +38,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Activity {
                          );
 
                      foreach (var contentType in _dynamicButtonToWorkflowsService.GetButtons().OrderBy(o => o.ButtonName)) {
-                         frm._Buttons.Add(new SelectListItem { Value = contentType.Id.ToString(), Text = contentType.ButtonName + " (" + contentType.ButtonDescription + ")" });
+                         frm._Buttons.Add(new SelectListItem { Value = contentType.Guid, Text = contentType.ButtonName + " (" + contentType.ButtonDescription + ")" });
                      }
 
                      return frm;

@@ -15,8 +15,9 @@
 
             if (isAuthorized) {
                 @Html.Raw("&nbsp;")
-                <button type="submit" name="submit.Save" value="@Html.Raw("submit.DynamicCustomButton." + Model[i].ButtonText)">
-                    @T(Model[i].ButtonText)
+                var text = !string.IsNullOrWhiteSpace(Model[i].ButtonText) ? Model[i].ButtonText : Model[i].ButtonName;
+                <button type="submit" name="submit.Save" value="@Html.Raw("submit.DynamicCustomButton." + Model[i].Guid)">
+                    @T(text)
                 </button>
             }
 

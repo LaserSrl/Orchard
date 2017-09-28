@@ -1,14 +1,17 @@
-﻿using System.Collections.Generic;
-using Laser.Orchard.ButtonToWorkflows.Models;
+﻿using Laser.Orchard.ButtonToWorkflows.Models;
 using Laser.Orchard.ButtonToWorkflows.Services;
 using Laser.Orchard.ButtonToWorkflows.ViewModels;
 using Laser.Orchard.StartupConfig.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Environment.Extensions;
-using System.Linq;
-using Orchard.Localization;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Environment.Extensions;
+using Orchard.Localization;
+using Orchard.Logging;
+using Orchard.UI.Notify;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace Laser.Orchard.ButtonToWorkflows.Drivers {
@@ -22,17 +25,18 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
         private const string TemplateName = "Parts/DynamicButtonToWorkflowsSettings";
 
         public Localizer T { get; set; }
+        public ILogger _logger { get; set; }
 
         public DynamicButtonToWorkflowsSettingsPartDriver(
             IDynamicButtonToWorkflowsService dynamicButtonToWorkflowsService,
             IControllerContextAccessor controllerContextAccessor) {
             _dynamicButtonToWorkflowsService = dynamicButtonToWorkflowsService;
+            _logger = NullLogger.Instance;
             _controllerContextAccessor = controllerContextAccessor;
             T = NullLocalizer.Instance;
         }
 
-        protected override string Prefix
-        {
+        protected override string Prefix {
             get { return "Laser.DynamicButtonToWorkflows.Settings"; }
         }
 
@@ -49,6 +53,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
                             ButtonDescription = s.ButtonDescription,
                             ButtonMessage = s.ButtonMessage,
                             ButtonAsync = s.ButtonAsync,
+                            Guid = s.Guid,
                             Delete = false
                         });
                     else
@@ -69,71 +74,81 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
             DynamicButtonToWorkflowsSettingsVM dynamicButtonSettingsVM = new DynamicButtonToWorkflowsSettingsVM();
 
             if (updater.TryUpdateModel(dynamicButtonSettingsVM, Prefix, null, null)) {
-                var buttonsByName = dynamicButtonSettingsVM.Buttons.GroupBy(q => new { q.ButtonName }).Select(q => new { q.Key.ButtonName, Occurrences = q.Count() });
+                var buttonsByName = dynamicButtonSettingsVM.Buttons.Where(w => w.Delete == false).GroupBy(q => new { q.ButtonName }).Select(q => new { q.Key.ButtonName, Occurrences = q.Count() });
                 buttonsByName = buttonsByName.Where(q => q.Occurrences > 1);
 
                 if (buttonsByName.ToList().Count() > 0) {
                     _controllerContextAccessor.Context.Controller.TempData[Prefix + "ButtonsWithErrors"] = dynamicButtonSettingsVM.Buttons;
                     updater.AddModelError("ButtonUpdateError", T("Cannot have multiple buttons with the same name ({0})", string.Join(", ", buttonsByName.Select(q => q.ButtonName))));
-                }
-                else {
+                } else {
                     _dynamicButtonToWorkflowsService.UpdateButtons(dynamicButtonSettingsVM.Buttons);
                 }
-            }
-            else {
+            } else {
                 _controllerContextAccessor.Context.Controller.TempData[Prefix + "ButtonsWithErrors"] = dynamicButtonSettingsVM.Buttons;
             }
 
             return Editor(part, shapeHelper);
         }
+
         protected override void Exporting(DynamicButtonToWorkflowsSettingsPart part, ExportContentContext context) {
             var root = context.Element(part.PartDefinition.Name);
-            foreach (var button in _dynamicButtonToWorkflowsService.GetButtons().OrderBy(x => x.Id)) { 
+
+            foreach (var button in _dynamicButtonToWorkflowsService.GetButtons().OrderBy(x => x.Id)) {
                 XElement buttonSettings = new XElement("ButtonSettings");
                 buttonSettings.SetAttributeValue("ButtonName", button.ButtonName);
                 buttonSettings.SetAttributeValue("ButtonText", button.ButtonText);
                 buttonSettings.SetAttributeValue("ButtonDescription", button.ButtonDescription);
                 buttonSettings.SetAttributeValue("ButtonMessage", button.ButtonMessage);
                 buttonSettings.SetAttributeValue("ButtonAsync", button.ButtonAsync);
+                buttonSettings.SetAttributeValue("Guid", button.Guid);
                 root.Add(buttonSettings);
             }
         }
+
         protected override void Importing(DynamicButtonToWorkflowsSettingsPart part, ImportContentContext context) {
-            var root = context.Data.Element(part.PartDefinition.Name);
             var newDefinitions = new List<DynamicButtonToWorkflowsEdit>();
-            foreach(var def in _dynamicButtonToWorkflowsService.GetButtons().OrderBy(x => x.Id)) {
+            var existingDefinitions = _dynamicButtonToWorkflowsService.GetButtons();
+
+            var root = context.Data.Element(part.PartDefinition.Name);
+            var buttonSettings = root.Elements("ButtonSettings");
+
+            foreach (var button in buttonSettings) {
+                var uniqueName = "";
+                if (button.Attribute("ButtonName") != null && !string.IsNullOrWhiteSpace(button.Attribute("ButtonName").Value)) {
+                    uniqueName = GenerateUniqueName(button.Attribute("ButtonName").Value, existingDefinitions.ToList());
+
+                    if (existingDefinitions.Any(a => a.ButtonName.Trim().Equals(button.Attribute("ButtonName").Value.Trim())))
+                        _logger.Error(string.Format("The button name {0} was already used. It was automatically renamed to {1}.", button.Attribute("ButtonName").Value, uniqueName));
+                } else
+                    uniqueName = GenerateUniqueName(Guid.NewGuid().ToString(), existingDefinitions.ToList());
+
                 newDefinitions.Add(new DynamicButtonToWorkflowsEdit {
-                    Id = def.Id,
-                    ButtonName = def.ButtonName,
-                    ButtonText = def.ButtonText,
-                    ButtonDescription = def.ButtonDescription,
-                    ButtonMessage = def.ButtonMessage,
-                    ButtonAsync = def.ButtonAsync,
+                    ButtonName = uniqueName,
+                    ButtonText = button.Attribute("ButtonText") != null ? button.Attribute("ButtonText").Value : "",
+                    ButtonDescription = button.Attribute("ButtonDescription") != null ? button.Attribute("ButtonDescription").Value : "",
+                    ButtonMessage = button.Attribute("ButtonMessage") != null ? button.Attribute("ButtonMessage").Value : "",
+                    ButtonAsync = button.Attribute("ButtonAsync") != null ? bool.Parse(button.Attribute("ButtonAsync").Value) : false,
+                    Guid = button.Attribute("Guid") != null ? button.Attribute("Guid").Value : "",
                     Delete = false
                 });
             }
-            var buttonSettings = root.Elements("ButtonSettings");
-            int idx = 0;
-            foreach(var button in buttonSettings) {
-                if (newDefinitions.Count > idx) {
-                    newDefinitions[idx].ButtonName = button.Attribute("ButtonName") != null ? button.Attribute("ButtonName").Value : "";
-                    newDefinitions[idx].ButtonText = button.Attribute("ButtonText") != null ? button.Attribute("ButtonText").Value : "";
-                    newDefinitions[idx].ButtonDescription = button.Attribute("ButtonDescription") != null ? button.Attribute("ButtonDescription").Value : "";
-                    newDefinitions[idx].ButtonMessage = button.Attribute("ButtonMessage") != null ? button.Attribute("ButtonMessage").Value : "";
-                    newDefinitions[idx].ButtonAsync = button.Attribute("ButtonAsync") != null ? bool.Parse(button.Attribute("ButtonAsync").Value) : false;
-                } else {
-                    newDefinitions.Add(new DynamicButtonToWorkflowsEdit {
-                        ButtonName = button.Attribute("ButtonName") != null ? button.Attribute("ButtonName").Value : "",
-                        ButtonText = button.Attribute("ButtonText") != null ? button.Attribute("ButtonText").Value : "",
-                        ButtonDescription = button.Attribute("ButtonDescription") != null ? button.Attribute("ButtonDescription").Value : "",
-                        ButtonMessage = button.Attribute("ButtonMessage") != null ? button.Attribute("ButtonMessage").Value : "",
-                        ButtonAsync = button.Attribute("ButtonAsync") != null ? bool.Parse(button.Attribute("ButtonAsync").Value) : false,
-                        Delete = false
-                    });
-                }
-                idx++;
-            }
+
             _dynamicButtonToWorkflowsService.UpdateButtons(newDefinitions);
+        }
+
+        private string GenerateUniqueName(string name, List<DynamicButtonToWorkflowsRecord> buttons) {
+            if (!buttons.Any(a => a.ButtonName.Trim().Equals(name.Trim())))
+                return name;
+            else {
+                int suffix = 2;
+                string newName = name + suffix;
+                while (buttons.Any(a => a.ButtonName.Trim().Equals(newName.Trim()))) {
+                    suffix++;
+                    newName = name + suffix;
+                }
+
+                return newName;
+            }
         }
     }
 }

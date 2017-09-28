@@ -26,7 +26,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
         protected override DriverResult Editor(DynamicButtonToWorkflowsPart part, dynamic shapeHelper) {
 
             var settings = part.TypePartDefinition.Settings.GetModel<DynamicButtonsSetting>();
-            var buttonList = _dynamicButtonToWorkflowsService.GetButtons().Where(w => settings.List.ToList().Contains("{" + w.Id + "}"));
+            var buttonList = _dynamicButtonToWorkflowsService.GetButtons().Where(w => settings.List.ToList().Contains("{" + w.Guid + "}"));
 
             return ContentShape("Parts_DynamicButtonToWorkflows", () => shapeHelper.EditorTemplate(TemplateName: "Parts/DynamicButtonToWorkflows",
                                                                                                    Model: buttonList.ToList(),

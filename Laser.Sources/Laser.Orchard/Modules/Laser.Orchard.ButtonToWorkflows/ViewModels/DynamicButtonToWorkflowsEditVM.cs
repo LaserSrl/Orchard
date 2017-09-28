@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Laser.Orchard.ButtonToWorkflows.ViewModels.ValidationProviders;
+﻿using Laser.Orchard.ButtonToWorkflows.ViewModels.ValidationProviders;
 
 namespace Laser.Orchard.ButtonToWorkflows.ViewModels {
     [ValidateDynamicButtonData]
@@ -18,6 +14,8 @@ namespace Laser.Orchard.ButtonToWorkflows.ViewModels {
         public string ButtonMessage { get; set; }
 
         public bool ButtonAsync { get; set; }
+
+        public string Guid { get; set; }
 
         public bool Delete { get; set; }
     }

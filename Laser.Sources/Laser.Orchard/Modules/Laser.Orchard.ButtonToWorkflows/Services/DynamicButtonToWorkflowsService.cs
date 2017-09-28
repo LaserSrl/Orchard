@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Laser.Orchard.ButtonToWorkflows.Models;
+﻿using Laser.Orchard.ButtonToWorkflows.Models;
 using Laser.Orchard.ButtonToWorkflows.ViewModels;
 using Orchard;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Security.Permissions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Laser.Orchard.ButtonToWorkflows.Services {
 
@@ -55,7 +56,8 @@ namespace Laser.Orchard.ButtonToWorkflows.Services {
                             ButtonText = buttonData.ButtonText,
                             ButtonDescription = buttonData.ButtonDescription,
                             ButtonMessage = buttonData.ButtonMessage,
-                            ButtonAsync = buttonData.ButtonAsync
+                            ButtonAsync = buttonData.ButtonAsync,
+                            Guid = Guid.NewGuid().ToString()
                         });
                     else {
                         button.ButtonName = buttonData.ButtonName;
@@ -63,6 +65,9 @@ namespace Laser.Orchard.ButtonToWorkflows.Services {
                         button.ButtonDescription = buttonData.ButtonDescription;
                         button.ButtonMessage = buttonData.ButtonMessage;
                         button.ButtonAsync = buttonData.ButtonAsync;
+
+                        if (string.IsNullOrWhiteSpace(button.Guid) && !string.IsNullOrWhiteSpace(buttonData.Guid))
+                            button.Guid = buttonData.Guid;
 
                         _dynButtonRecordRepository.Update(button);
                     }
