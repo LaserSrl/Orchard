@@ -26,7 +26,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
         protected override DriverResult Editor(DynamicButtonToWorkflowsPart part, dynamic shapeHelper) {
 
             var settings = part.TypePartDefinition.Settings.GetModel<DynamicButtonsSetting>();
-            var buttonList = _dynamicButtonToWorkflowsService.GetButtons().Where(w => settings.List.ToList().Contains("{" + w.Guid + "}"));
+            var buttonList = _dynamicButtonToWorkflowsService.GetButtons().Where(w => settings.List.ToList().Contains("{" + w.GlobalIdentifier + "}"));
 
             return ContentShape("Parts_DynamicButtonToWorkflows", () => shapeHelper.EditorTemplate(TemplateName: "Parts/DynamicButtonToWorkflows",
                                                                                                    Model: buttonList.ToList(),
@@ -39,7 +39,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
             if (updater.TryUpdateModel(model, Prefix, null, null)) {
                 if (part.ContentItem.Id != 0) {
                     foreach (DynamicButtonToWorkflowsRecord button in model) {
-                        if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.DynamicCustomButton." + button.Guid) {
+                        if (_orchardServices.WorkContext.HttpContext.Request.Form["submit.Save"] == "submit.DynamicCustomButton." + button.GlobalIdentifier) {
                             part.ButtonName = button.ButtonName;
                             part.MessageToWrite = button.ButtonMessage;
                             part.ActionAsync = button.ButtonAsync;

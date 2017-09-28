@@ -42,7 +42,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Activity {
                          if (!string.IsNullOrWhiteSpace(contentType.ButtonDescription))
                              optionText = optionText + " (" + contentType.ButtonDescription + ")";
 
-                         frm._Buttons.Add(new SelectListItem { Value = contentType.Guid, Text = optionText });
+                         frm._Buttons.Add(new SelectListItem { Value = contentType.GlobalIdentifier, Text = optionText });
                      }
 
                      return frm;

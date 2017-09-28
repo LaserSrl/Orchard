@@ -57,7 +57,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Services {
                             ButtonDescription = buttonData.ButtonDescription,
                             ButtonMessage = buttonData.ButtonMessage,
                             ButtonAsync = buttonData.ButtonAsync,
-                            Guid = Guid.NewGuid().ToString()
+                            GlobalIdentifier = Guid.NewGuid().ToString()
                         });
                     else {
                         button.ButtonName = buttonData.ButtonName;
@@ -66,8 +66,8 @@ namespace Laser.Orchard.ButtonToWorkflows.Services {
                         button.ButtonMessage = buttonData.ButtonMessage;
                         button.ButtonAsync = buttonData.ButtonAsync;
 
-                        if (string.IsNullOrWhiteSpace(button.Guid) && !string.IsNullOrWhiteSpace(buttonData.Guid))
-                            button.Guid = buttonData.Guid;
+                        if (string.IsNullOrWhiteSpace(button.GlobalIdentifier) && !string.IsNullOrWhiteSpace(buttonData.GlobalIdentifier))
+                            button.GlobalIdentifier = buttonData.GlobalIdentifier;
 
                         _dynButtonRecordRepository.Update(button);
                     }
