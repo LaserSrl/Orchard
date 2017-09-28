@@ -177,14 +177,16 @@ namespace Laser.Orchard.Policy.Services {
                             _userPolicyAnswersRepository.Create(record);
                             _policyEventHandler.PolicyChanged(new PolicyEventViewModel {
                                 policyType = record.PolicyTextInfoPartRecord.PolicyType,
-                                accepted = record.Accepted
+                                accepted = record.Accepted,
+                                ItemPolicyPartRecordId = item.Id
                             });
                         } else if (record.Accepted != recordForHistory.Accepted) {
                             _userPolicyAnswersHistoryRepository.Create(recordForHistory);
                             _userPolicyAnswersRepository.Update(record);
                             _policyEventHandler.PolicyChanged(new PolicyEventViewModel {
                                 policyType = record.PolicyTextInfoPartRecord.PolicyType,
-                                accepted = record.Accepted
+                                accepted = record.Accepted,
+                                ItemPolicyPartRecordId = item.Id
                             });
                         }
                     }
@@ -194,7 +196,8 @@ namespace Laser.Orchard.Policy.Services {
                     _userPolicyAnswersRepository.Delete(record);
                     _policyEventHandler.PolicyChanged(new PolicyEventViewModel {
                         policyType = recordForHistory.PolicyTextInfoPartRecord.PolicyType,
-                        accepted = false
+                        accepted = false,
+                        ItemPolicyPartRecordId = item.Id
                     });
                 }
             }
