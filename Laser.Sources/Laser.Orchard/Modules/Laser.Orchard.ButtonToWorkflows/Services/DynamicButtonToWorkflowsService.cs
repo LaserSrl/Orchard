@@ -57,7 +57,7 @@ namespace Laser.Orchard.ButtonToWorkflows.Services {
                             ButtonDescription = buttonData.ButtonDescription,
                             ButtonMessage = buttonData.ButtonMessage,
                             ButtonAsync = buttonData.ButtonAsync,
-                            GlobalIdentifier = Guid.NewGuid().ToString()
+                            GlobalIdentifier = string.IsNullOrWhiteSpace(buttonData.GlobalIdentifier) ? Guid.NewGuid().ToString() : buttonData.GlobalIdentifier
                         });
                     else {
                         button.ButtonName = buttonData.ButtonName;
