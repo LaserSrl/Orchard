@@ -43,6 +43,7 @@ namespace Laser.Orchard.Commons.Services {
         private string[] _filterContentFieldsParts;
         private bool _omitContentItem;
         private string[] _complexBehaviour;
+        private string[] _includeMembers; // members ending with "Record" or "Definition" that have to be always included 
         // object/key/dump
 
         public ObjectDumper(int levels, string[] filterContentFieldsParts = null, bool omitContentItem = false, bool tinyResponse = true, string[] complexBehaviour = null) {
@@ -68,6 +69,8 @@ namespace Laser.Orchard.Commons.Services {
             };
             _filterContentFieldsParts = filterContentFieldsParts;
             _omitContentItem = omitContentItem;
+            // members ending with "Record" or "Definition" that have to be always included 
+            _includeMembers = new string[] { "PolicyTextInfoPartRecord" };
         }
         public List<ContentFlags> RenderedContentList { get { return _contentRendered; } }
 
@@ -299,7 +302,7 @@ namespace Laser.Orchard.Commons.Services {
                 .GetFields(BindingFlags.Instance | BindingFlags.Public).Cast<MemberInfo>()
                 .Union(o.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
                 .Where(m => !m.Name.StartsWith("_")) // remove members with a name starting with '_' (usually proxied objects)
-                .Where(m => !m.Name.EndsWith("Definition") && !m.Name.EndsWith("Record"));
+                .Where(m => (!m.Name.EndsWith("Definition") && (!m.Name.EndsWith("Record")) || _includeMembers.Contains(m.Name)));
             if (_keepOnlyTheeseMembers.Select(s => s.Split('/')[0]).Contains(objectName)) { // se ho impostato Membri specifici allora recupero solo quelli
                 members = members
                     .Where(m => _keepOnlyTheeseMembers.Contains(objectName + "/" + m.Name));
