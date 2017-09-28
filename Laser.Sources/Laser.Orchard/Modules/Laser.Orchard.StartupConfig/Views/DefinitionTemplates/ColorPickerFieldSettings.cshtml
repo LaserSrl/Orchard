@@ -1,0 +1,6 @@
+﻿@model ColorPickerFieldSettings
+@using Laser.Orchard.StartupConfig.ColorPicker;
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.Hint)">@T("Help Text")</label>
+    @Html.TextAreaFor(m => m.Hint)
+</fieldset>
