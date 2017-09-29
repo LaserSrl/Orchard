@@ -111,9 +111,12 @@
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Models\ProfilePart.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Security\AuthorizationEventHandler.cs" />
+    <Compile Include="Settings\ProfileFrontEndEditorEvents.cs" />
+    <Compile Include="Settings\ProfileFrontEndSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\Edit.cshtml" />
@@ -135,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Content Include="Views\DefinitionTemplates\ProfileFrontEndSettings.cshtml" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -142,6 +146,7 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

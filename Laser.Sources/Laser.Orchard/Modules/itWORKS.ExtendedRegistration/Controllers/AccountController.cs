@@ -15,7 +15,7 @@ using Orchard.Themes;
 using Orchard.Users.Events;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
-
+using Contrib.Profile.Models;
 
 namespace itWORKS.ExtendedRegistration.Controllers
 {
@@ -76,7 +76,7 @@ namespace itWORKS.ExtendedRegistration.Controllers
             var shape = _orchardServices.New.Register();
 
             var user = _orchardServices.ContentManager.New("User");
-            if (user != null)
+            if (user != null && user.As<ProfilePart>() != null)
             {
                 shape.UserProfile = _contentManager.BuildEditor(user);
             }
@@ -120,8 +120,10 @@ namespace itWORKS.ExtendedRegistration.Controllers
 
                 if (user != null)
                 {
-                    // we know userpart data is ok, now we update the 'real' recently published userpart
-                    _orchardServices.ContentManager.UpdateEditor(user.ContentItem, this);
+                    if (user.ContentItem.As<ProfilePart>() != null || user.As<ProfilePart>() != null) {
+                        // we know userpart data is ok, now we update the 'real' recently published userpart
+                        _orchardServices.ContentManager.UpdateEditor(user.ContentItem, this);
+                    }
 
                     var userPart2 = user.As<UserPart>();
                     if (user.As<UserPart>().EmailStatus == UserStatus.Pending)

@@ -6,6 +6,7 @@ using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Themes;
 using Orchard.UI.Notify;
+using Contrib.Profile.Models;
 
 namespace Contrib.Profile.Controllers {
     [ValidateInput(false), Themed]
@@ -27,7 +28,9 @@ namespace Contrib.Profile.Controllers {
         public ActionResult Index(string username) {
             IUser user = _membershipService.GetUser(username);
 
-            if(user == null || !Services.Authorizer.Authorize(Permissions.ViewProfiles, user, null)) {
+            if(user == null || 
+                (user.As<ProfilePart>() == null || user.ContentItem.As<ProfilePart>() == null) ||
+                !Services.Authorizer.Authorize(Permissions.ViewProfiles, user, null)) {
                 return HttpNotFound();
             }
 
@@ -37,11 +40,13 @@ namespace Contrib.Profile.Controllers {
         }
 
         public ActionResult Edit() {
-            if(Services.WorkContext.CurrentUser == null) {
+            IUser user = Services.WorkContext.CurrentUser;
+
+            if (user == null ||
+                (user.As<ProfilePart>() == null || user.ContentItem.As<ProfilePart>() == null)) {
                 return HttpNotFound();
             }
 
-            IUser user = Services.WorkContext.CurrentUser;
 
             dynamic shape = Services.ContentManager.BuildEditor(user.ContentItem);
 
@@ -50,11 +55,12 @@ namespace Contrib.Profile.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPost() {
-            if (Services.WorkContext.CurrentUser == null) {
+            IUser user = Services.WorkContext.CurrentUser;
+
+            if (user == null ||
+                (user.As<ProfilePart>() == null || user.ContentItem.As<ProfilePart>() == null)) {
                 return HttpNotFound();
             }
-
-            IUser user = Services.WorkContext.CurrentUser;
 
             dynamic shape = Services.ContentManager.UpdateEditor(user.ContentItem, this);
             if (!ModelState.IsValid) {
