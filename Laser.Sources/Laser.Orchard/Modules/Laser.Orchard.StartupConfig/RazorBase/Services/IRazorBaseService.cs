@@ -32,7 +32,7 @@ namespace Laser.Orchard.StartupConfig.RazorBase.Services {
         public string CalculateFallbackTenantCodePosition(string postTenantFolder, string codeFileNameWithExtension) {
             var uriDir = String.Format(URIFORMAT, _shellSettings.Name, postTenantFolder);
             var uriFile = String.Format("{0}/{1}", uriDir, codeFileNameWithExtension);
-            var fallbackTenants = _orchardServices.WorkContext.CurrentSite.As<EnvironmentVariablesSettingsPart>().FallbackTenants.Split(';');
+            var fallbackTenants = String.IsNullOrWhiteSpace(_orchardServices.WorkContext.CurrentSite.As<EnvironmentVariablesSettingsPart>().FallbackTenants) ? new string[] { } : _orchardServices.WorkContext.CurrentSite.As<EnvironmentVariablesSettingsPart>().FallbackTenants.Split(';');
             var localDir = HostingEnvironment.MapPath(uriDir);
             string localFile;
             var razorFileFound = false;
