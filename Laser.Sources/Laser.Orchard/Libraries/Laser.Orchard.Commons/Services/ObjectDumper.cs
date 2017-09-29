@@ -9,8 +9,6 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Shapes;
 using System.Globalization;
 using System.Web.Helpers;
-using System.Dynamic;
-using System.Numerics;
 
 namespace Laser.Orchard.Commons.Services {
 
@@ -462,7 +460,6 @@ namespace Laser.Orchard.Commons.Services {
             if (shape != null) {
                 return shape.Metadata.Type + " Shape";
             }
-
             return FormatType(item.GetType());
         }
 
@@ -475,7 +472,9 @@ namespace Laser.Orchard.Commons.Services {
                     return String.Format("{0}<{1}>", type.Name.Substring(0, type.Name.IndexOf('`')), genericArguments);
                 }
             }
-
+            if (type.Name.EndsWith("Proxy")) {
+                return type.BaseType.Name;
+            }
             return type.Name;
         }
 

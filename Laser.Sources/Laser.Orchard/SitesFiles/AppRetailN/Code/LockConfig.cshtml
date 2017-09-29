@@ -4,7 +4,7 @@
 
 @functions{
     // Model.ContentItem is a MessaggioPromozionale
-    string retString = "Error"; //possible outcomes: Error,Ok
+    string retString = "Error"; //possible outcomes: Error,ConfigurazioneGrafica,ConfigurazioneAppStore
     string eMsg = "";
     //services
     IContentManager _contentManager;
@@ -32,7 +32,7 @@
                 }
             }
         }
-        retString = "Ok";
+        retString = contentType;
     } catch (Exception ex) {
         eMsg += string.Format("\r\n{0}", ex.Message);
         Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
