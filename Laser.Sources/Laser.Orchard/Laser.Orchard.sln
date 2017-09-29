@@ -13,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThemesAdmin", "ThemesAdmin"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sites", "Sites", "{4641B8B9-62AD-45A5-B0C0-9F31BBC8B425}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SitesFiles", "SitesFiles\SitesFiles.csproj", "{54548A99-0B95-4143-A4DF-2E92EEA5752A}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{67FA933C-12AB-44BC-BF7A-6A5F4FD919DD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.LinkCreator", "Utilities\Laser.Orchard.LinkCreator\Laser.Orchard.LinkCreator.csproj", "{D903D279-3F10-45CF-B6B4-6D4E48666B62}"
@@ -205,14 +203,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.SEO.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nwazet.Commerce.Tests", "..\..\Nwazet.Commerce\Nwazet.Commerce.Tests\Nwazet.Commerce.Tests.csproj", "{F33D9F18-B69D-4512-A6A9-3D4E585ACE01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App_DataFiles", "App_DataFiles\App_DataFiles.csproj", "{54548A99-0B95-4143-A4DF-2E92EEA5752A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{54548A99-0B95-4143-A4DF-2E92EEA5752A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{54548A99-0B95-4143-A4DF-2E92EEA5752A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D903D279-3F10-45CF-B6B4-6D4E48666B62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D903D279-3F10-45CF-B6B4-6D4E48666B62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D903D279-3F10-45CF-B6B4-6D4E48666B62}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -570,12 +568,13 @@ Global
 		{F33D9F18-B69D-4512-A6A9-3D4E585ACE01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F33D9F18-B69D-4512-A6A9-3D4E585ACE01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F33D9F18-B69D-4512-A6A9-3D4E585ACE01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54548A99-0B95-4143-A4DF-2E92EEA5752A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54548A99-0B95-4143-A4DF-2E92EEA5752A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{54548A99-0B95-4143-A4DF-2E92EEA5752A} = {4641B8B9-62AD-45A5-B0C0-9F31BBC8B425}
 		{D903D279-3F10-45CF-B6B4-6D4E48666B62} = {67FA933C-12AB-44BC-BF7A-6A5F4FD919DD}
 		{5CCFEF5A-D043-4F3B-A198-650736EFA8AE} = {67FA933C-12AB-44BC-BF7A-6A5F4FD919DD}
 		{9D49DF40-AE74-4CCE-B628-A1B26E99B2D4} = {821AC088-E913-428E-883E-CB67A3EFB65D}
@@ -666,5 +665,6 @@ Global
 		{314EC563-FE70-443C-BCBC-77D3051A62C8} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{F8D22E0E-539F-4579-8B72-B33386E63676} = {43B44FB0-ECDC-4552-8D02-302983E0AC0A}
 		{F33D9F18-B69D-4512-A6A9-3D4E585ACE01} = {43B44FB0-ECDC-4552-8D02-302983E0AC0A}
+		{54548A99-0B95-4143-A4DF-2E92EEA5752A} = {4641B8B9-62AD-45A5-B0C0-9F31BBC8B425}
 	EndGlobalSection
 EndGlobal

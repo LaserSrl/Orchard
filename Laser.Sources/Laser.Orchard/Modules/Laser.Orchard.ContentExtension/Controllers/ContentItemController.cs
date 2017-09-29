@@ -32,6 +32,7 @@ using System.Web.Hosting;
 using System.Web.Http;
 using OrchardCore = Orchard.Core;
 using Orchard.UI.Notify;
+using Laser.Orchard.StartupConfig.RazorBase.Services;
 
 namespace Laser.Orchard.ContentExtension.Controllers {
 
@@ -54,6 +55,8 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private readonly IRazorTemplateManager _razorTemplateManager;
         private readonly INotifier _notifier;
+        private readonly IRazorBaseService _razorService;
+
         public Localizer T { get; set; }
 
         public ContentItemController(
@@ -73,7 +76,8 @@ namespace Laser.Orchard.ContentExtension.Controllers {
 
            ITransactionManager transactionManager,
             Lazy<IEnumerable<IContentHandler>> handlers,
-            IRazorTemplateManager razorTemplateManager
+            IRazorTemplateManager razorTemplateManager,
+            IRazorBaseService razorService
            ) {
             _razorTemplateManager = razorTemplateManager;
             _localizedStringManager = localizedStringManager;
@@ -93,6 +97,8 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             _transactionManager = transactionManager;
             _handlers = handlers;
             _notifier = notifier;
+            _razorService = razorService;
+
         }
 
         public IEnumerable<IContentHandler> Handlers
@@ -485,10 +491,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         }
 
         private string ValidateMessage(ContentItem ci, string postfix) {
-            string validate_folder = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSettings.Name + @"\Validation\";
-            if (!System.IO.Directory.Exists(validate_folder))
-                System.IO.Directory.CreateDirectory(validate_folder);
-            string myfile = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSettings.Name + @"\Validation\" + ci.ContentType + postfix + ".cshtml";
+            string myfile = _razorService.CalculateFallbackTenantCodePosition("Validation", ci.ContentType + postfix + ".cshtml");
             var model = new RazorModelContext {
                 OrchardServices = _orchardServices,
                 ContentItem = ci,
