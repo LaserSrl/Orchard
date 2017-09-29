@@ -62,6 +62,9 @@
     <Reference Include="Orchard.MediaLibrary">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.MediaLibrary\bin\Orchard.MediaLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Themes">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Themes\bin\Orchard.Themes.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -215,6 +218,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Content.Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Settings\AdminMenu.cs" />
+    <Compile Include="Settings\Constants.cs" />
+    <Compile Include="Settings\Controllers\AdminController.cs" />
+    <Compile Include="Settings\Drivers\ThemeSettingsPartDriver.cs" />
+    <Compile Include="Settings\Handlers\ThemeSettingsHandler.cs" />
+    <Compile Include="Settings\Migration.cs" />
+    <Compile Include="Settings\Models\ThemeSettingsPart.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\OptionsIndex.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\ThemeSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
