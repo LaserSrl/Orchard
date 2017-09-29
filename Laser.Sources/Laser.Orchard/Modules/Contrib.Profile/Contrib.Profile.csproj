@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Drivers\ProfilePartDriver.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ProfilePart.cs" />
     <Compile Include="Permissions.cs" />
