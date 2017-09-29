@@ -13,6 +13,8 @@ using RazorEngine.Configuration;
 using RazorEngine.Templating;
 using Orchard.Workflows.Models;
 using RazorEngine;
+using Laser.Orchard.StartupConfig.Models;
+using Laser.Orchard.StartupConfig.RazorBase.Services;
 
 namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
 
@@ -34,23 +36,20 @@ namespace Laser.Orchard.StartupConfig.RazorCodeExecution.Services {
         private readonly ShellSettings _shellSettings;
         private readonly IOrchardServices _orchardServices;
         private readonly IRazorTemplateManager _razorTemplateManager;
+        private readonly IRazorBaseService _razorService;
 
         public Localizer T { get; set; }
 
-        public RazorExecuteService(ShellSettings shellSettings, IOrchardServices orchardServices, IRazorTemplateManager razorTemplateManager) {
+        public RazorExecuteService(ShellSettings shellSettings, IOrchardServices orchardServices, IRazorTemplateManager razorTemplateManager, IRazorBaseService razorService) {
             _shellSettings = shellSettings;
             _orchardServices = orchardServices;
             _razorTemplateManager = razorTemplateManager;
+            _razorService = razorService;
             T = NullLocalizer.Instance;
         }
 
         public string Execute(string codeFileWithExtension, IContent content, IDictionary<string, object> tokens = null) {
-            var uriDir = String.Format("~/App_Data/Sites/{0}/Code/", _shellSettings.Name);
-            var uriFile = String.Format("{0}/{1}", uriDir, codeFileWithExtension);
-            var localDir = HostingEnvironment.MapPath(uriDir);
-            if (!System.IO.Directory.Exists(localDir))
-                System.IO.Directory.CreateDirectory(localDir);
-            var localFile = HostingEnvironment.MapPath(uriFile);
+            string localFile = _razorService.CalculateFallbackTenantCodePosition("Code", codeFileWithExtension);
             var model = new RazorModelContext {
                 OrchardServices = _orchardServices,
                 ContentItem = content,

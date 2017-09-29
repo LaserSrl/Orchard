@@ -22,7 +22,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         }
 
         public IAuthenticationClient Build(ProviderConfigurationRecord providerConfigurationRecord) {
-            return new FacebookClient(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret);
+            return new FacebookOAuth2Client(providerConfigurationRecord.ProviderIdKey, providerConfigurationRecord.ProviderSecret);
         }
 
         public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previousAuthResult, string userAccessToken) {

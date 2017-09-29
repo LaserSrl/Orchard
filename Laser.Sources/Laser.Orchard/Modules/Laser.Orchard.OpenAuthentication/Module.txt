@@ -1,11 +1,16 @@
-﻿Name: Laser OpenAuthentication
-AntiForgery: enabled
+﻿AntiForgery: enabled
 Author: Laser s.r.l.
 Website: http://laser-group.com
 Version: 1.0
 OrchardVersion: 1.8
 Features:
     Laser.Orchard.OpenAuthentication:
+		Name: Laser OpenAuthentication
 		Description: Provides OAuth functionality to orchard Site
+		Dependencies: Laser.Orchard.StartupConfig
+		Category:Content
+	Laser.Orchard.OpenAuthentication.AppDirect:
+		Name: Laser OpenAuthentication AppDirect
+		Description: Provides OpenId SSO AppDirect functionality to orchard Site
 		Dependencies: Laser.Orchard.StartupConfig
 		Category:Content

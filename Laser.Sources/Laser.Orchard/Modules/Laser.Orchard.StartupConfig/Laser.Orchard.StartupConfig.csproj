@@ -253,9 +253,12 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UsersAutocompleteController.cs" />
     <Compile Include="Drivers\AuthenticationRequiredPartDriver.cs" />
+    <Compile Include="RazorBase\Drivers\EnvironmentVariablesSettingsPartDriver.cs" />
     <Compile Include="Drivers\FavoriteCulturePartDriver.cs" />
     <Compile Include="Drivers\MaintenancePartDriver.cs" />
     <Compile Include="Drivers\PublishExtensionPartDriver.cs" />
+    <Compile Include="RazorBase\Handlers\EnvironmentVariablesSettingsHandler.cs" />
+    <Compile Include="RazorBase\Models\EnvironmentVariablesSettingsPart.cs" />
     <Compile Include="Handlers\DisplayTextPartHandler.cs" />
     <Compile Include="Handlers\IDumperHandler.cs" />
     <Compile Include="Models\AuthenticationRequiredPart.cs" />
@@ -268,6 +271,7 @@
     <Compile Include="Projections\OwnerIdForm.cs" />
     <Compile Include="Projections\OwnerNameFilter.cs" />
     <Compile Include="Projections\OwnerStringForm.cs" />
+    <Compile Include="RazorBase\Services\IRazorBaseService.cs" />
     <Compile Include="Settings\DisplayTextPartSettingsHooks.cs" />
     <Compile Include="Settings\IdentityPartOnEveryTypeDefinitionHooks.cs" />
     <Compile Include="TaxonomiesExtensions\Drivers\TaxonomyExtensionPartDriver.cs" />
@@ -443,6 +447,7 @@
     <Content Include="Styles\font-awesome\scss\_stacked.scss" />
     <Content Include="Styles\font-awesome\scss\_variables.scss" />
     <Content Include="Views\DefinitionTemplates\ColorPickerFieldSettings.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\EnvironmentVariablesSettings.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

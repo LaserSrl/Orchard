@@ -1,0 +1,53 @@
+@{
+
+
+    System.Xml.XmlDocument mydoc = ToXmlDocument(Model);
+
+    mydoc = cambianome(mydoc, "root/item", "ExternalGuest");
+    mydoc = aggiungipadre(mydoc, "root", "lista", "ExternalGuest");
+    mydoc = RimuoviFratelli(mydoc, "root/lista");
+
+
+
+    foreach (XmlNode bookToModify in mydoc.SelectNodes("/root/lista/ExternalGuest")) {
+
+
+        var nodeDesc = bookToModify.SelectSingleNode("desc2");
+        if (nodeDesc==null){
+            nodeDesc = mydoc.CreateElement("desc2");
+        }
+        if (String.IsNullOrWhiteSpace(nodeDesc.InnerText)) {
+            nodeDesc.InnerText = bookToModify.SelectSingleNode("desc1").InnerText;
+        }
+
+        System.Xml.XmlNode originalID = mydoc.CreateElement("OriginalId");
+        originalID.InnerXml = bookToModify.SelectNodes("id")[0].InnerText;
+        bookToModify.AppendChild(originalID);
+        System.Xml.XmlNode sid = mydoc.CreateElement("Sid");
+        sid.InnerText = "ExternalGuest:" + bookToModify.SelectNodes("id")[0].InnerXml.ToString();
+        bookToModify.AppendChild(sid);
+
+        string artista = bookToModify.SelectSingleNode("NomeCognome").InnerText;
+        string linkURL = "http://www.festivaldellatv.it/";
+        if (String.IsNullOrWhiteSpace(bookToModify.SelectSingleNode("link").InnerXml.ToString()) == false) {
+            linkURL = StripHTML(bookToModify.SelectSingleNode("link").InnerXml.ToString());
+        } 
+        string immagine = "http://www.festivaldellatv.it/www.festivaldellatv.it/img/fdtv_logo_2015.png";
+		if (String.IsNullOrWhiteSpace(bookToModify.SelectSingleNode("foto_images").InnerXml.ToString()) == false) {
+			bookToModify.SelectSingleNode("foto_images").InnerXml=bookToModify.SelectSingleNode("foto_images").InnerXml.ToString().Split('|')[0];
+            immagine = StripHTML(bookToModify.SelectSingleNode("foto_images").InnerXml.ToString());
+        }
+        mydoc = AggiungiShareLink(mydoc, bookToModify, "Vieni anche tu a trovare " + artista + " al #FestivaldellaTV2016", linkURL, immagine);
+
+    }
+
+    mydoc = cambianome(mydoc, "root/lista/ExternalGuest/desc1", "abstractText");
+    mydoc = cambianome(mydoc, "root/lista/ExternalGuest/desc2", "descriptionText");
+    mydoc = cambianome(mydoc, "root/lista/ExternalGuest/foto_images", "mediaURL");
+    mydoc = cambianome(mydoc, "root/lista/ExternalGuest/id", "ToRemove");
+
+    mydoc = cambianome(mydoc, "root/lista", "ToRemove");
+    mydoc = cambianome(mydoc, "root", "ToRemove");
+
+    SpanXDocument(ToXDocument(mydoc).Root);
+}
