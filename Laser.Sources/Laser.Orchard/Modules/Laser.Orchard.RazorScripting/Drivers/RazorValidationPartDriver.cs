@@ -7,7 +7,7 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
 using System;
 
-namespace Laser.Orchard.RazorScripting.Driver {
+namespace Laser.Orchard.RazorScripting.Drivers {
 
     public class RazorValidationPartDriver : ContentPartDriver<RazorValidationPart> {
         private readonly IRazorExecuteService _razorExecuteService;

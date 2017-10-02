@@ -119,7 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\RazorDecisionActivity.cs" />
-    <Compile Include="Driver\RazorValidationPartDriver.cs" />
+    <Compile Include="Drivers\RazorValidationPartDriver.cs" />
     <Compile Include="Forms\RazorDecisionForms.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\RazorValidationPart.cs" />

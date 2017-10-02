@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{54548A99-0B95-4143-A4DF-2E92EEA5752A}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SitesFiles</RootNamespace>
+    <AssemblyName>SitesFiles</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="Sites\AppRetailN\Code\CheckUpdatedConfig.cshtml" />
+    <None Include="Sites\AppRetailN\Code\CreaUtenzaKrake.cshtml" />
+    <None Include="Sites\AppRetailN\Code\GetCredenziali.cshtml" />
+    <None Include="Sites\AppRetailN\Code\LockConfig.cshtml" />
+    <None Include="Sites\AppRetailN\Code\SignalRichiestaProdotto.cshtml" />
+    <None Include="Sites\AppRetailN\Code\UnpublishRichiesteProdotto.cshtml" />
+    <None Include="Sites\AppRetailN\Code\UnpublishStores.cshtml" />
+    <None Include="Sites\AppRetailN\Code\UpdateConfigurazioneBase.cshtml" />
+    <None Include="Sites\AppRetailN\Code\UpdateContatto.cshtml" />
+    <None Include="Sites\AppRetailN\Code\UpdateMessaggioPromozionale.cshtml" />
+    <None Include="Sites\AppRetailN\Code\UpdatePush.cshtml" />
+    <None Include="Sites\AppRetailN\Code\UpdateRichiestaProdotto.cshtml" />
+    <None Include="Sites\AutoMotoEpoca\Mobile\AME_DEV.p12" />
+    <None Include="Sites\AutoMotoEpoca\Mobile\AME_PROD.p12" />
+    <None Include="Sites\common.cshtml" />
+    <None Include="Sites\ExpertMallardo\Code\UpdatePuntiVendita.cshtml" />
+    <None Include="Sites\ExpertMallardo\Mobile\devExpert.p12" />
+    <None Include="Sites\ExpertMallardo\Mobile\prodExpert.p12" />
+    <None Include="Sites\expoincitta\Mobile\EXPO_dev.p12" />
+    <None Include="Sites\expoincitta\Mobile\EXPO_prod.p12" />
+    <None Include="Sites\FestivalTV\Xslt\instagram.cshtml" />
+    <None Include="Sites\FestivalTV\Xslt\ospiti.cshtml" />
+    <None Include="Sites\FondationGP\Code\AssignPublishExtensionStatus.cshtml" />
+    <None Include="Sites\FondationGP\Mobile\pushProdMorgex.p12" />
+    <None Include="Sites\FondationGP\Mobile\pushSvilMorgex.p12" />
+    <None Include="Sites\FondationGP\Mobile\pushsviluppoAME.p12" />
+    <None Include="Sites\Hkt00\Mobile\AME_DEV.p12" />
+    <None Include="Sites\Hkt00\Mobile\AME_PROD.p12" />
+    <None Include="Sites\Hkt00\Mobile\KrakeSampleDev.p12" />
+    <None Include="Sites\Hkt00\Mobile\KrakeSampleProd.p12" />
+    <None Include="Sites\IvreaTerritorio\Mobile\pushVisitami.p12" />
+    <None Include="Sites\IvreaTerritorio\WebServices\CalendarEvent.cshtml" />
+    <None Include="Sites\IvreaTerritorio\WebServices\CalendarEvent1.cshtml" />
+    <None Include="Sites\IvreaTerritorio\WebServices\Eventi015VM.cshtml" />
+    <None Include="Sites\IvreaTerritorio\WebServices\Eventi015VM1.cshtml" />
+    <None Include="Sites\IvreaTerritorio\WebServices\Itinerario.cshtml" />
+    <None Include="Sites\IvreaTerritorio\WebServices\Itinerario1.cshtml" />
+    <None Include="Sites\IvreaTerritorio\WebServices\POI.cshtml" />
+    <None Include="Sites\IvreaTerritorio\WebServices\POI1.cshtml" />
+    <None Include="Sites\Montevarchi\XSLT\eventi.cshtml" />
+    <None Include="Sites\MyVEC\Code\AccessoInStore.cshtml" />
+    <None Include="Sites\MyVEC\Code\AppDownloaded.cshtml" />
+    <None Include="Sites\MyVEC\Code\AssociazioneVisitaContatto.cshtml" />
+    <None Include="Sites\MyVEC\Code\CheckEmailCreator.cshtml" />
+    <None Include="Sites\MyVEC\Code\CheckPrenotazioneParcheggio.cshtml" />
+    <None Include="Sites\MyVEC\Code\CheckTarga.cshtml" />
+    <None Include="Sites\MyVEC\Code\GestioneRichiestaCamerino.cshtml" />
+    <None Include="Sites\MyVEC\Code\InserimentoRichiestaCamerino.cshtml" />
+    <None Include="Sites\MyVEC\Code\NotificaInviata.cshtml" />
+    <None Include="Sites\MyVEC\Code\ReadCredenzialiUtente.cshtml" />
+    <None Include="Sites\MyVEC\Code\RegistraPartecipazione.cshtml" />
+    <None Include="Sites\MyVEC\Code\CreaInviti.cshtml" />
+    <None Include="Sites\MyVEC\Code\CreaPrenotazioneParcheggio.cshtml">
+      <SubType>Code</SubType>
+    </None>
+    <None Include="Sites\MyVEC\Code\CreaUtenteHID.cshtml" />
+    <None Include="Sites\MyVEC\Code\CreaUtenzaKrakePerInvitato.cshtml" />
+    <None Include="Sites\MyVEC\Code\CsvValidation.cshtml">
+      <SubType>Code</SubType>
+    </None>
+    <None Include="Sites\MyVEC\Code\DailyUpdatesTask.cshtml" />
+    <None Include="Sites\MyVEC\Code\InvitoFixUserIdToCreatorid.cshtml" />
+    <None Include="Sites\MyVEC\Code\ReadInvitoAndTarga.cshtml" />
+    <None Include="Sites\MyVEC\Code\SyncDataInvitoByVisita.cshtml">
+      <SubType>Code</SubType>
+    </None>
+    <None Include="Sites\MyVEC\Code\SyncDataVisitaToInvito.cshtml" />
+    <None Include="Sites\MyVEC\Code\UpdateQuestionnaireContext.cshtml" />
+    <None Include="Sites\MyVEC\Code\UscitaDaStore.cshtml" />
+    <None Include="Sites\MyVEC\Code\ValidazioneSalesAssistantsPerNegozio.cshtml" />
+    <None Include="Sites\MyVEC\Mobile\devVec.p12" />
+    <None Include="Sites\MyVEC\Mobile\prodVec.p12" />
+    <None Include="Sites\Quincinetto\Mobile\dev._3_2017.p12" />
+    <None Include="Sites\Quincinetto\Mobile\dev_4_2018.p12" />
+    <None Include="Sites\Quincinetto\Mobile\prod_3_2017.p12" />
+    <None Include="Sites\Quincinetto\Mobile\prod_4_2018.p12" />
+    <None Include="Sites\RomaMunicipioII\Code\ImportOsp.cshtml" />
+    <None Include="Sites\SSC\Mobile\BolognaDev.p12" />
+    <None Include="Sites\SSC\Mobile\BolognaProd.p12" />
+    <None Include="Sites\TerritorioMorgex\Mobile\pushProdMorgex.p12" />
+    <None Include="Sites\TerritorioMorgex\Mobile\pushSvilMorgex.p12" />
+    <None Include="Sites\Tff\Xslt\getfilm.cshtml" />
+    <None Include="Sites\Tff\Xslt\getfilmbyday.cshtml" />
+    <None Include="Sites\Tff\Xslt\getgiorni.cshtml" />
+    <None Include="Sites\Tff\Xslt\getnews.cshtml" />
+    <None Include="Sites\Tff\Xslt\getsezioni.cshtml" />
+    <None Include="Sites\Tff\Xslt\getsponsor.cshtml" />
+    <None Include="Sites\Tff\Xslt\LuoghiFestival - Copia.cshtml" />
+    <None Include="Sites\Tff\Xslt\LuoghiFestival.cshtml" />
+    <None Include="Sites\TorinoCampidoglio\Code\ElaboraSchedaPartecipazione.cshtml" />
+    <None Include="Sites\TorinoCampidoglio\Xslt\torinolivinglabnews.cshtml" />
+    <None Include="Sites\TurismoTorino\Mobile\ttdev.p12" />
+    <None Include="Sites\TurismoTorino\Mobile\ttprod.p12" />
+    <None Include="Sites\ValliCanavesane\Code\ChangeOwner.cshtml" />
+    <None Include="Sites\ValliCanavesane\Code\ElaboraRichiestaDisponibilita.cshtml" />
+    <None Include="Sites\ValliCanavesane\Code\GeneraCodicePromo.cshtml" />
+    <None Include="Sites\ValliCanavesane\Code\ImportEvents.cshtml" />
+    <None Include="Sites\ValliCanavesane\Code\ImportWorkflowIsRunning.cshtml" />
+    <None Include="Sites\ValliCanavesane\Code\ShouldAssignRole.cshtml" />
+    <None Include="Sites\ValliCanavesane\Code\ShouldSendPasswordEmail.cshtml" />
+    <None Include="Sites\Vialfre\Mobile\pushDevVialfre.p12" />
+    <None Include="Sites\Vialfre\Mobile\pushProdVialfre.p12" />
+    <None Include="Sites\VisitMilano\Code\AssignPublishExtensionStatus.cshtml" />
+    <None Include="Sites\VisitMilano\Code\visitmilanotermseventi.cshtml" />
+    <None Include="Sites\VisitMilano\Code\visitmilanotermsitinerari.cshtml" />
+    <None Include="Sites\VisitMilano\Code\visitmilanotermsluoghi.cshtml" />
+    <None Include="Sites\VisitMilano\Mobile\dev_3_2018.p12" />
+    <None Include="Sites\VisitMilano\Mobile\prod_4_2018.p12" />
+    <None Include="Sites\VisitMilano\Xslt\ExternalListaEventi.cshtml" />
+    <None Include="Sites\VisitMilano\Xslt\ExternalListaItinerari.cshtml" />
+    <None Include="Sites\VisitMilano\Xslt\ExternalListaLuoghi.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Sites\AltoAdige\Xslt\feedurl.xslt" />
+    <Content Include="Sites\AltoAdige\Xslt\feedurldetail.xslt" />
+    <Content Include="Sites\expoincitta\Xslt\BikeSharing.xslt" />
+    <Content Include="Sites\expoincitta\Xslt\ListaCategorie.xslt" />
+    <Content Include="Sites\expoincitta\Xslt\ListaEventi.xslt" />
+    <Content Include="Sites\expoincitta\Xslt\OtpStops.xslt" />
+    <Content Include="Sites\expoincitta\Xslt\OtpStopTimes.xslt" />
+    <Content Include="Sites\FondationGP\Xslt\NewsField.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Sites\Hkt00\Xslt\BikeSharing.xslt" />
+    <Content Include="Sites\Hkt00\Xslt\OtpStops.xslt" />
+    <Content Include="Sites\Hkt00\Xslt\OtpStopTimes.xslt" />
+    <Content Include="Sites\TorinoCampidoglio\Xslt\ListaEventi.xslt" />
+    <Content Include="Sites\TurismoTorino\Xslt\ElencoProduttori.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Sites\TurismoTorino\Xslt\ListaEventi.xslt" />
+    <Content Include="Sites\TurismoTorino\Xslt\Listaproduttori.xslt" />
+    <Content Include="Sites\TurismoTorino\Xslt\Poi.xslt" />
+    <Content Include="Sites\TurismoTorino\Xslt\PoiByComuniIstat.xslt" />
+    <Content Include="Sites\TurismoTorino\Xslt\Produttoribycomune.xslt" />
+    <Content Include="Sites\Vialfre\Xslt\LuoghiEvento.Luoghi.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Sites\Vialfre\Xslt\ProgrammaEvento.Programma.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Sites\Vialfre\Xslt\Luoghi.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Sites\Vialfre\Xslt\Programma.xslt" />
+    <Content Include="Sites\Vialfre\Xslt\TipiEventi.xslt" />
+    <Content Include="Sites\Vialfre\Xslt\Visitami.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Sites\VisitMilano\Xslt\BikeSharing.xslt" />
+    <Content Include="Sites\VisitMilano\Xslt\OtpStops.xslt" />
+    <Content Include="Sites\VisitMilano\Xslt\OtpStopTimes.xslt" />
+    <Content Include="Sites\ViviIlBiellese\Xslt\feedurl.xslt" />
+    <Content Include="Sites\WakeUp.hta" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Shared\Razors\" />
+    <Folder Include="Sites\RomaMunicipioII\Mobile\" />
+    <Folder Include="Sites\RomaMunicipioII\Xslt\" />
+    <Folder Include="Sites\ViviIlBiellese\Mobile\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
