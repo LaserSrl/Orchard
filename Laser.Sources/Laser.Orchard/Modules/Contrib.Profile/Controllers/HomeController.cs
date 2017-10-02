@@ -18,11 +18,14 @@ namespace Contrib.Profile.Controllers {
     public class HomeController : Controller, IUpdateModel {
 
         private readonly IMembershipService _membershipService;
+        private readonly IContentManager _contentManager;
 
         public HomeController(IOrchardServices services,
-            IMembershipService membershipService) {
+            IMembershipService membershipService,
+            IContentManager contentManager) {
 
             _membershipService = membershipService;
+            _contentManager = contentManager;
 
             Services = services;
         }
@@ -33,52 +36,13 @@ namespace Contrib.Profile.Controllers {
         public ActionResult Index(string username) {
             IUser user = _membershipService.GetUser(username);
 
-            if(user == null ||
+            if (user == null ||
                 UserHasNoProfilePart(user) ||
                 !Services.Authorizer.Authorize(Permissions.ViewProfiles, user, null)) {
                 return HttpNotFound();
             }
 
-            //based on the Type definition we find, we will build a new type definition
-            //that allows us to only show what we may.
-            var guid = Guid.NewGuid().ToString(); //used to generate type name
-            var viewTypeName = "UserView" + guid;
-            var userTypeDefinition = user.ContentItem.TypeDefinition;
-            var partDefinitions = new List<ContentTypePartDefinition>();
-            var parts = new List<ContentPart>();
-            foreach (var typePartDefinition in userTypeDefinition.Parts
-                .Where(ctpd => MayAllowPartDisplay(ctpd, userTypeDefinition.Name))) {
-
-                partDefinitions.Add(typePartDefinition);
-                parts.Add(user
-                    .ContentItem
-                    .Parts
-                    .Where(pa => pa.PartDefinition.Name == typePartDefinition.PartDefinition.Name)
-                    .FirstOrDefault());
-            }
-            parts.AddRange(
-                user.ContentItem.Parts
-                .Where(pa => !userTypeDefinition
-                    .Parts
-                    .Select(ctpd => ctpd.PartDefinition.Name)
-                    .Contains(pa.PartDefinition.Name))
-                );
-
-            var contentTypeDefinition = 
-                new ContentTypeDefinition(viewTypeName, viewTypeName,
-                partDefinitions, new SettingsDictionary());
-
-            var builder = new ContentItemBuilder(contentTypeDefinition);
-            foreach (var part in parts) {
-                builder.Weld(part);
-            }
-
-            //dynamic shape = Services.ContentManager.BuildDisplay(user.ContentItem);
-            dynamic shape = Services.ContentManager.BuildDisplay(builder.Build());
-
-            //foreach (var part in parts) {
-            //    user.ContentItem.Weld(part);
-            //}
+            dynamic shape = Services.ContentManager.BuildDisplay(BuildFrontEndShape(user, MayAllowPartDisplay, MayAllowFieldDisplay));
 
             return View((object)shape);
         }
@@ -90,9 +54,8 @@ namespace Contrib.Profile.Controllers {
                 UserHasNoProfilePart(user)) {
                 return HttpNotFound();
             }
-
-
-            dynamic shape = Services.ContentManager.BuildEditor(user.ContentItem);
+            
+            dynamic shape = Services.ContentManager.BuildEditor(BuildFrontEndShape(user, MayAllowPartEdit, MayAllowFieldEdit));
 
             return View((object)shape);
         }
@@ -105,17 +68,82 @@ namespace Contrib.Profile.Controllers {
                 UserHasNoProfilePart(user)) {
                 return HttpNotFound();
             }
+            var userId = user.Id;
 
-            dynamic shape = Services.ContentManager.UpdateEditor(user.ContentItem, this);
+            var uItem = BuildFrontEndShape(user, MayAllowPartEdit, MayAllowFieldEdit);
+            dynamic shape = Services.ContentManager.UpdateEditor(uItem, this);
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View("Edit", (object)shape);
             }
-
+            user = _contentManager.Get<IUser>(userId, VersionOptions.DraftRequired);
+            uItem.VersionRecord = user.ContentItem.VersionRecord;
+            _contentManager.Publish(uItem);
             Services.Notifier.Information(T("Your profile has been saved."));
 
             return RedirectToAction("Edit");
         }
+        
+        private ContentItem BuildFrontEndShape(
+            IUser user, 
+            Func<ContentTypePartDefinition, string, bool> partTest, 
+            Func<ContentPartFieldDefinition, bool> fieldTest) {
+
+            //based on the Type definition we find, we will build a new type definition
+            //that allows us to only show what we may.
+            var guid = Guid.NewGuid().ToString(); //used to generate type name
+            var editTypeName = "UserEdit" + guid;
+            var userTypeDefinition = user.ContentItem.TypeDefinition;
+            var contentTypeDefinition =
+                new ContentTypeDefinition(editTypeName, editTypeName,
+                Enumerable.Empty<ContentTypePartDefinition>(), new SettingsDictionary());
+
+            var builder = new ContentItemBuilder(contentTypeDefinition);
+
+            foreach (var typePartDefinition in userTypeDefinition.Parts
+                .Where(ctpd => partTest(ctpd, userTypeDefinition.Name))) {
+
+                var part = user
+                    .ContentItem
+                    .Parts
+                    .Where(pa => pa.PartDefinition.Name == typePartDefinition.PartDefinition.Name)
+                    .FirstOrDefault();
+
+                if (part.Fields.Any(fi => !fieldTest(fi.PartFieldDefinition))) {
+                    var myPart = (ContentPart)(Activator.CreateInstance(part.GetType()));
+                    var fieldDefinitions = new List<ContentPartFieldDefinition>();
+                    fieldDefinitions.AddRange(part
+                        .PartDefinition.Fields.Where(cpfd =>
+                        fieldTest(cpfd)));
+                    var contentPartDefinition = new ContentPartDefinition(part.PartDefinition.Name, fieldDefinitions, part.PartDefinition.Settings);
+                    var partDefinition = new ContentTypePartDefinition(contentPartDefinition, part.TypePartDefinition.Settings);
+                    myPart.TypePartDefinition = partDefinition;
+                    foreach (var field in part.Fields.Where(fi => fieldTest(fi.PartFieldDefinition))) {
+                        ((ContentPart)myPart).Weld(field);
+                    }
+                    builder.Weld((ContentPart)myPart);
+                } else {
+                    builder.Weld(part);
+                }
+            }
+
+            var item = builder.Build();
+            item.ContentManager = _contentManager;
+
+            //add all the parts that were welded dynamically to user. We must do this, because the UserPart
+            //is added like this.
+            foreach (var part in user.ContentItem.Parts
+                .Where(pa => !userTypeDefinition
+                    .Parts
+                    .Select(ctpd => ctpd.PartDefinition.Name)
+                    .Contains(pa.PartDefinition.Name))) {
+                //builder.Weld(part);
+                ((IList<ContentPart>)(item.Parts)).Add(part);
+            }
+
+            return item;
+        }
+
 
         private bool UserHasNoProfilePart(IUser user) {
             return user.As<ProfilePart>() == null && user.ContentItem.As<ProfilePart>() == null;
@@ -124,6 +152,18 @@ namespace Contrib.Profile.Controllers {
         private bool MayAllowPartDisplay(ContentTypePartDefinition definition, string typeName) {
             return definition.PartDefinition.Name == typeName || //this is to account for fields added to the type
                 definition.Settings.GetModel<ProfileFrontEndSettings>().AllowFrontEndDisplay;
+        }
+
+        private bool MayAllowPartEdit(ContentTypePartDefinition definition, string typeName) {
+            return definition.PartDefinition.Name == typeName || //this is to account for fields added to the type
+                definition.Settings.GetModel<ProfileFrontEndSettings>().AllowFrontEndEdit;
+        }
+        private bool MayAllowFieldDisplay(ContentPartFieldDefinition definition) {
+            return definition.Settings.GetModel<ProfileFrontEndSettings>().AllowFrontEndDisplay;
+        }
+
+        private bool MayAllowFieldEdit(ContentPartFieldDefinition definition) {
+            return definition.Settings.GetModel<ProfileFrontEndSettings>().AllowFrontEndEdit;
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
