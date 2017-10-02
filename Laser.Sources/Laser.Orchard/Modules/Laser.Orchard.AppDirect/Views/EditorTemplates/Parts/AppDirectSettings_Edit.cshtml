@@ -5,6 +5,11 @@
     Style.Require("FontAwesome430").AtHead();
 }
 <fieldset>
+    @Html.LabelFor(x => x.BaseUrl,T("Market Base Url"))
+    @Html.TextBoxFor(x => x.BaseUrl)
+    <div class="hint">@T("Base Url like https://marketplace.appdirect.com")</div>
+</fieldset>
+<fieldset>
     <legend>@T("Add OAuth Setting")</legend>
     <div id="btw">
         <ul id="j_menuquestion"></ul>

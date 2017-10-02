@@ -175,5 +175,10 @@ namespace Laser.Orchard.OpenAuthentication {
                  t => t.AlterColumn("ProviderUserData", col => col.WithType(DbType.String).Unlimited()));
              return 12;
          }
+        public int UpdateFrom12() {
+            SchemaBuilder.AlterTable("OpenAuthenticationSettingsPartRecord", t => t.AddColumn<string>("AppDirectBaseUrl"));
+            return 13;
+        }
+        
     }
 }

@@ -12,5 +12,5 @@ Features:
 	Laser.Orchard.OpenAuthentication.AppDirect:
 		Name: Laser OpenAuthentication AppDirect
 		Description: Provides OpenId SSO AppDirect functionality to orchard Site
-		Dependencies: Laser.Orchard.StartupConfig
+		Dependencies: Laser.Orchard.StartupConfig, Laser.Orchard.OpenAuthentication
 		Category:Content

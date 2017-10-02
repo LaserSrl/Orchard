@@ -3,5 +3,7 @@
 namespace Laser.Orchard.OpenAuthentication.Models {
     public class OpenAuthenticationSettingsPartRecord : ContentPartRecord {
         public virtual bool AutoRegistrationEnabled { get; set; }
+        public virtual string AppDirectBaseUrl { get; set; }
+       
     }
 }

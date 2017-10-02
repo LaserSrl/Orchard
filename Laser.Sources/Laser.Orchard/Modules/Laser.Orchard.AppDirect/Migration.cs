@@ -65,6 +65,11 @@ namespace Laser.Orchard.AppDirect {
                  .WithPart("CommonPart")
                  .WithPart("AppDirectRequestPart")
                  .WithPart(typeof(AppDirectButtonPart).Name)
+                 .WithPart("DisplayTextPart",y=>y.
+                    WithSetting("DisplayTextPartSettings.DisplayText", "{Content.Fields.AppDirectRequestPart.Action} - {Content.AppDirectUserEmail} - {Content.Fields.AppDirectRequestPart.Edition}")
+                    )
+                 .Listable()
+                 .Securable()
             );
             SchemaBuilder.CreateTable(typeof(AppDirectSettingsRecord).Name, table => table
                  .Column<int>("Id", column => column.PrimaryKey().Identity())
@@ -90,6 +95,13 @@ namespace Laser.Orchard.AppDirect {
                .Column<bool>("Enabled")
            );
            return 2;
+        }
+        public int UpdateFrom2() {
+            SchemaBuilder.CreateTable(typeof(AppDirectSettingsPartRecord).Name, table => table
+               .ContentPartRecord()
+                 .Column<string>("BaseUrl")
+                 );
+            return 3;
         }
     }
 }
