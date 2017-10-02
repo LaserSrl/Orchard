@@ -36,7 +36,6 @@
            Laser.Orchard.Maps, 
            Laser.Orchard.Mobile, 
            Laser.Orchard.OpenAuthentication,
-           Laser.Orchard.OpenAuthentication.AppDirect,
            Laser.Orchard.Policy, 
            Laser.Orchard.PushGateway, 
            Laser.Orchard.Queries, 
