@@ -67,7 +67,7 @@
                 EnumerationField enumField = field as EnumerationField;
                 // get settings of ScriptNascondiPrezzo in content type Prodotto
                 var settings = _contentManager.GetContentTypeDefinitions().First(x => x.Name == "Prodotto").Parts.First(x => x.PartDefinition.Name == "Prodotto").PartDefinition.Fields.First(x => x.Name == "ScriptNascondiPrezzo").Settings;
-                var script = settings["InsertStuffFieldSettings.RawHtml"];
+                var script = (settings.ContainsKey("InsertStuffFieldSettings.RawHtml")) ? settings["InsertStuffFieldSettings.RawHtml"] : "";
                 // update script if necesssary
                 if (enumField.Value.Contains("B2C") == false && string.IsNullOrWhiteSpace(script)) {
                     settings["InsertStuffFieldSettings.RawHtml"] = "<script type='text/javascript'>\r\n$('label[for=Prodotto_NascondiPrezzo_Value]').parent().hide();\r\n</script>";
