@@ -205,7 +205,8 @@ namespace Laser.Orchard.AppDirect.Controllers {
 
         public ActionResult LogOnManager() {
             string stropenid = Request.QueryString["openid"];
-            if (stropenid != null && stropenid.StartsWith("https://marketplace.appdirect.com/openid/id")) {
+            var settingbaseurl = _orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>().BaseUrl;
+            if (stropenid != null && stropenid.StartsWith(settingbaseurl + "/openid/id")) {
                 //  string accountIdentifier = Request.QueryString["accountIdentifier"];
                 var product = Request.QueryString["productKey"];
                 OpenIdRelyingParty rpopenid = new OpenIdRelyingParty();

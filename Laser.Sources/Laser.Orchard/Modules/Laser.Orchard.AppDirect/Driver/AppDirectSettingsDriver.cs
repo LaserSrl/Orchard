@@ -28,6 +28,10 @@ namespace Laser.Orchard.AppDirect.Driver {
 
         protected override DriverResult Editor(AppDirectSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape("Parts_AppDirectSettings_Edit", () => {
+                var baseurl = "";
+             //   part = _orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>();
+                if (part != null)
+                    baseurl = part.BaseUrl;
                 var vm = new ListAppDirectSettingVM {
                     ListAppDirectSetting = _repoSetting.Table.ToList().Select(s => new AppDirectSettingVM {
                         Id = s.Id,
@@ -35,12 +39,15 @@ namespace Laser.Orchard.AppDirect.Driver {
                         ConsumerSecret = s.ConsumerSecret,
                         Key = s.TheKey,
                         Delete = false
-                    })
+                    }),
+                    BaseUrl = baseurl
                 };
+                
                 if (updater != null) {
                     vm = new ListAppDirectSettingVM();
                     if (updater.TryUpdateModel(vm, Prefix, null, null)) {
                         UpdateOAuth(vm);
+                        part.BaseUrl = vm.BaseUrl;
                    }
                 }
                 else {
