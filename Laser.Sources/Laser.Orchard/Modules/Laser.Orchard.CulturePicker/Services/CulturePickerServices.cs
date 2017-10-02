@@ -20,14 +20,27 @@ namespace Laser.Orchard.CulturePicker.Services {
 
             //setting up domain for cookie allows to share it to sub-domains as well
             //if non-default port is used, we consider it as a testing environment without sub-domains
-            if (request.Url != null && 
-                request.Url.IsDefaultPort &&
-                !(request.Url.Host.ToUpperInvariant() == "LOCALHOST")) {
+            if (UseSubdomainCookie(context)) {
                 // '.' prefix means, that cookie will be shared to sub-domains
                 cultureCookie.Domain = "." + request.Url.Host;
             }
 
             context.Response.Cookies.Add(cultureCookie);
+        }
+
+        private bool UseSubdomainCookie(HttpContextBase context) {
+            //TODO: write an actual implementation based, e.g., on a site setting
+            return false;
+
+            //Original code to test whether subdomain cookie should be used:
+            ////setting up domain for cookie allows to share it to sub-domains as well
+            ////if non-default port is used, we consider it as a testing environment without sub-domains
+            //if (request.Url != null &&
+            //    request.Url.IsDefaultPort &&
+            //    !(request.Url.Host.ToUpperInvariant() == "LOCALHOST")) {
+            //    // '.' prefix means, that cookie will be shared to sub-domains
+            //    cultureCookie.Domain = "." + request.Url.Host;
+            //}
         }
 
     }

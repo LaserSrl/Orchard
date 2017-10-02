@@ -42,7 +42,11 @@ namespace Laser.Orchard.UsersExtensions.Filters {
             _utilsServices = utilsServices;
             _workContext = workContext;
 
-            allowedControllers = new string[] { "Laser.Orchard.Policy.Controllers.PoliciesController", "Orchard.Users.Controllers.AccountController", "Laser.Orchard.OpenAuthentication.Controllers.AccountController" };
+            allowedControllers = new string[] {
+                "Laser.Orchard.UsersExtensions.Controllers.UserActionsController",
+                "Laser.Orchard.Policy.Controllers.PoliciesController",
+                "Orchard.Users.Controllers.AccountController",
+                "Laser.Orchard.OpenAuthentication.Controllers.AccountController" };
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {

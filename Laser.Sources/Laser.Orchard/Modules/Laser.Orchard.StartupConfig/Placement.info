@@ -56,4 +56,7 @@
 
   <Place Fields_Custom_ColorPicker_Edit="Content:2.5"/>
   <Place Fields_Custom_ColorPicker="Content:2.5"/>
+  
+  <!-- Settings -->
+  <Place Parts_EnvironmentVariablesSettings_Edit="Content:1" />
 </Placement>

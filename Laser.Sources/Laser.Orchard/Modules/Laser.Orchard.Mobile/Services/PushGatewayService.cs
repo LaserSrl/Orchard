@@ -46,7 +46,7 @@ namespace Laser.Orchard.Mobile.Services {
 
         PushState PublishedPushEvent(ContentItem ci);
 
-        void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string messageWindows, string sound, string queryDevice = "", string externalUrl = "");
+        void SendPushService(bool produzione, string device, Int32 idContentRelated, ContentItem contentItem, string language_param, string messageApple, string messageAndroid, string messageWindows, string sound, string queryDevice = "", string externalUrl = "");
 
         IList<IDictionary> GetContactsWithDevice(string nameFilter);
 
@@ -387,7 +387,7 @@ namespace Laser.Orchard.Mobile.Services {
         /// <param name="JsonAndroid">If JsonAndroid is empty messageAndroid will be sent</param>
         /// <param name="messageWindows"></param>
         /// <param name="sound">Used in Apple Message</param>
-        public void SendPushService(bool produzione, string device, Int32 idContentRelated, string language_param, string messageApple, string messageAndroid, string messageWindows, string sound, string queryDevice = "", string externalUrl = "") {
+        public void SendPushService(bool produzione, string device, Int32 idContentRelated, ContentItem contenItem, string language_param, string messageApple, string messageAndroid, string messageWindows, string sound, string queryDevice = "", string externalUrl = "") {
             _result = null;
             bool stopPush = false;
             ContentItem relatedContentItem = null;
@@ -410,7 +410,11 @@ namespace Laser.Orchard.Mobile.Services {
                 if (string.IsNullOrEmpty(language_param)) {
                     language = _orchardServices.WorkContext.CurrentSite.SiteCulture;
                     try {
-                        language = ((dynamic)relatedContentItem).LocalizationPart.Culture != null ? ((dynamic)relatedContentItem).LocalizationPart.Culture.Culture : language;
+                        if(((dynamic)relatedContentItem).LocalizationPart != null && ((dynamic)relatedContentItem).LocalizationPart.Culture != null) {
+                            language = ((dynamic)relatedContentItem).LocalizationPart.Culture.Culture;
+                        }else if (((dynamic)contenItem).LocalizationPart != null && ((dynamic)contenItem).LocalizationPart.Culture != null) {
+                            language = ((dynamic)contenItem).LocalizationPart.Culture.Culture;
+                        }
                     }
                     catch {
                         language = "All";
@@ -622,7 +626,11 @@ namespace Laser.Orchard.Mobile.Services {
                         // determina il language
                         string language = _orchardServices.WorkContext.CurrentSite.SiteCulture;
                         try {
-                            language = contentForPush.LocalizationPart.Culture != null ? contentForPush.LocalizationPart.Culture.Culture : language;
+                            if (((dynamic)contentForPush).LocalizationPart != null && ((dynamic)contentForPush).LocalizationPart.Culture != null) {
+                                language = ((dynamic)contentForPush).LocalizationPart.Culture.Culture;
+                            } else if (((dynamic)ci).LocalizationPart != null && ((dynamic)ci).LocalizationPart.Culture != null) {
+                                language = ((dynamic)ci).LocalizationPart.Culture.Culture;
+                            }
                         }
                         catch {
                             language = "All";
