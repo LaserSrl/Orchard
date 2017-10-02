@@ -54,8 +54,9 @@ namespace Contrib.Profile.Controllers {
                 UserHasNoProfilePart(user)) {
                 return HttpNotFound();
             }
-            
-            dynamic shape = Services.ContentManager.BuildEditor(BuildFrontEndShape(user, MayAllowPartEdit, MayAllowFieldEdit));
+
+            //dynamic shape = Services.ContentManager.BuildEditor(BuildFrontEndShape(user, MayAllowPartEdit, MayAllowFieldEdit));
+            dynamic shape = BuildFrontEndShapeEx(user, MayAllowPartEdit, MayAllowFieldEdit);
 
             return View((object)shape);
         }
@@ -144,6 +145,20 @@ namespace Contrib.Profile.Controllers {
             return item;
         }
 
+
+        private dynamic BuildFrontEndShapeEx(
+            IUser user,
+            Func<ContentTypePartDefinition, string, bool> partTest,
+            Func<ContentPartFieldDefinition, bool> fieldTest) {
+
+            dynamic shape = _contentManager.BuildEditor(user);
+            //shape.Content.Items contains the List<object> of the things we will display
+            //we can do a ((List<object>)(shape.Content.Items)).RemoveAll(condition) to get rid 
+            //of the stuff we do not want to see.
+
+
+            return shape;
+        }
 
         private bool UserHasNoProfilePart(IUser user) {
             return user.As<ProfilePart>() == null && user.ContentItem.As<ProfilePart>() == null;
