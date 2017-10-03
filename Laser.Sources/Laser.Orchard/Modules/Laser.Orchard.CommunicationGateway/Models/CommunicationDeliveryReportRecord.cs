@@ -5,6 +5,7 @@ using System.Web;
 
 namespace Laser.Orchard.CommunicationGateway.Models {
     public class CommunicationDeliveryReportRecord {
+        public virtual int Id { get; set; }
         public virtual int CommunicationAdvertisingPartRecord_Id { get; set; }
         public virtual string ExternalId { get; set; }
         // Date and time send request
