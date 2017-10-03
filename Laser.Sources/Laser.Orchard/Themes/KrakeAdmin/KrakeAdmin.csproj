@@ -192,6 +192,13 @@
     <Compile Include="Filters\SelectContentCssFilter.cs" />
     <Compile Include="Filters\StringWriteWithEncoding.cs" />
     <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Settings\AdminMenu.cs" />
+    <Compile Include="Settings\Constants.cs" />
+    <Compile Include="Settings\Controllers\AdminController.cs" />
+    <Compile Include="Settings\Migration.cs" />
+    <Compile Include="Settings\Models\ThemeSettingsRecord.cs" />
+    <Compile Include="Settings\Services\ThemeSettingsService.cs" />
+    <Compile Include="Settings\ViewModels\ThemeSettingsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Content.SummaryAdmin.cshtml">
@@ -242,6 +249,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Pager.CurrentPage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PlaceholderLogo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\ThemeSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

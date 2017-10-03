@@ -1,6 +1,9 @@
 ﻿@using Orchard.Utility.Extensions;
 @using Orchard.Environment.Configuration;
 @{
+    ShellSettings _shellsettings;
+
+    WorkContext.TryResolve<ShellSettings>(out _shellsettings);
     Script.Require("jQuery");
     //Script.Include("admin.js").AtFoot();
     IEnumerable<dynamic> firstLevelMenuItems = Model;
@@ -17,13 +20,6 @@
     Model.Attributes.Add("id", "main-menu");
 
     var tag = Tag(Model, "ul");
-
-    /*Logica Logo WhiteLabel*/
-    ShellSettings _shellsettings;
-    WorkContext.TryResolve<ShellSettings>(out _shellsettings);
-    string tenantname = _shellsettings.Name.ToLower();
-    var backgroundImage = Url.Content(String.Format("~/media/AdminResources/Logo/{0}-logo.png", tenantname));
-    var backgroundImageMinimized = Url.Content(String.Format("~/media/AdminResources/Logo/{0}-logo-minimized.png", tenantname));
 
     string basePath = "";
     string tenantPath = _shellsettings.RequestUrlPrefix ?? "";
@@ -45,14 +41,7 @@
         </div>
     </div>
     <div class="menubar-scroll-panel">
-        @if (File.Exists(Server.MapPath(backgroundImage))) {
-            <div class="logo-icon">
-                <img src="@backgroundImage" class="img-responsive" />
-            </div>
-            <div class="logo-icon-minimized">
-                <img src="@backgroundImageMinimized" class="img-responsive" />
-            </div>
-        }
+        @Display(New.PLaceholderLogo())
         ﻿@tag.StartElement
         @foreach (var firstLevelMenuItem in Model) {
             IEnumerable<dynamic> secondLevelMenuItems = firstLevelMenuItem;
@@ -83,16 +72,14 @@
 
                 if (firstLevelMenuItem.Selected) {
                     classSelected = "active";
-                }
-                else {
+                } else {
                     classSelected = "";
                 }
 
                 //***** Elimino il link sull'apertura del sottomenu *****//
                 if (secondLevelMenuItems.Count(menuItem => !menuItem.LocalNav) > 1 || !firstLevelMenuItem.LinkToFirstChild) {
                     sectionHeaderMarkup = new HtmlString(string.Format(@"<a><div class=""gui-icon""><i class=""{2}""></i></div><span class=""title"">{0}</span></a>", sectionHeaderText, Html.Encode(itemClassName), icon_class));
-                }
-                else {
+                } else {
                     sectionHeaderMarkup = HasText(itemId)
                         ? new HtmlString(string.Format(@"<a href=""{0}"" class=""{1}"" id=""{2}""><div class=""gui-icon""><i class=""{4}""></i></div><span class=""title"">{3}</span></a>", (string)firstOfTheSecond.Href, Html.Encode(classSelected), Html.Encode(itemId), sectionHeaderText, icon_class))
                         : new HtmlString(string.Format(@"<a href=""{0}"" class=""{1}""><div class=""gui-icon""><i class=""{3}""></i></div><span class=""title"">{2}</span></a>", (string)firstOfTheSecond.Href, Html.Encode(classSelected), sectionHeaderText, icon_class));
@@ -101,24 +88,20 @@
                 if (secondLevelMenuItems.Count(menuItem => !menuItem.LocalNav) > 1 && firstLevelMenuItemUrl != firstOfTheSecond.Href) {
                     stringUrlFirstChild = (string)firstOfTheSecond.Href;
                     stringLabelFirstChild = sectionHeaderText;
-                }
-                else if (!firstLevelMenuItem.LinkToFirstChild) {
+                } else if (!firstLevelMenuItem.LinkToFirstChild) {
                     if (firstLevelMenuItemUrl != basePath) {
                         stringUrlFirstChild = (string)firstLevelMenuItem.Href;
-                    }
-                    else {
+                    } else {
                         stringUrlFirstChild = (string)firstOfTheSecond.Href;
                     }
                     stringLabelFirstChild = sectionHeaderText;
                 }
 
-            }
-            else if (firstLevelMenuItem.RouteValues != null || HasText(firstLevelMenuItem.Url)) {
+            } else if (firstLevelMenuItem.RouteValues != null || HasText(firstLevelMenuItem.Url)) {
                 sectionHeaderMarkup = HasText(itemId)
                     ? new HtmlString(string.Format(@"<a href=""{0}"" class=""{1}"" id=""{2}""><div class=""gui-icon""><i class=""{4}""></i></div><span class=""title"">{3}</span></a>", (string)firstLevelMenuItem.Href, Html.Encode(classSelected), Html.Encode(itemId), sectionHeaderText, icon_class))
                     : new HtmlString(string.Format(@"<a href=""{0}"" class=""{1}""><div class=""gui-icon""><i class=""{3}""></i></div><span class=""title"">{2}</span></a>", (string)firstLevelMenuItem.Href, Html.Encode(classSelected), sectionHeaderText, icon_class));
-            }
-            else {
+            } else {
                 // if the header isn't linked and there are no children there's no reason for this item in the menu other than to look pretty
                 if (!secondLevelMenuItems.Any()) {
                     continue;
@@ -179,8 +162,7 @@
                         @secondLevelTag.StartElement
                         if (HasText(secondLevelItemId)) {
                             <a href="@secondLevelUrl" id="@secondLevelItemId"><span class="title">@secondLevelMenuItem.Text</span></a>
-                        }
-                        else {
+                        } else {
                             <a href="@secondLevelUrl"><span class="title">@secondLevelMenuItem.Text</span></a>
                         }
                         @secondLevelTag.EndElement
