@@ -1,13 +1,13 @@
-﻿using KrakeDefaultTheme.Settings.Models;
-using KrakeDefaultTheme.Settings.ViewModels;
-using KrakeDefaultTheme.Settings.Services;
+﻿using KrakeAdmin.Settings.Models;
+using KrakeAdmin.Settings.ViewModels;
+using KrakeAdmin.Settings.Services;
 using Orchard;
 using Orchard.Localization;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using System.Web.Mvc;
 
-namespace KrakeDefaultTheme.Settings.Controllers {
+namespace KrakeAdmin.Settings.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
         private readonly IThemeSettingsService _settingsService;
@@ -29,10 +29,10 @@ namespace KrakeDefaultTheme.Settings.Controllers {
                 BaseLineText = settings.BaseLineText,
                 HeaderLogoUrl = settings.HeaderLogoUrl,
                 PlaceholderLogoUrl = settings.PlaceholderLogoUrl,
-
+                PlaceholderSmallLogoUrl = settings.PlaceholderSmallLogoUrl,
             };
 
-            return View("~/Themes/KrakeDefaultTheme/Views/admin/ThemeSettings.cshtml", viewModel);
+            return View("~/Themes/KrakeAdmin/Views/admin/ThemeSettings.cshtml", viewModel);
         }
 
         [HttpPost]
@@ -45,6 +45,7 @@ namespace KrakeDefaultTheme.Settings.Controllers {
             settings.BaseLineText = viewModel.BaseLineText;
             settings.HeaderLogoUrl = viewModel.HeaderLogoUrl;
             settings.PlaceholderLogoUrl = viewModel.PlaceholderLogoUrl;
+            settings.PlaceholderSmallLogoUrl = viewModel.PlaceholderSmallLogoUrl; 
 
             Services.Notifier.Information(T("Your settings have been saved."));
 

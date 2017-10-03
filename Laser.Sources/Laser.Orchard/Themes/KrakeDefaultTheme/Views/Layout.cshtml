@@ -70,11 +70,19 @@
     WorkContext.TryResolve<IThemeSettingsService>(out _themeSettingsService);
     string tenantname = _shellsettings.Name;
     var themeSettings = _themeSettingsService.GetSettings();
-
-    //if (Model.Title != null) {
-    //    Model.Header.Add(Display.Title(Title: Model.Title));
-    //}
-
+    var backgroundImage = "";
+    var isLocalLogo = false;
+    if (!String.IsNullOrEmpty(themeSettings.HeaderLogoUrl)) {
+        isLocalLogo = !themeSettings.HeaderLogoUrl.StartsWith("http");
+        if (isLocalLogo) {
+            backgroundImage = Url.Content(themeSettings.HeaderLogoUrl);
+        } else {
+            backgroundImage = themeSettings.HeaderLogoUrl;
+        }
+    }
+    if (isLocalLogo && !File.Exists(Server.MapPath(backgroundImage))) {
+        backgroundImage = "";
+    }
 }
 
 <header>
@@ -83,8 +91,8 @@
             <div class="col-xs-0 col-md-4"></div>
             <div class="col-xs-12 col-md-4 text-center">
                 <a href="~/">
-                    @if (!String.IsNullOrEmpty(themeSettings.HeaderLogoUrl)) {
-                        <img src="@themeSettings.HeaderLogoUrl" alt="logo" class="img-responsive" />
+                    @if (!String.IsNullOrEmpty(backgroundImage)) {
+                        <img src="@backgroundImage" alt="logo" class="img-responsive" />
                     } else {
                         <img src="@subthemePath/images/logo.png" alt="logo" class="img-responsive" />}
                 </a>
@@ -117,6 +125,6 @@
 </div>
 <div id="footer">
     <div class="container container-footer">
-        <div class="footer-text">@WorkContext.CurrentSite.SiteName - @(String.IsNullOrWhiteSpace(themeSettings.BaseLineText)?T("Powered by Krake").ToString(): themeSettings.BaseLineText)</div>
+        <div class="footer-text">@WorkContext.CurrentSite.SiteName - @(String.IsNullOrWhiteSpace(themeSettings.BaseLineText) ? T("Powered by Krake").ToString() : themeSettings.BaseLineText)</div>
     </div>
 </div>
