@@ -150,7 +150,7 @@ namespace itWORKS.ExtendedRegistration.Controllers {
                     }
 
                     return Redirect(string.IsNullOrWhiteSpace(_shellSettings.RequestUrlPrefix) ?
-                        "~/":
+                        "~/" :
                         "~/" + _shellSettings.RequestUrlPrefix.Trim('/'));
                 }
 
@@ -233,23 +233,12 @@ namespace itWORKS.ExtendedRegistration.Controllers {
             }
         }
 
-        private bool _preventValidationErrors;
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
-            _preventValidationErrors = false;
-            if (model is ContentPart) {
-                var part = model as ContentPart;
-                _preventValidationErrors = !_frontEndProfileService.MayAllowPartEdit(part.TypePartDefinition, part.TypeDefinition.Name);
-            } else if (model is ContentField) {
-                var field = model as ContentField;
-                _preventValidationErrors = !_frontEndProfileService.MayAllowFieldEdit(field.PartFieldDefinition);
-            }
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
 
         void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
-            if (!_preventValidationErrors) {
-                ModelState.AddModelError(key, errorMessage.ToString());
-            }
+            ModelState.AddModelError(key, errorMessage.ToString());
         }
     }
 
