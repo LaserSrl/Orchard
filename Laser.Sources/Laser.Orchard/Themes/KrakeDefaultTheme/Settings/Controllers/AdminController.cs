@@ -1,34 +1,55 @@
-﻿using System.Web.Mvc;
+﻿using KrakeDefaultTheme.Settings.Models;
+using KrakeDefaultTheme.Settings.ViewModels;
+using KrakeDefaultTheme.Settings.Services;
 using Orchard;
 using Orchard.Localization;
+using Orchard.Themes;
 using Orchard.UI.Notify;
-using KrakeDefaultTheme.Settings.Models;
-using System;
-using Orchard.ContentManagement;
+using System.Web.Mvc;
 
 namespace KrakeDefaultTheme.Settings.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
+        private readonly IThemeSettingsService _settingsService;
+        public IOrchardServices Services { get; private set; }
 
         public AdminController(
-            IOrchardServices services
-            ) {
+            IThemeSettingsService settingsService,
+            IOrchardServices services) {
             Services = services;
+            _settingsService = settingsService;
             T = NullLocalizer.Instance;
         }
 
-        public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Index() {
-            var viewModel = Services.WorkContext.CurrentSite.As<ThemeSettingsPart>();
-            return View("~/Themes/KrakeDefaultTheme/Views/Admin/OptionsIndex.cshtml", viewModel);
+        public ActionResult ThemeSettings() {
+            var settings = _settingsService.GetSettings();
+            var viewModel = new ThemeSettingsViewModel {
+                BaseLineText = settings.BaseLineText,
+                HeaderLogoUrl = settings.HeaderLogoUrl,
+                PlaceholderLogoUrl = settings.PlaceholderLogoUrl,
+
+            };
+
+            return View("~/Themes/KrakeDefaultTheme/Views/admin/ThemeSettings.cshtml", viewModel);
         }
 
         [HttpPost]
-        public ActionResult Index(ThemeSettingsPart viewModel) {
-            throw new NotImplementedException();
-            return View("OptionsIndex", null);
+        [ActionName("ThemeSettings")]
+        public ActionResult ThemeSettingsPOST(ThemeSettingsRecord viewModel) {
+            if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't update theme settings")))
+                return new HttpUnauthorizedResult();
+
+            var settings = _settingsService.GetSettings();
+            settings.BaseLineText = viewModel.BaseLineText;
+            settings.HeaderLogoUrl = viewModel.HeaderLogoUrl;
+            settings.PlaceholderLogoUrl = viewModel.PlaceholderLogoUrl;
+
+            Services.Notifier.Information(T("Your settings have been saved."));
+
+            return RedirectToAction("ThemeSettings");
         }
     }
+
 }

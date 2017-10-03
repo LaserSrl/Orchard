@@ -8,13 +8,13 @@ using System.Web;
 namespace KrakeDefaultTheme.Settings {
     public class Migrations : DataMigrationImpl {
         public int Create() {
-            ContentDefinitionManager.AlterPartDefinition("ThemeSettingsPart", part => part
-                    .WithField("Logo", fieldBuilder => fieldBuilder
-                    .WithDisplayName("Logo")
-                    .OfType("MediaLibraryPickerField")
-                    .WithSetting("MediaLibraryPickerFieldSettings.Required", "False")
-                    .WithSetting(" MediaLibraryPickerFieldSettings.Multiple", "False"))
+            SchemaBuilder.CreateTable("ThemeSettingsRecord", table => table
+                .Column<int>("Id", column => column.PrimaryKey().Identity())
+                .Column<string>("HeaderLogoUrl", c => c.WithLength(500))
+                .Column<string>("PlaceholderLogoUrl", c => c.WithLength(500))
+                .Column<string>("BaseLineText", c => c.WithLength(120))
             );
+
             return 1;
         }
     }

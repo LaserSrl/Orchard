@@ -223,16 +223,20 @@
     <Compile Include="Settings\AdminMenu.cs" />
     <Compile Include="Settings\Constants.cs" />
     <Compile Include="Settings\Controllers\AdminController.cs" />
-    <Compile Include="Settings\Drivers\ThemeSettingsPartDriver.cs" />
     <Compile Include="Settings\Handlers\ThemeSettingsHandler.cs" />
     <Compile Include="Settings\Migration.cs" />
-    <Compile Include="Settings\Models\ThemeSettingsPart.cs" />
+    <Compile Include="Settings\Models\ThemeSettingsRecord.cs" />
+    <Compile Include="Settings\Services\ThemeSettingsService.cs" />
+    <Compile Include="Settings\ViewModels\ThemeSettingsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Admin\OptionsIndex.cshtml" />
+    <Content Include="Views\Admin\ThemeSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\ThemeSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Settings\Drivers\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

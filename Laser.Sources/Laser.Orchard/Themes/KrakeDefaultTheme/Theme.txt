@@ -1,4 +1,5 @@
 Name: KrakeDefaultTheme
+AntiForgery: enabled
 Author: Laser Srl
 Website: http://www.laser-group.com
 Description: Krake frontoffice theme

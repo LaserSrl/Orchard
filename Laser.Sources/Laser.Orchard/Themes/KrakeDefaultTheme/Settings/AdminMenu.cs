@@ -19,7 +19,7 @@ namespace KrakeDefaultTheme.Settings {
             if (themeName.Name == Constants.ThemeName) {
                 builder.Add(T("Themes"),
                     menu => menu
-                        .Add(T("Krake default theme options"), "5.1", item => item.Action("Index", "Admin", new { area = Constants.RoutesAreaName }).LocalNav())
+                        .Add(T("Krake default theme options"), "5.1", item => item.Action("ThemeSettings", "Admin", new { area = Constants.RoutesAreaName }).LocalNav())
                     );
             }
         }
