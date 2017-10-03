@@ -41,8 +41,11 @@ namespace Contrib.Profile.Controllers {
                 !Services.Authorizer.Authorize(Permissions.ViewProfiles, user, null)) {
                 return HttpNotFound();
             }
-
-            dynamic shape = Services.ContentManager.BuildDisplay(BuildFrontEndShape(user, MayAllowPartDisplay, MayAllowFieldDisplay));
+            
+            dynamic shape = BuildFrontEndShape(
+                _contentManager.BuildDisplay(user, "", ""), //since the result of BuildDisplay is dynamic I have to do the ugly thing below
+                new Func<ContentTypePartDefinition, string, bool>(MayAllowPartDisplay), 
+                new Func<ContentPartFieldDefinition, bool>(MayAllowFieldDisplay));
 
             return View((object)shape);
         }
@@ -54,9 +57,11 @@ namespace Contrib.Profile.Controllers {
                 UserHasNoProfilePart(user)) {
                 return HttpNotFound();
             }
-
-            //dynamic shape = Services.ContentManager.BuildEditor(BuildFrontEndShape(user, MayAllowPartEdit, MayAllowFieldEdit));
-            dynamic shape = BuildFrontEndShapeEx(user, MayAllowPartEdit, MayAllowFieldEdit);
+            
+            dynamic shape = BuildFrontEndShape(
+                _contentManager.BuildEditor(user),
+                new Func<ContentTypePartDefinition, string, bool>(MayAllowPartEdit),
+                new Func<ContentPartFieldDefinition, bool>(MayAllowFieldEdit));
 
             return View((object)shape);
         }
@@ -71,91 +76,45 @@ namespace Contrib.Profile.Controllers {
             }
             var userId = user.Id;
 
-            var uItem = BuildFrontEndShape(user, MayAllowPartEdit, MayAllowFieldEdit);
-            dynamic shape = Services.ContentManager.UpdateEditor(uItem, this);
+            dynamic shape = BuildFrontEndShape(
+                _contentManager.UpdateEditor(user, this),
+                new Func<ContentTypePartDefinition, string, bool>(MayAllowPartEdit),
+                new Func<ContentPartFieldDefinition, bool>(MayAllowFieldEdit));
+            
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View("Edit", (object)shape);
             }
-            user = _contentManager.Get<IUser>(userId, VersionOptions.DraftRequired);
-            uItem.VersionRecord = user.ContentItem.VersionRecord;
-            _contentManager.Publish(uItem);
+
             Services.Notifier.Information(T("Your profile has been saved."));
 
             return RedirectToAction("Edit");
         }
         
-        private ContentItem BuildFrontEndShape(
-            IUser user, 
-            Func<ContentTypePartDefinition, string, bool> partTest, 
-            Func<ContentPartFieldDefinition, bool> fieldTest) {
 
-            //based on the Type definition we find, we will build a new type definition
-            //that allows us to only show what we may.
-            var guid = Guid.NewGuid().ToString(); //used to generate type name
-            var editTypeName = "UserEdit" + guid;
-            var userTypeDefinition = user.ContentItem.TypeDefinition;
-            var contentTypeDefinition =
-                new ContentTypeDefinition(editTypeName, editTypeName,
-                Enumerable.Empty<ContentTypePartDefinition>(), new SettingsDictionary());
-
-            var builder = new ContentItemBuilder(contentTypeDefinition);
-
-            foreach (var typePartDefinition in userTypeDefinition.Parts
-                .Where(ctpd => partTest(ctpd, userTypeDefinition.Name))) {
-
-                var part = user
-                    .ContentItem
-                    .Parts
-                    .Where(pa => pa.PartDefinition.Name == typePartDefinition.PartDefinition.Name)
-                    .FirstOrDefault();
-
-                if (part.Fields.Any(fi => !fieldTest(fi.PartFieldDefinition))) {
-                    var myPart = (ContentPart)(Activator.CreateInstance(part.GetType()));
-                    var fieldDefinitions = new List<ContentPartFieldDefinition>();
-                    fieldDefinitions.AddRange(part
-                        .PartDefinition.Fields.Where(cpfd =>
-                        fieldTest(cpfd)));
-                    var contentPartDefinition = new ContentPartDefinition(part.PartDefinition.Name, fieldDefinitions, part.PartDefinition.Settings);
-                    var partDefinition = new ContentTypePartDefinition(contentPartDefinition, part.TypePartDefinition.Settings);
-                    myPart.TypePartDefinition = partDefinition;
-                    foreach (var field in part.Fields.Where(fi => fieldTest(fi.PartFieldDefinition))) {
-                        ((ContentPart)myPart).Weld(field);
-                    }
-                    builder.Weld((ContentPart)myPart);
-                } else {
-                    builder.Weld(part);
-                }
-            }
-
-            var item = builder.Build();
-            item.ContentManager = _contentManager;
-
-            //add all the parts that were welded dynamically to user. We must do this, because the UserPart
-            //is added like this.
-            foreach (var part in user.ContentItem.Parts
-                .Where(pa => !userTypeDefinition
-                    .Parts
-                    .Select(ctpd => ctpd.PartDefinition.Name)
-                    .Contains(pa.PartDefinition.Name))) {
-                //builder.Weld(part);
-                ((IList<ContentPart>)(item.Parts)).Add(part);
-            }
-
-            return item;
-        }
-
-
-        private dynamic BuildFrontEndShapeEx(
-            IUser user,
+        private dynamic BuildFrontEndShape(
+            dynamic shape,
             Func<ContentTypePartDefinition, string, bool> partTest,
             Func<ContentPartFieldDefinition, bool> fieldTest) {
-
-            dynamic shape = _contentManager.BuildEditor(user);
+            
             //shape.Content.Items contains the List<object> of the things we will display
-            //we can do a ((List<object>)(shape.Content.Items)).RemoveAll(condition) to get rid 
+            //we can do a ((List<dynamic>)(shape.Content.Items)).RemoveAll(condition) to get rid 
             //of the stuff we do not want to see.
 
+            //remove parts. This also removes all parts that are dynamically attached and hence
+            //cannot have the setting to control their visibility
+            ((List<dynamic>)(shape.Content.Items))
+                .RemoveAll(it =>
+                    it.ContentPart != null &&
+                    !partTest(it.ContentPart.TypePartDefinition, it.ContentPart.TypeDefinition.Name)
+                );
+            //remove fields
+            ((List<dynamic>)(shape.Content.Items))
+                .RemoveAll(it =>
+                    it.ContentPart != null &&
+                    it.ContentField != null &&
+                    !fieldTest(it.ContentField.PartFieldDefinition)
+                ); 
 
             return shape;
         }
@@ -173,6 +132,7 @@ namespace Contrib.Profile.Controllers {
             return definition.PartDefinition.Name == typeName || //this is to account for fields added to the type
                 definition.Settings.GetModel<ProfileFrontEndSettings>().AllowFrontEndEdit;
         }
+
         private bool MayAllowFieldDisplay(ContentPartFieldDefinition definition) {
             return definition.Settings.GetModel<ProfileFrontEndSettings>().AllowFrontEndDisplay;
         }
