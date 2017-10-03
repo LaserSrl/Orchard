@@ -135,7 +135,7 @@
     <SearchSettingsPart SearchFields="Default:title,Categoria,prodotto-abstract,prodotto-descrizione" DisplayType="Summary" FilterCulture="false" SearchIndex="Default" />
     <ShareLinkModuleSettingPart Fb_App="" SharedBody="" SharedImage="" SharedLink="" SharedText="" />
     <ShortLinksSettingsPart GoogleApiKey="" />
-    <SiteSettingsPart SupportedCultures="en-US;it-IT" DefaultParserEngine="Laser.Orchard.TemplateManagement.Parsers.RazorParserEngine" MaxPagedCount="0" MaxPageSize="0" PageSize="10" PageTitleSeparator=" - " SiteCalendar="" SiteCulture="it-IT" SiteName="App Retail" SiteSalt="ca962f8f8dde4dc2b3d8198ba6b5cb61" SiteTimeZone="W. Europe Standard Time" SuperUser="admin" UseCdn="false" DefaultParserIdSelected="Laser.Orchard.TemplateManagement.Parsers.RazorParserEngine" />
+    <SiteSettingsPart SupportedCultures="it-IT" DefaultParserEngine="Laser.Orchard.TemplateManagement.Parsers.RazorParserEngine" MaxPagedCount="0" MaxPageSize="0" PageSize="10" PageTitleSeparator=" - " SiteCalendar="" SiteCulture="it-IT" SiteName="App Retail" SiteSalt="ca962f8f8dde4dc2b3d8198ba6b5cb61" SiteTimeZone="W. Europe Standard Time" SuperUser="admin" UseCdn="false" DefaultParserIdSelected="Laser.Orchard.TemplateManagement.Parsers.RazorParserEngine" />
     <SmtpSettingsPart Address="krake.ao@gmail.com" EnableSsl="true" Host="smtp.gmail.com" Password="laseradmin" Port="25" RequireCredentials="true" UseDefaultCredentials="false" UserName="krake.ao@gmail.com" />
     <SslSettingsPart CustomEnabled="false" Enabled="false" InsecureHostName="pre-multitenant10.mykrake.com" SecureEverything="true" SecureHostName="pre-multitenant10.mykrake.com" SendStrictTransportSecurityHeaders="false" StrictTransportSecurityIncludeSubdomains="false" StrictTransportSecurityMaxAge="31536000" StrictTransportSecurityPreload="false" Urls="" />
     <ThemeSiteSettingsPart CurrentThemeName="KrakeDefaultTheme" />
@@ -922,35 +922,35 @@
     <CustomTemplate Id="/Identifier=05b7a1ddec50435f86e120df86bc1ee9" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-28T16:06:56.9049623Z" PublishedUtc="2017-10-02T16:32:15.2629213Z" ModifiedUtc="2017-10-02T16:32:15.2454738Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-28T16:06:56.9049623Z" PublishedUtc="2017-10-03T15:40:44.0825471Z" ModifiedUtc="2017-10-03T15:40:44.0720942Z" />
       <IdentityPart Identifier="05b7a1ddec50435f86e120df86bc1ee9" />
-      <TemplatePart Title="Conferma configurazione AppStore" Subject="AppRetail - Conferma configurazione AppStore" Text="Il brand administrator ha confermato la configurazione AppStore dell'app &quot;@Model.WorkContext.CurrentSite.SiteName&quot; (@Model.WorkContext.CurrentSite.BaseUrl).&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
+      <TemplatePart Title="Conferma configurazione AppStore" Subject="Conferma configurazione AppStore" Text="Il brand administrator ha confermato la configurazione AppStore dell'app &quot;@Model.WorkContext.CurrentSite.SiteName&quot; (@Model.Urls.BaseUrl).&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
     </CustomTemplate>
     <CustomTemplate Id="/Identifier=5b73ecc0a41c480c9d3e583bf328320a" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-11T10:01:29.3381944Z" PublishedUtc="2017-10-02T16:32:57.9374859Z" ModifiedUtc="2017-10-02T16:32:57.9290474Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-11T10:01:29.3381944Z" PublishedUtc="2017-10-03T14:02:55.5035237Z" ModifiedUtc="2017-10-02T16:32:57.9290474Z" />
       <IdentityPart Identifier="5b73ecc0a41c480c9d3e583bf328320a" />
       <TemplatePart Title="Richiesta pubblicazione app" Subject="Richiesta pubblicazione app" Text="Si richiede la pubblicazione dell'app &quot;@Model.WorkContext.CurrentSite.SiteName&quot; (@Model.WorkContext.CurrentSite.BaseUrl).&#xD;&#xA;&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
     </CustomTemplate>
     <CustomTemplate Id="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-11T08:55:31.6105684Z" PublishedUtc="2017-10-02T15:56:08.1034012Z" ModifiedUtc="2017-09-11T09:54:31.3198943Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-11T08:55:31.6105684Z" PublishedUtc="2017-10-03T15:37:31.8952689Z" ModifiedUtc="2017-10-03T15:37:31.886241Z" />
       <IdentityPart Identifier="ca0a0ee70bb44d25afb170a6cea75241" />
-      <TemplatePart Title="Master Template" Subject="Master Template" Text="&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt;&#xD;&#xA;&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;&#xD;&#xA;&#xD;&#xA;  &lt;head&gt;&#xD;&#xA;    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;&#xD;&#xA;    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;&#xD;&#xA;    &lt;title&gt;Vodafone Experience Center&lt;/title&gt;&#xD;&#xA;    &lt;style&gt;&#xD;&#xA;body {&#xD;&#xA;  width: 100% !important;&#xD;&#xA;  min-width: 100%;&#xD;&#xA;  -webkit-text-size-adjust: 100%;&#xD;&#xA;  -ms-text-size-adjust: 100%;&#xD;&#xA;  margin: 0;&#xD;&#xA;  Margin: 0;&#xD;&#xA;  padding: 0;&#xD;&#xA;  -moz-box-sizing: border-box;&#xD;&#xA;  -webkit-box-sizing: border-box;&#xD;&#xA;  box-sizing: border-box; &#xD;&#xA;}&#xD;&#xA;.reflink {&#xD;&#xA;  color:white;&#xD;&#xA;  font-weight:bold;&#xD;&#xA;  text-decoration:none;&#xD;&#xA;}&#xD;&#xA;    &lt;/style&gt;  &#xD;&#xA;  &lt;/head&gt;&#xD;&#xA;  &lt;body&gt;&#xD;&#xA;    &lt;h1 style=&quot;background-image:url('https://pre-multitenant10.mykrake.com/Themes/KrakeAdmin/Styles/images/krake-orizontal.png');background-repeat:no-repeat;height:100px;text-align:center;font-size:32px;font-weight:700;&quot;&gt;&#xD;&#xA;      App Retail&#xD;&#xA;    &lt;/h1&gt;&#xD;&#xA; @RenderBody()&#xD;&#xA;    &lt;div style=&quot;background-color:rgb(230,0,0);margin-top:20px;text-align:center;color:white&quot;&gt;&#xD;&#xA;      &lt;a href=&quot;http://www.laser-group.com&quot; class=&quot;reflink&quot;&gt;Laser s.r.l.&lt;/a&gt;&#xD;&#xA;      &lt;span style=&quot;width:20%&quot;&gt;&amp;nbsp;-&amp;nbsp;&lt;/span&gt;&#xD;&#xA;      &lt;a href=&quot;http://www.vodafone.it&quot; class=&quot;reflink&quot;&gt;Vodafone&lt;/a&gt;&#xD;&#xA;    &lt;/div&gt;&#xD;&#xA;  &lt;/body&gt;&#xD;&#xA;&lt;/html&gt;" IsLayout="true" />
+      <TemplatePart Title="Master Template" Subject="Master Template" Text="&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt;&#xD;&#xA;&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;&#xD;&#xA;&#xD;&#xA;  &lt;head&gt;&#xD;&#xA;    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;&#xD;&#xA;    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;&#xD;&#xA;    &lt;title&gt;Vodafone Experience Center&lt;/title&gt;&#xD;&#xA;    &lt;style&gt;&#xD;&#xA;body {&#xD;&#xA;  width: 100% !important;&#xD;&#xA;  min-width: 100%;&#xD;&#xA;  -webkit-text-size-adjust: 100%;&#xD;&#xA;  -ms-text-size-adjust: 100%;&#xD;&#xA;  margin: 0;&#xD;&#xA;  Margin: 0;&#xD;&#xA;  padding: 0;&#xD;&#xA;  -moz-box-sizing: border-box;&#xD;&#xA;  -webkit-box-sizing: border-box;&#xD;&#xA;  box-sizing: border-box; &#xD;&#xA;}&#xD;&#xA;.reflink {&#xD;&#xA;  color:white;&#xD;&#xA;  font-weight:bold;&#xD;&#xA;  text-decoration:none;&#xD;&#xA;}&#xD;&#xA;    &lt;/style&gt;  &#xD;&#xA;  &lt;/head&gt;&#xD;&#xA;  &lt;body&gt;&#xD;&#xA;    &lt;h1 style=&quot;height:100px;text-align:center;font-size:32px;font-weight:700;&quot;&gt;&#xD;&#xA;      @Model.WorkContext.CurrentSite.SiteName&#xD;&#xA;    &lt;/h1&gt;&#xD;&#xA; @RenderBody()&#xD;&#xA;    &lt;div style=&quot;background-color:rgb(230,0,0);margin-top:20px;text-align:center;color:white&quot;&gt;&#xD;&#xA;      &lt;a href=&quot;http://www.laser-group.com&quot; class=&quot;reflink&quot;&gt;Laser s.r.l.&lt;/a&gt;&#xD;&#xA;      &lt;span style=&quot;width:20%&quot;&gt;&amp;nbsp;-&amp;nbsp;&lt;/span&gt;&#xD;&#xA;      &lt;a href=&quot;http://www.vodafone.it&quot; class=&quot;reflink&quot;&gt;Vodafone&lt;/a&gt;&#xD;&#xA;    &lt;/div&gt;&#xD;&#xA;  &lt;/body&gt;&#xD;&#xA;&lt;/html&gt;" IsLayout="true" />
     </CustomTemplate>
     <CustomTemplate Id="/Identifier=cbfa0473e1994097ac6d8514ea44861d" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-28T15:57:38.6476714Z" PublishedUtc="2017-10-02T16:32:35.6651838Z" ModifiedUtc="2017-10-02T16:32:35.6461877Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-28T15:57:38.6476714Z" PublishedUtc="2017-10-03T15:41:19.4541145Z" ModifiedUtc="2017-10-03T15:41:19.4015986Z" />
       <IdentityPart Identifier="cbfa0473e1994097ac6d8514ea44861d" />
-      <TemplatePart Title="Conferma configurazione grafica" Subject="AppRetail - Conferma configurazione grafica" Text="Il brand administrator ha confermato la configurazione grafica dell'app &quot;@Model.WorkContext.CurrentSite.SiteName&quot; (@Model.WorkContext.CurrentSite.BaseUrl).&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
+      <TemplatePart Title="Conferma configurazione grafica" Subject="Conferma configurazione grafica" Text="Il brand administrator ha confermato la configurazione grafica dell'app &quot;@Model.WorkContext.CurrentSite.SiteName&quot; (@Model.WorkContext.CurrentSite.BaseUrl).&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
     </CustomTemplate>
     <CustomTemplate Id="/Identifier=de0e15ed8b0040d296f41d1f4c526585" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-07-31T08:46:09.6198211Z" PublishedUtc="2017-10-02T15:56:08.4287481Z" ModifiedUtc="2017-09-11T09:55:32.7541045Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-07-31T08:46:09.6198211Z" PublishedUtc="2017-10-03T14:02:55.7110307Z" ModifiedUtc="2017-09-11T09:55:32.7541045Z" />
       <IdentityPart Identifier="de0e15ed8b0040d296f41d1f4c526585" />
       <TemplatePart Title="Invio credenziali dipendente" Subject="Invio credenziali utente" Text="@{&#xD;&#xA;    dynamic item = Model.Content.ContentItem;&#xD;&#xA;    string usr = Model.Content.WorkflowContext.GetState(&quot;UserName&quot;);&#xD;&#xA;    string pwd = Model.Content.WorkflowContext.GetState(&quot;Password&quot;);&#xD;&#xA;}&#xD;&#xA;Gentile @item.Dipendente.Nome.Value @item.Dipendente.Cognome.Value,&lt;br/&gt;&#xD;&#xA;le tue credenziali per accedere all'App Retail sono:&lt;br/&gt;&#xD;&#xA;Utente: @usr&lt;br/&gt;&#xD;&#xA;Password: @pwd&lt;br/&gt;&#xD;&#xA;&lt;br/&gt;&#xD;&#xA;Buon lavoro!&lt;br/&gt;&#xD;&#xA;&lt;br/&gt;&#xD;&#xA;Il Brand Administrator&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
     </CustomTemplate>
@@ -1588,19 +1588,19 @@
   <Workflows>
     <Workflow Name="DeliverApp" Enabled="true">
       <Activities>
-        <Activity Id="61" Name="DynamicButtonEvent" Start="true" X="130" Y="6">
+        <Activity Id="1" Name="DynamicButtonEvent" Start="true" X="130" Y="6">
           <State>{"DynamicButton":"3"}</State>
         </Activity>
-        <Activity Id="62" Name="SendTemplatedEmail" Start="false" X="130" Y="140">
+        <Activity Id="2" Name="SendTemplatedEmail" Start="false" X="130" Y="140">
           <State>{"Recipient":"other","RecipientOther":"laser.srl.ao@gmail.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"5"}</State>
         </Activity>
-        <Activity Id="63" Name="Notify" Start="false" X="177" Y="253">
+        <Activity Id="3" Name="Notify" Start="false" X="177" Y="253">
           <State>{"Notification":"Information","Message":"La richiesta di pubblicazione dell'app è stata inviata."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="61" SourceEndpoint="Done" DestinationActivityId="62" DestinationEndpoint="" />
-        <Transition SourceActivityId="62" SourceEndpoint="Sent" DestinationActivityId="63" DestinationEndpoint="" />
+        <Transition SourceActivityId="1" SourceEndpoint="Done" DestinationActivityId="2" DestinationEndpoint="" />
+        <Transition SourceActivityId="2" SourceEndpoint="Sent" DestinationActivityId="3" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Dipendente" Enabled="true">
@@ -1618,27 +1618,27 @@
     </Workflow>
     <Workflow Name="Invio Credenziali" Enabled="true">
       <Activities>
-        <Activity Id="64" Name="SendTemplatedEmail" Start="false" X="283" Y="268">
+        <Activity Id="6" Name="SendTemplatedEmail" Start="false" X="283" Y="268">
           <State>{"Recipient":"other","RecipientOther":"{Content.Fields.Dipendente.Email}","RecipientCC":"","RecipientBCC":"","FromEmail":"","ReplyTo":"","EmailTemplate":"7"}</State>
         </Activity>
-        <Activity Id="65" Name="RazorExecute" Start="false" X="299" Y="119">
+        <Activity Id="7" Name="RazorExecute" Start="false" X="299" Y="119">
           <State>{"RazorExecuteActivity_Outcomes":"Ok,Error","RazorExecuteActivity_RazorView":"GetCredenziali.cshtml"}</State>
         </Activity>
-        <Activity Id="66" Name="Logging" Start="false" X="570" Y="140">
+        <Activity Id="8" Name="Logging" Start="false" X="570" Y="140">
           <State>{"Level":"Error","Message":"{Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="67" Name="Notify" Start="false" X="587" Y="295">
+        <Activity Id="9" Name="Notify" Start="false" X="587" Y="295">
           <State>{"Notification":"Error","Message":"Si è verificato un errore durante l'invio della e-mail."}</State>
         </Activity>
-        <Activity Id="68" Name="DynamicButtonEvent" Start="true" X="222" Y="0">
+        <Activity Id="10" Name="DynamicButtonEvent" Start="true" X="222" Y="0">
           <State>{"DynamicButton":"1"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="65" SourceEndpoint="Ok" DestinationActivityId="64" DestinationEndpoint="" />
-        <Transition SourceActivityId="65" SourceEndpoint="Error" DestinationActivityId="66" DestinationEndpoint="" />
-        <Transition SourceActivityId="66" SourceEndpoint="Done" DestinationActivityId="67" DestinationEndpoint="" />
-        <Transition SourceActivityId="68" SourceEndpoint="Done" DestinationActivityId="65" DestinationEndpoint="" />
+        <Transition SourceActivityId="7" SourceEndpoint="Ok" DestinationActivityId="6" DestinationEndpoint="" />
+        <Transition SourceActivityId="7" SourceEndpoint="Error" DestinationActivityId="8" DestinationEndpoint="" />
+        <Transition SourceActivityId="8" SourceEndpoint="Done" DestinationActivityId="9" DestinationEndpoint="" />
+        <Transition SourceActivityId="10" SourceEndpoint="Done" DestinationActivityId="7" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Messaggio Promozionale" Enabled="true">
@@ -1664,51 +1664,55 @@
     </Workflow>
     <Workflow Name="PublishConfigs" Enabled="true">
       <Activities>
-        <Activity Id="69" Name="ContentUpdated" Start="true" X="93" Y="33">
+        <Activity Id="84" Name="ContentUpdated" Start="true" X="93" Y="33">
           <State>{"ContentTypes":"ConfigurazioneAppStore,ConfigurazioneGrafica"}</State>
         </Activity>
-        <Activity Id="70" Name="IsInRole" Start="false" X="120" Y="146">
+        <Activity Id="85" Name="IsInRole" Start="false" X="120" Y="146">
           <State>{"Roles":"BrandAdminB2B,BrandAdminB2C"}</State>
         </Activity>
-        <Activity Id="71" Name="RazorExecute" Start="false" X="91" Y="292">
+        <Activity Id="86" Name="RazorExecute" Start="false" X="91" Y="292">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"CheckUpdatedConfig.cshtml"}</State>
         </Activity>
-        <Activity Id="72" Name="RazorExecute" Start="false" X="466" Y="148">
-          <State>{"RazorExecuteActivity_Outcomes":"Error,ConfigurazioneGrafica,ConfigurazioneAppStore","RazorExecuteActivity_RazorView":"LockConfig.cshtml"}</State>
+        <Activity Id="87" Name="RazorExecute" Start="false" X="466" Y="148">
+          <State>{"RazorExecuteActivity_Outcomes":"Error,ConfigurazioneGrafica,ConfigurazioneAppStore,AlreadyLocked","RazorExecuteActivity_RazorView":"LockConfig.cshtml"}</State>
         </Activity>
-        <Activity Id="73" Name="Logging" Start="false" X="717" Y="150">
+        <Activity Id="88" Name="Logging" Start="false" X="717" Y="150">
           <State>{"Level":"Error","Message":"Error in workflow PublishConfigs LockConfig. Errore durante il cambiamento di owner della configurazione \"{Content.ContentType}\" (id: {Content.Id}). {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="74" Name="Notify" Start="false" X="727" Y="296">
+        <Activity Id="89" Name="Notify" Start="false" X="727" Y="296">
           <State>{"Notification":"Error","Message":"Si è verificato un errore. Provare a pubblicare nuovamente la configurazione."}</State>
         </Activity>
-        <Activity Id="75" Name="Notify" Start="false" X="152" Y="501">
-          <State>{"Notification":"Error","Message":"Non è possibile modificare la configurazione dopo averla confermata. Contattare l'assistenza."}</State>
+        <Activity Id="90" Name="Notify" Start="false" X="152" Y="501">
+          <State>{"Notification":"Error","Message":"Non è possibile modificare la configurazione dopo averla confermata. Se necessario, contattare l'assistenza."}</State>
         </Activity>
-        <Activity Id="76" Name="DynamicButtonEvent" Start="true" X="451" Y="31">
+        <Activity Id="91" Name="DynamicButtonEvent" Start="true" X="451" Y="31">
           <State>{"DynamicButton":"2"}</State>
         </Activity>
-        <Activity Id="77" Name="SendTemplatedEmail" Start="false" X="510" Y="297">
+        <Activity Id="92" Name="SendTemplatedEmail" Start="false" X="510" Y="297">
           <State>{"Recipient":"other","RecipientOther":"laser.srl.ao@gmail.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"6"}</State>
         </Activity>
-        <Activity Id="78" Name="SendTemplatedEmail" Start="false" X="306" Y="296">
+        <Activity Id="93" Name="SendTemplatedEmail" Start="false" X="306" Y="296">
           <State>{"Recipient":"other","RecipientOther":"laser.srl.ao@gmail.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"3"}</State>
         </Activity>
-        <Activity Id="79" Name="Notify" Start="false" X="450" Y="465">
+        <Activity Id="94" Name="Notify" Start="false" X="450" Y="465">
           <State>{"Notification":"Information","Message":"I tuoi dati verranno presi in carico e gestiti dai nostri tecnici. Avendo confermato i dati, questi non saranno più modificabili."}</State>
+        </Activity>
+        <Activity Id="95" Name="Notify" Start="false" X="737" Y="85">
+          <State>{"Notification":"Warning","Message":"Configurazione già confermata in precedenza."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="69" SourceEndpoint="Done" DestinationActivityId="70" DestinationEndpoint="" />
-        <Transition SourceActivityId="70" SourceEndpoint="Yes" DestinationActivityId="71" DestinationEndpoint="" />
-        <Transition SourceActivityId="71" SourceEndpoint="Error" DestinationActivityId="75" DestinationEndpoint="" />
-        <Transition SourceActivityId="72" SourceEndpoint="Error" DestinationActivityId="73" DestinationEndpoint="" />
-        <Transition SourceActivityId="73" SourceEndpoint="Done" DestinationActivityId="74" DestinationEndpoint="" />
-        <Transition SourceActivityId="76" SourceEndpoint="Done" DestinationActivityId="72" DestinationEndpoint="" />
-        <Transition SourceActivityId="72" SourceEndpoint="ConfigurazioneAppStore" DestinationActivityId="78" DestinationEndpoint="" />
-        <Transition SourceActivityId="72" SourceEndpoint="ConfigurazioneGrafica" DestinationActivityId="77" DestinationEndpoint="" />
-        <Transition SourceActivityId="78" SourceEndpoint="Sent" DestinationActivityId="79" DestinationEndpoint="" />
-        <Transition SourceActivityId="77" SourceEndpoint="Sent" DestinationActivityId="79" DestinationEndpoint="" />
+        <Transition SourceActivityId="84" SourceEndpoint="Done" DestinationActivityId="85" DestinationEndpoint="" />
+        <Transition SourceActivityId="85" SourceEndpoint="Yes" DestinationActivityId="86" DestinationEndpoint="" />
+        <Transition SourceActivityId="86" SourceEndpoint="Error" DestinationActivityId="90" DestinationEndpoint="" />
+        <Transition SourceActivityId="87" SourceEndpoint="Error" DestinationActivityId="88" DestinationEndpoint="" />
+        <Transition SourceActivityId="88" SourceEndpoint="Done" DestinationActivityId="89" DestinationEndpoint="" />
+        <Transition SourceActivityId="91" SourceEndpoint="Done" DestinationActivityId="87" DestinationEndpoint="" />
+        <Transition SourceActivityId="87" SourceEndpoint="ConfigurazioneAppStore" DestinationActivityId="93" DestinationEndpoint="" />
+        <Transition SourceActivityId="87" SourceEndpoint="ConfigurazioneGrafica" DestinationActivityId="92" DestinationEndpoint="" />
+        <Transition SourceActivityId="93" SourceEndpoint="Sent" DestinationActivityId="94" DestinationEndpoint="" />
+        <Transition SourceActivityId="92" SourceEndpoint="Sent" DestinationActivityId="94" DestinationEndpoint="" />
+        <Transition SourceActivityId="87" SourceEndpoint="AlreadyLocked" DestinationActivityId="95" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Richiesta Prodotto" Enabled="true">
