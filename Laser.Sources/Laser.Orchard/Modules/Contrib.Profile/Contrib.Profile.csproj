@@ -116,6 +116,8 @@
     <Compile Include="Permissions.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Security\AuthorizationEventHandler.cs" />
+    <Compile Include="Services\FrontEndProfileService.cs" />
+    <Compile Include="Services\IFrontEndProfileService.cs" />
     <Compile Include="Settings\ProfileFrontEndEditorEvents.cs" />
     <Compile Include="Settings\ProfileFrontEndSettings.cs" />
   </ItemGroup>

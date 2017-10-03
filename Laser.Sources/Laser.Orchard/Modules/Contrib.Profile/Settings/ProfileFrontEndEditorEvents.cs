@@ -1,14 +1,11 @@
-﻿using Contrib.Profile.Models;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Web;
 
 namespace Contrib.Profile.Settings {
     public class ProfileFrontEndEditorEvents : ContentDefinitionEditorEventsBase {
