@@ -126,6 +126,7 @@
     </DynamicButtonToWorkflowsSettingsPart>
     <EnvironmentVariablesSettingsPart FallbackTenants="AppRetailTemplate" />
     <GoogleAnalyticsSettingsPart AnonymizeIp="true" DomainName="" GoogleAnalyticsKey="UA-37701956-23" TrackOnAdmin="false" TrackOnFrontEnd="true" UseAsyncTracking="true" />
+    <LuceneSettingsPart LuceneAnalyzerSelectorMappingsSerialized="[{&quot;IndexName&quot;:&quot;Default&quot;,&quot;AnalyzerName&quot;:&quot;Default&quot;}]" />
     <MapsSiteSettingsPart MaxZoom="0" />
     <OpenAuthenticationSettingsPart AutoRegistrationEnabled="true" />
     <ProtectionSettingsPart ProtectedEntries="Laser.Orchard.WebServices.Json.GetByAlias,Laser.Orchard.WebServices.Signal.Trigger,Laser.Orchard.Braintree.Paypal.GetClientToken,Laser.Orchard.Braintree.Paypal.Pay,Laser.Orchard.WebServices.WebApi.Display" />
