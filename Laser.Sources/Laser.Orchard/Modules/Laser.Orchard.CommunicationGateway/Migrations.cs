@@ -389,5 +389,13 @@ namespace Laser.Orchard.CommunicationGateway {
                 .WithDescription("Fields that are not synchronized with related user."));
             return 30;
         }
+
+        public int UpdateFrom30() {
+            SchemaBuilder.AlterTable("CommunicationDeliveryReportRecord",
+               table => table
+                   .AddColumn<int>("Id", column => column.PrimaryKey().Identity()));
+
+            return 31;
+        }
     }
 }

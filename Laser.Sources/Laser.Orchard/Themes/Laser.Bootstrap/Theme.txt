@@ -1,4 +1,5 @@
 Name: Laser.Bootstrap
+AntiForgery: enabled
 Author: Laser
 Website: http://www.laser-group.com
 Description: Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.
