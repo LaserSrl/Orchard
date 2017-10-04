@@ -929,9 +929,9 @@
     <CustomTemplate Id="/Identifier=5b73ecc0a41c480c9d3e583bf328320a" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-11T10:01:29.3381944Z" PublishedUtc="2017-10-03T14:02:55.5035237Z" ModifiedUtc="2017-10-02T16:32:57.9290474Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-11T10:01:29.3381944Z" PublishedUtc="2017-10-04T09:44:08.9714052Z" ModifiedUtc="2017-10-04T09:44:08.9636224Z" />
       <IdentityPart Identifier="5b73ecc0a41c480c9d3e583bf328320a" />
-      <TemplatePart Title="Richiesta pubblicazione app" Subject="Richiesta pubblicazione app" Text="Si richiede la pubblicazione dell'app &quot;@Model.WorkContext.CurrentSite.SiteName&quot; (@Model.WorkContext.CurrentSite.BaseUrl).&#xD;&#xA;&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
+      <TemplatePart Title="Richiesta pubblicazione app" Subject="Richiesta pubblicazione app" Text="Si richiede la pubblicazione dell'app &quot;@Model.WorkContext.CurrentSite.SiteName&quot; (@Model.Urls.BaseUrl).&lt;br/&gt;&#xD;&#xA;Note del Cliente:&lt;br/&gt;&#xD;&#xA;@Model.Content.ContentItem.RichiestaPubblicazione.Note.Value&#xD;&#xA;&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
     </CustomTemplate>
     <CustomTemplate Id="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" Status="Published">
       <NumericField.Creator Value="2" />
@@ -945,12 +945,12 @@
       <NumericField.LastModifier Value="2" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-28T15:57:38.6476714Z" PublishedUtc="2017-10-03T15:41:19.4541145Z" ModifiedUtc="2017-10-03T15:41:19.4015986Z" />
       <IdentityPart Identifier="cbfa0473e1994097ac6d8514ea44861d" />
-      <TemplatePart Title="Conferma configurazione grafica" Subject="Conferma configurazione grafica" Text="Il brand administrator ha confermato la configurazione grafica dell'app &quot;@Model.WorkContext.CurrentSite.SiteName&quot; (@Model.WorkContext.CurrentSite.BaseUrl).&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
+      <TemplatePart Title="Conferma configurazione grafica" Subject="Conferma configurazione grafica" Text="Il brand administrator ha confermato la configurazione grafica dell'app &quot;@Model.WorkContext.CurrentSite.SiteName&quot; (@Model.Urls.BaseUrl).&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
     </CustomTemplate>
     <CustomTemplate Id="/Identifier=de0e15ed8b0040d296f41d1f4c526585" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-07-31T08:46:09.6198211Z" PublishedUtc="2017-10-03T14:02:55.7110307Z" ModifiedUtc="2017-09-11T09:55:32.7541045Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-07-31T08:46:09.6198211Z" PublishedUtc="2017-10-03T16:13:50.3566417Z" ModifiedUtc="2017-09-11T09:55:32.7541045Z" />
       <IdentityPart Identifier="de0e15ed8b0040d296f41d1f4c526585" />
       <TemplatePart Title="Invio credenziali dipendente" Subject="Invio credenziali utente" Text="@{&#xD;&#xA;    dynamic item = Model.Content.ContentItem;&#xD;&#xA;    string usr = Model.Content.WorkflowContext.GetState(&quot;UserName&quot;);&#xD;&#xA;    string pwd = Model.Content.WorkflowContext.GetState(&quot;Password&quot;);&#xD;&#xA;}&#xD;&#xA;Gentile @item.Dipendente.Nome.Value @item.Dipendente.Cognome.Value,&lt;br/&gt;&#xD;&#xA;le tue credenziali per accedere all'App Retail sono:&lt;br/&gt;&#xD;&#xA;Utente: @usr&lt;br/&gt;&#xD;&#xA;Password: @pwd&lt;br/&gt;&#xD;&#xA;&lt;br/&gt;&#xD;&#xA;Buon lavoro!&lt;br/&gt;&#xD;&#xA;&lt;br/&gt;&#xD;&#xA;Il Brand Administrator&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
     </CustomTemplate>
