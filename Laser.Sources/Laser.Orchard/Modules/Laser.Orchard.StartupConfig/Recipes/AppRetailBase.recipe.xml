@@ -133,7 +133,7 @@
     <PushMobileSettingsPart AndroidApiKey="AIzaSyDIPtcdYFIaC-yh_96-E8ecY6CenxYuYKg" AndroidApiKeyDevelopment="AIzaSyDIPtcdYFIaC-yh_96-E8ecY6CenxYuYKg" AndroidPushServiceUrl="https://fcm.googleapis.com/fcm/send" CommitSentOnly="false" DelayMinutesBeforeRetry="1" MaxNumRetry="0" MaxPushPerIteration="0" PushSendBufferSize="50" ShowTestOptions="false" />
     <QuestionnaireModuleSettingsPart Disposable="false" />
     <RegistrationSettingsPart EnableLostPassword="true" NotificationsRecipients="" NotifyModeration="false" UsersAreModerated="false" UsersCanRegister="true" UsersMustValidateEmail="true" ValidateEmailContactEMail="" ValidateEmailRegisteredWebsite="" />
-    <SearchSettingsPart SearchFields="Default:title,Categoria,prodotto-abstract,prodotto-descrizione" DisplayType="Summary" FilterCulture="false" SearchIndex="Default" />
+    <SearchSettingsPart SearchFields="Default:title,Categoria,prodotto-abstract,prodotto-descrizione,body" DisplayType="Summary" FilterCulture="false" SearchIndex="Default" />
     <ShareLinkModuleSettingPart Fb_App="" SharedBody="" SharedImage="" SharedLink="" SharedText="" />
     <ShortLinksSettingsPart GoogleApiKey="" />
     <SiteSettingsPart SupportedCultures="it-IT" DefaultParserEngine="Laser.Orchard.TemplateManagement.Parsers.RazorParserEngine" MaxPagedCount="0" MaxPageSize="0" PageSize="10" PageTitleSeparator=" - " SiteCalendar="" SiteCulture="it-IT" SiteName="App Retail" SiteSalt="ca962f8f8dde4dc2b3d8198ba6b5cb61" SiteTimeZone="W. Europe Standard Time" SuperUser="admin" UseCdn="false" DefaultParserIdSelected="Laser.Orchard.TemplateManagement.Parsers.RazorParserEngine" />
