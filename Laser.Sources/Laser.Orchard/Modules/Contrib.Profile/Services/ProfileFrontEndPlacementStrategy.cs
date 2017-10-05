@@ -29,11 +29,8 @@ namespace Contrib.Profile.Services {
         private readonly IShapeFactory _shapeFactory;
         private readonly IEnumerable<IContentPartDriver> _contentPartDrivers;
         private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
-        private readonly ISiteThemeService _siteThemeService;
-        private readonly IShapeTableLocator _shapeTableLocator;
-        private readonly RequestContext _requestContext;
-        private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IFrontEndProfileService _frontEndProfileService;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
         public ProfileFrontEndPlacementStrategy(
             Work<IContentDefinitionManager> contentDefinitionManager,
@@ -41,22 +38,16 @@ namespace Contrib.Profile.Services {
             IShapeFactory shapeFactory,
             IEnumerable<IContentPartDriver> contentPartDrivers,
             IEnumerable<IContentFieldDriver> contentFieldDrivers,
-            ISiteThemeService siteThemeService,
-            IShapeTableLocator shapeTableLocator,
-            RequestContext requestContext,
-            IVirtualPathProvider virtualPathProvider,
-            IFrontEndProfileService frontEndProfileService) {
+            IFrontEndProfileService frontEndProfileService,
+            IWorkContextAccessor workContextAccessor) {
 
             _contentDefinitionManager = contentDefinitionManager;
             _contentManager = contentManager;
             _shapeFactory = shapeFactory;
             _contentPartDrivers = contentPartDrivers;
             _contentFieldDrivers = contentFieldDrivers;
-            _siteThemeService = siteThemeService;
-            _shapeTableLocator = shapeTableLocator;
-            _requestContext = requestContext;
-            _virtualPathProvider = virtualPathProvider;
             _frontEndProfileService = frontEndProfileService;
+            _workContextAccessor = workContextAccessor;
 
             Logger = NullLogger.Instance;
         }
@@ -64,64 +55,77 @@ namespace Contrib.Profile.Services {
         public ILogger Logger { get; set; }
 
         public void ShapeTableCreated(ShapeTable shapeTable) {
-
-            if (!AdminFilter.IsApplied(_requestContext)) {
-                var typeDefinitions = _contentDefinitionManager.Value
+            
+            var typeDefinitions = _contentDefinitionManager.Value
                 .ListTypeDefinitions().
                 Where(ctd => ctd.Parts.Any(ctpd => ctpd.PartDefinition.Name == "ProfilePart"));
 
-                var allPlacements = typeDefinitions
-                    .SelectMany(td => GetEditorPlacement(td.Name)
-                        .Select(p => new TypePlacement { Placement = p, ContentType = td.Name }));
+            var allPlacements = typeDefinitions
+                .SelectMany(td => GetEditorPlacement(td)
+                    .Select(p => new TypePlacement { Placement = p, ContentType = td.Name }));
 
-                // group all placement settings by shape type
-                var shapePlacements = allPlacements
-                    .GroupBy(x => x.Placement.ShapeType)
-                    .ToDictionary(x => x.Key, y => y.ToList());
+            // group all placement settings by shape type
+            var shapePlacements = allPlacements
+                .GroupBy(x => x.Placement.ShapeType)
+                .ToDictionary(x => x.Key, y => y.ToList());
 
-                foreach (var shapeType in shapeTable.Descriptors.Keys) {
-                    List<TypePlacement> customPlacements;
-                    if (shapePlacements.TryGetValue(shapeType, out customPlacements)) {
-                        if (!customPlacements.Any()) {
-                            continue;
-                        }
-                        // there are some custom placements, build a predicate
-                        var descriptor = shapeTable.Descriptors[shapeType];
-                        var placement = descriptor.Placement;
-                        descriptor.Placement = ctx => {
-                            if (ctx.DisplayType == null) {
-                                foreach (var customPlacement in customPlacements) {
+            foreach (var shapeType in shapeTable.Descriptors.Keys) {
+                List<TypePlacement> customPlacements;
+                if (shapePlacements.TryGetValue(shapeType, out customPlacements)) {
+                    if (!customPlacements.Any()) {
+                        continue;
+                    }
+                    // there are some custom placements, build a predicate
+                    var descriptor = shapeTable.Descriptors[shapeType];
+                    var placement = descriptor.Placement;
+                    descriptor.Placement = ctx => {
+                        var WorkContext = _workContextAccessor.GetContext(); //I need the context for the call using the predicates
+                        if (ctx.DisplayType == null && 
+                            !AdminFilter.IsApplied(WorkContext.HttpContext.Request.RequestContext)) {
 
-                                    var type = customPlacement.ContentType;
-                                    var differentiator = customPlacement.Placement.Differentiator;
+                            foreach (var customPlacement in customPlacements) {
+                                var type = customPlacement.ContentType;
+                                var differentiator = customPlacement.Placement.Differentiator;
 
-                                    if (((ctx.Differentiator ?? String.Empty) == (differentiator ?? String.Empty)) && ctx.ContentType == type) {
+                                if (((ctx.Differentiator ?? string.Empty) == (differentiator ?? string.Empty)) && ctx.ContentType == type) {
 
-                                        var location = customPlacement.Placement.Zone;
-                                        if (!String.IsNullOrEmpty(customPlacement.Placement.Position)) {
-                                            location = String.Concat(location, ":", customPlacement.Placement.Position);
-                                        }
-
-                                        return new PlacementInfo { Location = location };
+                                    var location = customPlacement.Placement.Zone;
+                                    if (!string.IsNullOrEmpty(customPlacement.Placement.Position)) {
+                                        location = string.Concat(location, ":", customPlacement.Placement.Position);
                                     }
+
+                                    return new PlacementInfo { Location = location };
                                 }
                             }
-
-                            return placement(ctx);
-                        };
-                    }
+                        }
+                        //fallback
+                        return placement(ctx);
+                    };
                 }
             }
+
         }
 
-        private IEnumerable<PlacementSettings> GetEditorPlacement(string contentType) {
-            var content = _contentManager.New(contentType);
+        /// <summary>
+        /// We build a dummy content item in order to execute the drivers for all ContentParts and ContentFields.
+        /// This way we can process the resulting shapes one by one and set the placement to "-" (don't place) for
+        /// those we don't want to show on front end editors. We need this to prevent their UpdateEditor methods to
+        /// be executed.
+        /// </summary>
+        /// <param name="definition">The definition of the ContentType we are working on.</param>
+        /// <returns>The PlacementSetting objects for all ContentParts and ContentFields in the type.</returns>
+        private IEnumerable<PlacementSettings> GetEditorPlacement(ContentTypeDefinition definition) {
+            var contentType = definition.Name;
+            var content = _contentManager.New(contentType); //our dummy content
 
             dynamic itemShape = CreateItemShape("Content_Edit");
             itemShape.ContentItem = content;
 
-            var context = new BuildEditorContext(itemShape, content, String.Empty, _shapeFactory);
-            BindPlacement(context, null, "Content");
+            var context = new BuildEditorContext(itemShape, content, string.Empty, _shapeFactory);
+            //get the default placements: if we don't provide these ourselves, placement for shapes will default
+            //to null, preventing them to be displayed at all times.
+            var defaultPlacements = definition.GetPlacement(PlacementType.Editor);
+            BindPlacement(context, null, "Content", defaultPlacements);
 
             var placementSettings = new List<PlacementSettings>();
 
@@ -162,7 +166,7 @@ namespace Contrib.Profile.Services {
                             hidePlacement = !_frontEndProfileService.MayAllowFieldEdit(field.PartFieldDefinition);
                         }
                     } else {
-                        //don't show
+                        //don't show anything of this part
                         hidePlacement = true;
                     }
                     yield return GetPlacement((ContentShapeResult)result, context, typeName, hidePlacement);
@@ -178,7 +182,7 @@ namespace Contrib.Profile.Services {
                 );
 
             string zone = hidden ? "-" : placement.Location;
-            string position = String.Empty;
+            string position = string.Empty;
 
             // if no placement is found, it's hidden, e.g., no placement was found for the specific ContentType/DisplayType
             if (!hidden && placement.Location != null) {
@@ -189,26 +193,11 @@ namespace Contrib.Profile.Services {
                 }
             }
 
-            //var content = _contentManager.New(typeName);
-
-            //dynamic itemShape = CreateItemShape("Content_Edit");
-            //itemShape.ContentItem = content;
-
-            //if (context is BuildDisplayContext) {
-            //    var newContext = new BuildDisplayContext(itemShape, content, "Detail", "", context.New);
-            //    BindPlacement(newContext, "Detail", "Content");
-            //    result.Apply(newContext);
-            //} else {
-            //    var newContext = new BuildEditorContext(itemShape, content, "", context.New);
-            //    BindPlacement(newContext, null, "Content");
-            //    result.Apply(newContext);
-            //}
-
             return new PlacementSettings {
                 ShapeType = result.GetShapeType(),
                 Zone = zone,
                 Position = position,
-                Differentiator = result.GetDifferentiator() ?? String.Empty
+                Differentiator = result.GetDifferentiator() ?? string.Empty
             };
         }
 
@@ -219,38 +208,21 @@ namespace Contrib.Profile.Services {
             return zoneHolding;
         }
 
-        private void BindPlacement(BuildShapeContext context, string displayType, string stereotype) {
+        private void BindPlacement(
+            BuildShapeContext context, string displayType, 
+            string stereotype, IEnumerable<PlacementSettings> defaultSettings) {
+
             context.FindPlacement = (partShapeType, differentiator, defaultLocation) => {
-
-                var theme = _siteThemeService.GetSiteTheme();
-                var shapeTable = _shapeTableLocator.Lookup(theme.Id);
-
-                var request = _requestContext.HttpContext.Request;
-
-                ShapeDescriptor descriptor;
-                if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
-                    var placementContext = new ShapePlacementContext {
-                        Content = context.ContentItem,
-                        ContentType = context.ContentItem.ContentType,
-                        Stereotype = stereotype,
-                        DisplayType = displayType,
-                        Differentiator = differentiator,
-                        Path = VirtualPathUtility.AppendTrailingSlash(_virtualPathProvider.ToAppRelative(request.Path)) // get the current app-relative path, i.e. ~/my-blog/foo
-                    };
-
-                    // define which location should be used if none placement is hit
-                    descriptor.DefaultPlacement = defaultLocation;
-
-                    var placement = descriptor.Placement(placementContext);
-                    if (placement != null) {
-                        placement.Source = placementContext.Source;
-                        return placement;
-                    }
-                }
-
+                var mockSetting = new PlacementSettings {
+                    ShapeType = partShapeType,
+                    Differentiator = differentiator
+                };
+                var defaultSetting = defaultSettings.FirstOrDefault(ps => ps.IsSameAs(mockSetting));
+                defaultLocation = defaultSetting == null ? defaultLocation : //may still end up with a null defaultLocation
+                    defaultSetting.Zone + (string.IsNullOrEmpty(defaultSetting.Position) ? "" : ":" + defaultSetting.Position);
                 return new PlacementInfo {
                     Location = defaultLocation,
-                    Source = String.Empty
+                    Source = string.Empty
                 };
             };
         }

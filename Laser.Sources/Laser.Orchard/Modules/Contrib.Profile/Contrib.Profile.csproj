@@ -122,13 +122,14 @@
     <Compile Include="Permissions.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Security\AuthorizationEventHandler.cs" />
+    <Compile Include="Services\DefaultFrontEndSettingsProviderBase.cs" />
     <Compile Include="Services\FrontEndProfileService.cs" />
+    <Compile Include="Services\IDefaultFrontEndSettingsProvider.cs" />
     <Compile Include="Services\IFrontEndProfileService.cs" />
     <Compile Include="Services\ProfileFrontEndPlacementStrategy.cs" />
-    <Compile Include="Services\ProfilePlacementService.cs" />
+    <Compile Include="Settings\FrontEndContentDefinitionEventHandler.cs" />
     <Compile Include="Settings\ProfileFrontEndEditorEvents.cs" />
     <Compile Include="Settings\ProfileFrontEndSettings.cs" />
-    <Compile Include="Settings\ProfilePartContentDefinitionEditorEvents.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\Edit.cshtml" />
