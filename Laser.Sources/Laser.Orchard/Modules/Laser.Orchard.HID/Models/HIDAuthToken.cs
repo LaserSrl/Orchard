@@ -58,14 +58,16 @@ namespace Laser.Orchard.HID.Models {
                         }
                     }
                 }
-            } catch (Exception ex) {
+            } catch (System.Net.WebException ex) {
                 //response code 401 in case login info is invalid
-                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null && resp.StatusCode == HttpStatusCode.Unauthorized) {
                     Error = AuthenticationErrors.ClientInfoInvalid;
                 } else {
                     Error = AuthenticationErrors.CommunicationError;
                 }
+            } catch {
+                Error = AuthenticationErrors.CommunicationError;
             }
             return this;
         }

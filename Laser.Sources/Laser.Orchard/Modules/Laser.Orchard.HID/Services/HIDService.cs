@@ -138,8 +138,8 @@ namespace Laser.Orchard.HID.Services {
                         }
                     }
                 }
-            } catch (Exception ex) {
-                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+            } catch (System.Net.WebException ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null) {
                     switch (resp.StatusCode) {
                         case HttpStatusCode.BadRequest:
@@ -162,6 +162,8 @@ namespace Laser.Orchard.HID.Services {
                 } else {
                     result.Error = SearchErrors.UnknownError;
                 }
+            } catch {
+                result.Error = SearchErrors.UnknownError;
             }
 
             return result;
@@ -202,8 +204,8 @@ namespace Laser.Orchard.HID.Services {
                         }
                     }
                 }
-            } catch (Exception ex) {
-                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+            } catch (System.Net.WebException ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null) {
                     switch (resp.StatusCode) {
                         case HttpStatusCode.BadRequest:
@@ -226,6 +228,8 @@ namespace Laser.Orchard.HID.Services {
                 } else {
                     result.Error = SearchErrors.UnknownError;
                 }
+            } catch {
+                result.Error = SearchErrors.UnknownError;
             }
 
             return result;

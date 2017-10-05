@@ -119,8 +119,8 @@ namespace Laser.Orchard.HID.Models {
                         }
                     }
                 }
-            } catch (Exception ex) {
-                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+            } catch (System.Net.WebException ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null) {
                     if (resp.StatusCode == HttpStatusCode.Unauthorized) {
                         if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
@@ -133,6 +133,8 @@ namespace Laser.Orchard.HID.Models {
                 } else {
                     Error = UserErrors.UnknownError;
                 }
+            } catch {
+                Error = UserErrors.UnknownError;
             }
             return this;
         }
@@ -184,8 +186,8 @@ namespace Laser.Orchard.HID.Models {
                         }
                     }
                 }
-            } catch (Exception ex) {
-                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+            } catch (System.Net.WebException ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null) {
                     if (resp.StatusCode == HttpStatusCode.Unauthorized) {
                         if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
@@ -198,6 +200,8 @@ namespace Laser.Orchard.HID.Models {
                 } else {
                     Error = UserErrors.UnknownError;
                 }
+            } catch {
+                Error = UserErrors.UnknownError;
             }
             return this;
         }
@@ -236,8 +240,8 @@ namespace Laser.Orchard.HID.Models {
                         }
                     }
                 }
-            } catch (Exception ex) {
-                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+            } catch (System.Net.WebException ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null) {
                     if (resp.StatusCode == HttpStatusCode.Unauthorized) {
                         if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
@@ -250,6 +254,8 @@ namespace Laser.Orchard.HID.Models {
                 } else {
                     Error = UserErrors.UnknownError;
                 }
+            } catch {
+                Error = UserErrors.UnknownError;
             }
             //a valid invitation code is in the form ABCD-EFGH-ILMN-OPQR
             //16 useful characters with an hyphen separator
@@ -361,8 +367,8 @@ namespace Laser.Orchard.HID.Models {
                                                 Error = UserErrors.UnknownError;
                                             }
                                         }
-                                    } catch (Exception ex) {
-                                        HttpWebResponse respRevoke = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                                    } catch (System.Net.WebException ex) {
+                                        HttpWebResponse respRevoke = (System.Net.HttpWebResponse)(ex.Response);
                                         if (respRevoke != null) {
                                             if (respRevoke.StatusCode == HttpStatusCode.Unauthorized) {
                                                 if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
@@ -378,13 +384,15 @@ namespace Laser.Orchard.HID.Models {
                                         } else {
                                             Error = UserErrors.UnknownError;
                                         }
+                                    } catch {
+                                        Error = UserErrors.UnknownError;
                                     }
                                 }
                             }
                         }
                     }
-                } catch (Exception ex) {
-                    HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+                } catch (System.Net.WebException ex) {
+                    HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                     if (resp != null) {
                         if (resp.StatusCode == HttpStatusCode.Unauthorized) {
                             if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
@@ -397,6 +405,8 @@ namespace Laser.Orchard.HID.Models {
                     } else {
                         Error = UserErrors.UnknownError;
                     }
+                } catch {
+                    Error = UserErrors.UnknownError;
                 }
                 if (Error != UserErrors.NoError && Error != UserErrors.PreconditionFailed) {
                     credentialContainer.Error = CredentialErrors.UnknownError;

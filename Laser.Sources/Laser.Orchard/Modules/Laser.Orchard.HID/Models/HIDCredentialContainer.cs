@@ -117,8 +117,8 @@ namespace Laser.Orchard.HID.Models {
                         Error = CredentialErrors.NoError;
                     }
                 }
-            } catch (Exception ex) {
-                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+            } catch (System.Net.WebException ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null) {
                     if (resp.StatusCode == HttpStatusCode.Unauthorized) {
                         Error = CredentialErrors.AuthorizationFailed;
@@ -135,6 +135,8 @@ namespace Laser.Orchard.HID.Models {
                 } else {
                     Error = CredentialErrors.UnknownError;
                 }
+            } catch {
+                Error = CredentialErrors.UnknownError;
             }
 
             return this;
