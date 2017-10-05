@@ -30,7 +30,10 @@
           
             <input type="submit" class="submit" value="@T("Sign In")">
         }<br />
-             @if (userCanRegister) {@Html.ActionLink(T("Register").Text, "Register", new { ReturnUrl = Request.QueryString["ReturnUrl"] }) @T(" if you don't have an account.")<br>}
+             @if (userCanRegister) {
+                 @Html.ActionLink(T("Register").Text, "Register", new { ReturnUrl = Request.QueryString["ReturnUrl"] }) 
+                 <text> </text>@T(" if you don't have an account.")
+             }
             
     </div>
 </div>
