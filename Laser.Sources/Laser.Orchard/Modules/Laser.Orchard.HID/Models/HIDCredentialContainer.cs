@@ -1,6 +1,7 @@
 ﻿using Laser.Orchard.HID.Extensions;
 using Laser.Orchard.HID.Services;
 using Newtonsoft.Json.Linq;
+using Orchard.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,22 +24,25 @@ namespace Laser.Orchard.HID.Models {
         public List<HIDCredential> Credentials { get; set; }
         public CredentialErrors Error { get; set; }
 
+        public ILogger Logger { get; set; }
+
         public HIDCredentialContainer() {
             Credentials = new List<HIDCredential>();
             Error = CredentialErrors.NoError;
+            Logger = NullLogger.Instance;
         }
 
         public HIDCredentialContainer(JToken container, IHIDAPIService _HIDService)
             : this() {
             Id = int.Parse(container["id"].ToString());
             Status = container["status"].ToString().ToUpperInvariant();
-            OsVersion = container["osVersion"].ToString();
+            OsVersion = container["osVersion"]  != null ? container["osVersion"].ToString() : "";
             Manufacturer = container["manufacturer"].ToString();
             Model = container["model"].ToString();
             ApplicationVersion = container["applicationVersion"].ToString();
-            SimOperator = container["simOperator"].ToString();
-            BluetoothCapability = container["bluetoothCapability"].ToString();
-            NfcCapability = container["nfcCapability"].ToString();
+            SimOperator = container["simOperator"] != null ? container["simOperator"].ToString() : "";
+            BluetoothCapability = container["bluetoothCapability"] != null ? container["bluetoothCapability"].ToString() : "";
+            NfcCapability = container["nfcCapability"] != null ? container["nfcCapability"].ToString() : "";
             if (container["urn:hid:scim:api:ma:1.0:Credential"] != null) {
                 var pNums = _HIDService.GetSiteSettings().PartNumbers;
                 Credentials.AddRange(
@@ -53,13 +57,13 @@ namespace Laser.Orchard.HID.Models {
         public void UpdateContainer(JToken container, IHIDAPIService _HIDService) {
             Id = int.Parse(container["id"].ToString());
             Status = container["status"].ToString();
-            OsVersion = container["osVersion"].ToString();
+            OsVersion = container["osVersion"] != null ? container["osVersion"].ToString() : "";
             Manufacturer = container["manufacturer"].ToString();
             Model = container["model"].ToString();
             ApplicationVersion = container["applicationVersion"].ToString();
-            SimOperator = container["simOperator"].ToString();
-            BluetoothCapability = container["bluetoothCapability"].ToString();
-            NfcCapability = container["nfcCapability"].ToString();
+            SimOperator = container["simOperator"] != null ? container["simOperator"].ToString() : "";
+            BluetoothCapability = container["bluetoothCapability"] != null ? container["bluetoothCapability"].ToString() : "";
+            NfcCapability = container["nfcCapability"] != null ? container["nfcCapability"].ToString() : "";
             Credentials.Clear();
             if (container["urn:hid:scim:api:ma:1.0:Credential"] != null) {
                 var pNums = _HIDService.GetSiteSettings().PartNumbers;
@@ -117,8 +121,8 @@ namespace Laser.Orchard.HID.Models {
                         Error = CredentialErrors.NoError;
                     }
                 }
-            } catch (Exception ex) {
-                HttpWebResponse resp = (System.Net.HttpWebResponse)((System.Net.WebException)ex).Response;
+            } catch (WebException ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null) {
                     if (resp.StatusCode == HttpStatusCode.Unauthorized) {
                         Error = CredentialErrors.AuthorizationFailed;
@@ -135,6 +139,9 @@ namespace Laser.Orchard.HID.Models {
                 } else {
                     Error = CredentialErrors.UnknownError;
                 }
+            } catch (Exception ex) {
+                Error = CredentialErrors.UnknownError;
+                Logger.Error(ex, "Fallback error management.");
             }
 
             return this;
