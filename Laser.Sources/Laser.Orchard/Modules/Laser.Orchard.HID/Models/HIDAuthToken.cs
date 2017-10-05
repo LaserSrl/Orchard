@@ -1,6 +1,7 @@
 ﻿using Laser.Orchard.HID.Extensions;
 using Laser.Orchard.HID.Services;
 using Newtonsoft.Json.Linq;
+using Orchard.Logging;
 using System;
 using System.IO;
 using System.Net;
@@ -14,12 +15,14 @@ namespace Laser.Orchard.HID.Models {
         public AuthenticationErrors Error { get; private set; }
 
         private readonly IHIDAdminService _HIDService;
+        public ILogger Logger { get; set; }
 
         private HIDAuthToken(IHIDAdminService hidService) {
             _HIDService = hidService;
             TokenType = "";
             AccessToken = "";
             Error = AuthenticationErrors.NotAuthenticated;
+            Logger = NullLogger.Instance;
         }
 
         private const string AuthBodyFormat = @"grant_type=client_credentials&client_id={0}&client_secret={1}";
@@ -58,7 +61,7 @@ namespace Laser.Orchard.HID.Models {
                         }
                     }
                 }
-            } catch (System.Net.WebException ex) {
+            } catch (WebException ex) {
                 //response code 401 in case login info is invalid
                 HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null && resp.StatusCode == HttpStatusCode.Unauthorized) {
@@ -66,8 +69,9 @@ namespace Laser.Orchard.HID.Models {
                 } else {
                     Error = AuthenticationErrors.CommunicationError;
                 }
-            } catch {
+            } catch (Exception ex) {
                 Error = AuthenticationErrors.CommunicationError;
+                Logger.Error(ex, "Fallback error management.");
             }
             return this;
         }

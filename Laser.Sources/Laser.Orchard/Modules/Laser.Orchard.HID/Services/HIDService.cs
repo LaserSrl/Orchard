@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using Orchard.Caching.Services;
 using Orchard.Environment.Configuration;
 using Orchard.Security;
+using Orchard.Logging;
 
 namespace Laser.Orchard.HID.Services {
     public class HIDService : IHIDAdminService, IHIDAPIService {
@@ -18,6 +19,7 @@ namespace Laser.Orchard.HID.Services {
         private readonly IOrchardServices _orchardServices;
         private readonly ICacheStorageProvider _cacheStorageProvider;
         private readonly ShellSettings _shellSetting;
+        public ILogger Logger { get; set; }
 
         public HIDService(IOrchardServices orchardServices,
             ICacheStorageProvider cacheStorageProvider,
@@ -25,6 +27,7 @@ namespace Laser.Orchard.HID.Services {
             _orchardServices = orchardServices;
             _cacheStorageProvider = cacheStorageProvider;
             _shellSetting = shellSetting;
+            Logger = NullLogger.Instance;
         }
 
         private string BaseURI {
@@ -138,7 +141,7 @@ namespace Laser.Orchard.HID.Services {
                         }
                     }
                 }
-            } catch (System.Net.WebException ex) {
+            } catch (WebException ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null) {
                     switch (resp.StatusCode) {
@@ -162,8 +165,9 @@ namespace Laser.Orchard.HID.Services {
                 } else {
                     result.Error = SearchErrors.UnknownError;
                 }
-            } catch {
+            } catch (Exception ex) {
                 result.Error = SearchErrors.UnknownError;
+                Logger.Error(ex, "Fallback error management.");
             }
 
             return result;
@@ -204,7 +208,7 @@ namespace Laser.Orchard.HID.Services {
                         }
                     }
                 }
-            } catch (System.Net.WebException ex) {
+            } catch (WebException ex) {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null) {
                     switch (resp.StatusCode) {
@@ -228,8 +232,9 @@ namespace Laser.Orchard.HID.Services {
                 } else {
                     result.Error = SearchErrors.UnknownError;
                 }
-            } catch {
+            } catch (Exception ex) {
                 result.Error = SearchErrors.UnknownError;
+                Logger.Error(ex, "Fallback error management.");
             }
 
             return result;
