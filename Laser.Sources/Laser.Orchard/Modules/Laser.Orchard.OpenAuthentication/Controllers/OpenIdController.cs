@@ -3,7 +3,9 @@ using System.Web.Mvc;
 using System.Web.Security;
 using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration;
 using DotNetOpenAuth.OpenId.RelyingParty;
+using Laser.Orchard.OpenAuthentication.Models;
 using Orchard;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -42,7 +44,8 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
         }
         public ActionResult LogOn() {
             string stropenid = Request.QueryString["openid"];
-            if (stropenid != null && stropenid.StartsWith("https://marketplace.appdirect.com/openid/id")) {
+            var baseurl = _orchardServices.WorkContext.CurrentSite.As<OpenAuthenticationSettingsPart>().AppDirectBaseUrl??"";
+            if (stropenid != null && stropenid.ToLower().StartsWith(baseurl.ToLower() + "/openid/id")) {
                 string accountIdentifier = Request.QueryString["accountIdentifier"];
                 OpenIdRelyingParty rpopenid = new OpenIdRelyingParty();
                 var response = rpopenid.GetResponse();

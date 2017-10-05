@@ -205,8 +205,8 @@ namespace Laser.Orchard.AppDirect.Controllers {
 
         public ActionResult LogOnManager() {
             string stropenid = Request.QueryString["openid"];
-            var settingbaseurl = _orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>().BaseUrl;
-            if (stropenid != null && stropenid.StartsWith(settingbaseurl + "/openid/id")) {
+            var settingbaseurl = _orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>().BaseUrl??"";
+            if (stropenid != null && stropenid.ToLower().StartsWith(settingbaseurl.ToLower() + "/openid/id")) {
                 //  string accountIdentifier = Request.QueryString["accountIdentifier"];
                 var product = Request.QueryString["productKey"];
                 OpenIdRelyingParty rpopenid = new OpenIdRelyingParty();
