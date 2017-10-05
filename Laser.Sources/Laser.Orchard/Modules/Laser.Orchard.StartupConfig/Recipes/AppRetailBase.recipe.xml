@@ -1519,7 +1519,9 @@
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;PuntoVendita&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
           </FilterGroup>
         </FilterGroups>
-        <SortCriteria />
+        <SortCriteria>
+          <SortCriterion Category="TitlePartRecord" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;Sort&gt;true&lt;/Sort&gt;&lt;/Form&gt;" Type="Title" />
+        </SortCriteria>
         <Layouts />
       </QueryPart>
       <TitlePart Title="Query Punti Vendita" />
