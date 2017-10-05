@@ -2,6 +2,7 @@
 using System.Text;
 using System.Web;
 using Laser.Orchard.OpenAuthentication.Models;
+using Laser.Orchard.StartupConfig.Handlers;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
