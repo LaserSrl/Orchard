@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Contrib.Profile.Settings;
+using Orchard.ContentManagement.MetaData.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using Orchard.ContentManagement.MetaData.Models;
-using System.Globalization;
 
 namespace Contrib.Profile.Services {
     /// <summary>
@@ -30,10 +28,7 @@ namespace Contrib.Profile.Services {
         /// </summary>
         /// <param name="settings"></param>
         private void SetDefaultValues(SettingsDictionary settings) {
-            settings["ProfileFrontEndSettings.AllowFrontEndEdit"] =
-                true.ToString(CultureInfo.InvariantCulture);
-            settings["ProfileFrontEndSettings.AllowFrontEndDisplay"] =
-                true.ToString(CultureInfo.InvariantCulture);
+            ProfileFrontEndSettings.SetValues(settings, true, true);
         }
     }
 }

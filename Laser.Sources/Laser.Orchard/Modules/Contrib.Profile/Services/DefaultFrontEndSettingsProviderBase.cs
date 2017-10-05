@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Contrib.Profile.Settings;
+using Orchard.ContentManagement.MetaData.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using Orchard.ContentManagement.MetaData.Models;
-using System.Globalization;
 
 namespace Contrib.Profile.Services {
     /// <summary>
@@ -12,7 +10,7 @@ namespace Contrib.Profile.Services {
     /// setting PartName, AllowDisplay and AllowEdit. E.g.:
     /// 
     /// public class MyImplementation : DefaultFrontEndSettingsProviderBase {
-    ///     public MyImplementation
+    ///     public MyImplementation()
     ///         : base("MyPartName", true, false) {}
     /// }
     /// 
@@ -35,10 +33,7 @@ namespace Contrib.Profile.Services {
                 foreach (var typePartDefinition in definition.Parts
                     .Where(ctpd => ctpd.PartDefinition.Name == PartName)) {
 
-                    typePartDefinition.Settings["ProfileFrontEndSettings.AllowFrontEndEdit"] = 
-                        AllowEdit.ToString(CultureInfo.InvariantCulture);
-                    typePartDefinition.Settings["ProfileFrontEndSettings.AllowFrontEndDisplay"] = 
-                        AllowDisplay.ToString(CultureInfo.InvariantCulture);
+                    ProfileFrontEndSettings.SetValues(typePartDefinition.Settings, AllowDisplay, AllowEdit);
                 }
             }
         }

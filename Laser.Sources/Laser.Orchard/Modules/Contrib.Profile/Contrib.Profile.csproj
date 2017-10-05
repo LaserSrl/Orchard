@@ -127,6 +127,7 @@
     <Compile Include="Services\IDefaultFrontEndSettingsProvider.cs" />
     <Compile Include="Services\IFrontEndProfileService.cs" />
     <Compile Include="Services\ProfileFrontEndPlacementStrategy.cs" />
+    <Compile Include="Services\ProfilePartDefaultSettingsProvider.cs" />
     <Compile Include="Settings\FrontEndContentDefinitionEventHandler.cs" />
     <Compile Include="Settings\ProfileFrontEndEditorEvents.cs" />
     <Compile Include="Settings\ProfileFrontEndSettings.cs" />

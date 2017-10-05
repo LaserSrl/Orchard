@@ -1,10 +1,6 @@
 ﻿using Orchard;
 using Orchard.ContentManagement.MetaData.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Contrib.Profile.Services {
     public interface IDefaultFrontEndSettingsProvider : IDependency {
