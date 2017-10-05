@@ -48,6 +48,8 @@
                     titleString = @T("Events between {0} and {1}", startTime.Date.ToShortDateString(), endTime.Date.ToShortDateString()).ToString();
                 }
             }
+        } else {
+            titleString = @T("Today's events").ToString();
         }
 
         string cat = rQuery.Get("termids");
@@ -84,7 +86,7 @@
                         titleString += " - " + what.FirstOrDefault().Title; // categoryTitle;
                     }
                 }
-            }            
+            }
         }
         <h1>@titleString</h1>
     }

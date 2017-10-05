@@ -23,12 +23,24 @@ using OrchardNS = Orchard;
 
 namespace Laser.Orchard.Policy.Services {
     public interface IPolicyServices : IDependency {
+        /// <summary>
+        /// Gets an object having a list of policies retrieved by culture, ordered by Priority (desc); if needed (writeMode==true) it saves the result into a cookie.
+        /// </summary>
+        /// <param name="writeMode">Tells if the policies should be stored into a cookie.</param>
+        /// <param name="language">optional: the culture of the policies to get. if null the current culture is applied.</param>
+        /// <returns>A PoliciesForUserViewModel object</returns>
         PoliciesForUserViewModel GetPoliciesForUserOrSession(bool writeMode, string language = null);
         void PolicyForUserUpdate(PolicyForUserViewModel viewModel, IUser user = null);
         void PolicyForUserMassiveUpdate(IList<PolicyForUserViewModel> viewModelCollection, IUser user = null);
         IList<PolicyForUserViewModel> GetCookieOrVolatileAnswers();
         void CreateAndAttachPolicyCookie(IList<PolicyForUserViewModel> viewModelCollection, bool writeMode);
         string[] GetPoliciesForContent(PolicyPart part);
+        /// <summary>
+        /// Gets a list of policies by culture and/or ids, ordered by Priority (desc)
+        /// </summary>
+        /// <param name="culture">optional: the culture of the policies to get. if null the current culture is applied.</param>
+        /// <param name="ids">optional: content ids of the policies to get. </param>
+        /// <returns>A list of PolicyTextInfoPart</returns>
         IEnumerable<PolicyTextInfoPart> GetPolicies(string culture = null, int[] ids = null);
         List<PolicyHistoryViewModel> GetPolicyHistoryForUser(int userId);
         string PoliciesLMNVSerialization(IEnumerable<PolicyTextInfoPart> policies);

@@ -1,20 +1,42 @@
-﻿@using Orchard.Projections.Services;
+﻿@using Orchard.Environment.Configuration;
+@using Orchard.Projections.Services;
+@using Orchard.Taxonomies.Fields;
+@using Orchard.Taxonomies.Services;
 @{
     int page = 1;
     int pageSize = Model.ContentItem.ProjectionPart.Record.Items;
 
     var services = WorkContext.Resolve<IProjectionManager>();
     var queryId = Model.ContentItem.ProjectionPart.Record.QueryPartRecord.Id;
-    var queryItems = services.GetContentItems(queryId, (page - 1) * pageSize, pageSize);
+    var queryItems = services.GetContentItems((int)queryId, (page - 1) * pageSize, pageSize);
 
-    dynamic item = Model.ContentItem;
+    var url = "~/"; //in case of errors wi will link back to home
+    var settings = WorkContext.Resolve<ShellSettings>();
+    var prefix = settings.RequestUrlPrefix;
+
+    if (queryItems.Any()) {
+        var ci = (dynamic)(queryItems.First());
+        if (ci.Prodotto != null &&
+            ci.Prodotto.Tipologia != null) {
+            var taxField = (TaxonomyField)(ci.Prodotto.Tipologia);
+
+            if (taxField.Terms.Any()) { //a term is required, but check just in case
+                var taxonomyService = WorkContext.Resolve<ITaxonomyService>();
+                url = taxonomyService.GetTaxonomy(taxField.Terms.First().TaxonomyId).Slug;
+            }
+        }
+    }
+
+    url = (url.StartsWith("~/") ? url.Substring(2) : url).Trim('/'); //remove ~/
+    url = "~/" + (string.IsNullOrWhiteSpace(prefix) ? "" : prefix + "/") + url;
+    url = Url.Content(url);
 }
 <div class="space-40"></div>
 <div class="space-40"></div>
 <div id="showcase" class="container-fluid">
     <div id="showcase-slider">
-        @foreach (var resulted in queryItems) {
-            
+        @foreach (var item in queryItems) {
+            var resulted = (dynamic)item;
             <div class="showcase-item">
                 <div class="row">
                     <div class="col-xs-12 col-md-5 col-lg-4 showcase-item-img">
@@ -46,7 +68,7 @@
             </div>
         }
     </div>
-    <a href="~/showcase" class="text-right all-showcase-link">@T("See all projects")</a>
+    <a href="@url" class="text-right all-showcase-link">@T("See all projects")</a>
     <div class="space-20"></div>
     <div class="showcase-bottom"></div>
 </div>

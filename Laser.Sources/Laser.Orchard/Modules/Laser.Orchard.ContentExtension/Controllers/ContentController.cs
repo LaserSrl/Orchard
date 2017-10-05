@@ -1,4 +1,5 @@
-﻿using Laser.Orchard.StartupConfig.RazorCodeExecution.Services;
+﻿using Laser.Orchard.StartupConfig.RazorBase.Services;
+using Laser.Orchard.StartupConfig.RazorCodeExecution.Services;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
@@ -46,6 +47,8 @@ namespace Laser.Orchard.ContentExtension.Controllers {
         private readonly ILocalizedStringManager _localizedStringManager;
         private readonly IUtilsServices _utilsServices;
         private readonly IRazorTemplateManager _razorTemplateManager;
+        private readonly IRazorBaseService _razorService;
+
         public Localizer T { get; set; }
 
         public ContentController(
@@ -61,8 +64,8 @@ namespace Laser.Orchard.ContentExtension.Controllers {
            IContentDefinitionManager contentDefinitionManager,
             ITaxonomyService taxonomyService,
            ILocalizedStringManager localizedStringManager,
-            IRazorTemplateManager razorTemplateManager
-           ) {
+            IRazorTemplateManager razorTemplateManager,
+            IRazorBaseService razorService) {
             _localizedStringManager = localizedStringManager;
             _taxonomyService = taxonomyService;
             _contentDefinitionManager = contentDefinitionManager;
@@ -78,6 +81,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
             _utilsServices = utilsServices;
             Logger = NullLogger.Instance;
             _razorTemplateManager = razorTemplateManager;
+            _razorService = razorService;
         }
 
         /// <summary>
@@ -374,10 +378,7 @@ namespace Laser.Orchard.ContentExtension.Controllers {
 
         //public event EventHandler ExternalContentCreated;
         private string ValidateMessage(ContentItem ci, string postfix) {
-            string validate_folder = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSettings.Name + @"\Validation\";
-            if (!System.IO.Directory.Exists(validate_folder))
-                System.IO.Directory.CreateDirectory(validate_folder);
-            string myfile = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSettings.Name + @"\Validation\" + ci.ContentType + postfix + ".cshtml";
+            string myfile = _razorService.CalculateFallbackTenantCodePosition("Validation", ci.ContentType + postfix + ".cshtml");
             var model = new RazorModelContext {
                 OrchardServices = _orchardServices,
                 ContentItem = ci,

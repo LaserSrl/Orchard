@@ -370,7 +370,7 @@ msgstr "Uno o più campi contengono errori. Correggi e riprova."
 
 msgctxt "~/Themes/Lasergroup/Views/Parts/ContactForm-AfterContentContattiPage.cshtml"
 msgid "SEND"
-msgstr "Invia"
+msgstr "INVIA"
 
 msgctxt "~/Themes/Lasergroup/Views/Parts/ContactForm-AfterContentContattiPage.cshtml"
 msgid "The email and confirmation do not match"
