@@ -13,7 +13,7 @@
     using (Script.Head()) {
         <script type="text/javascript">
             $(function () {
-                var data = $('#@requestFieldId').val();
+                var data = jQuery.parseJSON($('#@requestFieldId').val());
                 var jsonRendererPlaceholder = $('<pre></pre>');
                 $('#@requestFieldId').hide();
                 $('#@requestFieldId').parent().append(jsonRendererPlaceholder);
