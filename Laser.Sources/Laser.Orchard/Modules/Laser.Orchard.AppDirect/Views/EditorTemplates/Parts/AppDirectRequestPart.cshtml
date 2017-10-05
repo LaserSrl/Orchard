@@ -1,0 +1,26 @@
+﻿@model Laser.Orchard.AppDirect.Models.AppDirectRequestPart
+@{
+    Script.Require("jsonViewer").AtHead();
+    Style.Require("jsonViewer").AtHead();
+    var requestFieldId = "AppDirectRequestPart_Request_Text";
+    var requestFieldDisplayName = ((dynamic)Model).Request.DisplayName;
+    @*<fieldset>
+
+        <label for="AppDirectRequestPart_Edition_Text">@requestFieldDisplayName</label>
+        <pre id="json-renderer-request"></pre>
+
+    </fieldset>*@
+    using (Script.Head()) {
+        <script type="text/javascript">
+            $(function () {
+                var data = $('#@requestFieldId').val();
+                var data = { "type": "SUBSCRIPTION_ORDER", "marketplace": { "partner": "ACME", "baseUrl": "https://acme.appdirect.com" }, "applicationUuid": null, "flag": "STATELESS", "creator": { "uuid": "ec5d8eda-5cec-444d-9e30-125b6e4b67e2", "openId": "https://www.appdirect.com/openid/id/ec5d8eda-5cec-444d-9e30-125b6e4b67e2", "email": "test-email+creator@appdirect.com", "firstName": "DummyCreatorFirst", "lastName": "DummyCreatorLast", "language": "fr", "locale": null, "address": null, "attributes": null }, "payload": { "user": null, "company": { "uuid": "d15bb36e-5fb5-11e0-8c3c-00262d2cda03", "externalId": null, "name": "Example Company Name", "email": "company-email@example.com", "phoneNumber": "415-555-1212", "website": "http://www.example.com", "country": "CA" }, "account": null, "addonInstance": null, "addonBinding": null, "order": { "editionCode": "BASIC", "addonOfferingCode": null, "pricingDuration": "MONTHLY", "items": [{ "unit": "USER", "quantity": 10 }, { "unit": "MEGABYTE", "quantity": 15 }], "customAttributes": [] }, "notice": null, "configuration": { "domain": "mydomain" } }, "returnUrl": "https://www.appdirect.com/finishprocure?token=dummyOrder", "links": [] };
+                var jsonRendererPlaceholder = $('<pre></pre>');
+                $('#@requestFieldId').hide();
+                $('#@requestFieldId').parent().append(jsonRendererPlaceholder);
+                jsonRendererPlaceholder.attr('id', 'json-renderer-request');
+                $('#json-renderer-request').jsonBrowse(data);
+            });
+        </script>
+    }
+}
