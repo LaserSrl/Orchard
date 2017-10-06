@@ -1,6 +1,7 @@
 ﻿using Laser.Orchard.CommunicationGateway.Models;
 using Laser.Orchard.StartupConfig.Services;
 using Orchard.ContentManagement.MetaData;
+using Orchard.ContentTypes.Events;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Layouts.Helpers;
@@ -10,10 +11,16 @@ using System.Data;
 namespace Laser.Orchard.CommunicationGateway {
 
     public class CoomunicationMigrations : DataMigrationImpl {
-        private readonly IUtilsServices _utilsServices;
 
-        public CoomunicationMigrations(IUtilsServices utilsServices) {
+        private readonly IUtilsServices _utilsServices;
+        private readonly IContentDefinitionEventHandler _contentDefinitionEventHandlers;
+
+        public CoomunicationMigrations(
+            IUtilsServices utilsServices,
+            IContentDefinitionEventHandler contentDefinitionEventHandlers) {
+
             _utilsServices = utilsServices;
+            _contentDefinitionEventHandlers = contentDefinitionEventHandlers;
         }
 
         /// <summary>
@@ -408,6 +415,8 @@ namespace Laser.Orchard.CommunicationGateway {
                 .Attachable(false));
             ContentDefinitionManager.AlterTypeDefinition("CommunicationContact", content => content
                 .WithPart("FavoriteCulturePart"));
+            _contentDefinitionEventHandlers.ContentPartAttached(
+                new ContentPartAttachedContext { ContentTypeName = "CommunicationContact", ContentPartName = "FavoriteCulturePart" });
 
             return 32;
         }
