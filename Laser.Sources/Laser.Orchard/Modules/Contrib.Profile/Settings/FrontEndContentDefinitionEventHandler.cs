@@ -2,10 +2,8 @@
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentTypes.Events;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace Contrib.Profile.Settings {
     /// <summary>
@@ -29,6 +27,8 @@ namespace Contrib.Profile.Settings {
             var typeDefinition = _contentDefinitionManager.GetTypeDefinition(context.ContentTypeName);
             if (context.ContentPartName == "ProfilePart" || TypeHasProfilePart(typeDefinition)) {
                 //see whether in the type there are any default settings to process
+                //We only execute the providers for the part that was attached. This means we can
+                //change the default settings of some, and they will not be reset here.
                 foreach (var provider in _frontEndSettingsProviders
                     .Where(prov => prov.ForParts().Contains(context.ContentPartName))) {
 
@@ -55,15 +55,17 @@ namespace Contrib.Profile.Settings {
         }
 
         public void ContentFieldAttached(ContentFieldAttachedContext context) {
+            //this handles a special condition: all fields in the ProfilePart should by default be set
+            //to be displayed/editable in front-end.
             if (context.ContentPartName == "ProfilePart") {
-                var typeDefinition = _contentDefinitionManager
+                var typeDefinitions = _contentDefinitionManager
                     .ListTypeDefinitions()
-                    .FirstOrDefault(td => TypeHasProfilePart(td));
-                if (typeDefinition != null) {
+                    .Where(td => TypeHasProfilePart(td));
+                foreach(var typeDefinition in typeDefinitions) {
                     foreach (var provider in _frontEndSettingsProviders
                         .Where(prov => prov.ForParts().Contains("ProfilePart"))) {
 
-                        provider.ConfigureDefaultValues(typeDefinition);
+                        provider.ConfigureDefaultValues(typeDefinition, context.ContentFieldTypeName + "." + context.ContentFieldName);
                     }
                 }
             }

@@ -36,8 +36,7 @@ namespace Contrib.Profile.Settings {
                 //_typeHasProfilePart = true;
                 var settings = new ProfileFrontEndSettings();
                 if (updateModel.TryUpdateModel(settings, "ProfileFrontEndSettings", null, null)) {
-                    builder.WithSetting("ProfileFrontEndSettings.AllowFrontEndEdit", settings.AllowFrontEndEdit.ToString(CultureInfo.InvariantCulture));
-                    builder.WithSetting("ProfileFrontEndSettings.AllowFrontEndDisplay", settings.AllowFrontEndDisplay.ToString(CultureInfo.InvariantCulture));
+                    ProfileFrontEndSettings.SetValues(builder, settings.AllowFrontEndDisplay, settings.AllowFrontEndEdit);
                 }
                 yield return DefinitionTemplate(settings);
             }
@@ -61,8 +60,7 @@ namespace Contrib.Profile.Settings {
                 _typeHasProfilePart = true;
                 var settings = new ProfileFrontEndSettings();
                 if (updateModel.TryUpdateModel(settings, "ProfileFrontEndSettings", null, null)) {
-                    builder.WithSetting("ProfileFrontEndSettings.AllowFrontEndEdit", settings.AllowFrontEndEdit.ToString(CultureInfo.InvariantCulture));
-                    builder.WithSetting("ProfileFrontEndSettings.AllowFrontEndDisplay", settings.AllowFrontEndDisplay.ToString(CultureInfo.InvariantCulture));
+                    ProfileFrontEndSettings.SetValues(builder, settings.AllowFrontEndDisplay, settings.AllowFrontEndEdit);
                 }
                 yield return DefinitionTemplate(settings);
             }

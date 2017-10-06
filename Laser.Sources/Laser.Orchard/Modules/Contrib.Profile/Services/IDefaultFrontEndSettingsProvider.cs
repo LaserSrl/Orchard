@@ -8,7 +8,9 @@ namespace Contrib.Profile.Services {
         /// Sets the defaults for the part for this implementation of the provider.
         /// </summary>
         /// <param name="definition">The definition of the type being processed</param>
-        void ConfigureDefaultValues(ContentTypeDefinition definition);
+        /// <param name="options">An array of strings describing further options for the method.</param>
+        /// <remarks>There is no prescription on what the method will do with the options parameter.</remarks>
+        void ConfigureDefaultValues(ContentTypeDefinition definition, params string[] options);
 
         /// <summary>
         /// Tells what parts this provider is set to handle
