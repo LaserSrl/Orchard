@@ -14,8 +14,8 @@ namespace Laser.Orchard.HID.Models {
             : this() {
             Id = int.Parse(credential["id"].ToString());
             PartNumber = credential["partNumber"].ToString();
-            PartNumberFriendlyName = credential["partnumberFriendlyName"].ToString();
-            CardNumber = credential["cardNumber"].ToString();
+            PartNumberFriendlyName = credential["partnumberFriendlyName"] != null ? credential["partnumberFriendlyName"].ToString() : "";
+            CardNumber = credential["cardNumber"] != null ? credential["cardNumber"].ToString() : ""; 
             Status = credential["status"].ToString().ToUpperInvariant();
         }
     }

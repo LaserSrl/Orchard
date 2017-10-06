@@ -397,5 +397,19 @@ namespace Laser.Orchard.CommunicationGateway {
 
             return 31;
         }
+
+        /// <summary>
+        /// This migration added when we implemented the front end settings for display/
+        /// edit controlled by ProfilePart, that need things you want to show on front end to 
+        /// be in the actual definitions of ContentTypes.
+        /// </summary>
+        public int UpdateFrom31() {
+            ContentDefinitionManager.AlterPartDefinition("FavoriteCulturePart", builder => builder
+                .Attachable(false));
+            ContentDefinitionManager.AlterTypeDefinition("CommunicationContact", content => content
+                .WithPart("FavoriteCulturePart"));
+
+            return 32;
+        }
     }
 }
