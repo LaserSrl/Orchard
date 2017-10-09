@@ -138,6 +138,7 @@
   <ItemGroup>
     <Compile Include="Activity\SubscriptionEvent.cs" />
     <Compile Include="Controllers\SubscriptionController.cs" />
+    <Compile Include="Driver\AppDirectRequestPartDriver.cs" />
     <Compile Include="Driver\AppDirectButtonDriver.cs" />
     <Compile Include="Driver\AppDirectSettingsDriver.cs" />
     <Compile Include="Driver\AppDirectUserDriver.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Handlers\AppDirectUserHandler.cs" />
     <Compile Include="Migration.cs" />
     <Compile Include="Models\AppDirectButtonPart.cs" />
+    <Compile Include="Models\AppDirectRequestPart.cs" />
     <Compile Include="Models\AppDirectSettingsPart.cs" />
     <Compile Include="Models\AppDirectUserPart.cs" />
     <Compile Include="Models\AppDirectUserPartRecord.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="ViewModels\ButtonVM.cs" />
     <None Include="Views\EditorTemplates\AppDirectSettingVM.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\AppDirectButton.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\AppDirectRequestPart.cshtml" />
     <None Include="Views\EditorTemplates\Parts\AppDirectUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
