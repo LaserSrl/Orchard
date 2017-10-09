@@ -72,11 +72,11 @@ namespace Laser.Orchard.SEO.Handlers {
             foreach (Match tokenMatch in mc) {
                 string token = tokenMatch.ToString();
                 string stringToken = _tokenizer.Replace(token, tokensDictionary);
-                tokenVal.Add(token, stringToken);
+                tokenVal[token] = stringToken;
             }
 
             foreach (string token in tokenVal.Keys) {
-                scriptText = scriptText.Replace(token, tokenVal[token]); //TODO: togliere righe con attributo nullo??
+                scriptText = scriptText.Replace(token, tokenVal[token]);
             }
 
             return scriptText;
