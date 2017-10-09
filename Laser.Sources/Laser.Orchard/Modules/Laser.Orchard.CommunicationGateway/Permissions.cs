@@ -32,6 +32,7 @@ namespace Laser.Orchard.CommunicationGateway {
                 PublishOwnCommunicationAdv,
                 PublishCommunicationAdv,
                 AccessExportContacts,
+                AccessImportContacts,
                 ShowContacts
             };
         }
