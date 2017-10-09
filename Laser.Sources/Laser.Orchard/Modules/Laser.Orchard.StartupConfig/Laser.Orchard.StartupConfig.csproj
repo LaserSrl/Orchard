@@ -235,6 +235,10 @@
       <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
       <Name>Laser.Orchard.Commons</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Contrib.Profile\Contrib.Profile.csproj">
+      <Project>{bb5c57f4-d9cb-4440-89a6-d9ff9f41e4e3}</Project>
+      <Name>Contrib.Profile</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\WebApiResponseActivity.cs" />
@@ -253,9 +257,12 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UsersAutocompleteController.cs" />
     <Compile Include="Drivers\AuthenticationRequiredPartDriver.cs" />
+    <Compile Include="RazorBase\Drivers\EnvironmentVariablesSettingsPartDriver.cs" />
     <Compile Include="Drivers\FavoriteCulturePartDriver.cs" />
     <Compile Include="Drivers\MaintenancePartDriver.cs" />
     <Compile Include="Drivers\PublishExtensionPartDriver.cs" />
+    <Compile Include="RazorBase\Handlers\EnvironmentVariablesSettingsHandler.cs" />
+    <Compile Include="RazorBase\Models\EnvironmentVariablesSettingsPart.cs" />
     <Compile Include="Handlers\DisplayTextPartHandler.cs" />
     <Compile Include="Handlers\IDumperHandler.cs" />
     <Compile Include="Models\AuthenticationRequiredPart.cs" />
@@ -268,6 +275,8 @@
     <Compile Include="Projections\OwnerIdForm.cs" />
     <Compile Include="Projections\OwnerNameFilter.cs" />
     <Compile Include="Projections\OwnerStringForm.cs" />
+    <Compile Include="RazorBase\Services\IRazorBaseService.cs" />
+    <Compile Include="Services\FavoriteCultureDefaultFrontEndSettingsProvider.cs" />
     <Compile Include="Settings\DisplayTextPartSettingsHooks.cs" />
     <Compile Include="Settings\IdentityPartOnEveryTypeDefinitionHooks.cs" />
     <Compile Include="TaxonomiesExtensions\Drivers\TaxonomyExtensionPartDriver.cs" />
@@ -443,6 +452,7 @@
     <Content Include="Styles\font-awesome\scss\_stacked.scss" />
     <Content Include="Styles\font-awesome\scss\_variables.scss" />
     <Content Include="Views\DefinitionTemplates\ColorPickerFieldSettings.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\EnvironmentVariablesSettings.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

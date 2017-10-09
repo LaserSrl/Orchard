@@ -1,0 +1,6 @@
+﻿@model Laser.Orchard.AppDirect.ViewModels.ButtonVM
+@if (!string.IsNullOrEmpty(Model.ButtonAction)) {
+<div style="float:right">
+    <button type="submit" name="submit.Save" value="@Model.ButtonAction">@Model.ButtonText</button>
+</div>
+}

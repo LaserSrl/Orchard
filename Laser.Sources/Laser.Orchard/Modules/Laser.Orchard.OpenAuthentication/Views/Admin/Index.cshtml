@@ -51,6 +51,19 @@
             @T("Note: Remember to enable \"Users can create new accounts on the site\" in Settings > Users")
         </span>
     </fieldset>
-    
+    if (Model.ShowAppDirectSetting) {
+        <fieldset>
+            @Html.LabelFor(m => m.AppDirectBaseUrl, T("App Direct BaseUrl"))
+            @Html.TextBoxFor(m => m.AppDirectBaseUrl, new { @class = "text large" })
+                <span class="hint">
+                @T("Base Url like https://marketplace.appdirect.com")
+             </span>
+        </fieldset>
+    }
+    else {
+        @Html.HiddenFor(m => m.AppDirectBaseUrl, new { @class = "text large" })
+    }
+
+
     <button class="primaryAction" type="submit">@T("Save")</button>
 }
