@@ -380,7 +380,7 @@
         <InfoPage />
         <LocalizationPart />
         <MapPart MapPartSettings.Required="False" />
-        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="" ShareLinkPartSettingVM.SharedText="" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
+        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedText="Ho appena visualizzato la pagina {Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
         <SocialPart />
         <TitlePart />
       </InfoPage>
@@ -455,7 +455,7 @@
         <LocalizationPart />
         <NewsClienti />
         <PublishLaterPart />
-        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedText="{Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" ShareLinkPartSettingVM.SharedBody="{Content.Body}" ShareLinkPartSettingVM.ShowBodyChoise="False" />
+        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedText="Ho appena visualizzato la news {Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" ShareLinkPartSettingVM.SharedBody="{Content.Body}" ShareLinkPartSettingVM.ShowBodyChoise="False" />
         <TitlePart />
       </NewsClienti>
       <NewsDipendenti ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default" DisplayName="News Dipendenti">
@@ -466,7 +466,7 @@
         <LocalizationPart />
         <NewsDipendenti />
         <PublishLaterPart />
-        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedText="{Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" ShareLinkPartSettingVM.SharedBody="{Content.Body}" ShareLinkPartSettingVM.ShowBodyChoise="False" />
+        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedText="Ho appena visualizzato la news {Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" ShareLinkPartSettingVM.SharedBody="{Content.Body}" ShareLinkPartSettingVM.ShowBodyChoise="False" />
         <TitlePart />
       </NewsDipendenti>
       <OEmbed Stereotype="Media" DisplayName="External Media">
@@ -535,7 +535,7 @@
         <LocalizationPart />
         <MapPart MapPartSettings.Required="True" />
         <PuntoVendita />
-        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="" ShareLinkPartSettingVM.SharedText="" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
+        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedText="Ho appena visualizzato il punto vendita {Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
         <SocialPart />
         <TitlePart />
       </PuntoVendita>
@@ -618,7 +618,7 @@
         <IdentityPart />
         <LocalizationPart />
         <MapPart MapPartSettings.Required="True" />
-        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="" ShareLinkPartSettingVM.SharedText="" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
+        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedText="Ho appena visualizzato lo store {Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
         <SocialPart />
         <Store />
         <TitlePart />
