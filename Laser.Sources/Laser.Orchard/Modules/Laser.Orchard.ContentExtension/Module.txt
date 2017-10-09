@@ -5,7 +5,7 @@ Website: http://www.laser-group.com
 Version: 1.0
 OrchardVersion: 1.10
 Description: Enable Content Manipulation feature from extarnal orchard's environment
-Dependencies: Laser.Orchard.StartupConfig,Orchard.MediaLibrary,Orchard.Localization,Orchard.Fields,Orchard.ContentPicker,Orchard.Taxonomies,Laser.Orchard.WebServices
+Dependencies: Laser.Orchard.StartupConfig,Orchard.MediaLibrary,Orchard.Localization,Orchard.Fields,Orchard.ContentPicker,Orchard.Taxonomies,Laser.Orchard.WebServices,Laser.Orchard.UsersExtensions
 Category: Content
 Features:
     Laser.Orchard.ContentExtension.DynamicProjection:

@@ -1,0 +1,35 @@
+﻿@model Laser.Orchard.AppDirect.ViewModels.ListAppDirectSettingVM
+@using Laser.Orchard.Commons.Helpers
+@{
+    Script.Require("jQuery_NestedModels").AtHead();
+    Style.Require("FontAwesome430").AtHead();
+}
+<fieldset>
+    @Html.LabelFor(x => x.BaseUrl,T("Market Base Url"))
+    @Html.TextBoxFor(x => x.BaseUrl)
+    <div class="hint">@T("Base Url like https://marketplace.appdirect.com")</div>
+</fieldset>
+<fieldset>
+    <legend>@T("Add OAuth Setting")</legend>
+    <div id="btw">
+        <ul id="j_menuquestion"></ul>
+        @Html.EditorFor(x => x.ListAppDirectSetting)
+    </div>
+    <p style="margin: 10px 0px 10px 0px;">
+        <i class="fa fa-plus" style="color: green; margin-right:5px;"></i>@Html.LinkToAddNestedForm(x => x.ListAppDirectSetting, T("Add OAuth Setting").Text, "#btw", ".j_btw", "btw")
+    </p>
+</fieldset>
+
+@{
+    using (Script.Head()) {
+        <script type="text/javascript">
+            function CleanFieldsOnRemove(caller) {
+                $(caller).parent().parent().find(':text').each(function () {
+                    if (!$(this).hasClass("preserve-on-clean")) {
+                        $(this).val("");
+                    }
+                })
+            }
+        </script>
+    }
+}
