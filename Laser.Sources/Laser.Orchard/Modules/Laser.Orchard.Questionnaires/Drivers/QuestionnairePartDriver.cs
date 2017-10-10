@@ -76,15 +76,6 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             if (IsAuthorized) {
                 var viewModel = _questServices.BuildViewModelWithResultsForQuestionnairePart(part); //Modello mappato senza risposte
                 if (_controllerContextAccessor.Context != null) {
-                    // valorizza il context
-                    var questionnaireContext = part.Settings.GetModel<QuestionnairesPartSettingVM>().QuestionnaireContext;
-                    //questionnaireContext = _tokenizer.Replace(questionnaireContext, new Dictionary<string, object> {{ "Content", part.ContentItem}});
-                    questionnaireContext = _tokenizer.Replace(questionnaireContext, new Dictionary<string, object> { { "Content", _currentContentAccessor.CurrentContentItem } });
-                    viewModel.Context = questionnaireContext;
-                    // limita la lunghezza del context a 255 chars
-                    if (viewModel.Context.Length > 255) {
-                        viewModel.Context = viewModel.Context.Substring(0, 255);
-                    }
                     // valorizza le altre proprietà del viewModel
                     var fullModelWithAnswers = _controllerContextAccessor.Context.Controller.TempData["QuestUpdatedEditModel"];
                     var hasAcceptedTerms = _controllerContextAccessor.Context.Controller.TempData["HasAcceptedTerms"];
