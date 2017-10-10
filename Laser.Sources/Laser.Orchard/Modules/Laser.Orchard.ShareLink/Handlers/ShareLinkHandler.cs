@@ -34,8 +34,8 @@ namespace Laser.Orchard.ShareLink.Handlers {
             processedPriority = int.MinValue;
 
             OnGetDisplayShape<ShareLinkPart>((context, part) => {
-                _sharelinkService.FillPart(part);
                 if (context.DisplayType == "Detail") {
+                    _sharelinkService.FillPart(part); //GetPriority may use info from the part
                     var thisPriority = _priorityProviders.Any() ? _priorityProviders.Max(pp => pp.GetPriority(part)) : 0;
                     if (thisPriority > processedPriority) {
                         var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);

@@ -5,6 +5,7 @@ using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Laser.Orchard.WebServices.Models;
 using Orchard;
+using Orchard.Core.Contents;
 using Orchard.Autoroute.Models;
 using Orchard.ContentManagement;
 using Orchard.Environment.Configuration;
@@ -176,7 +177,7 @@ namespace Laser.Orchard.WebServices.Controllers {
                             // ListShape = merged;
                         }
 
-                    #endregion Projection
+                        #endregion Projection
                     }
                 } else {
                     //  string tipoCI = item.ContentItem.ContentType;
@@ -272,6 +273,11 @@ namespace Laser.Orchard.WebServices.Controllers {
         public ActionResult GetByAlias(string displayAlias, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour = "") {
             //   Logger.Error("inizio"+DateTime.Now.ToString());
             IContent item = null;
+
+            if (displayAlias == null) {
+                return Json(_utilsServices.GetResponse(ResponseType.MissingParameters), JsonRequestBehavior.AllowGet);
+            }
+
             try {
                 if (displayAlias.ToLower() == "user+info" || displayAlias.ToLower() == "user info") {
                     #region richiesta dati di uno user
@@ -281,25 +287,30 @@ namespace Laser.Orchard.WebServices.Controllers {
                         var result = new ContentResult { ContentType = "application/json" };
                         result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidUser));
                         return result;
-                    }
-                    else
+                    } else
                         if (!_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
-                            var result = new ContentResult { ContentType = "application/json" };
-                            result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidXSRF));
-                            return result;
-                            //   Content((Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
-                        }
-                        else {
-                            #region utente validato
-                            item = currentUser.ContentItem;
+                        var result = new ContentResult { ContentType = "application/json" };
+                        result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidXSRF));
+                        return result;
+                        //   Content((Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
+                    } else {
+                        #region utente validato
+                        item = currentUser.ContentItem;
 
-                            #endregion
-                        }
+                        #endregion
+                    }
                     #endregion
-                }
-                else {
+                } else {
                     item = GetContentByAlias(displayAlias);
                 }
+
+                if (!_orchardServices.Authorizer.Authorize(Permissions.ViewContent, item))
+                    return Json(UnauthorizedResponse(), JsonRequestBehavior.AllowGet);
+
+                if(item == null) {
+                    return new HttpStatusCodeResult(404);
+                }
+
                 ContentResult cr = (ContentResult)GetContent(item, sourceType, resultTarget, mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel, complexBehaviour.Split(','));
                 //    Logger.Error("Fine:"+DateTime.Now.ToString());
 
@@ -307,13 +318,21 @@ namespace Laser.Orchard.WebServices.Controllers {
                     Logger.Error(cr.Content.ToString());
                 }
                 return cr;
-            }
-            catch (System.Security.SecurityException) {
+            } catch (System.Security.SecurityException) {
                 return Json(_utilsServices.GetResponse(ResponseType.InvalidUser), JsonRequestBehavior.AllowGet);
-            }
-            catch {
+            } catch (OrchardSecurityException) {
+                return Json(UnauthorizedResponse(), JsonRequestBehavior.AllowGet);
+            } catch {
                 return new HttpStatusCodeResult(500);
             }
+        }
+
+        private Response UnauthorizedResponse() {
+            var response = _utilsServices.GetResponse(ResponseType.UnAuthorized);
+            response.ResolutionAction = _authenticationService.GetAuthenticatedUser() == null ?
+                ResolutionAction.Login :
+                ResolutionAction.NoAction;
+            return response;
         }
 
         //
@@ -658,18 +677,17 @@ namespace Laser.Orchard.WebServices.Controllers {
         /// <param name="key">default cache key such as defined in Orchard.OutpuCache</param>
         /// <returns>The new cache key</returns>
         public void KeyGenerated(StringBuilder key) {
-            var area = _request.RequestContext.RouteData.Values["area"];
-            var controller = _request.RequestContext.RouteData.Values["controller"];
-            var action = _request.RequestContext.RouteData.Values["action"];
-            if (area.ToString().ToLowerInvariant().Equals("laser.orchard.webservices") && controller.ToString().ToLowerInvariant().Equals("json")) {
-                if (action.ToString().ToLowerInvariant() == "getbyalias") {
+            var values = _request.RequestContext.RouteData.Values;
+            if (values.ContainsKey("area") && values.ContainsKey("controller") && values.ContainsKey("action")) {
+                if (values["area"].ToString().ToLowerInvariant().Equals("laser.orchard.webservices") &&
+                    values["controller"].ToString().ToLowerInvariant().Equals("json") &&
+                    values["action"].ToString().ToLowerInvariant().Equals("getbyalias")) {
                     IContent item = GetContentByAlias(_request.QueryString["displayalias"]);
                     if (item != null) {
                         var policy = item.As<Policy.Models.PolicyPart>();
                         if (policy != null && (policy.HasPendingPolicies ?? false)) {
                             key.Append("policy-not-accepted;");
-                        }
-                        else if (policy != null && !(policy.HasPendingPolicies ?? false)) {
+                        } else if (policy != null && !(policy.HasPendingPolicies ?? false)) {
                             key.Append("policy-accepted;");
                         }
                     }

@@ -1,16 +1,10 @@
 ﻿@using Orchard.ContentManagement
 @using Orchard.Utility.Extensions
 @using Orchard.Environment.Configuration
+
 @{
     var userCanRegister = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().UsersCanRegister;
     var enableLostPassword = WorkContext.CurrentSite.As<Orchard.Users.Models.RegistrationSettingsPart>().EnableLostPassword;
-
-    /*Logica Logo WhiteLabel*/
-    ShellSettings _shellsettings;
-    WorkContext.TryResolve<ShellSettings>(out _shellsettings);
-    string tenantname = _shellsettings.Name.ToLower();
-    var whitelabelLogo = Url.Content(String.Format("~/media/AdminResources/Logo/{0}-logo-frontoffice.png", tenantname));
-    
 }
 
 <div class="row">
@@ -18,12 +12,7 @@
 </div>
 <div class="row">
     <div class="col-xs-12 col-sm-4 col-index">
-        @if (File.Exists(Server.MapPath(whitelabelLogo))) {
-            <img src="@whitelabelLogo" alt="@tenantname" class="img-responsive"/>
-        } else {
-            <div class="placeholder-logo"></div>   
-        }
-
+        @Display(New.PlaceholderLogo())
     </div>
     <div class="col-xs-12 col-sm-8 col-index">
 	        <h3>@T("Account Information")</h3>
@@ -41,7 +30,10 @@
           
             <input type="submit" class="submit" value="@T("Sign In")">
         }<br />
-             @if (userCanRegister) {@Html.ActionLink(T("Register").Text, "Register", new { ReturnUrl = Request.QueryString["ReturnUrl"] }) @T(" if you don't have an account.")<br>}
+             @if (userCanRegister) {
+                 @Html.ActionLink(T("Register").Text, "Register", new { ReturnUrl = Request.QueryString["ReturnUrl"] }) 
+                 <text> </text>@T(" if you don't have an account.")
+             }
             
     </div>
 </div>

@@ -224,7 +224,7 @@ namespace Laser.Orchard.Events.Drivers {
                             part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, activityVM.TimeStart);
                             part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, activityVM.TimeEnd);
                         }
-                    }catch(OrchardException ex) {
+                    }catch(OrchardException) {
                         updater.AddModelError(Prefix + "DateFormatError", T("The starting date or ending date are not valid."));
                     }                  
                 }
@@ -234,7 +234,7 @@ namespace Laser.Orchard.Events.Drivers {
                 if (part.Repeat) {
                     try{
                         part.RepeatEndDate = _dataLocalization.StringToDatetime(activityVM.RepeatEndDate, "");
-                    } catch (OrchardException ex) {
+                    } catch (OrchardException) {
                         updater.AddModelError(Prefix + "DateRepeateFormatError", T("The repeat date is not valid."));
                     }
 

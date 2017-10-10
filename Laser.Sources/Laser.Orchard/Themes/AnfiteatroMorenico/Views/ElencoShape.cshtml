@@ -4,6 +4,7 @@
 @{
     var settings = WorkContext.Resolve<ShellSettings>();
     var prefix = settings.RequestUrlPrefix;
+    var langPattern = WorkContext.CurrentCulture == "it-IT" ? "" : WorkContext.CurrentCulture + "/";
 }
 @functions {
     // To support the layout classifaction below. Implementing as a razor function because we can, could otherwise be a Func<string[], string, string> in the code block following.
@@ -22,12 +23,18 @@
     var i = 0;
 
     if (Request.Url.LocalPath.Contains("/eventi")) {
-        if (String.IsNullOrWhiteSpace(Request.QueryString["datainizio"])) {
+        var synteticQs = Request.QueryString["datainizio"] ?? "" +
+            Request.QueryString["datafine"] ?? "";
+        var termIds = Request.QueryString["termids"] ?? "";
+        if (String.IsNullOrWhiteSpace(synteticQs) && !String.IsNullOrWhiteSpace(termIds)) {
             var url = "";
-            var urlPattern = "~/eventi?datainizio={0}&datafine={1}";
+            var urlPattern = "~/{0}eventi?datainizio={1}&datafine={2}&termids={3}";
             url = String.Format(urlPattern,
+                langPattern,
                 DateTime.Today.ToString("dd/MM/yyyy"),
-                DateTime.Today.ToString("dd/MM/yyyy"));
+                DateTime.Today.ToString("dd/MM/yyyy"),
+                termIds
+                );
             url = NormalizeUrl(url, prefix);
 
             Response.Redirect(url);

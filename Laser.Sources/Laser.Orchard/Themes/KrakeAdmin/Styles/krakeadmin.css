@@ -1438,7 +1438,7 @@ a.text-success:hover {
     left: 0;
     right: 0;
     height: 64px;
-    z-index: 105;
+    z-index: 1000;
     background: #ffffff;
     color: rgba(49, 53, 52, 0.6);
     -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
@@ -1623,7 +1623,7 @@ a.text-success:hover {
 
     .header-nav-profile .dropdown .profile-info {
         display: inline-block;
-        vertical-align: middle;
+        vertical-align: middle !important;
         padding: 0 20px 0 10px;
         line-height: 15px;
     }

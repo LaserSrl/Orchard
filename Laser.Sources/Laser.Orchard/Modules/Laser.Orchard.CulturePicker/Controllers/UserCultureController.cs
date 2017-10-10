@@ -5,6 +5,7 @@ using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Mvc.Extensions;
 using System;
+using System.Web;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.CulturePicker.Controllers {
@@ -60,9 +61,13 @@ namespace Laser.Orchard.CulturePicker.Controllers {
                     returnUrl = "~/" + returnUrl;
                 }
             }
+
+            if(Services.WorkContext.HttpContext.Request.UrlReferrer == null) {
+                return new HttpStatusCodeResult(404);
+            }
             //in the redirect we should be including the queries back into returnUrl
-            //we can find the queries in Services.WorkContext.HttpContext.Request.rlReferrer.PathAndQuery
-            string queries = Services.WorkContext.HttpContext.Request.UrlReferrer.Query;
+            //we can find the queries in Services.WorkContext.HttpContext.Request.UrlReferrer.PathAndQuery
+            string queries = Services.WorkContext.HttpContext.Request.UrlReferrer.Query; //not found
 
             returnUrl += queries;
             return this.RedirectLocal(returnUrl);

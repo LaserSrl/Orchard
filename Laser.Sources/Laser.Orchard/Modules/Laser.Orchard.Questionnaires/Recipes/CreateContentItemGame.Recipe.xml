@@ -14,7 +14,7 @@
   <Feature enable="Laser.Orchard.Events,Laser.Orchard.Questionnaires" />
   <Metadata>
     <Types>
-      <Game ContentTypeSettings.Draftable="True" ContentTypeSettings.Creatable="True"  TypeIndexing.Indexes="Search">
+      <Game ContentTypeSettings.Draftable="True" ContentTypeSettings.Creatable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True"   TypeIndexing.Indexes="Search">
         <GamePart />
         <TitlePart />
         <CommonPart />
