@@ -46,7 +46,7 @@ namespace Laser.Orchard.CommunicationGateway.Navigation {
                           .Position("1.063")
                             .Action("Index", "ContactsAdmin", new { area = "Laser.Orchard.CommunicationGateway" })
                 //   .LocalNav()
-                .Permission(Permissions.ManageContact)
+                .Permission(Permissions.ShowContacts)
                  )
                 //    .Add(sub4 => sub4
                 //     .Caption(T("Settings"))

@@ -125,17 +125,19 @@
       <ButtonSettings ButtonName="ConfermaConfig" ButtonText="Conferma" ButtonAsync="false" />
       <ButtonSettings ButtonName="DeliverApp" ButtonText="Richiedi pubblicazione app" ButtonAsync="false" />
     </DynamicButtonToWorkflowsSettingsPart>
+    <EnvironmentVariablesSettingsPart FallbackTenants="AppRetailTemplate" />
     <GoogleAnalyticsSettingsPart AnonymizeIp="true" DomainName="" GoogleAnalyticsKey="UA-37701956-23" TrackOnAdmin="false" TrackOnFrontEnd="true" UseAsyncTracking="true" />
+    <LuceneSettingsPart LuceneAnalyzerSelectorMappingsSerialized="[{&quot;IndexName&quot;:&quot;Default&quot;,&quot;AnalyzerName&quot;:&quot;Default&quot;}]" />
     <MapsSiteSettingsPart MaxZoom="0" />
     <OpenAuthenticationSettingsPart AutoRegistrationEnabled="true" />
     <ProtectionSettingsPart ProtectedEntries="Laser.Orchard.WebServices.Json.GetByAlias,Laser.Orchard.WebServices.Signal.Trigger,Laser.Orchard.Braintree.Paypal.GetClientToken,Laser.Orchard.Braintree.Paypal.Pay,Laser.Orchard.WebServices.WebApi.Display" />
     <PushMobileSettingsPart AndroidApiKey="AIzaSyDIPtcdYFIaC-yh_96-E8ecY6CenxYuYKg" AndroidApiKeyDevelopment="AIzaSyDIPtcdYFIaC-yh_96-E8ecY6CenxYuYKg" AndroidPushServiceUrl="https://fcm.googleapis.com/fcm/send" CommitSentOnly="false" DelayMinutesBeforeRetry="1" MaxNumRetry="0" MaxPushPerIteration="0" PushSendBufferSize="50" ShowTestOptions="false" />
     <QuestionnaireModuleSettingsPart Disposable="false" />
     <RegistrationSettingsPart EnableLostPassword="true" NotificationsRecipients="" NotifyModeration="false" UsersAreModerated="false" UsersCanRegister="true" UsersMustValidateEmail="true" ValidateEmailContactEMail="" ValidateEmailRegisteredWebsite="" />
-    <SearchSettingsPart SearchFields="Default:title,Categoria,prodotto-abstract,prodotto-descrizione" DisplayType="Summary" FilterCulture="false" SearchIndex="Default" />
+    <SearchSettingsPart SearchFields="Default:title,Categoria,prodotto-abstract,prodotto-descrizione,body" DisplayType="Summary" FilterCulture="false" SearchIndex="Default" />
     <ShareLinkModuleSettingPart Fb_App="" SharedBody="" SharedImage="" SharedLink="" SharedText="" />
     <ShortLinksSettingsPart GoogleApiKey="" />
-    <SiteSettingsPart SupportedCultures="en-US;it-IT" DefaultParserEngine="Laser.Orchard.TemplateManagement.Parsers.RazorParserEngine" MaxPagedCount="0" MaxPageSize="0" PageSize="10" PageTitleSeparator=" - " SiteCalendar="" SiteCulture="it-IT" SiteName="App Retail" SiteSalt="ca962f8f8dde4dc2b3d8198ba6b5cb61" SiteTimeZone="W. Europe Standard Time" SuperUser="admin" UseCdn="false" DefaultParserIdSelected="Laser.Orchard.TemplateManagement.Parsers.RazorParserEngine" />
+    <SiteSettingsPart SupportedCultures="it-IT" DefaultParserEngine="Laser.Orchard.TemplateManagement.Parsers.RazorParserEngine" MaxPagedCount="0" MaxPageSize="0" PageSize="10" PageTitleSeparator=" - " SiteCalendar="" SiteCulture="it-IT" SiteName="App Retail" SiteSalt="ca962f8f8dde4dc2b3d8198ba6b5cb61" SiteTimeZone="W. Europe Standard Time" SuperUser="admin" UseCdn="false" DefaultParserIdSelected="Laser.Orchard.TemplateManagement.Parsers.RazorParserEngine" />
     <SmtpSettingsPart Address="krake.ao@gmail.com" EnableSsl="true" Host="smtp.gmail.com" Password="laseradmin" Port="25" RequireCredentials="true" UseDefaultCredentials="false" UserName="krake.ao@gmail.com" />
     <SslSettingsPart CustomEnabled="false" Enabled="false" InsecureHostName="pre-multitenant10.mykrake.com" SecureEverything="true" SecureHostName="pre-multitenant10.mykrake.com" SendStrictTransportSecurityHeaders="false" StrictTransportSecurityIncludeSubdomains="false" StrictTransportSecurityMaxAge="31536000" StrictTransportSecurityPreload="false" Urls="" />
     <ThemeSiteSettingsPart CurrentThemeName="KrakeDefaultTheme" />
@@ -161,7 +163,7 @@
       </AuthenticatedProjection>
       <Blog DisplayName="Blog">
         <AdminMenuPart AdminMenuPartTypeSettings.DefaultPosition="2" />
-        <AutoroutePart AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-blog&quot;}]" />
+        <AutoroutePart AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-blog&quot;}]" />
         <BlogPart />
         <CommentsContainerPart />
         <CommonPart />
@@ -175,7 +177,7 @@
         <WidgetPart />
       </BlogArchives>
       <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search" DisplayName="Blog Post">
-        <AutoroutePart AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Blog and Title&quot;,&quot;Pattern&quot;:&quot;{Content.Container.Path}/{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-blog/my-post&quot;}]" />
+        <AutoroutePart AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Blog and Title&quot;,&quot;Pattern&quot;:&quot;{Content.Container.Path}/{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-blog/my-post&quot;}]" />
         <BlogPostPart />
         <BodyPart />
         <CommentsPart />
@@ -208,34 +210,35 @@
         <IdentityPart />
         <WidgetPart />
       </CalendarWidget>
-      <Catalogo ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="False" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" DisplayName="Catalogo">
+      <Catalogo ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="False" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default" DisplayName="Catalogo">
         <ActivityPart ActivityPartSettings.UseRecurrences="False" />
-        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <Catalogo />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <IdentityPart />
+        <SummaryAdminToolbarPart SummaryAdminToolbarPartSettings.Labels="{ Label=Prodotti, Area=, Controller=, Action=, Parameters=, CustomUrl=AdvancedOptions.CPFIdToSearch={Content.Id}&amp;AdvancedOptions.CPFName=Prodotto.Cataloghi., Target=_self }," />
         <TitlePart />
       </Catalogo>
       <CategoriaNewsDipendentiTerm Taxonomy="Categoria News Dipendenti" DisplayName="Categoria News Dipendenti Term">
-        <AutoroutePart AutorouteSettings.AllowCustomPattern="true" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" />
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" />
         <CommonPart />
         <TermPart />
         <TitlePart />
       </CategoriaNewsDipendentiTerm>
       <CategoriaProdottoTerm Taxonomy="Categoria Prodotto" DisplayName="Categoria Prodotto Term">
-        <AutoroutePart AutorouteSettings.AllowCustomPattern="true" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" />
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" />
         <CommonPart />
         <TermPart />
         <TitlePart />
       </CategoriaProdottoTerm>
       <CategoriaPromoTerm Taxonomy="Categoria Promo" DisplayName="Categoria Promo Term">
-        <AutoroutePart AutorouteSettings.AllowCustomPattern="true" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" />
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" />
         <CommonPart />
         <TermPart />
         <TitlePart />
       </CategoriaPromoTerm>
       <Colore ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="False" DisplayName="Colore" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False">
-        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <Colore />
         <CommonPart DateEditorSettings.ShowDateEditor="False" OwnerEditorSettings.ShowOwnerEditor="True" />
         <IdentityPart />
@@ -247,7 +250,7 @@
         <IdentityPart />
       </Comment>
       <CommunicationAdvertising ContentTypeSettings.Creatable="False" ContentTypeSettings.Draftable="True" DisplayName="Advertising">
-        <AutoroutePart AutorouteSettings.AllowCustomPattern="false" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Title', Pattern:'{Content.Slug}',Description:'Title of Advertising'}]" AutorouteSettings.DefaultPatternIndex="0" />
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="false" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Title', Pattern:'{Content.Slug}',Description:'Title of Advertising'}]" AutorouteSettings.DefaultPatternIndex="0" />
         <CommonPart />
         <CommunicationAdvertisingPart />
         <IdentityPart />
@@ -264,7 +267,7 @@
         <TitlePart />
       </CommunicationCampaign>
       <CommunicationContact ContentTypeSettings.Creatable="False" ContentTypeSettings.Draftable="False" ContentTypeSettings.Listable="False" ContentTypeSettings.Securable="False" ContentTypeLayoutSettings.Placeable="False" DisplayName="Communication Contact" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Parts_Title_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;41&quot;,&quot;Differentiator&quot;:&quot;Note&quot;},{&quot;ShapeType&quot;:&quot;Parts_FavoriteCulturePart_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:&quot;Email&quot;},{&quot;ShapeType&quot;:&quot;Fields_TaxonomyField_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:&quot;PreferenzeProfilo&quot;},{&quot;ShapeType&quot;:&quot;Fields_TaxonomyFieldList_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;11&quot;,&quot;Differentiator&quot;:&quot;PreferenzeProfilo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;24&quot;,&quot;Differentiator&quot;:&quot;Luogodinascita&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;25&quot;,&quot;Differentiator&quot;:&quot;Nazionedinascita&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;28&quot;,&quot;Differentiator&quot;:&quot;Prefissotelefonico&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;29&quot;,&quot;Differentiator&quot;:&quot;Numerotelefonico&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;30&quot;,&quot;Differentiator&quot;:&quot;Indirizzoresidenza&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;31&quot;,&quot;Differentiator&quot;:&quot;Cittaresidenza&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;32&quot;,&quot;Differentiator&quot;:&quot;CAPresidenza&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;33&quot;,&quot;Differentiator&quot;:&quot;Provinciaresidenza&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;34&quot;,&quot;Differentiator&quot;:&quot;Nazioneresidenza&quot;},{&quot;ShapeType&quot;:&quot;Fields_Hidden_String_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:&quot;TipoUtente&quot;},{&quot;ShapeType&quot;:&quot;Parts_EmailContact_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;5&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_SmsContact_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_TaxonomyField_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;8&quot;,&quot;Differentiator&quot;:&quot;Preferenze&quot;},{&quot;ShapeType&quot;:&quot;Parts_MobileContact_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;11&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;12&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;},{&quot;ShapeType&quot;:&quot;Parts_CommunicationContact_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;13&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;14&quot;,&quot;Differentiator&quot;:&quot;Avatar&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;15&quot;,&quot;Differentiator&quot;:&quot;Cognome&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;16&quot;,&quot;Differentiator&quot;:&quot;Nome&quot;},{&quot;ShapeType&quot;:&quot;Fields_DateTime_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;17&quot;,&quot;Differentiator&quot;:&quot;Datadinascita&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;18&quot;,&quot;Differentiator&quot;:&quot;PuntoVendita&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPickerLocalization_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;19&quot;,&quot;Differentiator&quot;:&quot;PuntoVendita&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;20&quot;,&quot;Differentiator&quot;:&quot;Store&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPickerLocalization_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;21&quot;,&quot;Differentiator&quot;:&quot;Store&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;22&quot;,&quot;Differentiator&quot;:&quot;AvatarInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;23&quot;,&quot;Differentiator&quot;:&quot;NomeInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;24&quot;,&quot;Differentiator&quot;:&quot;CognomeInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_DateTime_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;25&quot;,&quot;Differentiator&quot;:&quot;DatadinascitaInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;26&quot;,&quot;Differentiator&quot;:&quot;LuogodinascitaInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;27&quot;,&quot;Differentiator&quot;:&quot;NazionedinascitaInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;28&quot;,&quot;Differentiator&quot;:&quot;IndirizzoresidenzaInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;29&quot;,&quot;Differentiator&quot;:&quot;CittaresidenzaInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;30&quot;,&quot;Differentiator&quot;:&quot;CAPresidenzaInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;31&quot;,&quot;Differentiator&quot;:&quot;ProvinciaResidenzaInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;32&quot;,&quot;Differentiator&quot;:&quot;NazioneresidenzaInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;33&quot;,&quot;Differentiator&quot;:&quot;EmailInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;34&quot;,&quot;Differentiator&quot;:&quot;PrefissotelefonicoInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;35&quot;,&quot;Differentiator&quot;:&quot;NumerotelefonicoInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_TaxonomyField_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;36&quot;,&quot;Differentiator&quot;:&quot;PreferenzeInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_TaxonomyFieldList_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;37&quot;,&quot;Differentiator&quot;:&quot;PreferenzeInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;38&quot;,&quot;Differentiator&quot;:&quot;PuntoVenditaInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPickerLocalization_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;39&quot;,&quot;Differentiator&quot;:&quot;PuntoVenditaInfo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;40&quot;,&quot;Differentiator&quot;:&quot;NoteInfo&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;41&quot;,&quot;Differentiator&quot;:null}]">
-        <AutoroutePart AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;contact_{Content.Slug}&quot;,&quot;Description&quot;:&quot;Autoroute Contact&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
+        <AutoroutePart AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;contact_{Content.Slug}&quot;,&quot;Description&quot;:&quot;Autoroute Contact&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <CommunicationContactPart />
         <ContactInfoPart />
@@ -273,7 +276,7 @@
         <TitlePart />
         <UserPolicyPart />
       </CommunicationContact>
-      <ConfigurazioneAppStore ContentTypeSettings.Creatable="False" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:&quot;Nome&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:&quot;Descrizione&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:&quot;DescrizioneCorta&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:&quot;IconaApp&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;5&quot;,&quot;Differentiator&quot;:&quot;BannerAppAndroid&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:&quot;ParoleChiave&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:&quot;TestoPromozionale&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;8&quot;,&quot;Differentiator&quot;:&quot;URLSitoWeb&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;9&quot;,&quot;Differentiator&quot;:&quot;URLPolicyApp&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:&quot;emailTesterAndroid&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;11&quot;,&quot;Differentiator&quot;:&quot;emailTesteriOS&quot;},{&quot;ShapeType&quot;:&quot;Fields_Hidden_String_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;12&quot;,&quot;Differentiator&quot;:&quot;ConfigStatus&quot;},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;13&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;14&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Navigation_AdminMenu_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;15&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;16&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;17&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;18&quot;,&quot;Differentiator&quot;:null}]" DisplayName="Configurazione AppStore">
+      <ConfigurazioneAppStore ContentTypeSettings.Creatable="False" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="False" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:&quot;Nome&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:&quot;Descrizione&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:&quot;DescrizioneCorta&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:&quot;IconaApp&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;5&quot;,&quot;Differentiator&quot;:&quot;BannerAppAndroid&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:&quot;ParoleChiave&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:&quot;TestoPromozionale&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;8&quot;,&quot;Differentiator&quot;:&quot;URLSitoWeb&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;9&quot;,&quot;Differentiator&quot;:&quot;URLPolicyApp&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:&quot;emailTesterAndroid&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;11&quot;,&quot;Differentiator&quot;:&quot;emailTesteriOS&quot;},{&quot;ShapeType&quot;:&quot;Fields_Hidden_String_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;12&quot;,&quot;Differentiator&quot;:&quot;ConfigStatus&quot;},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;13&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;14&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Navigation_AdminMenu_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;15&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;16&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;17&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;18&quot;,&quot;Differentiator&quot;:null}]" DisplayName="Configurazione AppStore">
         <AdminMenuPart />
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;config/appstore&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
@@ -287,12 +290,12 @@
         <ConfigurazioneBase />
         <IdentityPart />
       </ConfigurazioneBase>
-      <ConfigurazioneGrafica ContentTypeSettings.Creatable="False" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:&quot;ImmagineSfondoApp&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:&quot;BannerAppAndroid&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;15&quot;,&quot;Differentiator&quot;:&quot;CellaCataloghi&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;16&quot;,&quot;Differentiator&quot;:&quot;CellaProdotti&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;17&quot;,&quot;Differentiator&quot;:&quot;CellaNews&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;18&quot;,&quot;Differentiator&quot;:&quot;CellaRichiesteProdotto&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;19&quot;,&quot;Differentiator&quot;:&quot;CellaPuntiVendita&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;23&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Navigation_AdminMenu_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;24&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;25&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;26&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;},{&quot;ShapeType&quot;:&quot;Fields_Custom_ColorPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;13&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;20&quot;,&quot;Differentiator&quot;:&quot;CellaPromozioni&quot;},{&quot;ShapeType&quot;:&quot;Fields_Hidden_String_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;21&quot;,&quot;Differentiator&quot;:&quot;ConfigStatus&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;22&quot;,&quot;Differentiator&quot;:null}]" DisplayName="Configurazione Grafica">
+      <ConfigurazioneGrafica ContentTypeSettings.Creatable="False" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="False" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:&quot;ImmagineSfondoApp&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:&quot;BannerAppAndroid&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:&quot;LogoApp&quot;},{&quot;ShapeType&quot;:&quot;Fields_Laser_Orchard_InsertStuff_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:&quot;ScriptAnteprima&quot;},{&quot;ShapeType&quot;:&quot;Fields_Custom_ColorPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;12&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;13&quot;,&quot;Differentiator&quot;:&quot;CellaCataloghi&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;14&quot;,&quot;Differentiator&quot;:&quot;CellaProdotti&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;15&quot;,&quot;Differentiator&quot;:&quot;CellaNews&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;16&quot;,&quot;Differentiator&quot;:&quot;CellaRichiesteProdotto&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;17&quot;,&quot;Differentiator&quot;:&quot;CellaPuntiVendita&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;18&quot;,&quot;Differentiator&quot;:&quot;CellaPromozioni&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;19&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Hidden_String_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;20&quot;,&quot;Differentiator&quot;:&quot;ConfigStatus&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;21&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Navigation_AdminMenu_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;22&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;23&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;24&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;25&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;}]" DisplayName="Configurazione Grafica">
         <AdminMenuPart />
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;config/graphics&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <ConfigurazioneGrafica />
-        <DynamicButtonToWorkflowsPart DynamicButtonsSetting.Buttons="{2},{3}" />
+        <DynamicButtonToWorkflowsPart DynamicButtonsSetting.Buttons="{2}" />
         <IdentityPart />
       </ConfigurazioneGrafica>
       <ConfigurazioneMarketplace ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" DisplayName="Configurazione Marketplace">
@@ -327,7 +330,7 @@
         <IdentityPart />
         <TemplatePart />
       </CustomTemplate>
-      <Dipendente ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="False" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:&quot;Cognome&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:&quot;Nome&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:&quot;Email&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:&quot;Store&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPickerLocalization_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;5&quot;,&quot;Differentiator&quot;:&quot;Store&quot;},{&quot;ShapeType&quot;:&quot;Fields_Hidden_String_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:&quot;UserID&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;8&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;9&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:null}]" DisplayName="Dipendente">
+      <Dipendente ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="False" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:&quot;Cognome&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:&quot;Nome&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:&quot;Email&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:&quot;Store&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPickerLocalization_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;5&quot;,&quot;Differentiator&quot;:&quot;Store&quot;},{&quot;ShapeType&quot;:&quot;Fields_Hidden_String_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:&quot;UserID&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;8&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;9&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:null}]" DisplayName="Dipendente">
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <Dipendente />
         <DisplayTextPart DisplayTextPartSettings.DisplayText="{Content.Fields.Dipendente.Cognome} {Content.Fields.Dipendente.Nome}" />
@@ -369,7 +372,7 @@
         <ImageProfilePart />
       </ImageProfile>
       <InfoPage ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" DisplayName="Info Page" TypeIndexing.Indexes="Search" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Parts_Title_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Localization_ContentTranslations_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Body_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Map_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;5&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_ContentPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;8&quot;,&quot;Differentiator&quot;:&quot;Contatto&quot;},{&quot;ShapeType&quot;:&quot;Fields_Link_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;9&quot;,&quot;Differentiator&quot;:&quot;YoutubeVideo&quot;},{&quot;ShapeType&quot;:&quot;Parts_ShareLink&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;11&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;12&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;13&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;14&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:&quot;MapSourceFile&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:&quot;Gallery&quot;}]" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True">
-        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;infopage&quot;,&quot;Pattern&quot;:&quot;infos/{Content.Slug}&quot;,&quot;Description&quot;:&quot;infos/my-title&quot;}]" AutorouteSettings.DefaultPatternIndex="0" />
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;infopage&quot;,&quot;Pattern&quot;:&quot;infos/{Content.Slug}&quot;,&quot;Description&quot;:&quot;infos/my-title&quot;}]" AutorouteSettings.DefaultPatternIndex="0" />
         <BodyPart BodyTypePartSettings.Flavor="html" />
         <CommonPart DateEditorSettings.ShowDateEditor="False" OwnerEditorSettings.ShowOwnerEditor="True" />
         <ContactPart />
@@ -377,7 +380,7 @@
         <InfoPage />
         <LocalizationPart />
         <MapPart MapPartSettings.Required="False" />
-        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="" ShareLinkPartSettingVM.SharedText="" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
+        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedText="Ho appena visualizzato la pagina {Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
         <SocialPart />
         <TitlePart />
       </InfoPage>
@@ -424,9 +427,9 @@
         <MenuWidgetPart />
         <WidgetPart />
       </MenuWidget>
-      <MessaggioPromozionale ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Parts_Title_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Activity_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Body_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;5&quot;,&quot;Differentiator&quot;:&quot;Gallery&quot;},{&quot;ShapeType&quot;:&quot;Fields_Boolean_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:&quot;Visibileatutti&quot;},{&quot;ShapeType&quot;:&quot;Fields_TaxonomyField_Localized_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:&quot;Categoria&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;8&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;9&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;11&quot;,&quot;Differentiator&quot;:null}]" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" DisplayName="Messaggio Promozionale" ContentTypeLayoutSettings.Placeable="False">
+      <MessaggioPromozionale ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Parts_Title_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Activity_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Body_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;5&quot;,&quot;Differentiator&quot;:&quot;Gallery&quot;},{&quot;ShapeType&quot;:&quot;Fields_Boolean_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:&quot;Visibileatutti&quot;},{&quot;ShapeType&quot;:&quot;Fields_TaxonomyField_Localized_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:&quot;Categoria&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;8&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;9&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;11&quot;,&quot;Differentiator&quot;:null}]" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" DisplayName="Promozione" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default">
         <ActivityPart ActivityPartSettings.UseRecurrences="False" />
-        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <BodyPart BodyTypePartSettings.Flavor="Html" />
         <CommonPart DateEditorSettings.ShowDateEditor="False" OwnerEditorSettings.ShowOwnerEditor="True" />
         <MessaggioPromozionale />
@@ -444,26 +447,26 @@
         <MenuPart />
         <NavigationQueryPart />
       </NavigationQueryMenuItem>
-      <NewsClienti ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" DisplayName="News Clienti">
-        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;news/{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
+      <NewsClienti ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default" DisplayName="News Clienti">
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;news/{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <BodyPart BodyTypePartSettings.Flavor="Html" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <IdentityPart />
         <LocalizationPart />
         <NewsClienti />
         <PublishLaterPart />
-        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedText="{Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" ShareLinkPartSettingVM.SharedBody="{Content.Body}" ShareLinkPartSettingVM.ShowBodyChoise="False" />
+        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedText="Ho appena visualizzato la news {Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" ShareLinkPartSettingVM.SharedBody="{Content.Body}" ShareLinkPartSettingVM.ShowBodyChoise="False" />
         <TitlePart />
       </NewsClienti>
-      <NewsDipendenti ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" DisplayName="News Dipendenti">
-        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;news-dipendenti/{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
+      <NewsDipendenti ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default" DisplayName="News Dipendenti">
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;news-dipendenti/{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <BodyPart BodyTypePartSettings.Flavor="Html" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <IdentityPart />
         <LocalizationPart />
         <NewsDipendenti />
         <PublishLaterPart />
-        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedText="{Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" ShareLinkPartSettingVM.SharedBody="{Content.Body}" ShareLinkPartSettingVM.ShowBodyChoise="False" />
+        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedText="Ho appena visualizzato la news {Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" ShareLinkPartSettingVM.SharedBody="{Content.Body}" ShareLinkPartSettingVM.ShowBodyChoise="False" />
         <TitlePart />
       </NewsDipendenti>
       <OEmbed Stereotype="Media" DisplayName="External Media">
@@ -477,7 +480,7 @@
         <OpenAuthenticationPart />
       </OpenAuthentication>
       <Page ContentTypeSettings.Creatable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search" DisplayName="Page">
-        <AutoroutePart AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-page&quot;}]" />
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-page&quot;}]" />
         <CommonPart DateEditorSettings.ShowDateEditor="True" />
         <LayoutPart LayoutTypePartSettings.IsTemplate="False" />
         <LocalizationPart />
@@ -486,8 +489,8 @@
         <TagsPart />
         <TitlePart />
       </Page>
-      <PolicyText ContentTypeSettings.Draftable="False" ContentTypeSettings.Creatable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" DisplayName="Policy Text">
-        <AutoroutePart AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Policy&quot;,&quot;Pattern&quot;:&quot;policy/{Content.Slug}&quot;,&quot;Description&quot;:&quot;policy/my-page&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
+      <PolicyText ContentTypeSettings.Draftable="False" ContentTypeSettings.Creatable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default" DisplayName="Testo Privacy">
+        <AutoroutePart AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Policy&quot;,&quot;Pattern&quot;:&quot;policy/{Content.Slug}&quot;,&quot;Description&quot;:&quot;policy/my-page&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <BodyPart BodyTypePartSettings.Flavor="Html" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <LocalizationPart />
@@ -495,23 +498,22 @@
         <TitlePart />
       </PolicyText>
       <PreferenzeTerm Taxonomy="Preferenze" DisplayName="Preferenze Term">
-        <AutoroutePart AutorouteSettings.AllowCustomPattern="true" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" />
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" />
         <CommonPart />
         <TermPart />
         <TitlePart />
       </PreferenzeTerm>
-      <Prodotto ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="False" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default" DisplayName="Prodotto" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Parts_Title_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:&quot;Gallery&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:&quot;AbbinamentiSuggeriti&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;5&quot;,&quot;Differentiator&quot;:&quot;Cataloghi&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPickerLocalization_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:&quot;AbbinamentiSuggeriti&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPickerLocalization_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:&quot;Cataloghi&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;8&quot;,&quot;Differentiator&quot;:&quot;URLecommerce&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;9&quot;,&quot;Differentiator&quot;:&quot;Abstract&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:&quot;Descrizione&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;11&quot;,&quot;Differentiator&quot;:&quot;SKU&quot;},{&quot;ShapeType&quot;:&quot;Fields_Laser_Orchard_InsertStuff_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;12&quot;,&quot;Differentiator&quot;:&quot;ScriptNascondiPrezzo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Boolean_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;13&quot;,&quot;Differentiator&quot;:&quot;Mettiinvetrina&quot;},{&quot;ShapeType&quot;:&quot;Fields_Boolean_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;14&quot;,&quot;Differentiator&quot;:&quot;NascondiPrezzo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;15&quot;,&quot;Differentiator&quot;:&quot;Prezzo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;16&quot;,&quot;Differentiator&quot;:&quot;PrezzoListino&quot;},{&quot;ShapeType&quot;:&quot;Parts_Tags_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;17&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_ShareLink&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;18&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;19&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_TaxonomyField_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;20&quot;,&quot;Differentiator&quot;:&quot;Categoria&quot;},{&quot;ShapeType&quot;:&quot;Fields_TaxonomyFieldList_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;21&quot;,&quot;Differentiator&quot;:&quot;Categoria&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;22&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;23&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;24&quot;,&quot;Differentiator&quot;:null}]">
-        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
+      <Prodotto ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="False" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default" DisplayName="Prodotto" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Parts_Title_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:&quot;Gallery&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:&quot;Abstract&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;5&quot;,&quot;Differentiator&quot;:&quot;Descrizione&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:&quot;SKU&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:&quot;PrezzoListino&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;8&quot;,&quot;Differentiator&quot;:&quot;Prezzo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Boolean_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;9&quot;,&quot;Differentiator&quot;:&quot;NascondiPrezzo&quot;},{&quot;ShapeType&quot;:&quot;Fields_Boolean_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:&quot;Mettiinvetrina&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;11&quot;,&quot;Differentiator&quot;:&quot;Cataloghi&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPickerLocalization_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;12&quot;,&quot;Differentiator&quot;:&quot;Cataloghi&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;13&quot;,&quot;Differentiator&quot;:&quot;AbbinamentiSuggeriti&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPickerLocalization_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;14&quot;,&quot;Differentiator&quot;:&quot;AbbinamentiSuggeriti&quot;},{&quot;ShapeType&quot;:&quot;Parts_Tags_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;15&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;15&quot;,&quot;Differentiator&quot;:&quot;URLecommerce&quot;},{&quot;ShapeType&quot;:&quot;Fields_TaxonomyField_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;16&quot;,&quot;Differentiator&quot;:&quot;Categoria&quot;},{&quot;ShapeType&quot;:&quot;Parts_ShareLink&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;17&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;18&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;19&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_TaxonomyFieldList_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;20&quot;,&quot;Differentiator&quot;:&quot;Categoria&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;21&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;22&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;},{&quot;ShapeType&quot;:&quot;Fields_Laser_Orchard_InsertStuff_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;23&quot;,&quot;Differentiator&quot;:&quot;ScriptNascondiPrezzo&quot;}]">
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <IdentityPart />
         <Prodotto />
-        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedBody="{Content.Fields.Prodotto.Descrizione}" ShareLinkPartSettingVM.SharedText="{Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowBodyChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
-        <TagsPart />
+        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedBody="" ShareLinkPartSettingVM.SharedText="Ho appena visualizzato il prodotto {Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="{Content.Fields.Prodotto.Gallery}" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowBodyChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
         <TitlePart />
       </Prodotto>
       <ProjectionPage ContentTypeSettings.Creatable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" DisplayName="Projection">
         <AdminMenuPart AdminMenuPartTypeSettings.DefaultPosition="5" />
-        <AutoroutePart AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-projections&quot;}]" />
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-projections&quot;}]" />
         <CommonPart />
         <MenuPart />
         <ProjectionPart />
@@ -523,8 +525,8 @@
         <ProjectionPart />
         <WidgetPart />
       </ProjectionWidget>
-      <PuntoVendita ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Parts_Title_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Localization_ContentTranslations_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Body_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Map_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;5&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:&quot;MapSourceFile&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:&quot;RaggioAreadiNotifica&quot;},{&quot;ShapeType&quot;:&quot;Parts_Media_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;8&quot;,&quot;Differentiator&quot;:&quot;Gallery&quot;},{&quot;ShapeType&quot;:&quot;Fields_Link_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;9&quot;,&quot;Differentiator&quot;:&quot;URLvideo&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:&quot;Contatto&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;11&quot;,&quot;Differentiator&quot;:&quot;PDF&quot;},{&quot;ShapeType&quot;:&quot;Parts_ShareLink&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;12&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;13&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;14&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;15&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;16&quot;,&quot;Differentiator&quot;:null}]" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" DisplayName="Punto Vendita" ContentTypeLayoutSettings.Placeable="False">
-        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;punto-vendita{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
+      <PuntoVendita ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Parts_Title_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:&quot;RaggioAreadiNotifica&quot;},{&quot;ShapeType&quot;:&quot;Parts_Media_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Link_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;9&quot;,&quot;Differentiator&quot;:&quot;URLvideo&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:&quot;Contatto&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;11&quot;,&quot;Differentiator&quot;:&quot;PDF&quot;},{&quot;ShapeType&quot;:&quot;Parts_ShareLink&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;14&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;15&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;16&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;17&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:&quot;Gallery&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:&quot;EMail&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;5&quot;,&quot;Differentiator&quot;:&quot;SitoWeb&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:&quot;Telefono&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:&quot;Facebook&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;8&quot;,&quot;Differentiator&quot;:&quot;Instagram&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;9&quot;,&quot;Differentiator&quot;:&quot;Pinterest&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:&quot;Twitter&quot;},{&quot;ShapeType&quot;:&quot;Parts_Localization_ContentTranslations_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;11&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Body_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;12&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Map_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;13&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;18&quot;,&quot;Differentiator&quot;:null}]" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" DisplayName="Punto Vendita" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default">
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;punto-vendita{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <BodyPart BodyTypePartSettings.Flavor="Html" />
         <CommonPart DateEditorSettings.ShowDateEditor="False" OwnerEditorSettings.ShowOwnerEditor="True" />
         <ContactPart />
@@ -532,11 +534,11 @@
         <LocalizationPart />
         <MapPart MapPartSettings.Required="True" />
         <PuntoVendita />
-        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="" ShareLinkPartSettingVM.SharedText="" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
+        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedText="Ho appena visualizzato il punto vendita {Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
         <SocialPart />
         <TitlePart />
       </PuntoVendita>
-      <PushClienti ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" DisplayName="Push Clienti">
+      <PushClienti ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default" DisplayName="Push Clienti">
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <IdentityPart />
         <LocalizationPart />
@@ -544,7 +546,7 @@
         <PublishLaterPart />
         <PushClienti />
       </PushClienti>
-      <PushDipendenti ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" DisplayName="Push Dipendenti">
+      <PushDipendenti ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default" DisplayName="Push Dipendenti">
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <LocalizationPart />
         <MobilePushPart PushMobilePartSettingVM.HideRelated="True" PushMobilePartSettingVM.AcceptZeroRelated="False" PushMobilePartSettingVM.QueryDevice="select distinct d.*&#xD;&#xA;from Laser_Orchard_Mobile_PushNotificationRecord as d inner join&#xD;&#xA;    Orchard_Projections_StringFieldIndexRecord as sfi &#xD;&#xA;		on sfi.FieldIndexPartRecord_Id = d.MobileContactPartRecord_Id &#xD;&#xA;		and sfi.PropertyName='ProfilePart.TipoUtente.' &#xD;&#xA;		and sfi.Value='dipendente'" />
@@ -558,8 +560,8 @@
         <QueryUserFilterExtensionPart QueryUserFilterExtensionPartSettingVM.QueryUserFilter="ProfilePartContentFields" />
         <TitlePart />
       </Query>
-      <Questionnaire ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="False" ContentTypeLayoutSettings.Placeable="False" DisplayName="Questionnaire">
-        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
+      <Questionnaire ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default" DisplayName="Survey">
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <BodyPart BodyTypePartSettings.Flavor="Html" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <LocalizationPart />
@@ -579,13 +581,21 @@
         <RecentBlogPostsPart />
         <WidgetPart />
       </RecentBlogPosts>
-      <RichiestaProdotto ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="False" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" DisplayName="Richiesta Prodotto">
-        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;product-request/{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
+      <RichiestaProdotto ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="False" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default" DisplayName="Richiesta Prodotto">
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;product-request/{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <IdentityPart />
         <RichiestaProdotto />
         <TitlePart />
       </RichiestaProdotto>
+      <RichiestaPubblicazione ContentTypeSettings.Creatable="False" ContentTypeSettings.Draftable="False" ContentTypeSettings.Listable="False" ContentTypeSettings.Securable="True" TypeIndexing.Indexes="" ContentTypeLayoutSettings.Placeable="False" DisplayName="Richiesta Pubblicazione">
+        <AdminMenuPart />
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;DeliverApp&quot;,&quot;Pattern&quot;:&quot;deliverapp&quot;,&quot;Description&quot;:null,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
+        <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
+        <DynamicButtonToWorkflowsPart DynamicButtonsSetting.Buttons="{3}" />
+        <IdentityPart />
+        <RichiestaPubblicazione />
+      </RichiestaPubblicazione>
       <ScheduledTask ContentTypeSettings.Creatable="False" ContentTypeSettings.Draftable="False" DisplayName="Scheduled Task" />
       <SearchForm Stereotype="Widget" DisplayName="Search Form">
         <CommonPart />
@@ -599,21 +609,16 @@
         <ShapeMenuItemPart />
       </ShapeMenuItem>
       <Site DisplayName="Site" />
-      <Store ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" DisplayName="Store">
-        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;store/{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
-        <BodyPart BodyTypePartSettings.Flavor="Html" />
+      <Store ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default" DisplayName="Store">
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;store/{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
-        <ContactPart />
         <IdentityPart />
         <LocalizationPart />
-        <MapPart MapPartSettings.Required="True" />
-        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="" ShareLinkPartSettingVM.SharedText="" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
-        <SocialPart />
         <Store />
         <TitlePart />
       </Store>
       <Taxonomy DisplayName="Taxonomy">
-        <AutoroutePart AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-taxonomy&quot;}]" />
+        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-taxonomy&quot;}]" />
         <CommonPart />
         <LocalizationPart />
         <TaxonomyExtensionPart />
@@ -704,8 +709,8 @@
         <ConfigStatus.HiddenStringField DisplayName="ConfigStatus" HiddenStringFieldSettings.Tokenized="True" />
         <Descrizione.TextField DisplayName="Descrizione" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Descrizione dell'app." />
         <DescrizioneCorta.TextField DisplayName="Descrizione Corta" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Breve descrizione dell'app." />
-        <emailTesterAndroid.TextField DisplayName="e-mail Tester Android" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Indirizzi e-mail da utilizzare per testare la versione Android dell'app. Devono corrispondere a utenti del Play Store." />
-        <emailTesteriOS.TextField DisplayName="e-mail Tester iOS" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Indirizzi e-mail da utilizzare per testare la versione iOS dell'app. Devono corrispondere a utenti dell'Apple Store." />
+        <emailTesterAndroid.TextField DisplayName="e-mail Tester Android" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Indirizzi e-mail da utilizzare per testare la versione Android dell'app. Devono corrispondere a utenti del Play Store. Inserire un indirizzo e-mail per riga." />
+        <emailTesteriOS.TextField DisplayName="e-mail Tester iOS" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Indirizzi e-mail da utilizzare per testare la versione iOS dell'app. Devono corrispondere a utenti dell'Apple Store. Inserire un indirizzo e-mail per riga." />
         <IconaApp.MediaLibraryPickerField DisplayName="Icona App" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="False" MediaLibraryPickerFieldSettings.Hint="Icona che identificherà l'app sui dispositivi degli utenti." />
         <Nome.TextField DisplayName="Nome" TextFieldSettings.Required="True" TextFieldSettings.Hint="Nome dell'app che apparirà nell'Apple Store e nel Google Play Store." />
         <ParoleChiave.TextField DisplayName="Parole Chiave" TextFieldSettings.Flavor="Wide" TextFieldSettings.Required="True" TextFieldSettings.Hint="Settori a cui l'app si riferisce." />
@@ -768,10 +773,10 @@
       <ContentMenuItemPart />
       <CulturePickerPart ContentPartSettings.Attachable="True" />
       <Dipendente ContentPartSettings.Attachable="True">
-        <Cognome.TextField DisplayName="Cognome" TextFieldSettings.Required="True" TextFieldSettings.Hint="Cognome del dipendente." />
-        <Email.InputField DisplayName="Email" InputFieldSettings.Type="Email" InputFieldSettings.Required="True" InputFieldSettings.AutoFocus="False" InputFieldSettings.AutoComplete="False" InputFieldSettings.MaxLength="0" InputFieldSettings.Hint="Indirizzo e-mail del dipendente da usare per comunicazioni aziendali." />
-        <Nome.TextField DisplayName="Nome" TextFieldSettings.Required="True" TextFieldSettings.Hint="Nome del dipendente." />
-        <Store.ContentPickerField DisplayName="Store" ContentPickerFieldSettings.Required="True" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Store" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Store in cui lavora il dipendente." />
+        <Cognome.TextField DisplayName="Cognome" TextFieldSettings.Required="True" TextFieldSettings.Hint="Cognome del dipendente." FieldIndexing.Included="True"/>
+        <Email.InputField DisplayName="Email" InputFieldSettings.Type="Email" InputFieldSettings.Required="True" InputFieldSettings.AutoFocus="False" InputFieldSettings.AutoComplete="False" InputFieldSettings.MaxLength="0" InputFieldSettings.Hint="Indirizzo e-mail del dipendente da usare per comunicazioni aziendali." FieldIndexing.Included="True"/>
+        <Nome.TextField DisplayName="Nome" TextFieldSettings.Required="True" TextFieldSettings.Hint="Nome del dipendente." FieldIndexing.Included="True"/>
+        <Store.ContentPickerField DisplayName="Store" ContentPickerFieldSettings.Required="True" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Store" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Store in cui lavora il dipendente." FieldIndexing.Included="True" />
         <UserID.HiddenStringField DisplayName="User ID" HiddenStringFieldSettings.Tokenized="False" />
       </Dipendente>
       <DisplayTextPart ContentPartSettings.Attachable="True" />
@@ -797,9 +802,9 @@
       <MenuPart ContentPartSettings.Attachable="True" ContentPartSettings.Description="Provides an easy way to create a ContentMenuItem from the content editor." />
       <MenuWidgetPart />
       <MessaggioPromozionale ContentPartSettings.Attachable="True">
-        <Categoria.TaxonomyField DisplayName="Categoria" TaxonomyFieldSettings.Taxonomy="Categoria Promo" TaxonomyFieldSettings.LeavesOnly="True" TaxonomyFieldSettings.Required="True" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="False" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldSettings.Hint="Categoria del Messaggio Promozionale." TaxonomyFieldLocalizationSettings.TryToLocalize="True" />
+        <Categoria.TaxonomyField DisplayName="Categoria" TaxonomyFieldSettings.Taxonomy="Categoria Promo" TaxonomyFieldSettings.LeavesOnly="True" TaxonomyFieldSettings.Required="True" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="False" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldSettings.Hint="Categoria del Messaggio Promozionale." TaxonomyFieldLocalizationSettings.TryToLocalize="True" FieldIndexing.Included="True" />
         <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="False" MediaLibraryPickerFieldSettings.Multiple="True" MediaLibraryPickerFieldSettings.Hint="Immagini a corredo del Messaggio Promozionale." />
-        <PuntoVendita.ContentPickerField DisplayName="Punto Vendita" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="True" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="PuntoVendita" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldExtensionSettings.TranslateContents="True" ContentPickerSearchFieldSettings.ShowSearchTab="True" ContentPickerSearchFieldSettings.SearchIndex="Search" ContentPickerSearchFieldSettings.DisplayedContentTypes="PuntoVendita" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Punti vendita a cui il Messaggio Promozionale si riferisce." />
+        <PuntoVendita.ContentPickerField DisplayName="Punto Vendita" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="True" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="PuntoVendita" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldExtensionSettings.TranslateContents="True" ContentPickerSearchFieldSettings.ShowSearchTab="True" ContentPickerSearchFieldSettings.SearchIndex="Search" ContentPickerSearchFieldSettings.DisplayedContentTypes="PuntoVendita" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Punti vendita a cui il Messaggio Promozionale si riferisce." FieldIndexing.Included="True" />
       </MessaggioPromozionale>
       <MobilePushPart ContentPartSettings.Attachable="True">
         <RelatedContent.ContentPickerField ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" />
@@ -810,11 +815,11 @@
       </MyCustomQueryPart>
       <NavigationQueryPart />
       <NewsClienti ContentPartSettings.Attachable="True">
-        <Categoria.TaxonomyField DisplayName="Categoria" TaxonomyFieldSettings.Taxonomy="Categoria Promo" TaxonomyFieldSettings.LeavesOnly="True" TaxonomyFieldSettings.Required="False" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="False" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldLocalizationSettings.TryToLocalize="True" TaxonomyFieldSettings.Hint="Categoria della notizia." />
+        <Categoria.TaxonomyField DisplayName="Categoria" TaxonomyFieldSettings.Taxonomy="Categoria Promo" TaxonomyFieldSettings.LeavesOnly="True" TaxonomyFieldSettings.Required="False" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="False" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldLocalizationSettings.TryToLocalize="True" TaxonomyFieldSettings.Hint="Categoria della notizia." FieldIndexing.Included="True" />
         <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="True" MediaLibraryPickerFieldSettings.Hint="Immagini a corredo della notizia." />
       </NewsClienti>
       <NewsDipendenti ContentPartSettings.Attachable="True">
-        <CategoriaNews.TaxonomyField DisplayName="Categoria News" TaxonomyFieldSettings.Taxonomy="Categoria News Dipendenti" TaxonomyFieldSettings.LeavesOnly="True" TaxonomyFieldSettings.Required="False" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="False" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldLocalizationSettings.TryToLocalize="True" TaxonomyFieldSettings.Hint="Categoria della notizia." />
+        <CategoriaNews.TaxonomyField DisplayName="Categoria News" TaxonomyFieldSettings.Taxonomy="Categoria News Dipendenti" TaxonomyFieldSettings.LeavesOnly="True" TaxonomyFieldSettings.Required="False" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="False" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldLocalizationSettings.TryToLocalize="True" TaxonomyFieldSettings.Hint="Categoria della notizia." FieldIndexing.Included="True"/>
         <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="True" MediaLibraryPickerFieldSettings.Hint="Immagini a corredo della notizia." />
       </NewsDipendenti>
       <OEmbedPart ContentPartSettings.Attachable="True" ContentPartSettings.Description="Provides common metadata for an OEmbed Media." />
@@ -842,20 +847,21 @@
         <Nome.TextField DisplayName="Nome" TextFieldSettings.Required="False" />
         <Preferenze.TaxonomyField DisplayName="Preferenze" TaxonomyFieldSettings.Taxonomy="Preferenze" TaxonomyFieldSettings.LeavesOnly="True" TaxonomyFieldSettings.Required="False" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="False" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldLocalizationSettings.TryToLocalize="True" />
         <PuntoVendita.ContentPickerField DisplayName="Punto Vendita" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="PuntoVendita" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" />
-        <Store.ContentPickerField DisplayName="Store" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Store" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" />
+        <Store.ContentPickerField DisplayName="Store (solo per i Dipendenti)" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Store" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Non modificare: valore sincronizzato dal Dipendente corrispondente." />
         <TipoUtente.HiddenStringField DisplayName="Tipo Utente" HiddenStringFieldSettings.Tokenized="False" />
       </ProfilePart>
       <ProjectionPart />
       <PublishLaterPart ContentPartSettings.Attachable="True" ContentPartSettings.Description="Adds the ability to delay the publication of a content item to a later date and time." />
       <PuntoVendita ContentPartSettings.Attachable="True">
         <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="True" MediaLibraryPickerFieldSettings.Hint="Immagini a corredo del Punto Vendita, per esempio foto dell'esterno e dell'interno del Punto Vendita stesso." />
+        <ScriptNascondiMapSource.InsertStuffField DisplayName="ScriptNascondiMapSource" InsertStuffFieldSettings.RawHtml="&lt;script type=&quot;text/javascript&quot;&gt;&#xD;&#xA;$(&quot;input#MapPart_MapSourceFile_SelectedIds&quot;).parent().hide();&#xD;&#xA;&lt;/script&gt;" InsertStuffFieldSettings.OnFooter="true" />
       </PuntoVendita>
       <PushClienti ContentPartSettings.Attachable="True">
-        <ContenutoCorrelato.ContentPickerField DisplayName="Contenuto Correlato" ContentPickerFieldSettings.Required="True" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="NewsClienti,MessaggioPromozionale" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="News o Messaggio Promozionale a cui la notifica push si riferisce." />
-        <Preferenze.TaxonomyField DisplayName="Preferenze" TaxonomyFieldSettings.Taxonomy="Preferenze" TaxonomyFieldSettings.LeavesOnly="True" TaxonomyFieldSettings.Required="True" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="False" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldLocalizationSettings.TryToLocalize="True" TaxonomyFieldSettings.Hint="La notifica push verrà inviata a chi ha espresso almeno una delle preferenze indicate." />
+        <ContenutoCorrelato.ContentPickerField DisplayName="Contenuto Correlato" ContentPickerFieldSettings.Required="True" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="NewsClienti,MessaggioPromozionale" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="News o Messaggio Promozionale a cui la notifica push si riferisce." FieldIndexing.Included="True" />
+        <Preferenze.TaxonomyField DisplayName="Preferenze" TaxonomyFieldSettings.Taxonomy="Preferenze" TaxonomyFieldSettings.LeavesOnly="True" TaxonomyFieldSettings.Required="True" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="False" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldLocalizationSettings.TryToLocalize="True" TaxonomyFieldSettings.Hint="La notifica push verrà inviata a chi ha espresso almeno una delle preferenze indicate." FieldIndexing.Included="True" />
       </PushClienti>
       <PushDipendenti ContentPartSettings.Attachable="True">
-        <ContenutoCorrelato.ContentPickerField DisplayName="Contenuto Correlato" ContentPickerFieldSettings.Required="True" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="NewsDipendenti,Questionnaire" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="News o Questionario a cui la notifica push si riferisce." />
+        <ContenutoCorrelato.ContentPickerField DisplayName="Contenuto Correlato" ContentPickerFieldSettings.Required="True" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="NewsDipendenti,Questionnaire" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="News o Questionario a cui la notifica push si riferisce." FieldIndexing.Included="True" />
       </PushDipendenti>
       <QueryPart />
       <QueryUserFilterExtensionPart ContentPartSettings.Attachable="False">
@@ -867,12 +873,16 @@
       <RecentBlogPostsPart ContentPartSettings.Description="Renders a list of recent blog posts." />
       <RichiestaProdotto ContentPartSettings.Attachable="True">
         <Colore.ContentPickerField DisplayName="Colore" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Colore" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Colore del prodotto richiesto (ove applicabile)." />
-        <Prodotto.ContentPickerField DisplayName="Prodotto" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Prodotto" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Prodotto richiesto." />
-        <Stato.EnumerationField DisplayName="Stato" EnumerationFieldSettings.Required="True" EnumerationFieldSettings.Options="Non evasa&#xD;&#xA;Evasa&#xD;&#xA;Rifiutata&#xD;&#xA;Annullata" EnumerationFieldSettings.ListMode="Radiobutton" EnumerationFieldSettings.DefaultValue="Non evasa" EnumerationFieldSettings.Hint="Stato della richiesta." />
-        <StoreDestinatario.ContentPickerField DisplayName="Store Destinatario" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Store" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Store a cui è stata inoltrata la richiesta." />
-        <StoreMittente.ContentPickerField DisplayName="Store Mittente" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Store" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Store che ha effettuato la richiesta." />
-        <Taglia.TextField DisplayName="Taglia" TextFieldSettings.Required="False" TextFieldSettings.Hint="Taglia del prodotto richiesto (ove applicabile)." />
+        <Prodotto.ContentPickerField DisplayName="Prodotto" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Prodotto" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Prodotto richiesto." FieldIndexing.Included="True" />
+        <Stato.EnumerationField DisplayName="Stato" EnumerationFieldSettings.Required="True" EnumerationFieldSettings.Options="Non evasa&#xD;&#xA;Evasa&#xD;&#xA;Rifiutata&#xD;&#xA;Annullata" EnumerationFieldSettings.ListMode="Radiobutton" EnumerationFieldSettings.DefaultValue="Non evasa" EnumerationFieldSettings.Hint="Stato della richiesta." FieldIndexing.Included="True" />
+        <StoreDestinatario.ContentPickerField DisplayName="Store Destinatario" ContentPickerFieldSettings.Required="True" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Store" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Store a cui è stata inoltrata la richiesta." FieldIndexing.Included="True" />
+        <StoreMittente.ContentPickerField DisplayName="Store Mittente" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Store" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Store che ha effettuato la richiesta." FieldIndexing.Included="True" />
+        <Taglia.TextField DisplayName="Taglia" TextFieldSettings.Required="False" TextFieldSettings.Hint="Taglia del prodotto richiesto (ove applicabile)." FieldIndexing.Included="True" />
       </RichiestaProdotto>
+      <RichiestaPubblicazione ContentPartSettings.Attachable="True">
+        <ConfigStatus.HiddenStringField DisplayName="ConfigStatus" HiddenStringFieldSettings.Tokenized="True" />
+        <Note.TextField DisplayName="Note" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Hint="Note relative alla richiesta di pubblicazione dell'app." TextFieldSettings.Required="False" />
+      </RichiestaPubblicazione>
       <SearchFormPart />
       <ShapeMenuItemPart />
       <ShareLinkPart ContentPartSettings.Attachable="True" />
@@ -883,8 +893,9 @@
         <Twitter.InputField DisplayName="Twitter" InputFieldSettings.Required="False" InputFieldSettings.Type="Url" InputFieldSettings.Pattern="http[s]?:\/\/twitter\.com\/(#!\/)?[a-zA-Z0-9_]{1,15}$" InputFieldSettings.Hint="Inserire un indirizzo Twitter valido (preceduto da http://)." InputFieldSettings.AutoFocus="False" InputFieldSettings.AutoComplete="False" InputFieldSettings.MaxLength="0" />
       </SocialPart>
       <Store ContentPartSettings.Attachable="True">
-        <StoreAssistants.ContentPickerField DisplayName="Store Assistants" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="True" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Dipendente" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Personale dello Store a cui verranno inviate le richieste di prodotti indirizzate a questo store." />
+        <StoreAssistants.ContentPickerField DisplayName="Store Assistants" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="True" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Dipendente" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Personale dello Store a cui verranno inviate le richieste di prodotti indirizzate a questo store." FieldIndexing.Included="True" />
       </Store>
+      <SummaryAdminToolbarPart ContentPartSettings.Attachable="True" />
       <TagsPart ContentPartSettings.Attachable="True" ContentPartSettings.Description="Allows to describe your content using non-hierarchical keywords." ContentPartLayoutSettings.Placeable="True" />
       <TaxonomyExtensionPart />
       <TaxonomyNavigationPart />
@@ -910,35 +921,42 @@
     <CustomTemplate Id="/Identifier=05b7a1ddec50435f86e120df86bc1ee9" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-28T16:06:56.9049623Z" PublishedUtc="2017-09-28T16:06:58.4620581Z" ModifiedUtc="2017-09-28T16:06:58.2701472Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-28T16:06:56.9049623Z" PublishedUtc="2017-10-03T15:40:44.0825471Z" ModifiedUtc="2017-10-03T15:40:44.0720942Z" />
       <IdentityPart Identifier="05b7a1ddec50435f86e120df86bc1ee9" />
-      <TemplatePart Title="Conferma configurazione AppStore" Subject="AppRetail - Conferma configurazione AppStore" Text="Il brand administrator ha confermato la configurazione AppStore dell'app &quot;@Model.WorkContext.CurrentSite.SiteName&quot;.&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
+      <TemplatePart Title="Conferma configurazione AppStore" Subject="Conferma configurazione AppStore" Text="Il brand administrator ha confermato la configurazione AppStore dell'app &quot;@Model.WorkContext.CurrentSite.SiteName&quot; (@Model.Urls.BaseUrl).&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
+    </CustomTemplate>
+    <CustomTemplate Id="/Identifier=5ad15c7e9e7643e8bd7762e5cdcccb97" Status="Published">
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-10-06T14:00:19.3941984Z" PublishedUtc="2017-10-09T09:12:04.0720403Z" ModifiedUtc="2017-10-09T09:12:04.0627176Z" />
+      <IdentityPart Identifier="5ad15c7e9e7643e8bd7762e5cdcccb97" />
+      <TemplatePart Title="Conferma registrazione cliente" Subject="Conferma registrazione" Text="@{&#xD;&#xA;	var policies = Model.Content.WorkflowContext.GetState(&quot;Policies&quot;);&#xD;&#xA;	var cognome = Model.Content.WorkflowContext.GetState(&quot;Cognome&quot;);&#xD;&#xA;	var nome = Model.Content.WorkflowContext.GetState(&quot;Nome&quot;);&#xD;&#xA;}&#xD;&#xA;Gentile @nome @cognome,&lt;br/&gt;&#xD;&#xA;Le confermiamo di aver inserito i suoi dati nei nostri archivi.&lt;br/&gt;&#xD;&#xA;&lt;br/&gt;&#xD;&#xA;Di seguito trova le Privacy Policy da Lei accettate.&lt;br/&gt;&#xD;&#xA;&lt;hr/&gt;&#xD;&#xA;@foreach(var kv in policies) {&#xD;&#xA;	&lt;b&gt;@kv.Key&lt;/b&gt;&lt;br/&gt;&#xD;&#xA;	&lt;span&gt;@Raw(kv.Value.ToString())&lt;/span&gt;&#xD;&#xA;	&lt;br/&gt;&#xD;&#xA;}&#xD;&#xA;&lt;hr/&gt;&#xD;&#xA;&lt;br/&gt;&#xD;&#xA;Se desidera modificare queste impostazioni, invii una e-mail a &lt;a href=&quot;mailto:laser.srl.ao@gmail.com&quot;&gt;laser.srl.ao@gmail.com&lt;/a&gt;.&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
     </CustomTemplate>
     <CustomTemplate Id="/Identifier=5b73ecc0a41c480c9d3e583bf328320a" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-11T10:01:29.3381944Z" PublishedUtc="2017-09-11T10:37:39.9781787Z" ModifiedUtc="2017-09-11T10:37:39.960574Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-11T10:01:29.3381944Z" PublishedUtc="2017-10-04T09:44:08.9714052Z" ModifiedUtc="2017-10-04T09:44:08.9636224Z" />
       <IdentityPart Identifier="5b73ecc0a41c480c9d3e583bf328320a" />
-      <TemplatePart Title="Richiesta pubblicazione app" Subject="Richiesta pubblicazione app" Text="Si richiede la pubblicazione dell'app &quot;@Model.WorkContext.CurrentSite.SiteName&quot;.&#xD;&#xA;&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
+      <TemplatePart Title="Richiesta pubblicazione app" Subject="Richiesta pubblicazione app" Text="Si richiede la pubblicazione dell'app &quot;@Model.WorkContext.CurrentSite.SiteName&quot; (@Model.Urls.BaseUrl).&lt;br/&gt;&#xD;&#xA;Note del Cliente:&lt;br/&gt;&#xD;&#xA;@Model.Content.ContentItem.RichiestaPubblicazione.Note.Value&#xD;&#xA;&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
     </CustomTemplate>
     <CustomTemplate Id="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-11T08:55:31.6105684Z" PublishedUtc="2017-09-11T09:54:31.7239037Z" ModifiedUtc="2017-09-11T09:54:31.3198943Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-11T08:55:31.6105684Z" PublishedUtc="2017-10-03T15:37:31.8952689Z" ModifiedUtc="2017-10-03T15:37:31.886241Z" />
       <IdentityPart Identifier="ca0a0ee70bb44d25afb170a6cea75241" />
-      <TemplatePart Title="Master Template" Subject="Master Template" Text="&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt;&#xD;&#xA;&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;&#xD;&#xA;&#xD;&#xA;  &lt;head&gt;&#xD;&#xA;    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;&#xD;&#xA;    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;&#xD;&#xA;    &lt;title&gt;Vodafone Experience Center&lt;/title&gt;&#xD;&#xA;    &lt;style&gt;&#xD;&#xA;body {&#xD;&#xA;  width: 100% !important;&#xD;&#xA;  min-width: 100%;&#xD;&#xA;  -webkit-text-size-adjust: 100%;&#xD;&#xA;  -ms-text-size-adjust: 100%;&#xD;&#xA;  margin: 0;&#xD;&#xA;  Margin: 0;&#xD;&#xA;  padding: 0;&#xD;&#xA;  -moz-box-sizing: border-box;&#xD;&#xA;  -webkit-box-sizing: border-box;&#xD;&#xA;  box-sizing: border-box; &#xD;&#xA;}&#xD;&#xA;.reflink {&#xD;&#xA;  color:white;&#xD;&#xA;  font-weight:bold;&#xD;&#xA;  text-decoration:none;&#xD;&#xA;}&#xD;&#xA;    &lt;/style&gt;  &#xD;&#xA;  &lt;/head&gt;&#xD;&#xA;  &lt;body&gt;&#xD;&#xA;    &lt;h1 style=&quot;background-image:url('https://pre-multitenant10.mykrake.com/Themes/KrakeAdmin/Styles/images/krake-orizontal.png');background-repeat:no-repeat;height:100px;text-align:center;font-size:32px;font-weight:700;&quot;&gt;&#xD;&#xA;      App Retail&#xD;&#xA;    &lt;/h1&gt;&#xD;&#xA;	@RenderBody()&#xD;&#xA;    &lt;div style=&quot;background-color:rgb(230,0,0);margin-top:20px;text-align:center;color:white&quot;&gt;&#xD;&#xA;      &lt;a href=&quot;http://www.laser-group.com&quot; class=&quot;reflink&quot;&gt;Laser s.r.l.&lt;/a&gt;&#xD;&#xA;      &lt;span style=&quot;width:20%&quot;&gt;&amp;nbsp;-&amp;nbsp;&lt;/span&gt;&#xD;&#xA;      &lt;a href=&quot;http://www.vodafone.it&quot; class=&quot;reflink&quot;&gt;Vodafone&lt;/a&gt;&#xD;&#xA;    &lt;/div&gt;&#xD;&#xA;  &lt;/body&gt;&#xD;&#xA;&lt;/html&gt;" IsLayout="true" />
+      <TemplatePart Title="Master Template" Subject="Master Template" Text="&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt;&#xD;&#xA;&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;&#xD;&#xA;&#xD;&#xA;  &lt;head&gt;&#xD;&#xA;    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;&#xD;&#xA;    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;&#xD;&#xA;    &lt;title&gt;Vodafone Experience Center&lt;/title&gt;&#xD;&#xA;    &lt;style&gt;&#xD;&#xA;body {&#xD;&#xA;  width: 100% !important;&#xD;&#xA;  min-width: 100%;&#xD;&#xA;  -webkit-text-size-adjust: 100%;&#xD;&#xA;  -ms-text-size-adjust: 100%;&#xD;&#xA;  margin: 0;&#xD;&#xA;  Margin: 0;&#xD;&#xA;  padding: 0;&#xD;&#xA;  -moz-box-sizing: border-box;&#xD;&#xA;  -webkit-box-sizing: border-box;&#xD;&#xA;  box-sizing: border-box; &#xD;&#xA;}&#xD;&#xA;.reflink {&#xD;&#xA;  color:white;&#xD;&#xA;  font-weight:bold;&#xD;&#xA;  text-decoration:none;&#xD;&#xA;}&#xD;&#xA;    &lt;/style&gt;  &#xD;&#xA;  &lt;/head&gt;&#xD;&#xA;  &lt;body&gt;&#xD;&#xA;    &lt;h1 style=&quot;height:100px;text-align:center;font-size:32px;font-weight:700;&quot;&gt;&#xD;&#xA;      @Model.WorkContext.CurrentSite.SiteName&#xD;&#xA;    &lt;/h1&gt;&#xD;&#xA; @RenderBody()&#xD;&#xA;    &lt;div style=&quot;background-color:rgb(230,0,0);margin-top:20px;text-align:center;color:white&quot;&gt;&#xD;&#xA;      &lt;a href=&quot;http://www.laser-group.com&quot; class=&quot;reflink&quot;&gt;Laser s.r.l.&lt;/a&gt;&#xD;&#xA;      &lt;span style=&quot;width:20%&quot;&gt;&amp;nbsp;-&amp;nbsp;&lt;/span&gt;&#xD;&#xA;      &lt;a href=&quot;http://www.vodafone.it&quot; class=&quot;reflink&quot;&gt;Vodafone&lt;/a&gt;&#xD;&#xA;    &lt;/div&gt;&#xD;&#xA;  &lt;/body&gt;&#xD;&#xA;&lt;/html&gt;" IsLayout="true" />
     </CustomTemplate>
     <CustomTemplate Id="/Identifier=cbfa0473e1994097ac6d8514ea44861d" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-28T15:57:38.6476714Z" PublishedUtc="2017-09-28T16:05:16.067786Z" ModifiedUtc="2017-09-28T16:05:16.0550638Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-28T15:57:38.6476714Z" PublishedUtc="2017-10-03T15:41:19.4541145Z" ModifiedUtc="2017-10-03T15:41:19.4015986Z" />
       <IdentityPart Identifier="cbfa0473e1994097ac6d8514ea44861d" />
-      <TemplatePart Title="Conferma configurazione grafica" Subject="AppRetail - Conferma configurazione grafica" Text="Il brand administrator ha confermato la configurazione grafica dell'app &quot;@Model.WorkContext.CurrentSite.SiteName&quot;.&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
+      <TemplatePart Title="Conferma configurazione grafica" Subject="Conferma configurazione grafica" Text="Il brand administrator ha confermato la configurazione grafica dell'app &quot;@Model.WorkContext.CurrentSite.SiteName&quot; (@Model.Urls.BaseUrl).&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
     </CustomTemplate>
     <CustomTemplate Id="/Identifier=de0e15ed8b0040d296f41d1f4c526585" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-07-31T08:46:09.6198211Z" PublishedUtc="2017-09-11T09:55:32.765459Z" ModifiedUtc="2017-09-11T09:55:32.7541045Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-07-31T08:46:09.6198211Z" PublishedUtc="2017-10-03T16:13:50.3566417Z" ModifiedUtc="2017-09-11T09:55:32.7541045Z" />
       <IdentityPart Identifier="de0e15ed8b0040d296f41d1f4c526585" />
       <TemplatePart Title="Invio credenziali dipendente" Subject="Invio credenziali utente" Text="@{&#xD;&#xA;    dynamic item = Model.Content.ContentItem;&#xD;&#xA;    string usr = Model.Content.WorkflowContext.GetState(&quot;UserName&quot;);&#xD;&#xA;    string pwd = Model.Content.WorkflowContext.GetState(&quot;Password&quot;);&#xD;&#xA;}&#xD;&#xA;Gentile @item.Dipendente.Nome.Value @item.Dipendente.Cognome.Value,&lt;br/&gt;&#xD;&#xA;le tue credenziali per accedere all'App Retail sono:&lt;br/&gt;&#xD;&#xA;Utente: @usr&lt;br/&gt;&#xD;&#xA;Password: @pwd&lt;br/&gt;&#xD;&#xA;&lt;br/&gt;&#xD;&#xA;Buon lavoro!&lt;br/&gt;&#xD;&#xA;&lt;br/&gt;&#xD;&#xA;Il Brand Administrator&#xD;&#xA;" IsLayout="false" Layout="/Identifier=ca0a0ee70bb44d25afb170a6cea75241" />
     </CustomTemplate>
@@ -979,7 +997,7 @@
       <TextField.ParoleChiave />
       <TextField.emailTesteriOS />
       <TextField.emailTesterAndroid />
-      <AdminMenuPart AdminMenuText="Configurazione AppStore" AdminMenuPosition="0.5" OnAdminMenu="true" />
+      <AdminMenuPart AdminMenuText="Configurazione AppStore" AdminMenuPosition="-2.1" OnAdminMenu="true" />
       <AutoroutePart Alias="config/appstore" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T15:19:28.1751672Z" PublishedUtc="2017-08-08T09:37:34.2062493Z" ModifiedUtc="2017-08-08T09:37:34.1750665Z" />
       <IdentityPart Identifier="53ad20a30e93466ca8d5d62c87436246" />
@@ -1014,7 +1032,7 @@
       <HiddenStringField.ConfigStatus />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <AdminMenuPart AdminMenuText="Configurazione Grafica" AdminMenuPosition="0.5" OnAdminMenu="true" />
+      <AdminMenuPart AdminMenuText="Configurazione Grafica" AdminMenuPosition="-2.2" OnAdminMenu="true" />
       <AutoroutePart Alias="config/graphics" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T15:23:13.3729818Z" PublishedUtc="2017-09-18T14:06:19.2728711Z" ModifiedUtc="2017-09-18T14:06:19.1900179Z" />
       <IdentityPart Identifier="5dcefc21a2464e31aef91fbb71ba68f9" />
@@ -1031,6 +1049,36 @@
       <TagsPart Tags="" />
       <TitlePart Title="Benvenuto nella console App Retail" />
     </Page>
+    <PolicyText Id="/alias=policy\/cessione-dati-a-terzi" Status="Published">
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <AutoroutePart Alias="policy/cessione-dati-a-terzi" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;Testo da definire&lt;/p&gt;" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-10-02T16:19:01.9289798Z" PublishedUtc="2017-10-02T16:19:02.0254877Z" ModifiedUtc="2017-10-02T16:19:02.0034358Z" />
+      <LocalizationPart Culture="it-IT" />
+      <PolicyTextInfoPart PolicyType="ThirdParty" Priority="0" UserHaveToAccept="false" />
+      <TitlePart Title="Cessione dati a terzi" />
+    </PolicyText>
+    <PolicyText Id="/alias=policy\/privacy" Status="Published">
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <AutoroutePart Alias="policy/privacy" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;Testo da definire&lt;/p&gt;" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-10-02T16:17:47.3696691Z" PublishedUtc="2017-10-02T16:17:47.618168Z" ModifiedUtc="2017-10-02T16:17:47.5709843Z" />
+      <LocalizationPart Culture="it-IT" />
+      <PolicyTextInfoPart PolicyType="Policy" Priority="0" UserHaveToAccept="true" />
+      <TitlePart Title="Privacy" />
+    </PolicyText>
+    <PolicyText Id="/alias=policy\/uso-commerciale" Status="Published">
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <AutoroutePart Alias="policy/uso-commerciale" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;Testo da definire&lt;/p&gt;" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-10-02T16:18:23.9452259Z" PublishedUtc="2017-10-02T16:18:24.0330255Z" ModifiedUtc="2017-10-02T16:18:24.0035093Z" />
+      <LocalizationPart Culture="it-IT" />
+      <PolicyTextInfoPart PolicyType="CommercialUse" Priority="0" UserHaveToAccept="false" />
+      <TitlePart Title="Uso Commerciale" />
+    </PolicyText>
     <PreferenzeTerm Id="/alias=preferenze\/offerte" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
@@ -1476,11 +1524,23 @@
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;PuntoVendita&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
           </FilterGroup>
         </FilterGroups>
-        <SortCriteria />
+        <SortCriteria>
+          <SortCriterion Category="TitlePartRecord" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;Sort&gt;true&lt;/Sort&gt;&lt;/Form&gt;" Type="Title" />
+        </SortCriteria>
         <Layouts />
       </QueryPart>
       <TitlePart Title="Query Punti Vendita" />
     </Query>
+    <RichiestaPubblicazione Id="/alias=deliverapp/Identifier=80b359bccb2f4335b6075797781661e5" Status="Published">
+      <HiddenStringField.ConfigStatus />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <TextField.Note />
+      <AdminMenuPart AdminMenuText="Richiesta Pubblicazione" AdminMenuPosition="-2.3" OnAdminMenu="true" />
+      <AutoroutePart Alias="deliverapp" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-10-03T09:45:14.7841128Z" PublishedUtc="2017-10-03T09:45:38.7168361Z" ModifiedUtc="2017-10-03T09:45:38.7060055Z" />
+      <IdentityPart Identifier="80b359bccb2f4335b6075797781661e5" />
+    </RichiestaPubblicazione>
     <Taxonomy Id="/alias=categoria-news-dipendenti" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
@@ -1524,8 +1584,8 @@
     <Role Name="Anonymous" Permissions="ViewContent,AccessFrontEnd,AddComment,ManageOwnMedia" />
     <Role Name="Authenticated" Permissions="ViewContent,AccessFrontEnd,AddComment,ViewOwnProfile,SubmitQuestionnaire,ImportMedia,ManageOwnMedia" />
     <Role Name="Author" Permissions="PublishOwnContent,EditOwnContent,DeleteOwnContent,PreviewOwnContent,AccessAdminPanel,CreateTaxonomy,AddComment,ManageOwnMedia,ManageOwnBlogs,ViewOwnProfile,CanSeeOwnContents" />
-    <Role Name="BrandAdminB2B" Permissions="AccessAdminPanel,Delete_PolicyText,Edit_PolicyText,Preview_PolicyText,Publish_PolicyText,Delete_Colore,Edit_Colore,Preview_Colore,Publish_Colore,Delete_Store,Edit_Store,Preview_Store,Delete_NewsDipendenti,Edit_NewsDipendenti,Preview_NewsDipendenti,Publish_NewsDipendenti,Edit_Prodotto,Preview_Prodotto,Publish_Prodotto,Delete_RichiestaProdotto,Edit_RichiestaProdotto,Preview_RichiestaProdotto,Publish_RichiestaProdotto,Delete_PushDipendenti,Edit_PushDipendenti,Preview_PushDipendenti,Publish_PushDipendenti,Edit_Dipendente,Preview_Dipendente,Publish_Dipendente,Edit_ConfigurazioneAppStore,Edit_ConfigurazioneGrafica,ManageTerms,ManageOwnMedia,CanSeeOwnContents,Laser.DynamicButtonToWorkflows.Permissions/ConfermaConfig,Laser.DynamicButtonToWorkflows.Permissions/DeliverApp,Laser.DynamicButtonToWorkflows.Permissions/InviaCredenziali" />
-    <Role Name="BrandAdminB2C" Permissions="AccessAdminPanel,Delete_PolicyText,Edit_PolicyText,Preview_PolicyText,Publish_PolicyText,Delete_Colore,Edit_Colore,Preview_Colore,Publish_Colore,Delete_MessaggioPromozionale,Edit_MessaggioPromozionale,Preview_MessaggioPromozionale,Publish_MessaggioPromozionale,Delete_PuntoVendita,Edit_PuntoVendita,Preview_PuntoVendita,Publish_PuntoVendita,Delete_NewsClienti,Edit_NewsClienti,Preview_NewsClienti,Publish_NewsClienti,Delete_PushClienti,Edit_PushClienti,Preview_PushClienti,Publish_PushClienti,Edit_ConfigurazioneAppStore,Edit_ConfigurazioneGrafica,ManageTerms,CanSeeOwnContents,Laser.DynamicButtonToWorkflows.Permissions/ConfermaConfig,Laser.DynamicButtonToWorkflows.Permissions/DeliverApp" />
+    <Role Name="BrandAdminB2B" Permissions="AccessAdminPanel,Delete_PolicyText,Edit_PolicyText,Preview_PolicyText,Publish_PolicyText,Delete_Questionnaire,Edit_Questionnaire,Preview_Questionnaire,Publish_Questionnaire,View_Questionnaire,Delete_Catalogo,Edit_Catalogo,Preview_Catalogo,Publish_Catalogo,View_Catalogo,Edit_ConfigurazioneAppStore,Edit_ConfigurazioneGrafica,Edit_Dipendente,Preview_Dipendente,Publish_Dipendente,Delete_NewsDipendenti,Edit_NewsDipendenti,Preview_NewsDipendenti,Publish_NewsDipendenti,Edit_Prodotto,Preview_Prodotto,Publish_Prodotto,Delete_PushDipendenti,Edit_PushDipendenti,Preview_PushDipendenti,Publish_PushDipendenti,Delete_Store,Edit_Store,Preview_Store,Publish_Store,Edit_RichiestaPubblicazione,Publish_RichiestaPubblicazione,ManageTerms,ManageOwnMedia,CanSeeOwnContents,Laser.DynamicButtonToWorkflows.Permissions/ConfermaConfig,Laser.DynamicButtonToWorkflows.Permissions/DeliverApp,Laser.DynamicButtonToWorkflows.Permissions/InviaCredenziali,SeesAllContent,AccessExportContacts,ShowCommunicationContacts,ShowMenuCommunication" />
+    <Role Name="BrandAdminB2C" Permissions="AccessAdminPanel,Delete_PolicyText,Edit_PolicyText,Preview_PolicyText,Publish_PolicyText,Delete_Questionnaire,Edit_Questionnaire,Preview_Questionnaire,Publish_Questionnaire,View_Questionnaire,Delete_Catalogo,Edit_Catalogo,Preview_Catalogo,Publish_Catalogo,View_Catalogo,Edit_ConfigurazioneAppStore,Edit_ConfigurazioneGrafica,Delete_MessaggioPromozionale,Edit_MessaggioPromozionale,Preview_MessaggioPromozionale,Publish_MessaggioPromozionale,Delete_NewsClienti,Edit_NewsClienti,Preview_NewsClienti,Publish_NewsClienti,Delete_PuntoVendita,Edit_PuntoVendita,Preview_PuntoVendita,Publish_PuntoVendita,Delete_PushClienti,Edit_PushClienti,Preview_PushClienti,Publish_PushClienti,Edit_RichiestaPubblicazione,Publish_RichiestaPubblicazione,ManageTerms,CanSeeOwnContents,Laser.DynamicButtonToWorkflows.Permissions/ConfermaConfig,Laser.DynamicButtonToWorkflows.Permissions/DeliverApp,SeesAllContent" />
     <Role Name="Contributor" Permissions="EditOwnContent,PreviewOwnContent,AccessAdminPanel,AddComment,ManageOwnMedia,EditOwnBlogPost,ViewOwnProfile,CanSeeOwnContents" />
     <Role Name="Editor" Permissions="PublishContent,EditContent,DeleteContent,PreviewContent,SetHomePage,AccessAdminPanel,ManageTaxonomies,ManageQueries,AddComment,ManageMediaContent,ManageTags,PublishBlogPost,EditBlogPost,DeleteBlogPost,ManageLayouts,ViewOwnProfile,SeesAllContent,AccessStatistics,GameRanking" />
     <Role Name="MobileAdmin" Permissions="AccessAdminPanel,View_ConfigurazioneBase" />
@@ -1536,279 +1596,288 @@
   <Workflows>
     <Workflow Name="DeliverApp" Enabled="true">
       <Activities>
-        <Activity Id="262" Name="DynamicButtonEvent" Start="true" X="130" Y="6">
+        <Activity Id="98" Name="DynamicButtonEvent" Start="true" X="130" Y="6">
           <State>{"DynamicButton":"3"}</State>
         </Activity>
-        <Activity Id="263" Name="SendTemplatedEmail" Start="false" X="130" Y="140">
-          <State>{"Recipient":"other","RecipientOther":"laser.srl.ao@gmail.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"244"}</State>
+        <Activity Id="99" Name="SendTemplatedEmail" Start="false" X="130" Y="140">
+          <State>{"Recipient":"other","RecipientOther":"laser.srl.ao@gmail.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"6"}</State>
         </Activity>
-        <Activity Id="264" Name="Notify" Start="false" X="177" Y="253">
+        <Activity Id="100" Name="Notify" Start="false" X="177" Y="253">
           <State>{"Notification":"Information","Message":"La richiesta di pubblicazione dell'app è stata inviata."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="262" SourceEndpoint="Done" DestinationActivityId="263" DestinationEndpoint="" />
-        <Transition SourceActivityId="263" SourceEndpoint="Sent" DestinationActivityId="264" DestinationEndpoint="" />
+        <Transition SourceActivityId="98" SourceEndpoint="Done" DestinationActivityId="99" DestinationEndpoint="" />
+        <Transition SourceActivityId="99" SourceEndpoint="Sent" DestinationActivityId="100" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Dipendente" Enabled="true">
       <Activities>
-        <Activity Id="28" Name="ContentUpdated" Start="true" X="164" Y="37">
+        <Activity Id="4" Name="ContentUpdated" Start="true" X="164" Y="37">
           <State>{"ContentTypes":"Dipendente"}</State>
         </Activity>
-        <Activity Id="29" Name="IsInRole" Start="false" X="183" Y="154">
-          <State>{"Roles":"BrandAdminB2B"}</State>
-        </Activity>
-        <Activity Id="30" Name="RazorExecute" Start="false" X="177" Y="287">
+        <Activity Id="5" Name="RazorExecute" Start="false" X="177" Y="287">
           <State>{"RazorExecuteActivity_Outcomes":"Ok,Error","RazorExecuteActivity_RazorView":"CreaUtenzaKrake.cshtml"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="28" SourceEndpoint="Done" DestinationActivityId="29" DestinationEndpoint="" />
-        <Transition SourceActivityId="29" SourceEndpoint="Yes" DestinationActivityId="30" DestinationEndpoint="" />
+        <Transition SourceActivityId="4" SourceEndpoint="Done" DestinationActivityId="5" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Invio Credenziali" Enabled="true">
       <Activities>
-        <Activity Id="163" Name="SendTemplatedEmail" Start="false" X="283" Y="268">
-          <State>{"Recipient":"other","RecipientOther":"{Content.Fields.Dipendente.Email}","RecipientCC":"","RecipientBCC":"","FromEmail":"","ReplyTo":"","EmailTemplate":"27"}</State>
+        <Activity Id="93" Name="SendTemplatedEmail" Start="false" X="283" Y="268">
+          <State>{"Recipient":"other","RecipientOther":"{Content.Fields.Dipendente.Email}","RecipientCC":"","RecipientBCC":"","FromEmail":"","ReplyTo":"","EmailTemplate":"8"}</State>
         </Activity>
-        <Activity Id="164" Name="RazorExecute" Start="false" X="299" Y="119">
+        <Activity Id="94" Name="RazorExecute" Start="false" X="299" Y="119">
           <State>{"RazorExecuteActivity_Outcomes":"Ok,Error","RazorExecuteActivity_RazorView":"GetCredenziali.cshtml"}</State>
         </Activity>
-        <Activity Id="165" Name="Logging" Start="false" X="570" Y="140">
+        <Activity Id="95" Name="Logging" Start="false" X="570" Y="140">
           <State>{"Level":"Error","Message":"{Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="166" Name="Notify" Start="false" X="587" Y="295">
+        <Activity Id="96" Name="Notify" Start="false" X="587" Y="295">
           <State>{"Notification":"Error","Message":"Si è verificato un errore durante l'invio della e-mail."}</State>
         </Activity>
-        <Activity Id="167" Name="DynamicButtonEvent" Start="true" X="222" Y="0">
+        <Activity Id="97" Name="DynamicButtonEvent" Start="true" X="222" Y="0">
           <State>{"DynamicButton":"1"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="164" SourceEndpoint="Ok" DestinationActivityId="163" DestinationEndpoint="" />
-        <Transition SourceActivityId="164" SourceEndpoint="Error" DestinationActivityId="165" DestinationEndpoint="" />
-        <Transition SourceActivityId="165" SourceEndpoint="Done" DestinationActivityId="166" DestinationEndpoint="" />
-        <Transition SourceActivityId="167" SourceEndpoint="Done" DestinationActivityId="164" DestinationEndpoint="" />
+        <Transition SourceActivityId="94" SourceEndpoint="Ok" DestinationActivityId="93" DestinationEndpoint="" />
+        <Transition SourceActivityId="94" SourceEndpoint="Error" DestinationActivityId="95" DestinationEndpoint="" />
+        <Transition SourceActivityId="95" SourceEndpoint="Done" DestinationActivityId="96" DestinationEndpoint="" />
+        <Transition SourceActivityId="97" SourceEndpoint="Done" DestinationActivityId="94" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Messaggio Promozionale" Enabled="true">
       <Activities>
-        <Activity Id="148" Name="ContentPublished" Start="true" X="254" Y="-6">
+        <Activity Id="11" Name="ContentPublished" Start="true" X="254" Y="-6">
           <State>{"ContentTypes":"MessaggioPromozionale"}</State>
         </Activity>
-        <Activity Id="149" Name="RazorExecute" Start="false" X="262" Y="126">
+        <Activity Id="12" Name="RazorExecute" Start="false" X="262" Y="126">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"UpdateMessaggioPromozionale.cshtml"}</State>
         </Activity>
-        <Activity Id="150" Name="Logging" Start="false" X="591" Y="142">
+        <Activity Id="13" Name="Logging" Start="false" X="591" Y="142">
           <State>{"Level":"Error","Message":"Error in workflow Messaggio Promozionale: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="151" Name="Notify" Start="false" X="602" Y="267">
+        <Activity Id="14" Name="Notify" Start="false" X="602" Y="267">
           <State>{"Notification":"Error","Message":"Si è verificato un errore durante il salvataggio. Verificare i dati inseriti e riprovare."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="148" SourceEndpoint="Done" DestinationActivityId="149" DestinationEndpoint="" />
-        <Transition SourceActivityId="149" SourceEndpoint="Error" DestinationActivityId="150" DestinationEndpoint="" />
-        <Transition SourceActivityId="150" SourceEndpoint="Done" DestinationActivityId="151" DestinationEndpoint="" />
+        <Transition SourceActivityId="11" SourceEndpoint="Done" DestinationActivityId="12" DestinationEndpoint="" />
+        <Transition SourceActivityId="12" SourceEndpoint="Error" DestinationActivityId="13" DestinationEndpoint="" />
+        <Transition SourceActivityId="13" SourceEndpoint="Done" DestinationActivityId="14" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="PublishConfigs" Enabled="true">
       <Activities>
-        <Activity Id="332" Name="ContentUpdated" Start="true" X="93" Y="33">
+        <Activity Id="81" Name="ContentUpdated" Start="true" X="93" Y="33">
           <State>{"ContentTypes":"ConfigurazioneAppStore,ConfigurazioneGrafica"}</State>
         </Activity>
-        <Activity Id="333" Name="IsInRole" Start="false" X="120" Y="146">
+        <Activity Id="82" Name="IsInRole" Start="false" X="120" Y="146">
           <State>{"Roles":"BrandAdminB2B,BrandAdminB2C"}</State>
         </Activity>
-        <Activity Id="334" Name="IsInRole" Start="false" X="490" Y="148">
-          <State>{"Roles":"BrandAdminB2B,BrandAdminB2C"}</State>
-        </Activity>
-        <Activity Id="335" Name="RazorExecute" Start="false" X="91" Y="292">
+        <Activity Id="83" Name="RazorExecute" Start="false" X="91" Y="292">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"CheckUpdatedConfig.cshtml"}</State>
         </Activity>
-        <Activity Id="336" Name="RazorExecute" Start="false" X="460" Y="305">
-          <State>{"RazorExecuteActivity_Outcomes":"Error,ConfigurazioneGrafica,ConfigurazioneAppStore","RazorExecuteActivity_RazorView":"LockConfig.cshtml"}</State>
+        <Activity Id="84" Name="RazorExecute" Start="false" X="466" Y="148">
+          <State>{"RazorExecuteActivity_Outcomes":"Error,ConfigurazioneGrafica,ConfigurazioneAppStore,AlreadyLocked","RazorExecuteActivity_RazorView":"LockConfig.cshtml"}</State>
         </Activity>
-        <Activity Id="337" Name="Logging" Start="false" X="705" Y="310">
+        <Activity Id="85" Name="Logging" Start="false" X="717" Y="150">
           <State>{"Level":"Error","Message":"Error in workflow PublishConfigs LockConfig. Errore durante il cambiamento di owner della configurazione \"{Content.ContentType}\" (id: {Content.Id}). {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="338" Name="Notify" Start="false" X="697" Y="490">
+        <Activity Id="86" Name="Notify" Start="false" X="727" Y="296">
           <State>{"Notification":"Error","Message":"Si è verificato un errore. Provare a pubblicare nuovamente la configurazione."}</State>
         </Activity>
-        <Activity Id="339" Name="Notify" Start="false" X="152" Y="501">
-          <State>{"Notification":"Error","Message":"Non è possibile modificare la configurazione dopo averla pubblicata. Contattare l'assistenza."}</State>
+        <Activity Id="87" Name="Notify" Start="false" X="152" Y="501">
+          <State>{"Notification":"Error","Message":"Non è possibile modificare la configurazione dopo averla confermata. Se necessario, contattare l'assistenza."}</State>
         </Activity>
-        <Activity Id="340" Name="DynamicButtonEvent" Start="true" X="451" Y="31">
+        <Activity Id="88" Name="DynamicButtonEvent" Start="true" X="451" Y="31">
           <State>{"DynamicButton":"2"}</State>
         </Activity>
-        <Activity Id="341" Name="SendTemplatedEmail" Start="false" X="513" Y="504">
-          <State>{"Recipient":"other","RecipientOther":"laser.srl.ao@gmail.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"269"}</State>
+        <Activity Id="89" Name="SendTemplatedEmail" Start="false" X="510" Y="297">
+          <State>{"Recipient":"other","RecipientOther":"laser.srl.ao@gmail.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"7"}</State>
         </Activity>
-        <Activity Id="342" Name="SendTemplatedEmail" Start="false" X="263" Y="494">
-          <State>{"Recipient":"other","RecipientOther":"laser.srl.ao@gmail.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"270"}</State>
+        <Activity Id="90" Name="SendTemplatedEmail" Start="false" X="306" Y="296">
+          <State>{"Recipient":"other","RecipientOther":"laser.srl.ao@gmail.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"3"}</State>
+        </Activity>
+        <Activity Id="91" Name="Notify" Start="false" X="450" Y="465">
+          <State>{"Notification":"Information","Message":"I tuoi dati verranno presi in carico e gestiti dai nostri tecnici. Avendo confermato i dati, questi non saranno più modificabili."}</State>
+        </Activity>
+        <Activity Id="92" Name="Notify" Start="false" X="737" Y="85">
+          <State>{"Notification":"Warning","Message":"Configurazione già confermata in precedenza."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="332" SourceEndpoint="Done" DestinationActivityId="333" DestinationEndpoint="" />
-        <Transition SourceActivityId="333" SourceEndpoint="Yes" DestinationActivityId="335" DestinationEndpoint="" />
-        <Transition SourceActivityId="334" SourceEndpoint="Yes" DestinationActivityId="336" DestinationEndpoint="" />
-        <Transition SourceActivityId="335" SourceEndpoint="Error" DestinationActivityId="339" DestinationEndpoint="" />
-        <Transition SourceActivityId="336" SourceEndpoint="Error" DestinationActivityId="337" DestinationEndpoint="" />
-        <Transition SourceActivityId="337" SourceEndpoint="Done" DestinationActivityId="338" DestinationEndpoint="" />
-        <Transition SourceActivityId="340" SourceEndpoint="Done" DestinationActivityId="334" DestinationEndpoint="" />
-        <Transition SourceActivityId="336" SourceEndpoint="ConfigurazioneAppStore" DestinationActivityId="342" DestinationEndpoint="" />
-        <Transition SourceActivityId="336" SourceEndpoint="ConfigurazioneGrafica" DestinationActivityId="341" DestinationEndpoint="" />
+        <Transition SourceActivityId="81" SourceEndpoint="Done" DestinationActivityId="82" DestinationEndpoint="" />
+        <Transition SourceActivityId="82" SourceEndpoint="Yes" DestinationActivityId="83" DestinationEndpoint="" />
+        <Transition SourceActivityId="83" SourceEndpoint="Error" DestinationActivityId="87" DestinationEndpoint="" />
+        <Transition SourceActivityId="84" SourceEndpoint="Error" DestinationActivityId="85" DestinationEndpoint="" />
+        <Transition SourceActivityId="85" SourceEndpoint="Done" DestinationActivityId="86" DestinationEndpoint="" />
+        <Transition SourceActivityId="88" SourceEndpoint="Done" DestinationActivityId="84" DestinationEndpoint="" />
+        <Transition SourceActivityId="84" SourceEndpoint="ConfigurazioneAppStore" DestinationActivityId="90" DestinationEndpoint="" />
+        <Transition SourceActivityId="84" SourceEndpoint="ConfigurazioneGrafica" DestinationActivityId="89" DestinationEndpoint="" />
+        <Transition SourceActivityId="90" SourceEndpoint="Sent" DestinationActivityId="91" DestinationEndpoint="" />
+        <Transition SourceActivityId="89" SourceEndpoint="Sent" DestinationActivityId="91" DestinationEndpoint="" />
+        <Transition SourceActivityId="84" SourceEndpoint="AlreadyLocked" DestinationActivityId="92" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Richiesta Prodotto" Enabled="true">
       <Activities>
-        <Activity Id="219" Name="RazorExecute" Start="false" X="499" Y="157">
+        <Activity Id="27" Name="RazorExecute" Start="false" X="499" Y="157">
           <State>{"RazorExecuteActivity_Outcomes":"Error,NonEvasa,Evasa,Annullata,Rifiutata","RazorExecuteActivity_RazorView":"UpdateRichiestaProdotto.cshtml"}</State>
         </Activity>
-        <Activity Id="220" Name="Logging" Start="false" X="767" Y="145">
+        <Activity Id="28" Name="Logging" Start="false" X="767" Y="145">
           <State>{"Level":"Error","Message":"Error in workflow UpdateRichiestaProdotto: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="221" Name="SendPush" Start="false" X="496" Y="349">
+        <Activity Id="29" Name="SendPush" Start="false" X="496" Y="349">
           <State>{"allDevice":"UserId","userId":"{Workflow.State:UserIdToNotify}","allLanguage":"All","Produzione":"Produzione","idRelated":"{Content.Id}","PushMessage":"La richiesta # {Content.Id} del prodotto {Content.Fields.RichiestaProdotto.Prodotto.Content.DisplayText} è stata annullata."}</State>
         </Activity>
-        <Activity Id="222" Name="SendPush" Start="false" X="607" Y="347">
+        <Activity Id="30" Name="SendPush" Start="false" X="607" Y="347">
           <State>{"allDevice":"UserId","userId":"{Workflow.State:UserIdToNotify}","allLanguage":"All","Produzione":"Produzione","idRelated":"{Content.Id}","PushMessage":"Si prega di prendere in carico la Richiesta # {Content.Id} del prodotto {Content.Fields.RichiestaProdotto.Prodotto.Content.DisplayText}."}</State>
         </Activity>
-        <Activity Id="223" Name="SendPush" Start="false" X="716" Y="345">
+        <Activity Id="31" Name="SendPush" Start="false" X="716" Y="345">
           <State>{"allDevice":"UserId","userId":"{Workflow.State:UserIdToNotify}","allLanguage":"All","Produzione":"Produzione","idRelated":"{Content.Id}","PushMessage":"La richiesta # {Content.Id} del prodotto {Content.Fields.RichiestaProdotto.Prodotto.Content.DisplayText} è stata evasa."}</State>
         </Activity>
-        <Activity Id="224" Name="Signal" Start="true" X="3" Y="52">
+        <Activity Id="32" Name="Signal" Start="true" X="3" Y="52">
           <State>{"Signal":"RichiestaNonEvasa"}</State>
         </Activity>
-        <Activity Id="225" Name="Signal" Start="true" X="108" Y="0">
+        <Activity Id="33" Name="Signal" Start="true" X="108" Y="0">
           <State>{"Signal":"RichiestaAnnullata"}</State>
         </Activity>
-        <Activity Id="226" Name="Signal" Start="true" X="187" Y="0">
+        <Activity Id="34" Name="Signal" Start="true" X="187" Y="0">
           <State>{"Signal":"RichiestaEvasa"}</State>
         </Activity>
-        <Activity Id="227" Name="RazorExecute" Start="false" X="99" Y="135">
+        <Activity Id="35" Name="RazorExecute" Start="false" X="99" Y="135">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"SignalRichiestaProdotto.cshtml"}</State>
         </Activity>
-        <Activity Id="228" Name="Logging" Start="false" X="57" Y="333">
+        <Activity Id="36" Name="Logging" Start="false" X="57" Y="333">
           <State>{"Level":"Error","Message":"Error in workflow UpdateRichiestaProdotto (signal): {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="229" Name="WebApiResponse" Start="false" X="30" Y="458">
+        <Activity Id="37" Name="WebApiResponse" Start="false" X="30" Y="458">
           <State>{"Message":"","ErrorCode":"GenericError","ResolutionAction":"NoAction"}</State>
         </Activity>
-        <Activity Id="230" Name="WebApiResponse" Start="false" X="244" Y="348">
+        <Activity Id="38" Name="WebApiResponse" Start="false" X="244" Y="348">
           <State>{"Successful":"true","Message":"","ErrorCode":"NoError","ResolutionAction":"NoAction"}</State>
         </Activity>
-        <Activity Id="231" Name="SendPush" Start="false" X="391" Y="276">
+        <Activity Id="39" Name="SendPush" Start="false" X="391" Y="276">
           <State>{"allDevice":"UserId","userId":"{Workflow.State:UserIdToNotify}","allLanguage":"All","Produzione":"Produzione","idRelated":"{Content.Id}","PushMessage":"La richiesta # {Content.Id} del prodotto {Content.Fields.RichiestaProdotto.Prodotto.Content.DisplayText} è stata rifiutata."}</State>
         </Activity>
-        <Activity Id="232" Name="Signal" Start="true" X="298" Y="49">
+        <Activity Id="40" Name="Signal" Start="true" X="298" Y="49">
           <State>{"Signal":"RichiestaRifiutata"}</State>
         </Activity>
-        <Activity Id="233" Name="ContentUpdated" Start="true" X="549" Y="45">
+        <Activity Id="41" Name="ContentUpdated" Start="true" X="549" Y="45">
           <State>{"ContentTypes":"RichiestaProdotto"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="219" SourceEndpoint="Error" DestinationActivityId="220" DestinationEndpoint="" />
-        <Transition SourceActivityId="219" SourceEndpoint="Annullata" DestinationActivityId="221" DestinationEndpoint="" />
-        <Transition SourceActivityId="219" SourceEndpoint="NonEvasa" DestinationActivityId="222" DestinationEndpoint="" />
-        <Transition SourceActivityId="219" SourceEndpoint="Evasa" DestinationActivityId="223" DestinationEndpoint="" />
-        <Transition SourceActivityId="224" SourceEndpoint="Done" DestinationActivityId="227" DestinationEndpoint="" />
-        <Transition SourceActivityId="225" SourceEndpoint="Done" DestinationActivityId="227" DestinationEndpoint="" />
-        <Transition SourceActivityId="226" SourceEndpoint="Done" DestinationActivityId="227" DestinationEndpoint="" />
-        <Transition SourceActivityId="227" SourceEndpoint="Ok" DestinationActivityId="230" DestinationEndpoint="" />
-        <Transition SourceActivityId="227" SourceEndpoint="Error" DestinationActivityId="228" DestinationEndpoint="" />
-        <Transition SourceActivityId="228" SourceEndpoint="Done" DestinationActivityId="229" DestinationEndpoint="" />
-        <Transition SourceActivityId="219" SourceEndpoint="Rifiutata" DestinationActivityId="231" DestinationEndpoint="" />
-        <Transition SourceActivityId="232" SourceEndpoint="Done" DestinationActivityId="227" DestinationEndpoint="" />
-        <Transition SourceActivityId="233" SourceEndpoint="Done" DestinationActivityId="219" DestinationEndpoint="" />
-        <Transition SourceActivityId="230" SourceEndpoint="Done" DestinationActivityId="219" DestinationEndpoint="" />
+        <Transition SourceActivityId="27" SourceEndpoint="Error" DestinationActivityId="28" DestinationEndpoint="" />
+        <Transition SourceActivityId="27" SourceEndpoint="Annullata" DestinationActivityId="29" DestinationEndpoint="" />
+        <Transition SourceActivityId="27" SourceEndpoint="NonEvasa" DestinationActivityId="30" DestinationEndpoint="" />
+        <Transition SourceActivityId="27" SourceEndpoint="Evasa" DestinationActivityId="31" DestinationEndpoint="" />
+        <Transition SourceActivityId="32" SourceEndpoint="Done" DestinationActivityId="35" DestinationEndpoint="" />
+        <Transition SourceActivityId="33" SourceEndpoint="Done" DestinationActivityId="35" DestinationEndpoint="" />
+        <Transition SourceActivityId="34" SourceEndpoint="Done" DestinationActivityId="35" DestinationEndpoint="" />
+        <Transition SourceActivityId="35" SourceEndpoint="Ok" DestinationActivityId="38" DestinationEndpoint="" />
+        <Transition SourceActivityId="35" SourceEndpoint="Error" DestinationActivityId="36" DestinationEndpoint="" />
+        <Transition SourceActivityId="36" SourceEndpoint="Done" DestinationActivityId="37" DestinationEndpoint="" />
+        <Transition SourceActivityId="27" SourceEndpoint="Rifiutata" DestinationActivityId="39" DestinationEndpoint="" />
+        <Transition SourceActivityId="40" SourceEndpoint="Done" DestinationActivityId="35" DestinationEndpoint="" />
+        <Transition SourceActivityId="41" SourceEndpoint="Done" DestinationActivityId="27" DestinationEndpoint="" />
+        <Transition SourceActivityId="38" SourceEndpoint="Done" DestinationActivityId="27" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Unpublish Richieste Prodotto" Enabled="true">
       <Activities>
-        <Activity Id="38" Name="Signal" Start="true" X="190" Y="4">
+        <Activity Id="42" Name="Signal" Start="true" X="190" Y="4">
           <State>{"Signal":"UnpublishRichiesteProdotto"}</State>
         </Activity>
-        <Activity Id="39" Name="RazorExecute" Start="false" X="172" Y="149">
+        <Activity Id="43" Name="RazorExecute" Start="false" X="172" Y="149">
           <State>{"RazorExecuteActivity_Outcomes":"Ok,Error","RazorExecuteActivity_RazorView":"UnpublishRichiesteProdotto.cshtml"}</State>
         </Activity>
-        <Activity Id="40" Name="Logging" Start="false" X="541" Y="174">
+        <Activity Id="44" Name="Logging" Start="false" X="541" Y="174">
           <State>{"Level":"Error","Message":"Error in workflow UnpublishRichiesteProdotto: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="38" SourceEndpoint="Done" DestinationActivityId="39" DestinationEndpoint="" />
-        <Transition SourceActivityId="39" SourceEndpoint="Error" DestinationActivityId="40" DestinationEndpoint="" />
+        <Transition SourceActivityId="42" SourceEndpoint="Done" DestinationActivityId="43" DestinationEndpoint="" />
+        <Transition SourceActivityId="43" SourceEndpoint="Error" DestinationActivityId="44" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Unpublish Stores" Enabled="true">
       <Activities>
-        <Activity Id="142" Name="ContentPublished" Start="true" X="207" Y="4">
+        <Activity Id="45" Name="ContentPublished" Start="true" X="207" Y="4">
           <State>{"ContentTypes":"Store"}</State>
         </Activity>
-        <Activity Id="143" Name="Signal" Start="true" X="463" Y="4">
+        <Activity Id="46" Name="Signal" Start="true" X="463" Y="4">
           <State>{"Signal":"CheckStores"}</State>
         </Activity>
-        <Activity Id="144" Name="RazorExecute" Start="false" X="319" Y="129">
+        <Activity Id="47" Name="RazorExecute" Start="false" X="319" Y="129">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok,Unpublished","RazorExecuteActivity_RazorView":"UnpublishStores.cshtml"}</State>
         </Activity>
-        <Activity Id="145" Name="Logging" Start="false" X="600" Y="139">
+        <Activity Id="48" Name="Logging" Start="false" X="600" Y="139">
           <State>{"Level":"Error","Message":"Error in workflow UnpublishStores: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="146" Name="Logging" Start="false" X="80" Y="144">
+        <Activity Id="49" Name="Logging" Start="false" X="80" Y="144">
           <State>{"Level":"Error","Message":"Workflow UnpublishStores: forced store unpublish."}</State>
         </Activity>
-        <Activity Id="147" Name="Notify" Start="false" X="87" Y="271">
+        <Activity Id="50" Name="Notify" Start="false" X="87" Y="271">
           <State>{"Notification":"Error","Message":"E' stato raggiunto il numero di Store acquistati. Lo Store non è stato pubblicato."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="142" SourceEndpoint="Done" DestinationActivityId="144" DestinationEndpoint="" />
-        <Transition SourceActivityId="143" SourceEndpoint="Done" DestinationActivityId="144" DestinationEndpoint="" />
-        <Transition SourceActivityId="144" SourceEndpoint="Error" DestinationActivityId="145" DestinationEndpoint="" />
-        <Transition SourceActivityId="144" SourceEndpoint="Unpublished" DestinationActivityId="146" DestinationEndpoint="" />
-        <Transition SourceActivityId="146" SourceEndpoint="Done" DestinationActivityId="147" DestinationEndpoint="" />
+        <Transition SourceActivityId="45" SourceEndpoint="Done" DestinationActivityId="47" DestinationEndpoint="" />
+        <Transition SourceActivityId="46" SourceEndpoint="Done" DestinationActivityId="47" DestinationEndpoint="" />
+        <Transition SourceActivityId="47" SourceEndpoint="Error" DestinationActivityId="48" DestinationEndpoint="" />
+        <Transition SourceActivityId="47" SourceEndpoint="Unpublished" DestinationActivityId="49" DestinationEndpoint="" />
+        <Transition SourceActivityId="49" SourceEndpoint="Done" DestinationActivityId="50" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Update Configurazione Base" Enabled="true">
       <Activities>
-        <Activity Id="245" Name="RazorExecute" Start="false" X="191" Y="127">
+        <Activity Id="51" Name="RazorExecute" Start="false" X="191" Y="127">
           <State>{"RazorExecuteActivity_Outcomes":"Ok,Error","RazorExecuteActivity_RazorView":"UpdateConfigurazioneBase.cshtml"}</State>
         </Activity>
-        <Activity Id="246" Name="Notify" Start="false" X="564" Y="153">
+        <Activity Id="52" Name="Notify" Start="false" X="564" Y="153">
           <State>{"Notification":"Error","Message":"Si è verificato un errore durante l'aggiornamento della struttura dei prodotti."}</State>
         </Activity>
-        <Activity Id="247" Name="Logging" Start="false" X="542" Y="278">
+        <Activity Id="53" Name="Logging" Start="false" X="542" Y="278">
           <State>{"Level":"Error","Message":"Error in workflow Update Configurazione Base: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="248" Name="ContentPublished" Start="true" X="228" Y="3">
+        <Activity Id="54" Name="ContentPublished" Start="true" X="228" Y="3">
           <State>{"ContentTypes":"ConfigurazioneBase"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="245" SourceEndpoint="Error" DestinationActivityId="246" DestinationEndpoint="" />
-        <Transition SourceActivityId="246" SourceEndpoint="Done" DestinationActivityId="247" DestinationEndpoint="" />
-        <Transition SourceActivityId="248" SourceEndpoint="Done" DestinationActivityId="245" DestinationEndpoint="" />
+        <Transition SourceActivityId="51" SourceEndpoint="Error" DestinationActivityId="52" DestinationEndpoint="" />
+        <Transition SourceActivityId="52" SourceEndpoint="Done" DestinationActivityId="53" DestinationEndpoint="" />
+        <Transition SourceActivityId="54" SourceEndpoint="Done" DestinationActivityId="51" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Update Contatto" Enabled="true">
       <Activities>
-        <Activity Id="201" Name="ContentUpdated" Start="true" X="212" Y="23">
+        <Activity Id="64" Name="ContentUpdated" Start="true" X="212" Y="23">
           <State>{"ContentTypes":"CommunicationContact"}</State>
         </Activity>
-        <Activity Id="202" Name="RazorExecute" Start="false" X="255" Y="176">
+        <Activity Id="65" Name="RazorExecute" Start="false" X="255" Y="176">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"UpdateContatto.cshtml"}</State>
         </Activity>
-        <Activity Id="203" Name="Logging" Start="false" X="640" Y="210">
+        <Activity Id="66" Name="Logging" Start="false" X="640" Y="210">
           <State>{"Level":"Error","Message":"Errore nel workflow UpdateContatto: {Workflow.State:ErrorMessage}"}</State>
+        </Activity>
+        <Activity Id="67" Name="SendTemplatedEmail" Start="false" X="278" Y="423">
+          <State>{"Recipient":"other","RecipientOther":"{Content.Fields.ContactInfoPart.EmailInfo}","RecipientCC":"giuseppe.musso@laser-group.com","RecipientBCC":"","FromEmail":"","ReplyTo":"","EmailTemplate":"5"}</State>
+        </Activity>
+        <Activity Id="68" Name="IsInRole" Start="false" X="300" Y="299">
+          <State>{"Roles":"StoreAssistant"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="201" SourceEndpoint="Done" DestinationActivityId="202" DestinationEndpoint="" />
-        <Transition SourceActivityId="202" SourceEndpoint="Error" DestinationActivityId="203" DestinationEndpoint="" />
+        <Transition SourceActivityId="64" SourceEndpoint="Done" DestinationActivityId="65" DestinationEndpoint="" />
+        <Transition SourceActivityId="65" SourceEndpoint="Error" DestinationActivityId="66" DestinationEndpoint="" />
+        <Transition SourceActivityId="65" SourceEndpoint="Ok" DestinationActivityId="68" DestinationEndpoint="" />
+        <Transition SourceActivityId="68" SourceEndpoint="Yes" DestinationActivityId="67" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Update Push" Enabled="true">

@@ -4,7 +4,7 @@
 
 @functions{
     // Model.ContentItem is a MessaggioPromozionale
-    string retString = "Error"; //possible outcomes: Error,ConfigurazioneGrafica,ConfigurazioneAppStore
+    string retString = "Error"; //possible outcomes: Error,ConfigurazioneGrafica,ConfigurazioneAppStore,AlreadyLocked
     string eMsg = "";
     //services
     IContentManager _contentManager;
@@ -24,15 +24,16 @@
                 if (string.IsNullOrWhiteSpace(hidden.Value)) {
                     hidden.Value = "locked";
                     _contentManager.Publish(config);
+                    retString = contentType;
                 } else {
                     // annullo la versione corrente
                     config.VersionRecord.Published = false;
                     ContentItem previous = _contentManager.Get(config.Id, VersionOptions.Latest);
                     previous.VersionRecord.Published = true;
+                    retString = "AlreadyLocked";
                 }
             }
         }
-        retString = contentType;
     } catch (Exception ex) {
         eMsg += string.Format("\r\n{0}", ex.Message);
         Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
