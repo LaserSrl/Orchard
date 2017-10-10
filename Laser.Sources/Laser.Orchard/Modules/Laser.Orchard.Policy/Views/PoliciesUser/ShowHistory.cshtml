@@ -17,6 +17,7 @@
                 <th>@T("Accepted")</th>
                 <th>@T("Answer date")</th>
                 <th>@T("Validity end")</th>
+                <th>@T("User")</th>
             </tr>
         </thead>
         <tbody>
@@ -49,6 +50,7 @@
                     <td>@item.AnswerDate</td>
                     <td>@if (item.EndValidity != null) { @item.EndValidity;
                         }</td>
+                    <td>@item.UserName</td>
                 </tr>
             }
         </tbody>
