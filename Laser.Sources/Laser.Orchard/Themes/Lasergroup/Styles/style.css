@@ -358,8 +358,10 @@ body.navbar-fixed #main-menu-home{ position:fixed; top:35px; height:45px; backgr
 
 
 #focus{ background:#FF0903; color:#fff; position:relative; padding-top:50px; padding-bottom:25px; }
-#focus .focus-top{ position:absolute; width:100%; left:0; top:-25px; height:30px; background:#FF0903; border-radius: 50% 50% 0 0; }
-#focus .focus-bottom{ position:absolute; width:100%; left:0; bottom:-50px; height:50px; background:#FF0903; border-radius: 0 0 50% 50%; }
+#focus.with-external-top { margin-top:30px }
+#focus.with-external-bottom { margin-top:50px }
+#focus .focus-top{ z-index:10; position:absolute; width:100%; left:0; top:-25px; height:30px; background:#FF0903; border-radius: 50% 50% 0 0; }
+#focus .focus-bottom{ z-index:10; position:absolute; width:100%; left:0; bottom:-50px; height:50px; background:#FF0903; border-radius: 0 0 50% 50%; }
 #focus .focus-item{ border-right:1px solid #e80903; display:block; color:#fff; font-size:30px; font-weight:400; }
 #focus .focus-item:hover,#focus .focus-item:focus{ text-decoration:none; }
 #focus .focus-item-link{ font-size:26px; font-weight:300; }
@@ -553,6 +555,7 @@ body.page-template-page-business .title{ color:#FF0903; }
 }
 
 #nav-societa{ background:#333; position:relative; padding-top:75px; }
+#nav-societa.with-external-bottom { margin-bottom:50px }
 #nav-societa .nav-societa-top{ background:#fff; position:absolute; width:100%; left:0; z-index:5; top:0; height:50px; border-radius: 0 0 50% 50%; }
 #nav-societa a{ color:#fff; }
 #nav-societa .nav-societa-bottom{ background:#333; position:absolute; width:100%; left:0; z-index:6; bottom:-50px; height:50px; border-radius: 0 0 50% 50%; }
@@ -738,7 +741,7 @@ body.page-template-page-societa-chi-siamo #intro{ z-index:5; }
     #showcase-container .showcase-title{ font-size:20px; padding-top: 28px; }
 }
 
-#filter{ background:#ff0903; color:#fff; position:relative; margin-right:80px; -webkit-transition:transform ease 0.8s; -moz-transition:transform ease 0.8s; transition:transform ease 0.8s; -webkit-transform:translateX(-100%); -moz-transform:translateX(-100%); transform:translateX(-100%); }
+#filter{ display:inline-block; background:#ff0903; color:#fff; position:relative; margin-right:80px; -webkit-transition:transform ease 0.8s; -moz-transition:transform ease 0.8s; transition:transform ease 0.8s; -webkit-transform:translateX(-100%); -moz-transform:translateX(-100%); transform:translateX(-100%); }
 #filter.open{ -webkit-transform:translateX(0); -moz-transform:translateX(0); transform:translateX(0); }
 #filter .filter-label{ letter-spacing:-1px; border-radius:10px 10px 0 0; padding:10px 0; text-align:center; background:#ff0903; color:#fff; position:absolute; right:-58px; top:5px; width:70px; display:block; text-transform:uppercase; font-weight:700; -webkit-transform:rotate(90deg); -moz-transform:rotate(90deg); transform:rotate(90deg); }
 #filter .filter-label .fa{ display:block; font-size:24px; line-height:14px; }
@@ -905,5 +908,9 @@ body.verde .navbar-nav > li.current-page-ancestor > a,
 body.verde .navbar-nav .dropdown-menu > li > a{ border-color:#A1D030 !important; }
 
 /* LAZY LOAD */
+#load-showcase-div-button { min-height: 100px; }
 #load_posts_loader{ opacity:0; transition:opacity 0.5s ease; -webkit-transition:opacity 0.5s ease; background:url('images/ajax-loader.gif') no-repeat; height:32px; width:32px; margin:20px auto; }
 #load_posts_loader.active{ opacity:1; }
+
+/* Widget adjustments*/
+/*.widget{ overflow:hidden; }*/
