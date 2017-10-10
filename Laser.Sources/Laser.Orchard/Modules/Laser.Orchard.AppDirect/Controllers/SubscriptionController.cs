@@ -205,7 +205,7 @@ namespace Laser.Orchard.AppDirect.Controllers {
 
         public ActionResult LogOnManager() {
             string stropenid = Request.QueryString["openid"];
-            var settingbaseurl = _orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>().BaseUrl??"";
+            var settingbaseurl = _orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>().BaseUrl ?? "";
             if (stropenid != null && stropenid.ToLower().StartsWith(settingbaseurl.ToLower() + "/openid/id")) {
                 //  string accountIdentifier = Request.QueryString["accountIdentifier"];
                 var product = Request.QueryString["productKey"];
@@ -218,7 +218,7 @@ namespace Laser.Orchard.AppDirect.Controllers {
                     if (usertenant != null) {
                         var accountIdentifier = usertenant.AccountIdentifier;
                         //      accountIdentifier = "185.11.22.191:1235/Laser.Orchard";
-                        Response.Redirect(string.Format("http://{0}/OpenId/LogOn?openid={1}&productKey={2}", accountIdentifier, stropenid, product));
+                        Response.Redirect(string.Format("https://{0}/OpenId/LogOn?openid={1}&productKey={2}", accountIdentifier, stropenid, product));
                     }
                     else
                         Logger.Error(T("Can't login user {0}, openid :", email, stropenid).ToString());

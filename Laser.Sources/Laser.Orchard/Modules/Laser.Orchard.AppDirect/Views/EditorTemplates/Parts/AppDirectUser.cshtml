@@ -7,10 +7,11 @@
         @Model.Email
         @Html.HiddenFor(m => m.Email)
     </div>
-    <div>
+    <fieldset>
         @Html.LabelFor(m => m.AccountIdentifier)
         @Html.TextBoxFor(m => m.AccountIdentifier)
-    </div>
+        <span class="hint">@T("The website Url of the tenant es: mykrake.com/istanza18")</span>
+    </fieldset>
     <div>
         @Html.LabelFor(m => m.FirstName, new { style = "display:inline;min-width:250px" }):
         @Model.FirstName
