@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Laser.Orchard.ButtonToWorkflows.Models;
 using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
 using Orchard.Workflows.Services;
-using Orchard.ContentManagement;
 
 namespace Laser.Orchard.AppDirect.Handlers {
     public class AppDirectTaskScheduleHandler : IScheduledTaskHandler {
