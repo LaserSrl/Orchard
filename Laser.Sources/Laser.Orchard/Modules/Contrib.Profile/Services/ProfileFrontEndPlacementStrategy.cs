@@ -55,7 +55,7 @@ namespace Contrib.Profile.Services {
         public ILogger Logger { get; set; }
 
         public void ShapeTableCreated(ShapeTable shapeTable) {
-            
+
             var typeDefinitions = _contentDefinitionManager.Value
                 .ListTypeDefinitions().
                 Where(ctd => ctd.Parts.Any(ctpd => ctpd.PartDefinition.Name == "ProfilePart"));
@@ -80,7 +80,7 @@ namespace Contrib.Profile.Services {
                     var placement = descriptor.Placement;
                     descriptor.Placement = ctx => {
                         var WorkContext = _workContextAccessor.GetContext(); //I need the context for the call using the predicates
-                        if (ctx.DisplayType == null && 
+                        if (ctx.DisplayType == null &&
                             !AdminFilter.IsApplied(WorkContext.HttpContext.Request.RequestContext)) {
 
                             foreach (var customPlacement in customPlacements) {
@@ -209,7 +209,7 @@ namespace Contrib.Profile.Services {
         }
 
         private void BindPlacement(
-            BuildShapeContext context, string displayType, 
+            BuildShapeContext context, string displayType,
             string stereotype, IEnumerable<PlacementSettings> defaultSettings) {
 
             context.FindPlacement = (partShapeType, differentiator, defaultLocation) => {
@@ -220,6 +220,7 @@ namespace Contrib.Profile.Services {
                 var defaultSetting = defaultSettings.FirstOrDefault(ps => ps.IsSameAs(mockSetting));
                 defaultLocation = defaultSetting == null ? defaultLocation : //may still end up with a null defaultLocation
                     defaultSetting.Zone + (string.IsNullOrEmpty(defaultSetting.Position) ? "" : ":" + defaultSetting.Position);
+                defaultLocation = string.IsNullOrWhiteSpace(defaultLocation) ? "Content:1" : defaultLocation; //avoid null fallbacks
                 return new PlacementInfo {
                     Location = defaultLocation,
                     Source = string.Empty
