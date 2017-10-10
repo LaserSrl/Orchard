@@ -330,6 +330,7 @@ namespace Pubblicazione {
                     }
                     foreach (var a in this.clbThemes.CheckedItems) {
                         ProcessXcopy(Path.Combine(elencoTemi[a.ToString()], "*.*"), Path.Combine(deploypath, @"Themes", a.ToString()));
+                        ProcessXcopy(Path.Combine(elencoTemi[a.ToString()], @"*.recipe.xml"), Path.Combine(deploypath, @"Themes", a.ToString()), ExclusionFileOptions.None);
                         foreach (var additionalFile in additionalFiles) {
                             ProcessXcopy(Path.Combine(elencoTemi[a.ToString()], additionalFile), Path.Combine(deploypath, "Themes", a.ToString()), ExclusionFileOptions.None);
                         }
