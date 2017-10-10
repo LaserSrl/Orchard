@@ -37,7 +37,6 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IContentManager _contentManager;
         private readonly string contentType = "CommunicationContact";
-        private readonly dynamic TestPermission = Permissions.ManageContact;
         private readonly ICommunicationService _communicationService;
         private readonly IScheduledTaskManager _taskManager;
         private readonly ITransactionManager _transactionManager;
@@ -87,7 +86,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
         [Admin]
         public ActionResult Edit(int id) {
-            if (!_orchardServices.Authorizer.Authorize(TestPermission))
+            if (!_orchardServices.Authorizer.Authorize(Permissions.ManageContact))
                 return new HttpUnauthorizedResult();
             object model;
             if (id == 0) {
@@ -107,7 +106,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
         [HttpPost, ActionName("Edit"), Admin]
         public ActionResult EditPOST(int id) {
-            if (!_orchardServices.Authorizer.Authorize(TestPermission))
+            if (!_orchardServices.Authorizer.Authorize(Permissions.ManageContact))
                 return new HttpUnauthorizedResult();
 
             var typeDef = _contentManager.GetContentTypeDefinitions().FirstOrDefault(x => x.Name == contentType);
@@ -152,8 +151,9 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         [HttpPost]
         [Admin]
         public ActionResult Remove(Int32 id) {
-            if (!_orchardServices.Authorizer.Authorize(TestPermission))
+            if (!_orchardServices.Authorizer.Authorize(Permissions.ManageContact)) {
                 return new HttpUnauthorizedResult();
+            }
             ContentItem content = _contentManager.Get(id);
             _contentManager.Remove(content);
             return RedirectToAction("Index", "ContactsAdmin");
@@ -163,7 +163,7 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         [HttpGet]
         [Admin]
         public ActionResult Index(int? page, int? pageSize, SearchVM search) {
-            if (!_orchardServices.Authorizer.Authorize(TestPermission)) {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.ShowContacts)) {
                 return new HttpUnauthorizedResult();
             }
             return IndexSearch(page, pageSize, search);
@@ -172,9 +172,9 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         [HttpGet]
         [Admin]
         public ActionResult IndexSearch(int? page, int? pageSize, SearchVM search) {
-            if (!_orchardServices.Authorizer.Authorize(TestPermission))
+            if (!_orchardServices.Authorizer.Authorize(Permissions.ShowContacts)) {
                 return new HttpUnauthorizedResult();
-
+            }
             if (Request.QueryString["submit.Export"] != null) {
                 return Export(search);
             }
@@ -317,7 +317,9 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
         }
 
         private ActionResult Export(SearchVM search) {
-            
+            if (!_orchardServices.Authorizer.Authorize(Permissions.AccessExportContacts)) {
+                return new HttpUnauthorizedResult();
+            }
             string parametri = "expression=" + Url.Encode(search.Expression) + "&field=" + Url.Encode(search.Field.ToString());
             parametri += search.CommercialUseAuthorization.HasValue ? String.Format("&commercialuse={0}", search.CommercialUseAuthorization.Value.ToString()) : "&commercialuse=";
             parametri += search.ThirdPartyAuthorization.HasValue ? String.Format("&thirdparty={0}", search.ThirdPartyAuthorization.Value.ToString()) : "&thirdparty=";
@@ -333,6 +335,9 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
         [Admin]
         public ActionResult ImportCsv(System.Web.HttpPostedFileBase csvFile) {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.AccessImportContacts)) {
+                return new HttpUnauthorizedResult();
+            }
             string path = Server.MapPath(_contactsImportRelativePath);
             if (csvFile != null) {
                 var len = csvFile.ContentLength;
@@ -363,8 +368,9 @@ namespace Laser.Orchard.CommunicationGateway.Controllers {
 
         [Admin]
         public ActionResult View(int id) {
-            if (!_orchardServices.Authorizer.Authorize(TestPermission))
+            if (!_orchardServices.Authorizer.Authorize(Permissions.ShowContacts)) {
                 return new HttpUnauthorizedResult();
+            }
             object model;
             if (id == 0) {
                 var newContent = _contentManager.New(contentType);
