@@ -1,29 +1,29 @@
 <script type="application/ld+json">
-{
+{{
   "@context": "http://schema.org",
   "@type": "NewsArticle",
-  "mainEntityOfPage": {
+  "mainEntityOfPage": {{
     "@type": "WebPage",
     "@id": "{Site.BaseUrl}{Content.DisplayUrl}"
-  },
+  }},
   "headline": "Content.Fields.CONTENTNAME.SOTTOTITOLO",
   "image": [
     "{Site.BaseUrl}{Content.Fields.CONTENTNAME.GALLERY.Url}"
    ],
   "datePublished": "{Content.Date}",
   "dateModified": "2015-02-05T09:20:00+08:00",
-  "author": {
+  "author": {{
     "@type": "Person",
     "name": "{Content.Fields.CommonPart.Creator}"
-  },
-   "publisher": {
+  }},
+   "publisher": {{
     "@type": "Organization",
     "name": "{Content.Fields.CommonPart.Creator}",
-    "logo": {
+    "logo": {{
       "@type": "ImageObject",
       "url": "DA SOSITUIRE CONIL LOGO"
-    }
-  },
+    }}
+  }},
   "description": "{Content.Body.StripHtml}"
-}
+}}
 </script>

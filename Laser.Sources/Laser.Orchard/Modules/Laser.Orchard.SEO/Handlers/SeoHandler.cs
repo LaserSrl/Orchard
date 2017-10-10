@@ -65,21 +65,7 @@ namespace Laser.Orchard.SEO.Handlers {
         private string scriptEval(SeoPartSettings settings, SeoPart part) {
             var tokensDictionary = new Dictionary<string, object> { { "Content", part.ContentItem } };
             Dictionary<string, string> tokenVal = new Dictionary<string, string>();
-            string scriptText = settings.JsonLd;
-            Regex r = new Regex(@"{(.+?)}");
-            MatchCollection mc = r.Matches(scriptText);
-
-            foreach (Match tokenMatch in mc) {
-                string token = tokenMatch.ToString();
-                string stringToken = _tokenizer.Replace(token, tokensDictionary);
-                tokenVal[token] = stringToken;
-            }
-
-            foreach (string token in tokenVal.Keys) {
-                scriptText = scriptText.Replace(token, tokenVal[token]);
-            }
-
-            return scriptText;
+            return _tokenizer.Replace(settings.JsonLd, tokensDictionary); ;
         }
 
     }
