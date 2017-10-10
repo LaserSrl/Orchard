@@ -136,12 +136,14 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activity\SubscriptionActionExecutedEvent.cs" />
     <Compile Include="Activity\SubscriptionEvent.cs" />
     <Compile Include="Controllers\SubscriptionController.cs" />
     <Compile Include="Driver\AppDirectRequestPartDriver.cs" />
     <Compile Include="Driver\AppDirectButtonDriver.cs" />
     <Compile Include="Driver\AppDirectSettingsDriver.cs" />
     <Compile Include="Driver\AppDirectUserDriver.cs" />
+    <Compile Include="Handlers\AppDirectActionExecutedScheduleHandler.cs" />
     <Compile Include="Handlers\AppDirectTaskScheduleHandler.cs" />
     <Compile Include="Handlers\AppDirectSettingsHandler.cs" />
     <Compile Include="Handlers\AppDirectUserHandler.cs" />
@@ -187,10 +189,6 @@
     <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
       <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
       <Name>Laser.Orchard.Commons</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Laser.Orchard.ButtonToWorkflows\Laser.Orchard.ButtonToWorkflows.csproj">
-      <Project>{71BC32D3-96C6-4AA1-AED8-CF1546AB4C21}</Project>
-      <Name>Laser.Orchard.ButtonToWorkflows</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
