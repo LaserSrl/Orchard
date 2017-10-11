@@ -24,23 +24,22 @@ namespace Laser.Orchard.Questionnaires.Drivers {
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IOrchardServices _orchardServices;
         private readonly ICaptchaService _capthcaServices;
-        private readonly ICurrentContentAccessor _currentContentAccessor;
         private readonly ITokenizer _tokenizer;
+        private readonly ICurrentContentAccessor _currentContentAccessor;
 
         public QuestionnairePartDriver(IQuestionnairesServices questServices,
+            ICurrentContentAccessor currentContentAccessor,
             IOrchardServices orchardServices,
             IControllerContextAccessor controllerContextAccessor,
             ICaptchaService capthcaServices,
-            ICurrentContentAccessor currentContentAccessor,
             ITokenizer tokenizer) {
             _questServices = questServices;
             _orchardServices = orchardServices;
             _controllerContextAccessor = controllerContextAccessor;
             T = NullLocalizer.Instance;
             _capthcaServices = capthcaServices;
-            _currentContentAccessor = currentContentAccessor;
             _tokenizer = tokenizer;
-
+            _currentContentAccessor = currentContentAccessor;
             _isAuthorized = new Lazy<bool>(() => 
                 _orchardServices.Authorizer.Authorize(Permissions.SubmitQuestionnaire)
             );
