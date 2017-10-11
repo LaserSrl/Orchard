@@ -64,7 +64,6 @@ namespace Laser.Orchard.SEO.Handlers {
 
         private string scriptEval(SeoPartSettings settings, SeoPart part) {
             var tokensDictionary = new Dictionary<string, object> { { "Content", part.ContentItem } };
-            Dictionary<string, string> tokenVal = new Dictionary<string, string>();
             return _tokenizer.Replace(settings.JsonLd, tokensDictionary); ;
         }
 
