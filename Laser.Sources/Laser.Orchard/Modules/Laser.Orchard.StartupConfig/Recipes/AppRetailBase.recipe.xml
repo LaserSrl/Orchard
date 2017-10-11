@@ -237,13 +237,6 @@
         <TermPart />
         <TitlePart />
       </CategoriaPromoTerm>
-      <Colore ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="False" DisplayName="Colore" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False">
-        <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
-        <Colore />
-        <CommonPart DateEditorSettings.ShowDateEditor="False" OwnerEditorSettings.ShowOwnerEditor="True" />
-        <IdentityPart />
-        <TitlePart />
-      </Colore>
       <Comment DisplayName="Comment">
         <CommentPart />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="false" DateEditorSettings.ShowDateEditor="false" />
@@ -684,9 +677,6 @@
       <Catalogo ContentPartSettings.Attachable="True">
         <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="False" MediaLibraryPickerFieldSettings.Multiple="False" />
       </Catalogo>
-      <Colore ContentPartSettings.Attachable="True">
-        <HEX.ColorPickerField DisplayName="HEX" />
-      </Colore>
       <CommentPart ContentPartSettings.Description="Used by the Comment content type." />
       <CommentsContainerPart ContentPartSettings.Description="Adds support to a content type to contain comments." />
       <CommentsPart ContentPartSettings.Attachable="True" ContentPartSettings.Description="Allows content items to be commented on." />
@@ -872,12 +862,11 @@
       <RankingPart />
       <RecentBlogPostsPart ContentPartSettings.Description="Renders a list of recent blog posts." />
       <RichiestaProdotto ContentPartSettings.Attachable="True">
-        <Colore.ContentPickerField DisplayName="Colore" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Colore" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Colore del prodotto richiesto (ove applicabile)." />
+        <Note.TextField DisplayName="Note" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Hint="Note a corredo della Richiesta Prodotto." TextFieldSettings.Required="False" FieldIndexing.Included="True" />
         <Prodotto.ContentPickerField DisplayName="Prodotto" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Prodotto" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Prodotto richiesto." FieldIndexing.Included="True" />
         <Stato.EnumerationField DisplayName="Stato" EnumerationFieldSettings.Required="True" EnumerationFieldSettings.Options="Non evasa&#xD;&#xA;Evasa&#xD;&#xA;Rifiutata&#xD;&#xA;Annullata" EnumerationFieldSettings.ListMode="Radiobutton" EnumerationFieldSettings.DefaultValue="Non evasa" EnumerationFieldSettings.Hint="Stato della richiesta." FieldIndexing.Included="True" />
         <StoreDestinatario.ContentPickerField DisplayName="Store Destinatario" ContentPickerFieldSettings.Required="True" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Store" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Store a cui è stata inoltrata la richiesta." FieldIndexing.Included="True" />
         <StoreMittente.ContentPickerField DisplayName="Store Mittente" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Store" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Store che ha effettuato la richiesta." FieldIndexing.Included="True" />
-        <Taglia.TextField DisplayName="Taglia" TextFieldSettings.Required="False" TextFieldSettings.Hint="Taglia del prodotto richiesto (ove applicabile)." FieldIndexing.Included="True" />
       </RichiestaProdotto>
       <RichiestaPubblicazione ContentPartSettings.Attachable="True">
         <ConfigStatus.HiddenStringField DisplayName="ConfigStatus" HiddenStringFieldSettings.Tokenized="True" />
@@ -1307,7 +1296,7 @@
         <FilterGroups>
           <FilterGroup>
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;Store&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
-            <Filter Category="TitlePartRecord" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;Operator&gt;NotEquals&lt;/Operator&gt;&lt;Value&gt;{Request.QueryString:StoreDipendente}&lt;/Value&gt;&lt;/Form&gt;" Type="Title" />
+            <Filter Category="TitlePartRecord" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;Operator&gt;NotEquals&lt;/Operator&gt;&lt;Value&gt;{User.Content.Fields.ProfilePart.Store.Content.DisplayText}&lt;/Value&gt;&lt;/Form&gt;" Type="Title" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria>
@@ -1584,8 +1573,9 @@
     <Role Name="Anonymous" Permissions="ViewContent,AccessFrontEnd,AddComment,ManageOwnMedia" />
     <Role Name="Authenticated" Permissions="ViewContent,AccessFrontEnd,AddComment,ViewOwnProfile,SubmitQuestionnaire,ImportMedia,ManageOwnMedia" />
     <Role Name="Author" Permissions="PublishOwnContent,EditOwnContent,DeleteOwnContent,PreviewOwnContent,AccessAdminPanel,CreateTaxonomy,AddComment,ManageOwnMedia,ManageOwnBlogs,ViewOwnProfile,CanSeeOwnContents" />
-    <Role Name="BrandAdminB2B" Permissions="AccessAdminPanel,Delete_PolicyText,Edit_PolicyText,Preview_PolicyText,Publish_PolicyText,Delete_Questionnaire,Edit_Questionnaire,Preview_Questionnaire,Publish_Questionnaire,View_Questionnaire,Delete_Catalogo,Edit_Catalogo,Preview_Catalogo,Publish_Catalogo,View_Catalogo,Edit_ConfigurazioneAppStore,Edit_ConfigurazioneGrafica,Edit_Dipendente,Preview_Dipendente,Publish_Dipendente,Delete_NewsDipendenti,Edit_NewsDipendenti,Preview_NewsDipendenti,Publish_NewsDipendenti,Edit_Prodotto,Preview_Prodotto,Publish_Prodotto,Delete_PushDipendenti,Edit_PushDipendenti,Preview_PushDipendenti,Publish_PushDipendenti,Delete_Store,Edit_Store,Preview_Store,Publish_Store,Edit_RichiestaPubblicazione,Publish_RichiestaPubblicazione,ManageTerms,ManageOwnMedia,CanSeeOwnContents,Laser.DynamicButtonToWorkflows.Permissions/ConfermaConfig,Laser.DynamicButtonToWorkflows.Permissions/DeliverApp,Laser.DynamicButtonToWorkflows.Permissions/InviaCredenziali,SeesAllContent,AccessExportContacts,ShowCommunicationContacts,ShowMenuCommunication" />
-    <Role Name="BrandAdminB2C" Permissions="AccessAdminPanel,Delete_PolicyText,Edit_PolicyText,Preview_PolicyText,Publish_PolicyText,Delete_Questionnaire,Edit_Questionnaire,Preview_Questionnaire,Publish_Questionnaire,View_Questionnaire,Delete_Catalogo,Edit_Catalogo,Preview_Catalogo,Publish_Catalogo,View_Catalogo,Edit_ConfigurazioneAppStore,Edit_ConfigurazioneGrafica,Delete_MessaggioPromozionale,Edit_MessaggioPromozionale,Preview_MessaggioPromozionale,Publish_MessaggioPromozionale,Delete_NewsClienti,Edit_NewsClienti,Preview_NewsClienti,Publish_NewsClienti,Delete_PuntoVendita,Edit_PuntoVendita,Preview_PuntoVendita,Publish_PuntoVendita,Delete_PushClienti,Edit_PushClienti,Preview_PushClienti,Publish_PushClienti,Edit_RichiestaPubblicazione,Publish_RichiestaPubblicazione,ManageTerms,CanSeeOwnContents,Laser.DynamicButtonToWorkflows.Permissions/ConfermaConfig,Laser.DynamicButtonToWorkflows.Permissions/DeliverApp,SeesAllContent" />
+    <Role Name="BrandAdminB2B" Permissions="AccessAdminPanel,Delete_PolicyText,Edit_PolicyText,Preview_PolicyText,Publish_PolicyText,Delete_Questionnaire,Edit_Questionnaire,Preview_Questionnaire,Publish_Questionnaire,View_Questionnaire,Delete_Catalogo,Edit_Catalogo,Preview_Catalogo,Publish_Catalogo,View_Catalogo,Edit_Dipendente,Preview_Dipendente,Publish_Dipendente,Delete_NewsDipendenti,Edit_NewsDipendenti,Preview_NewsDipendenti,Publish_NewsDipendenti,Edit_Prodotto,Preview_Prodotto,Publish_Prodotto,Delete_PushDipendenti,Edit_PushDipendenti,Preview_PushDipendenti,Publish_PushDipendenti,Delete_Store,Edit_Store,Preview_Store,Publish_Store,ManageTerms,ManageOwnMedia,CanSeeOwnContents,SeesAllContent,Laser.DynamicButtonToWorkflows.Permissions/ConfermaConfig,Laser.DynamicButtonToWorkflows.Permissions/DeliverApp,Laser.DynamicButtonToWorkflows.Permissions/InviaCredenziali,AccessExportContacts,ShowCommunicationContacts,ShowMenuCommunication" />
+    <Role Name="BrandAdminB2C" Permissions="AccessAdminPanel,Delete_PolicyText,Edit_PolicyText,Preview_PolicyText,Publish_PolicyText,Delete_Questionnaire,Edit_Questionnaire,Preview_Questionnaire,Publish_Questionnaire,View_Questionnaire,Delete_Catalogo,Edit_Catalogo,Preview_Catalogo,Publish_Catalogo,View_Catalogo,Delete_MessaggioPromozionale,Edit_MessaggioPromozionale,Preview_MessaggioPromozionale,Publish_MessaggioPromozionale,Delete_NewsClienti,Edit_NewsClienti,Preview_NewsClienti,Publish_NewsClienti,Delete_PuntoVendita,Edit_PuntoVendita,Preview_PuntoVendita,Publish_PuntoVendita,Delete_PushClienti,Edit_PushClienti,Preview_PushClienti,Publish_PushClienti,ManageTerms,CanSeeOwnContents,SeesAllContent,Laser.DynamicButtonToWorkflows.Permissions/ConfermaConfig,Laser.DynamicButtonToWorkflows.Permissions/DeliverApp" />
+    <Role Name="BrandAdminConfig" Permissions="Edit_ConfigurazioneAppStore,Edit_ConfigurazioneGrafica,Edit_RichiestaPubblicazione,Publish_RichiestaPubblicazione" />
     <Role Name="Contributor" Permissions="EditOwnContent,PreviewOwnContent,AccessAdminPanel,AddComment,ManageOwnMedia,EditOwnBlogPost,ViewOwnProfile,CanSeeOwnContents" />
     <Role Name="Editor" Permissions="PublishContent,EditContent,DeleteContent,PreviewContent,SetHomePage,AccessAdminPanel,ManageTaxonomies,ManageQueries,AddComment,ManageMediaContent,ManageTags,PublishBlogPost,EditBlogPost,DeleteBlogPost,ManageLayouts,ViewOwnProfile,SeesAllContent,AccessStatistics,GameRanking" />
     <Role Name="MobileAdmin" Permissions="AccessAdminPanel,View_ConfigurazioneBase" />
@@ -1596,19 +1586,28 @@
   <Workflows>
     <Workflow Name="DeliverApp" Enabled="true">
       <Activities>
-        <Activity Id="98" Name="DynamicButtonEvent" Start="true" X="130" Y="6">
+        <Activity Id="86" Name="DynamicButtonEvent" Start="true" X="10" Y="0">
           <State>{"DynamicButton":"3"}</State>
         </Activity>
-        <Activity Id="99" Name="SendTemplatedEmail" Start="false" X="130" Y="140">
-          <State>{"Recipient":"other","RecipientOther":"laser.srl.ao@gmail.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"6"}</State>
+        <Activity Id="87" Name="SendTemplatedEmail" Start="false" X="336" Y="119">
+          <State>{"Recipient":"other","RecipientOther":"giuseppe.musso@laser-group.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"6"}</State>
         </Activity>
-        <Activity Id="100" Name="Notify" Start="false" X="177" Y="253">
+        <Activity Id="88" Name="Notify" Start="false" X="381" Y="240">
           <State>{"Notification":"Information","Message":"La richiesta di pubblicazione dell'app è stata inviata."}</State>
+        </Activity>
+        <Activity Id="89" Name="RazorExecute" Start="false" X="230" Y="0">
+          <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"HideConfigs.cshtml"}</State>
+        </Activity>
+        <Activity Id="90" Name="Logging" Start="false" X="471" Y="4">
+          <State>{"Level":"Error","Message":"Error in workflow DeliverApp (HideConfigs.cshtml): {Workflow.State:ErrorMessage}"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="98" SourceEndpoint="Done" DestinationActivityId="99" DestinationEndpoint="" />
-        <Transition SourceActivityId="99" SourceEndpoint="Sent" DestinationActivityId="100" DestinationEndpoint="" />
+        <Transition SourceActivityId="87" SourceEndpoint="Sent" DestinationActivityId="88" DestinationEndpoint="" />
+        <Transition SourceActivityId="89" SourceEndpoint="Error" DestinationActivityId="90" DestinationEndpoint="" />
+        <Transition SourceActivityId="86" SourceEndpoint="Done" DestinationActivityId="89" DestinationEndpoint="" />
+        <Transition SourceActivityId="89" SourceEndpoint="Ok" DestinationActivityId="87" DestinationEndpoint="" />
+        <Transition SourceActivityId="90" SourceEndpoint="Done" DestinationActivityId="87" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Dipendente" Enabled="true">
@@ -1626,27 +1625,27 @@
     </Workflow>
     <Workflow Name="Invio Credenziali" Enabled="true">
       <Activities>
-        <Activity Id="93" Name="SendTemplatedEmail" Start="false" X="283" Y="268">
+        <Activity Id="6" Name="SendTemplatedEmail" Start="false" X="283" Y="268">
           <State>{"Recipient":"other","RecipientOther":"{Content.Fields.Dipendente.Email}","RecipientCC":"","RecipientBCC":"","FromEmail":"","ReplyTo":"","EmailTemplate":"8"}</State>
         </Activity>
-        <Activity Id="94" Name="RazorExecute" Start="false" X="299" Y="119">
+        <Activity Id="7" Name="RazorExecute" Start="false" X="299" Y="119">
           <State>{"RazorExecuteActivity_Outcomes":"Ok,Error","RazorExecuteActivity_RazorView":"GetCredenziali.cshtml"}</State>
         </Activity>
-        <Activity Id="95" Name="Logging" Start="false" X="570" Y="140">
+        <Activity Id="8" Name="Logging" Start="false" X="570" Y="140">
           <State>{"Level":"Error","Message":"{Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="96" Name="Notify" Start="false" X="587" Y="295">
+        <Activity Id="9" Name="Notify" Start="false" X="587" Y="295">
           <State>{"Notification":"Error","Message":"Si è verificato un errore durante l'invio della e-mail."}</State>
         </Activity>
-        <Activity Id="97" Name="DynamicButtonEvent" Start="true" X="222" Y="0">
+        <Activity Id="10" Name="DynamicButtonEvent" Start="true" X="222" Y="0">
           <State>{"DynamicButton":"1"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="94" SourceEndpoint="Ok" DestinationActivityId="93" DestinationEndpoint="" />
-        <Transition SourceActivityId="94" SourceEndpoint="Error" DestinationActivityId="95" DestinationEndpoint="" />
-        <Transition SourceActivityId="95" SourceEndpoint="Done" DestinationActivityId="96" DestinationEndpoint="" />
-        <Transition SourceActivityId="97" SourceEndpoint="Done" DestinationActivityId="94" DestinationEndpoint="" />
+        <Transition SourceActivityId="7" SourceEndpoint="Ok" DestinationActivityId="6" DestinationEndpoint="" />
+        <Transition SourceActivityId="7" SourceEndpoint="Error" DestinationActivityId="8" DestinationEndpoint="" />
+        <Transition SourceActivityId="8" SourceEndpoint="Done" DestinationActivityId="9" DestinationEndpoint="" />
+        <Transition SourceActivityId="10" SourceEndpoint="Done" DestinationActivityId="7" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Messaggio Promozionale" Enabled="true">
@@ -1672,55 +1671,55 @@
     </Workflow>
     <Workflow Name="PublishConfigs" Enabled="true">
       <Activities>
-        <Activity Id="81" Name="ContentUpdated" Start="true" X="93" Y="33">
+        <Activity Id="15" Name="ContentUpdated" Start="true" X="93" Y="33">
           <State>{"ContentTypes":"ConfigurazioneAppStore,ConfigurazioneGrafica"}</State>
         </Activity>
-        <Activity Id="82" Name="IsInRole" Start="false" X="120" Y="146">
+        <Activity Id="16" Name="IsInRole" Start="false" X="120" Y="146">
           <State>{"Roles":"BrandAdminB2B,BrandAdminB2C"}</State>
         </Activity>
-        <Activity Id="83" Name="RazorExecute" Start="false" X="91" Y="292">
+        <Activity Id="17" Name="RazorExecute" Start="false" X="91" Y="292">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"CheckUpdatedConfig.cshtml"}</State>
         </Activity>
-        <Activity Id="84" Name="RazorExecute" Start="false" X="466" Y="148">
+        <Activity Id="18" Name="RazorExecute" Start="false" X="466" Y="148">
           <State>{"RazorExecuteActivity_Outcomes":"Error,ConfigurazioneGrafica,ConfigurazioneAppStore,AlreadyLocked","RazorExecuteActivity_RazorView":"LockConfig.cshtml"}</State>
         </Activity>
-        <Activity Id="85" Name="Logging" Start="false" X="717" Y="150">
+        <Activity Id="19" Name="Logging" Start="false" X="717" Y="150">
           <State>{"Level":"Error","Message":"Error in workflow PublishConfigs LockConfig. Errore durante il cambiamento di owner della configurazione \"{Content.ContentType}\" (id: {Content.Id}). {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="86" Name="Notify" Start="false" X="727" Y="296">
+        <Activity Id="20" Name="Notify" Start="false" X="727" Y="296">
           <State>{"Notification":"Error","Message":"Si è verificato un errore. Provare a pubblicare nuovamente la configurazione."}</State>
         </Activity>
-        <Activity Id="87" Name="Notify" Start="false" X="152" Y="501">
+        <Activity Id="21" Name="Notify" Start="false" X="152" Y="501">
           <State>{"Notification":"Error","Message":"Non è possibile modificare la configurazione dopo averla confermata. Se necessario, contattare l'assistenza."}</State>
         </Activity>
-        <Activity Id="88" Name="DynamicButtonEvent" Start="true" X="451" Y="31">
+        <Activity Id="22" Name="DynamicButtonEvent" Start="true" X="451" Y="31">
           <State>{"DynamicButton":"2"}</State>
         </Activity>
-        <Activity Id="89" Name="SendTemplatedEmail" Start="false" X="510" Y="297">
+        <Activity Id="23" Name="SendTemplatedEmail" Start="false" X="510" Y="297">
           <State>{"Recipient":"other","RecipientOther":"laser.srl.ao@gmail.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"7"}</State>
         </Activity>
-        <Activity Id="90" Name="SendTemplatedEmail" Start="false" X="306" Y="296">
+        <Activity Id="24" Name="SendTemplatedEmail" Start="false" X="306" Y="296">
           <State>{"Recipient":"other","RecipientOther":"laser.srl.ao@gmail.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"3"}</State>
         </Activity>
-        <Activity Id="91" Name="Notify" Start="false" X="450" Y="465">
+        <Activity Id="25" Name="Notify" Start="false" X="450" Y="465">
           <State>{"Notification":"Information","Message":"I tuoi dati verranno presi in carico e gestiti dai nostri tecnici. Avendo confermato i dati, questi non saranno più modificabili."}</State>
         </Activity>
-        <Activity Id="92" Name="Notify" Start="false" X="737" Y="85">
+        <Activity Id="26" Name="Notify" Start="false" X="737" Y="85">
           <State>{"Notification":"Warning","Message":"Configurazione già confermata in precedenza."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="81" SourceEndpoint="Done" DestinationActivityId="82" DestinationEndpoint="" />
-        <Transition SourceActivityId="82" SourceEndpoint="Yes" DestinationActivityId="83" DestinationEndpoint="" />
-        <Transition SourceActivityId="83" SourceEndpoint="Error" DestinationActivityId="87" DestinationEndpoint="" />
-        <Transition SourceActivityId="84" SourceEndpoint="Error" DestinationActivityId="85" DestinationEndpoint="" />
-        <Transition SourceActivityId="85" SourceEndpoint="Done" DestinationActivityId="86" DestinationEndpoint="" />
-        <Transition SourceActivityId="88" SourceEndpoint="Done" DestinationActivityId="84" DestinationEndpoint="" />
-        <Transition SourceActivityId="84" SourceEndpoint="ConfigurazioneAppStore" DestinationActivityId="90" DestinationEndpoint="" />
-        <Transition SourceActivityId="84" SourceEndpoint="ConfigurazioneGrafica" DestinationActivityId="89" DestinationEndpoint="" />
-        <Transition SourceActivityId="90" SourceEndpoint="Sent" DestinationActivityId="91" DestinationEndpoint="" />
-        <Transition SourceActivityId="89" SourceEndpoint="Sent" DestinationActivityId="91" DestinationEndpoint="" />
-        <Transition SourceActivityId="84" SourceEndpoint="AlreadyLocked" DestinationActivityId="92" DestinationEndpoint="" />
+        <Transition SourceActivityId="15" SourceEndpoint="Done" DestinationActivityId="16" DestinationEndpoint="" />
+        <Transition SourceActivityId="16" SourceEndpoint="Yes" DestinationActivityId="17" DestinationEndpoint="" />
+        <Transition SourceActivityId="17" SourceEndpoint="Error" DestinationActivityId="21" DestinationEndpoint="" />
+        <Transition SourceActivityId="18" SourceEndpoint="Error" DestinationActivityId="19" DestinationEndpoint="" />
+        <Transition SourceActivityId="19" SourceEndpoint="Done" DestinationActivityId="20" DestinationEndpoint="" />
+        <Transition SourceActivityId="22" SourceEndpoint="Done" DestinationActivityId="18" DestinationEndpoint="" />
+        <Transition SourceActivityId="18" SourceEndpoint="ConfigurazioneAppStore" DestinationActivityId="24" DestinationEndpoint="" />
+        <Transition SourceActivityId="18" SourceEndpoint="ConfigurazioneGrafica" DestinationActivityId="23" DestinationEndpoint="" />
+        <Transition SourceActivityId="24" SourceEndpoint="Sent" DestinationActivityId="25" DestinationEndpoint="" />
+        <Transition SourceActivityId="23" SourceEndpoint="Sent" DestinationActivityId="25" DestinationEndpoint="" />
+        <Transition SourceActivityId="18" SourceEndpoint="AlreadyLocked" DestinationActivityId="26" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Richiesta Prodotto" Enabled="true">
@@ -1857,27 +1856,27 @@
     </Workflow>
     <Workflow Name="Update Contatto" Enabled="true">
       <Activities>
-        <Activity Id="64" Name="ContentUpdated" Start="true" X="212" Y="23">
+        <Activity Id="55" Name="ContentUpdated" Start="true" X="212" Y="23">
           <State>{"ContentTypes":"CommunicationContact"}</State>
         </Activity>
-        <Activity Id="65" Name="RazorExecute" Start="false" X="255" Y="176">
+        <Activity Id="56" Name="RazorExecute" Start="false" X="255" Y="176">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"UpdateContatto.cshtml"}</State>
         </Activity>
-        <Activity Id="66" Name="Logging" Start="false" X="640" Y="210">
+        <Activity Id="57" Name="Logging" Start="false" X="640" Y="210">
           <State>{"Level":"Error","Message":"Errore nel workflow UpdateContatto: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="67" Name="SendTemplatedEmail" Start="false" X="278" Y="423">
+        <Activity Id="58" Name="SendTemplatedEmail" Start="false" X="278" Y="423">
           <State>{"Recipient":"other","RecipientOther":"{Content.Fields.ContactInfoPart.EmailInfo}","RecipientCC":"giuseppe.musso@laser-group.com","RecipientBCC":"","FromEmail":"","ReplyTo":"","EmailTemplate":"5"}</State>
         </Activity>
-        <Activity Id="68" Name="IsInRole" Start="false" X="300" Y="299">
+        <Activity Id="59" Name="IsInRole" Start="false" X="300" Y="299">
           <State>{"Roles":"StoreAssistant"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="64" SourceEndpoint="Done" DestinationActivityId="65" DestinationEndpoint="" />
-        <Transition SourceActivityId="65" SourceEndpoint="Error" DestinationActivityId="66" DestinationEndpoint="" />
-        <Transition SourceActivityId="65" SourceEndpoint="Ok" DestinationActivityId="68" DestinationEndpoint="" />
-        <Transition SourceActivityId="68" SourceEndpoint="Yes" DestinationActivityId="67" DestinationEndpoint="" />
+        <Transition SourceActivityId="55" SourceEndpoint="Done" DestinationActivityId="56" DestinationEndpoint="" />
+        <Transition SourceActivityId="56" SourceEndpoint="Error" DestinationActivityId="57" DestinationEndpoint="" />
+        <Transition SourceActivityId="56" SourceEndpoint="Ok" DestinationActivityId="59" DestinationEndpoint="" />
+        <Transition SourceActivityId="59" SourceEndpoint="Yes" DestinationActivityId="58" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Update Push" Enabled="true">
