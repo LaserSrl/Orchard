@@ -44,7 +44,7 @@ namespace Laser.Orchard.SEO.Settings {
                 builder.WithSetting("SeoPartSettings.GoogleNoSiteLinkSearchBox", model.GoogleNoSiteLinkSearchBox.ToString());
                 builder.WithSetting("SeoPartSettings.GoogleNoTranslate", model.GoogleNoTranslate.ToString());
 
-                builder.WithSetting("SeoPartSettings.JsonLd", model.JsonLd.ToString());
+                builder.WithSetting("SeoPartSettings.JsonLd", model.JsonLd != null ? model.JsonLd.ToString() : "");
                 yield return DefinitionTemplate(model);
             }
 
