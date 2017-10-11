@@ -8,6 +8,7 @@ namespace Laser.Orchard.Questionnaires.ViewModels {
     public class QuestionEditModel {
         public QuestionEditModel() {
             Answers = new List<AnswerEditModel>();
+            Published = true;
         }
         public int Id { get; set; }
         public string Question { get; set; }

@@ -6,6 +6,9 @@ using Laser.Orchard.Questionnaires.Models;
 
 namespace Laser.Orchard.Questionnaires.ViewModels {
     public class AnswerEditModel {
+        public AnswerEditModel() {
+            Published = true;
+        }
         public int Id { get; set; }
         public string Answer { get; set; }
         public bool Published { get; set; }
