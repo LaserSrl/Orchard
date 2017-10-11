@@ -24,23 +24,22 @@ namespace Laser.Orchard.Questionnaires.Drivers {
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IOrchardServices _orchardServices;
         private readonly ICaptchaService _capthcaServices;
-        private readonly ICurrentContentAccessor _currentContentAccessor;
         private readonly ITokenizer _tokenizer;
+        private readonly ICurrentContentAccessor _currentContentAccessor;
 
         public QuestionnairePartDriver(IQuestionnairesServices questServices,
+            ICurrentContentAccessor currentContentAccessor,
             IOrchardServices orchardServices,
             IControllerContextAccessor controllerContextAccessor,
             ICaptchaService capthcaServices,
-            ICurrentContentAccessor currentContentAccessor,
             ITokenizer tokenizer) {
             _questServices = questServices;
             _orchardServices = orchardServices;
             _controllerContextAccessor = controllerContextAccessor;
             T = NullLocalizer.Instance;
             _capthcaServices = capthcaServices;
-            _currentContentAccessor = currentContentAccessor;
             _tokenizer = tokenizer;
-
+            _currentContentAccessor = currentContentAccessor;
             _isAuthorized = new Lazy<bool>(() => 
                 _orchardServices.Authorizer.Authorize(Permissions.SubmitQuestionnaire)
             );
@@ -76,6 +75,15 @@ namespace Laser.Orchard.Questionnaires.Drivers {
             if (IsAuthorized) {
                 var viewModel = _questServices.BuildViewModelWithResultsForQuestionnairePart(part); //Modello mappato senza risposte
                 if (_controllerContextAccessor.Context != null) {
+                    // valorizza il context
+                    var questionnaireContext = part.Settings.GetModel<QuestionnairesPartSettingVM>().QuestionnaireContext;
+                    //questionnaireContext = _tokenizer.Replace(questionnaireContext, new Dictionary<string, object> {{ "Content", part.ContentItem}});
+                    questionnaireContext = _tokenizer.Replace(questionnaireContext, new Dictionary<string, object> { { "Content", _currentContentAccessor.CurrentContentItem } });
+                    viewModel.Context = questionnaireContext;
+                    // limita la lunghezza del context a 255 chars
+                    if (viewModel.Context.Length > 255) {
+                        viewModel.Context = viewModel.Context.Substring(0, 255);
+                    }
                     // valorizza le altre proprietà del viewModel
                     var fullModelWithAnswers = _controllerContextAccessor.Context.Controller.TempData["QuestUpdatedEditModel"];
                     var hasAcceptedTerms = _controllerContextAccessor.Context.Controller.TempData["HasAcceptedTerms"];
