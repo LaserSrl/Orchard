@@ -1,0 +1,5 @@
+﻿<Placement>
+  <Place Parts_AppDirectSettings_Edit="Content:1"/>
+  <Place Parts_AppDirectUser="Content:1" />
+  <Place Parts_AppDirectButton="Sidebar:25.1" Parts_AppDirectRequestPart="Content:10"/>
+</Placement>
