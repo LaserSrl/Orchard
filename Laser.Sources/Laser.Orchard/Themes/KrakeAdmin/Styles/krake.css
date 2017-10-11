@@ -91,6 +91,7 @@ button, .button, a.button {
     height: 30px;
     line-height: 18px;
     min-width: 110px;
+    font-size: 14px;
 }
 
 #cboxClose,

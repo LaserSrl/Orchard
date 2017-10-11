@@ -265,10 +265,12 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\OpenIdController.cs" />
     <Compile Include="Drivers\UserProviderDisplayPartDriver.cs" />
     <Compile Include="Drivers\UserProvidersPartDriver.cs" />
     <Compile Include="Events\IOpenAuthUserEventHandler.cs" />
     <Compile Include="Events\OpenAuthUserEventHandler.cs" />
+    <Compile Include="Events\UserAppDirectEvent.cs" />
     <Compile Include="Extensions\Constants.cs" />
     <Compile Include="Extensions\DictionaryExtension.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

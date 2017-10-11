@@ -208,8 +208,6 @@
     <Content Include="Views\Fields\MediaLibraryPicker.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplate-Nome.cshtml" />
-    <Content Include="Views\EditorTemplate-User-InputField-Cognome.cshtml" />
     <Content Include="Views\Media_Summary.cshtml" />
     <Content Include="Views\Parts.Title_Summary.cshtml" />
   </ItemGroup>
@@ -234,9 +232,12 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\ThemeSettings.cshtml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\PlaceholderLogo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Content.Edit-User.cshtml" />
+    <Content Include="Views\Content.SaveButton-User.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
