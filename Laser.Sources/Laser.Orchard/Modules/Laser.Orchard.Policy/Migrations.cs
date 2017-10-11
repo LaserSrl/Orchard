@@ -76,5 +76,14 @@ namespace Laser.Orchard.Policy {
 
             return 4;
         }
+        public int UpdateFrom4() {
+            SchemaBuilder.AlterTable("UserPolicyAnswersRecord", t =>
+                t.AddColumn<int>("UserPartRecord_Id", col => col.Nullable())
+            );
+            SchemaBuilder.AlterTable("UserPolicyAnswersHistoryRecord", t =>
+                t.AddColumn<int>("UserPartRecord_Id", col => col.Nullable())
+            );
+            return 5;
+        }
     }
 }

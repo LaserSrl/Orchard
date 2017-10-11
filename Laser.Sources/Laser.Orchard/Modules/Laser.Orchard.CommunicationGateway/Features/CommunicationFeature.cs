@@ -19,9 +19,9 @@ namespace Laser.Orchard.CommunicationGateway.Features {
         }
 
         public void Enabled(global::Orchard.Environment.Extensions.Models.Feature feature) {
-            if (feature.Descriptor.Id == "Laser.Orchard.CommunicationGateway") {
-                _communicationService.Synchronize();
-            }
+            //if (feature.Descriptor.Id == "Laser.Orchard.CommunicationGateway") {
+            //    _communicationService.Synchronize();
+            //}
         }
 
         public void Enabling(global::Orchard.Environment.Extensions.Models.Feature feature) {

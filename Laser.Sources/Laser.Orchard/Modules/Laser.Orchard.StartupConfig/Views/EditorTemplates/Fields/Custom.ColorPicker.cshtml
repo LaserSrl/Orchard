@@ -1,7 +1,9 @@
 ﻿@model Laser.Orchard.StartupConfig.ColorPicker.ColorPickerField
+@using Laser.Orchard.StartupConfig.ColorPicker;
 @{ 
     Style.Include("spectrum.css");
     Script.Require("spectrum").AtHead();
+    var fieldSettings = Model.PartFieldDefinition.Settings.GetModel<ColorPickerFieldSettings>();
 }
 <fieldset>
     <label>@Model.DisplayName</label>
@@ -9,4 +11,5 @@
     <script type="text/javascript">
         $("#@Html.FieldIdFor(m => m.Value)").spectrum({showInput:true,showPalette:true,showInitial:true,preferredFormat:"hex",showButtons:false});
     </script>
+    <span class="hint">@fieldSettings.Hint</span>
 </fieldset>

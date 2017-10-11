@@ -43,7 +43,8 @@ namespace Laser.Orchard.Policy.Controllers {
                         AnswerDate = s.AnswerDate,
                         AnswerId = s.AnswerId,
                         OldAccepted = s.OldAccepted,
-                        PolicyTextId = s.PolicyTextId
+                        PolicyTextId = s.PolicyTextId,
+                        UserId = s.UserId
                     }).ToList()
                 }
             };
@@ -60,7 +61,8 @@ namespace Laser.Orchard.Policy.Controllers {
                         AnswerId = s.AnswerId,
                         OldAccepted = s.OldAccepted,
                         PolicyTextId = s.PolicyTextId,
-                        PolicyText = null // non serve per l'update è sufficinete l'ID
+                        PolicyText = null, // non serve per l'update è sufficinete l'ID
+                        UserId = s.UserId
                     }).ToList();
                     _policySerivces.PolicyForUserMassiveUpdate(fullModel);
                     return (_utilsServices.GetResponse(ResponseType.Success));// { Message = "Ok", Success = true });

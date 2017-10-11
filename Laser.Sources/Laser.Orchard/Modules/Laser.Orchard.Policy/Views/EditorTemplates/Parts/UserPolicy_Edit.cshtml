@@ -19,6 +19,7 @@
                 <th>@T("Policy Text")</th>
                 <th>@T("Accepted")</th>
                 <th>@T("Answer date")</th>
+                <th>@T("User")</th>
             </tr>
         </thead>
         <tbody>
@@ -34,20 +35,21 @@
                     </td>
                     <td>@if (item.Accepted) {
                         <i class="fa fa-check-circle" style="color: green"></i> 
-                            if (item.PolicyTextInfoPartRecord.PolicyType == null || acceptTypePolicy) {
+                        if (item.PolicyTextInfoPartRecord.PolicyType == null || acceptTypePolicy) {
                         @T("Accepted")
-                            } else {
-                        @T("Read")
-                            }
                         } else {
+                        @T("Read")
+                        }
+                    } else {
                         <i class="fa fa-exclamation-triangle" style="color: red"></i> 
-                            if (item.PolicyTextInfoPartRecord.PolicyType == null || acceptTypePolicy) {
+                        if (item.PolicyTextInfoPartRecord.PolicyType == null || acceptTypePolicy) {
                         @T("Not Accepted")
-                            } else {
+                        } else {
                         @T("Unread")
-                            }
-                        }</td>
+                        }
+                    }</td>
                     <td>@item.AnswerDate</td>
+                    <td>@(item.UserPartRecord != null ? item.UserPartRecord.UserName :  "")</td>
                 </tr>
                 }
             }
