@@ -74,6 +74,18 @@
     </script>
 }
 @if (TempData["QuestSuccess"] != null) {
+    var cookie = HttpContext.Current.Request.Cookies.Get("Questionnaires");
+
+    if (cookie == null) {
+        cookie = new HttpCookie("Questionnaires", "");
+        HttpContext.Current.Response.AppendCookie(cookie);
+    }
+
+    if (!cookie.Value.Contains("," + Questionnaire.Id + ",")) {
+        cookie.Value += "," + Questionnaire.Id + ",";
+        HttpContext.Current.Response.SetCookie(cookie);
+    }
+
     <div class="quest-message quest-success">@T(TempData["QuestSuccess"].ToString())</div>
 }
 else {

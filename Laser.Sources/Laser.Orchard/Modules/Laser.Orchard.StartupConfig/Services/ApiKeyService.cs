@@ -155,6 +155,9 @@ namespace Laser.Orchard.StartupConfig.Services {
                 var settings = _orchardServices.WorkContext.CurrentSite.As<ProtectionSettingsPart>();
                 var item = settings.ExternalApplicationList.ExternalApplications.FirstOrDefault(x => x.ApiKey.Equals(pureKey));
                 if (item == null) {
+                    item = DefaultApplication.ApiKey.Equals(pureKey) ? DefaultApplication : item; //this may be a test request
+                }
+                if (item == null) {
                     Logger.Error("Decrypted key not found: key = " + key);
                     return false;
                 }
