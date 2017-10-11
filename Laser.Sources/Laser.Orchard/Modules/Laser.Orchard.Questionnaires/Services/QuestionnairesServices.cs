@@ -455,11 +455,11 @@ namespace Laser.Orchard.Questionnaires.Services {
             var questionnairePartSettings = _orchardServices.ContentManager.Get<QuestionnairePart>(editModel.Id).Settings.GetModel<QuestionnairesPartSettingVM>();
             var content = _orchardServices.ContentManager.Get(editModel.Id);
             bool exit = false;
-            // Tokenize Context
+            
             if (String.IsNullOrWhiteSpace(editModel.Context)) { //fallback into questionnaire part settings context if context is null
-                editModel.Context = questionnairePartSettings.QuestionnaireContext;
+                // Tokenize Settings Context
+                editModel.Context = _tokenizer.Replace(questionnairePartSettings.QuestionnaireContext, new Dictionary<string, object> { { "Content", content } }); 
             }
-            _tokenizer.Replace(editModel.Context, new Dictionary<string, object> { { "Content", content } });
             if (editModel.Context.Length > 255) {// limits context to 255 chars
                 editModel.Context = editModel.Context.Substring(0, 255);
             }
