@@ -20,6 +20,7 @@ using Orchard.Localization.Records;
 using Orchard.Localization.Services;
 using Orchard.Security;
 using OrchardNS = Orchard;
+using Orchard.Users.Models;
 
 namespace Laser.Orchard.Policy.Services {
     public interface IPolicyServices : IDependency {
@@ -30,7 +31,9 @@ namespace Laser.Orchard.Policy.Services {
         /// <param name="language">optional: the culture of the policies to get. if null the current culture is applied.</param>
         /// <returns>A PoliciesForUserViewModel object</returns>
         PoliciesForUserViewModel GetPoliciesForUserOrSession(bool writeMode, string language = null);
+        void PolicyForItemUpdate(PolicyForUserViewModel viewModel, ContentItem item);
         void PolicyForUserUpdate(PolicyForUserViewModel viewModel, IUser user = null);
+        void PolicyForItemMassiveUpdate(IList<PolicyForUserViewModel> viewModelCollection, ContentItem item);
         void PolicyForUserMassiveUpdate(IList<PolicyForUserViewModel> viewModelCollection, IUser user = null);
         IList<PolicyForUserViewModel> GetCookieOrVolatileAnswers();
         void CreateAndAttachPolicyCookie(IList<PolicyForUserViewModel> viewModelCollection, bool writeMode);
@@ -45,6 +48,7 @@ namespace Laser.Orchard.Policy.Services {
         List<PolicyHistoryViewModel> GetPolicyHistoryForUser(int userId);
         string PoliciesLMNVSerialization(IEnumerable<PolicyTextInfoPart> policies);
         string PoliciesPureJsonSerialization(IEnumerable<PolicyTextInfoPart> policies);
+        IEnumerable<UserPolicyAnswersRecord> GetPolicyAnswersForContent(int contentId);
     }
 
     public class PolicyServices : IPolicyServices {
@@ -107,6 +111,7 @@ namespace Laser.Orchard.Policy.Services {
                         AnswerDate = answer != null ? answer.AnswerDate : DateTime.MinValue,
                         OldAccepted = answer != null ? answer.Accepted : false,
                         Accepted = answer != null ? answer.Accepted : false,
+                        UserId = (answer != null && answer.UserPartRecord != null) ? (int?)answer.UserPartRecord.Id : null
                     };
                 }).ToList();
             }
@@ -121,6 +126,7 @@ namespace Laser.Orchard.Policy.Services {
                         AnswerDate = answer != null ? answer.AnswerDate : DateTime.MinValue,
                         OldAccepted = answer != null ? answer.Accepted : false,
                         Accepted = answer != null ? answer.Accepted : false,
+                        UserId = answer != null ? answer.UserId : null
                     };
                 }).ToList();
             }
@@ -130,16 +136,27 @@ namespace Laser.Orchard.Policy.Services {
             return new PoliciesForUserViewModel { Policies = model };
         }
 
-
         public void PolicyForUserUpdate(PolicyForUserViewModel viewModel, IUser user = null) {
-            UserPolicyAnswersRecord record = null;
             var loggedUser = user ?? _workContext.GetContext().CurrentUser;
+            PolicyForItemUpdate(viewModel, loggedUser.ContentItem);
+        }
 
-            // Recupero la risposta precedente dell'utente, se esiste
+        public void PolicyForItemUpdate(PolicyForUserViewModel viewModel, ContentItem item) {
+            UserPolicyAnswersRecord record = null;
+            var currentUser = _workContext.GetContext().CurrentUser;
+            UserPartRecord currentUserPartRecord = null;
+            if(currentUser != null) {
+                currentUserPartRecord = currentUser.ContentItem.As<UserPart>().Record;
+            } else if (item.ContentType == "User") {
+                // in fase di registrazione di un nuovo utente
+                currentUserPartRecord = item.As<UserPart>().Record;
+            }
+
+            // Recupero la risposta precedente, se esiste
             if (viewModel.AnswerId > 0)
                 record = _userPolicyAnswersRepository.Get(viewModel.AnswerId);
             else
-                record = _userPolicyAnswersRepository.Table.Where(w => w.PolicyTextInfoPartRecord.Id == viewModel.PolicyTextId && w.UserPolicyPartRecord.Id == loggedUser.Id).SingleOrDefault();
+                record = _userPolicyAnswersRepository.Table.Where(w => w.PolicyTextInfoPartRecord.Id == viewModel.PolicyTextId && w.UserPolicyPartRecord.Id == item.Id).SingleOrDefault();
 
             bool oldAnswer = record != null ? record.Accepted : false;
 
@@ -148,54 +165,55 @@ namespace Laser.Orchard.Policy.Services {
                 var policyText = _contentManager.Get<PolicyTextInfoPart>(viewModel.PolicyTextId).Record;
                 if ((policyText.UserHaveToAccept && viewModel.Accepted) || !policyText.UserHaveToAccept) {
                     var shouldCreateRecord = false;
-                    if (loggedUser != null) {
-                        
+                    if (item != null) {
                         if (viewModel.AnswerId <= 0 && record == null) {
                             record = new UserPolicyAnswersRecord();
                             shouldCreateRecord = true;
                         }
-
                         UserPolicyAnswersHistoryRecord recordForHistory = CopyForHistory(record);
 
-                        //date should be updated only if it is a new record, or the answer has actually changed
+                        //date and user should be updated only if it is a new record, or the answer has actually changed
                         record.AnswerDate = (shouldCreateRecord || oldAnswer != viewModel.Accepted) ? DateTime.UtcNow : record.AnswerDate;
+                        if(shouldCreateRecord || oldAnswer != viewModel.Accepted) {
+                            if (currentUserPartRecord == null && viewModel.UserId.HasValue) {
+                                // utilizza il valore del viewModel
+                                var userPart = _contentManager.Get<UserPart>(viewModel.UserId.Value);
+                                currentUserPartRecord = (userPart == null) ? null : userPart.Record;
+                            }
+                            record.UserPartRecord = currentUserPartRecord;
+                        }
                         record.Accepted = viewModel.Accepted;
-                        record.UserPolicyPartRecord = loggedUser.As<UserPolicyPart>().Record;
+                        record.UserPolicyPartRecord = item.As<UserPolicyPart>().Record;
                         record.PolicyTextInfoPartRecord = policyText;
-
                         if (shouldCreateRecord) {
                             _userPolicyAnswersRepository.Create(record);
-
                             _policyEventHandler.PolicyChanged(new PolicyEventViewModel {
                                 policyType = record.PolicyTextInfoPartRecord.PolicyType,
-                                accepted = record.Accepted
+                                accepted = record.Accepted,
+                                ItemPolicyPartRecordId = item.Id
                             });
-                        }
-                        else if (record.Accepted != recordForHistory.Accepted) {
+                        } else if (record.Accepted != recordForHistory.Accepted) {
                             _userPolicyAnswersHistoryRepository.Create(recordForHistory);
                             _userPolicyAnswersRepository.Update(record);
-
                             _policyEventHandler.PolicyChanged(new PolicyEventViewModel {
                                 policyType = record.PolicyTextInfoPartRecord.PolicyType,
-                                accepted = record.Accepted
+                                accepted = record.Accepted,
+                                ItemPolicyPartRecordId = item.Id
                             });
                         }
                     }
-                }
-                else if (policyText.UserHaveToAccept && !viewModel.Accepted && record != null) {
+                } else if (policyText.UserHaveToAccept && !viewModel.Accepted && record != null) {
                     UserPolicyAnswersHistoryRecord recordForHistory = CopyForHistory(record);
-
                     _userPolicyAnswersHistoryRepository.Create(recordForHistory);
                     _userPolicyAnswersRepository.Delete(record);
-
                     _policyEventHandler.PolicyChanged(new PolicyEventViewModel {
                         policyType = recordForHistory.PolicyTextInfoPartRecord.PolicyType,
-                        accepted = false
+                        accepted = false,
+                        ItemPolicyPartRecordId = item.Id
                     });
                 }
             }
         }
-
         public void PolicyForUserMassiveUpdate(IList<PolicyForUserViewModel> viewModelCollection, IUser user = null) {
             var loggedUser = user ?? _workContext.GetContext().CurrentUser;
             if (loggedUser != null) {
@@ -207,6 +225,13 @@ namespace Laser.Orchard.Policy.Services {
             CreateAndAttachPolicyCookie(viewModelCollection, true);
         }
 
+        public void PolicyForItemMassiveUpdate(IList<PolicyForUserViewModel> viewModelCollection, ContentItem item) {
+            if (item != null) {
+                foreach (var policy in viewModelCollection) {
+                    PolicyForItemUpdate(policy, item);
+                }
+            }
+        }
 
         public IList<PolicyForUserViewModel> GetCookieOrVolatileAnswers() {
             var viewModelCollection = _controllerContextAccessor.Context != null ? _controllerContextAccessor.Context.Controller.ViewBag.PoliciesAnswers : null;
@@ -323,7 +348,6 @@ namespace Laser.Orchard.Policy.Services {
 
         public List<PolicyHistoryViewModel> GetPolicyHistoryForUser(int userId) {
             List<PolicyHistoryViewModel> policyHistory = new List<PolicyHistoryViewModel>();
-            
             var currentAnswers = _userPolicyAnswersRepository.Table.Where(w => w.UserPolicyPartRecord.Id == userId);
             var oldAnswers = _userPolicyAnswersHistoryRepository.Table.Where(w => w.UserPolicyPartRecord.Id == userId);
 
@@ -336,7 +360,8 @@ namespace Laser.Orchard.Policy.Services {
                         PolicyType = s.PolicyTextInfoPartRecord.PolicyType,
                         Accepted = s.Accepted,
                         AnswerDate = s.AnswerDate,
-                        EndValidity = null
+                        EndValidity = null,
+                        UserName = (s.UserPartRecord != null)? s.UserPartRecord.UserName : ""
                     };
                 else
                     return null;
@@ -351,7 +376,8 @@ namespace Laser.Orchard.Policy.Services {
                         PolicyType = s.PolicyTextInfoPartRecord.PolicyType,
                         Accepted = s.Accepted,
                         AnswerDate = s.AnswerDate,
-                        EndValidity = s.EndValidity
+                        EndValidity = s.EndValidity,
+                        UserName = (s.UserPartRecord != null)? s.UserPartRecord.UserName : ""
                     };
                 else
                     return null;
@@ -444,8 +470,12 @@ namespace Laser.Orchard.Policy.Services {
             recordForHistory.EndValidity = DateTime.UtcNow.AddSeconds(-1);
             recordForHistory.PolicyTextInfoPartRecord = originalRecord.PolicyTextInfoPartRecord;
             recordForHistory.UserPolicyPartRecord = originalRecord.UserPolicyPartRecord;
-
+            recordForHistory.UserPartRecord = originalRecord.UserPartRecord;
             return recordForHistory;
+        }
+        public IEnumerable<UserPolicyAnswersRecord> GetPolicyAnswersForContent(int contentId) {
+            var answers = _userPolicyAnswersRepository.Fetch(x => x.UserPolicyPartRecord.Id == contentId);
+            return answers.ToList();
         }
     }
 }

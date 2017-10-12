@@ -1,0 +1,25 @@
+﻿@model Laser.Orchard.AppDirect.Models.AppDirectRequestPart
+@{
+    Script.Require("jsonViewer").AtHead();
+    Style.Require("jsonViewer").AtHead();
+    var requestFieldId = "AppDirectRequestPart_Request_Text";
+    var requestFieldDisplayName = ((dynamic)Model).Request.DisplayName;
+    @*<fieldset>
+
+        <label for="AppDirectRequestPart_Edition_Text">@requestFieldDisplayName</label>
+        <pre id="json-renderer-request"></pre>
+
+    </fieldset>*@
+    using (Script.Head()) {
+        <script type="text/javascript">
+            $(function () {
+                var data = jQuery.parseJSON($('#@requestFieldId').val());
+                var jsonRendererPlaceholder = $('<pre></pre>');
+                $('#@requestFieldId').hide();
+                $('#@requestFieldId').parent().append(jsonRendererPlaceholder);
+                jsonRendererPlaceholder.attr('id', 'json-renderer-request');
+                $('#json-renderer-request').jsonBrowse(data);
+            });
+        </script>
+    }
+}
