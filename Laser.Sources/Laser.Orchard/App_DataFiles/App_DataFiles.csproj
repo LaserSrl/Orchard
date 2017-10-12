@@ -38,6 +38,7 @@
     <None Include="Sites\AppRetailTemplate\Code\CheckUpdatedConfig.cshtml" />
     <None Include="Sites\AppRetailTemplate\Code\CreaUtenzaKrake.cshtml" />
     <None Include="Sites\AppRetailTemplate\Code\GetCredenziali.cshtml" />
+    <None Include="Sites\AppRetailTemplate\Code\HideConfigs.cshtml" />
     <None Include="Sites\AppRetailTemplate\Code\LockConfig.cshtml" />
     <None Include="Sites\AppRetailTemplate\Code\SignalRichiestaProdotto.cshtml" />
     <None Include="Sites\AppRetailTemplate\Code\UnpublishRichiesteProdotto.cshtml" />
