@@ -15,15 +15,15 @@
     }
     var selectedCulture = Model.UserCulture == null ? WorkContext.CurrentCulture : Model.UserCulture.CultureCode;
     if (availableCultureswithNames != null && availableCultureswithNames.Count > 0) {
-        <ul class="nav navbar-nav navbar-lang handel-got-d">
+        <ul class="nav navbar-nav navbar-lang navbar-lang-home-intro handel-got-d hidden-xs">
             @foreach (var cul in availableCultureswithNames) {
                     string activeCulture = cul.Key == selectedCulture ? "active" : "";
                 <li class="@activeCulture">
                     @*@if (activeCulture == "") { // culture is not the active one*@
-                        <a href="@Url.Action("ChangeCulture", "UserCulture", new { Area = "Laser.Orchard.CulturePicker", CultureName = cul.Key })" hreflang="@cul.Key.Substring(0, 2)">@cul.Key.Substring(0, 2)</a>
+                    <a href="@Url.Action("ChangeCulture", "UserCulture", new { Area = "Laser.Orchard.CulturePicker", CultureName = cul.Key })" hreflang="@cul.Key.Substring(0, 2)">@cul.Key.Substring(0, 2)</a>
                     @*} else {
-                        @cul.Key.Substring(0, 2)
-                    }*@
+                            @cul.Key.Substring(0, 2)
+                        }*@
                 </li>
             }
         </ul>
