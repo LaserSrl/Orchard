@@ -74,7 +74,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                 return (_utilsServices.GetResponse(ResponseType.Validation, "Validation: invalid input data structure."));
             }
         }
-        private Response ExecPost(List<AnswerWithResultViewModel> Risps, string QuestionnaireContext = "external") {
+        private Response ExecPost(List<AnswerWithResultViewModel> Risps, string QuestionnaireContext = "") {
 #if DEBUG
             Logger.Error(Request.Headers.ToString());
 #endif
