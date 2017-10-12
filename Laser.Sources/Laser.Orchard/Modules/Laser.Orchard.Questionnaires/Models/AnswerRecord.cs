@@ -6,6 +6,9 @@ using System.Web;
 
 namespace Laser.Orchard.Questionnaires.Models {
     public class AnswerRecord {
+        public AnswerRecord() {
+            Published = true;
+        }
         public virtual int Id { get; set; }
         [MaxLength(1200)]
         public virtual string Answer { get; set; }
