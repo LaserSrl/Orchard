@@ -1025,6 +1025,26 @@
       <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T15:23:13.3729818Z" PublishedUtc="2017-09-18T14:06:19.2728711Z" ModifiedUtc="2017-09-18T14:06:19.1900179Z" />
       <IdentityPart Identifier="5dcefc21a2464e31aef91fbb71ba68f9" />
     </ConfigurazioneGrafica>
+    <InfoPage Id="/alias=infos\/page-b2b/Identifier=d219ba415b4642cba931edc6c9d8da4a" Status="Published">
+      <InputField.EMail Value="" />
+      <InputField.SitoWeb Value="" />
+      <InputField.Telefono Value="" />
+      <InputField.Facebook />
+      <InputField.Instagram />
+      <InputField.Pinterest />
+      <InputField.Twitter />
+      <MediaLibraryPickerField.Gallery ContentItems="" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <AutoroutePart Alias="infos/page-b2b" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;Testo da definire.&lt;/p&gt;" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-10-12T15:25:49.115682Z" PublishedUtc="2017-10-12T15:25:49.7634386Z" ModifiedUtc="2017-10-12T15:25:49.6429978Z" />
+      <IdentityPart Identifier="d219ba415b4642cba931edc6c9d8da4a" />
+      <LocalizationPart Culture="it-IT" />
+      <MapPart Latitude="0" Longitude="0" LocationAddress="" LocationInfo="" />
+      <ShareLinkPart SharedLink="" SharedText="" SharedBody="" SharedImage="" />
+      <TitlePart Title="Page B2B" />
+    </InfoPage>
     <Page Id="/alias=home" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
