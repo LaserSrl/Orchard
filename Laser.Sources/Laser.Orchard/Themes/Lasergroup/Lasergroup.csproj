@@ -424,6 +424,9 @@
   <ItemGroup>
     <Content Include="Styles\images\1499974076_142-mini-country-flags-16x16px.zip" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\CulturePicker.AfterContent.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
