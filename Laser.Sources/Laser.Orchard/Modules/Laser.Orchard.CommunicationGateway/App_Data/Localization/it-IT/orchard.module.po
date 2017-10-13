@@ -104,6 +104,10 @@ msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/AdvertisingAdmin/ind
 msgid "Search:"
 msgstr "Cerca:"
 
+msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/AdvertisingAdmin/index.cshtml"
+msgid "The campaign '{0}' is no more active. You will not be able to Add new advertsing."
+msgstr "La campagna '{0}' non è più attiva. Non potrai più aggiungere nuovi comunicati."
+
 msgctxt "~/Modules/Laser.Orchard.CommunicationGateway/Views/CampaignAdmin/Edit.cshtml"
 msgid "Campaigns List"
 msgstr "Lista della campagne"

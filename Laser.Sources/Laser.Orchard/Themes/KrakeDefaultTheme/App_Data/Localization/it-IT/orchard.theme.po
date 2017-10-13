@@ -8,6 +8,42 @@
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
 
+msgctxt "~/Themes/KrakeDefaultTheme/Views/Admin/ThemeSettings.cshtml"
+msgid "Base line text"
+msgstr "Testo base"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/Admin/ThemeSettings.cshtml"
+msgid "Header logo URL"
+msgstr "URL del logo dell'intestazione"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/Admin/ThemeSettings.cshtml"
+msgid "Krake default theme settings"
+msgstr "Impostazioni del tema di default Krake"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/Admin/ThemeSettings.cshtml"
+msgid "Placeholder logo URL"
+msgstr "URL del logo placeholder"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/Admin/ThemeSettings.cshtml"
+msgid "Save"
+msgstr "Salva"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/Admin/ThemeSettings.cshtml"
+msgid "type a base line text."
+msgstr "digitare un testo di base."
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/Admin/ThemeSettings.cshtml"
+msgid "type an URL for the header logo."
+msgstr "digitare un URL per il logo dell'intestazione."
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/Admin/ThemeSettings.cshtml"
+msgid "type an URL for the placeholder logo."
+msgstr "digitare un URL per il logo placeholder."
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/Content.Summary.cshtml"
+msgid "View Content"
+msgstr "Visualizza contenuto"
+
 msgctxt "~/Themes/KrakeDefaultTheme/Views/EditorTemplates/Parts/FavoriteCulturePart_Edit.cshtml"
 msgid "Favorite Culture"
 msgstr "Cultura Preferenziale"
@@ -15,6 +51,10 @@ msgstr "Cultura Preferenziale"
 msgctxt "~/Themes/KrakeDefaultTheme/Views/EditorTemplates/Parts/FavoriteCulturePart_Edit.cshtml"
 msgid "Select your favorite culture"
 msgstr "Seleziona la tua lingua preferenziale"
+
+msgctxt "~/Themes/KrakeDefaultTheme/Views/EditorTemplates/Parts/ThemeSettings.cshtml"
+msgid "Krake Default Theme Options"
+msgstr "Opzioni del tema di default Krake"
 
 msgctxt "~/Themes/KrakeDefaultTheme/Views/EditorTemplates/Parts/UserRegistrationPolicy_Edit.cshtml"
 msgid "Accept"
@@ -248,6 +288,10 @@ msgctxt "~/Themes/KrakeDefaultTheme/Views/Parts.MenuWidget-Navigation.cshtml"
 msgid "Welcome,"
 msgstr "Benvenuto,"
 
+msgctxt "~/Themes/KrakeDefaultTheme/Views/Parts.Title_Summary.cshtml"
+msgid "View Content"
+msgstr "Visualizza contenuto"
+
 msgctxt "~/Themes/KrakeDefaultTheme/Views/Register.cshtml"
 msgid "Account creation was unsuccessful. Please correct the errors and try again."
 msgstr "La creazione dell'account non è riuscita. Correggere gli errori e riprovare."
@@ -271,4 +315,20 @@ msgstr "Registra"
 msgctxt "~/Themes/KrakeDefaultTheme/Views/Register.cshtml"
 msgid "Use the form below to create a new account."
 msgstr "Utilizzare il modulo seguente per creare un nuovo account."
+
+msgctxt "KrakeDefaultTheme.Settings.AdminMenu"
+msgid "Krake default theme options"
+msgstr "Opzioni del tema di default Krake"
+
+msgctxt "KrakeDefaultTheme.Settings.AdminMenu"
+msgid "Themes"
+msgstr "Temi"
+
+msgctxt "KrakeDefaultTheme.Settings.Controllers.AdminController"
+msgid "Couldn't update theme settings"
+msgstr "Impossibile aggiornare le impostazioni del tema"
+
+msgctxt "KrakeDefaultTheme.Settings.Controllers.AdminController"
+msgid "Your settings have been saved."
+msgstr "Le impostazioni sono state salvate."
 
