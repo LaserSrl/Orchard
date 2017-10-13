@@ -109,6 +109,10 @@ msgid "Advanced Operations"
 msgstr "Operazioni Avanzate"
 
 msgctxt "~/Modules/Laser.Orchard.Translator/Views/TranslatorTree/Index.cshtml"
+msgid "Deprecated"
+msgstr "Deprecato"
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/TranslatorTree/Index.cshtml"
 msgid "Export Translations"
 msgstr "Esporta Traduzioni"
 
@@ -117,12 +121,24 @@ msgid "Import Translations"
 msgstr "Importa le Traduzioni"
 
 msgctxt "~/Modules/Laser.Orchard.Translator/Views/TranslatorTree/Index.cshtml"
+msgid "Language"
+msgstr "Lingua"
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/TranslatorTree/Index.cshtml"
 msgid "Language: "
 msgstr "Lingua:"
 
 msgctxt "~/Modules/Laser.Orchard.Translator/Views/TranslatorTree/Index.cshtml"
+msgid "Legend"
+msgstr "Legenda"
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/TranslatorTree/Index.cshtml"
 msgid "Nothing to translate for this element."
 msgstr "Nessuna traduzione necessaria per questo elemento."
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/TranslatorTree/Index.cshtml"
+msgid "Please select a language"
+msgstr "Selezionare una lingua"
 
 msgctxt "~/Modules/Laser.Orchard.Translator/Views/TranslatorTree/Index.cshtml"
 msgid "Please select a module or a theme."
@@ -143,6 +159,10 @@ msgstr "Stato della Traduzione"
 msgctxt "~/Modules/Laser.Orchard.Translator/Views/TranslatorTree/Index.cshtml"
 msgid "Translator"
 msgstr "Traduttore"
+
+msgctxt "~/Modules/Laser.Orchard.Translator/Views/TranslatorTree/Index.cshtml"
+msgid "Used"
+msgstr "Usato"
 
 msgctxt "Laser.Orchard.Translator.AdminMenu"
 msgid "Translator"
