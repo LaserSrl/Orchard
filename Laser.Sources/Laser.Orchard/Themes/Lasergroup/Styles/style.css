@@ -862,7 +862,7 @@ body.page-template-page-societa-chi-siamo #intro{ z-index:5; }
 #contact-form .form-control:focus{ box-shadow:none; }
 #contact-form .btn-invia{ background:none; color:#FF0903; padding:0; border:0; font-size:18px; }
 #contact-form .btn-invia:hover,#contact-form .btn-invia:focus{ box-shadow:none; border:0; background:none; }
-
+#contact-form textarea.form-control{ max-width:100%; min-width:100%; }
 /* ---------------- LOG ON ---------------------------- */
 #log-on .page-title { color:#FF0903;}
 #log-on .control-label{ font-weight:400; color:#333; }
