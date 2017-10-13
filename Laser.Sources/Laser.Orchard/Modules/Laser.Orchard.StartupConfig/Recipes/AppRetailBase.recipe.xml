@@ -1067,7 +1067,7 @@
       <BodyPart Text="&lt;p&gt;Testo da definire&lt;/p&gt;" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-10-02T16:19:01.9289798Z" PublishedUtc="2017-10-02T16:19:02.0254877Z" ModifiedUtc="2017-10-02T16:19:02.0034358Z" />
       <LocalizationPart Culture="it-IT" />
-      <PolicyTextInfoPart PolicyType="ThirdParty" Priority="0" UserHaveToAccept="false" />
+      <PolicyTextInfoPart PolicyType="ThirdParty" Priority="10" UserHaveToAccept="false" />
       <TitlePart Title="Cessione dati a terzi" />
     </PolicyText>
     <PolicyText Id="/alias=policy\/privacy" Status="Published">
@@ -1077,7 +1077,7 @@
       <BodyPart Text="&lt;p&gt;Testo da definire&lt;/p&gt;" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-10-02T16:17:47.3696691Z" PublishedUtc="2017-10-02T16:17:47.618168Z" ModifiedUtc="2017-10-02T16:17:47.5709843Z" />
       <LocalizationPart Culture="it-IT" />
-      <PolicyTextInfoPart PolicyType="Policy" Priority="0" UserHaveToAccept="true" />
+      <PolicyTextInfoPart PolicyType="Policy" Priority="90" UserHaveToAccept="true" />
       <TitlePart Title="Privacy" />
     </PolicyText>
     <PolicyText Id="/alias=policy\/uso-commerciale" Status="Published">
@@ -1087,7 +1087,7 @@
       <BodyPart Text="&lt;p&gt;Testo da definire&lt;/p&gt;" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-10-02T16:18:23.9452259Z" PublishedUtc="2017-10-02T16:18:24.0330255Z" ModifiedUtc="2017-10-02T16:18:24.0035093Z" />
       <LocalizationPart Culture="it-IT" />
-      <PolicyTextInfoPart PolicyType="CommercialUse" Priority="0" UserHaveToAccept="false" />
+      <PolicyTextInfoPart PolicyType="CommercialUse" Priority="50" UserHaveToAccept="false" />
       <TitlePart Title="Uso Commerciale" />
     </PolicyText>
     <PreferenzeTerm Id="/alias=preferenze\/categoria-prodotto" Status="Published">
