@@ -1,4 +1,7 @@
-﻿@{
+﻿@using Orchard.Localization.Services;
+@using Laser.Orchard.CulturePicker.Services;
+@using Orchard.Environment.Configuration;
+@{
     var Menu = Model.Menu;
     var items = (IList<dynamic>)Enumerable.Cast<dynamic>(Menu.Items);
 
@@ -28,8 +31,7 @@
                                         <ul class="dropdown-menu">
                                             @DisplayChildren(item)
                                         </ul>
-                                }
-                                else {
+                                } else {
                                     <a href="@item.Href">@item.Text</a>
                                 }
                             </li>
@@ -37,6 +39,42 @@
                         position = position + 1;
                     }
                 </ul>
+                @*Threating Culturepicker as embedded functionality and not as a widget*@
+                @{ 
+                    ICultureManager _cultureManager;
+                    ICulturePickerSettingsService _extendedCultureService;
+                    ILocalizableContentService _localizableContentService;
+                    WorkContext.TryResolve(out _cultureManager );
+                    WorkContext.TryResolve(out _extendedCultureService);
+                    WorkContext.TryResolve(out _localizableContentService);
+                    var settings = _extendedCultureService.ReadSettings();
+                    var baseUrl = WorkContext.CurrentSite.BaseUrl;
+                    var availableCultures = settings.ExtendedCulturesList;
+                    var showOnlyPertinentCultures = settings.Settings.ShowOnlyPertinentCultures;
+                    var showLabel = settings.Settings.ShowLabel;
+                    var cleanUrl = WorkContext.HttpContext.Request.Url.AbsoluteUri.Replace(baseUrl, "");
+                    cleanUrl = WorkContext.HttpContext.Server.UrlDecode(cleanUrl);
+                    cleanUrl = cleanUrl.StartsWith("/") ? cleanUrl.Substring(1) : cleanUrl;
+
+                    var urlPrefix = WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
+                    if (!String.IsNullOrWhiteSpace(urlPrefix)) {
+                        cleanUrl = cleanUrl.StartsWith(urlPrefix, StringComparison.OrdinalIgnoreCase) ? cleanUrl.Substring(urlPrefix.Length) : cleanUrl;
+                    }
+                    cleanUrl = HttpUtility.UrlDecode(cleanUrl);
+                    cleanUrl = cleanUrl.StartsWith("/") ? cleanUrl.Substring(1) : cleanUrl;
+                    var isHomePage = String.IsNullOrWhiteSpace(cleanUrl);
+
+                    var siteAvailableCultures = _cultureManager.ListCultures().AsQueryable();
+                    var userCulture = _extendedCultureService.GetExtendedCulture(_cultureManager.GetCurrentCulture(WorkContext.HttpContext));
+                    var translatedCultures = _localizableContentService.AvailableTranslations(cleanUrl, isHomePage);
+
+                    }
+                    @Display(New.Parts_CulturePicker(AvailableCultures: availableCultures, 
+                           TranslatedCultures: translatedCultures, 
+                           UserCulture: userCulture, 
+                           ShowOnlyPertinentCultures: showOnlyPertinentCultures, 
+                           ShowLabel: showLabel
+                           ))
             </div>
         </div>
     </div>
