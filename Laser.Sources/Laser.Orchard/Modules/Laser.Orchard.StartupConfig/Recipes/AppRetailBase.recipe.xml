@@ -420,7 +420,7 @@
         <MenuWidgetPart />
         <WidgetPart />
       </MenuWidget>
-      <MessaggioPromozionale ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Parts_Title_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Activity_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Body_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;5&quot;,&quot;Differentiator&quot;:&quot;Gallery&quot;},{&quot;ShapeType&quot;:&quot;Fields_Boolean_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:&quot;Visibileatutti&quot;},{&quot;ShapeType&quot;:&quot;Fields_TaxonomyField_Localized_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:&quot;Categoria&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;8&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;9&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;11&quot;,&quot;Differentiator&quot;:null}]" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" DisplayName="Promozione" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default">
+      <MessaggioPromozionale ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Parts_Title_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Boolean_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:&quot;Visibileatutti&quot;},{&quot;ShapeType&quot;:&quot;Fields_TaxonomyField_Localized_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:&quot;Categoria&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;8&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;9&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:&quot;Gallery&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:&quot;PuntoVendita&quot;},{&quot;ShapeType&quot;:&quot;Fields_ContentPickerLocalization_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;5&quot;,&quot;Differentiator&quot;:&quot;PuntoVendita&quot;},{&quot;ShapeType&quot;:&quot;Parts_Activity_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Body_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_TaxonomyField_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:&quot;Categoria&quot;},{&quot;ShapeType&quot;:&quot;Fields_TaxonomyFieldList_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;11&quot;,&quot;Differentiator&quot;:&quot;Categoria&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;12&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;13&quot;,&quot;Differentiator&quot;:null}]" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" DisplayName="Promozione" ContentTypeLayoutSettings.Placeable="False" TypeIndexing.Indexes="Default">
         <ActivityPart ActivityPartSettings.UseRecurrences="False" />
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <BodyPart BodyTypePartSettings.Flavor="Html" />
@@ -527,7 +527,7 @@
         <LocalizationPart />
         <MapPart MapPartSettings.Required="True" />
         <PuntoVendita />
-        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedText="Ho appena visualizzato il punto vendita {Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
+        <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedText="Ho appena visualizzato il punto vendita {Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" ShareLinkPartSettingVM.SharedBody="" ShareLinkPartSettingVM.ShowBodyChoise="False" />
         <SocialPart />
         <TitlePart />
       </PuntoVendita>
@@ -675,7 +675,7 @@
       </CalendarEvent>
       <CalendarPart ContentPartSettings.Attachable="True" ContentPartSettings.Description="Used by the Calendar content type. Contains the source query that retrieves the events and some information about how to display them." />
       <Catalogo ContentPartSettings.Attachable="True">
-        <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="False" MediaLibraryPickerFieldSettings.Multiple="False" />
+        <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="False" MediaLibraryPickerFieldSettings.Multiple="False" MediaLibraryPickerFieldSettings.Hint="Clicca su &quot;Add&quot; e inserisci l'immagine rappresentativa del catalogo." />
       </Catalogo>
       <CommentPart ContentPartSettings.Description="Used by the Comment content type." />
       <CommentsContainerPart ContentPartSettings.Description="Adds support to a content type to contain comments." />
@@ -695,16 +695,17 @@
       </CommunicationCampaignPart>
       <CommunicationContactPart ContentPartSettings.Attachable="False" />
       <ConfigurazioneAppStore ContentPartSettings.Attachable="True">
-        <BannerAppAndroid.MediaLibraryPickerField DisplayName="Banner App Android" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="False" MediaLibraryPickerFieldSettings.Hint="Immagine associata all'app sul Play Store." />
+        <BannerAppAndroid.MediaLibraryPickerField DisplayName="Banner App" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="False" MediaLibraryPickerFieldSettings.Hint="Banner associato all'app (visibile soltanto sul Google Play Store). Immagine PNG di dimensioni 1024x500." />
         <ConfigStatus.HiddenStringField DisplayName="ConfigStatus" HiddenStringFieldSettings.Tokenized="True" />
-        <Descrizione.TextField DisplayName="Descrizione" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Descrizione dell'app." />
-        <DescrizioneCorta.TextField DisplayName="Descrizione Corta" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Breve descrizione dell'app." />
-        <emailTesterAndroid.TextField DisplayName="e-mail Tester Android" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Indirizzi e-mail da utilizzare per testare la versione Android dell'app. Devono corrispondere a utenti del Play Store. Inserire un indirizzo e-mail per riga." />
-        <emailTesteriOS.TextField DisplayName="e-mail Tester iOS" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Indirizzi e-mail da utilizzare per testare la versione iOS dell'app. Devono corrispondere a utenti dell'Apple Store. Inserire un indirizzo e-mail per riga." />
-        <IconaApp.MediaLibraryPickerField DisplayName="Icona App" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="False" MediaLibraryPickerFieldSettings.Hint="Icona che identificherà l'app sui dispositivi degli utenti." />
+        <Descrizione.TextField DisplayName="Descrizione" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Qui devi presentare e descrivere la tua app, elencando caratteristiche e funzioni (max 4000 caratteri, spazi inclusi). Si tratta del testo che l'utente leggerà sull'Apple Store e sul Google Play Store." />
+        <DescrizioneCorta.TextField DisplayName="Descrizione Corta" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="La tua app in 80 caratteri, spazi inclusi." />
+        <emailTesterAndroid.TextField DisplayName="e-mail Tester Android" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Indirizzi e-mail da utilizzare per testare la versione Android dell'app (devono corrispondere ai rispettivi utenti del Google Play Store). Inserire un indirizzo e-mail per riga." />
+        <emailTesteriOS.TextField DisplayName="e-mail Tester iOS" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Indirizzi e-mail da utilizzare per testare la versione iOS dell'app (devono corrispondere ai rispettivi utenti dell'Apple Store). Inserire un indirizzo e-mail per riga." />
+        <IconaApp.MediaLibraryPickerField DisplayName="Icona App" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="False" MediaLibraryPickerFieldSettings.Hint="Logo presente all'interno dell'app (immagine in vettoriale; formati accettati: .psd, .ai, .svg, .esp, .pdf)." />
         <Nome.TextField DisplayName="Nome" TextFieldSettings.Required="True" TextFieldSettings.Hint="Nome dell'app che apparirà nell'Apple Store e nel Google Play Store." />
-        <ParoleChiave.TextField DisplayName="Parole Chiave" TextFieldSettings.Flavor="Wide" TextFieldSettings.Required="True" TextFieldSettings.Hint="Settori a cui l'app si riferisce." />
-        <TestoPromozionale.TextField DisplayName="Testo Promozionale" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Messaggio promozionale per invitare a scaricare l'app." />
+        <ParoleChiave.TextField DisplayName="Parole Chiave" TextFieldSettings.Flavor="Wide" TextFieldSettings.Required="True" TextFieldSettings.Hint="Parole chiave correlate all'app e al brand (separare i termini con una virgola e senza spazi; max 50 caratteri). " />
+        <ScriptNascondiPulsanti.InsertStuffField DisplayName="Script Nascondi Pulsanti" InsertStuffFieldSettings.RawHtml="&lt;script&gt;&#xD;&#xA;$(function(){&#xD;&#xA;  var check = $(&quot;input[type=text][disabled][name$='ConfigStatus.Value']&quot;);&#xD;&#xA;  check.parent().hide();&#xD;&#xA;  if(check.val() == &quot;locked&quot;){&#xD;&#xA;    $(&quot;button&quot;).hide();&#xD;&#xA;  }&#xD;&#xA;});&#xD;&#xA;&lt;/script&gt;" InsertStuffFieldSettings.OnFooter="true" />
+        <TestoPromozionale.TextField DisplayName="Testo Promozionale" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Messaggio promozionale che invita a scaricare l'app (presente solo sull'Apple Store)." />
         <URLPolicyApp.InputField DisplayName="URL Policy App" InputFieldSettings.Type="Url" InputFieldSettings.Required="True" InputFieldSettings.AutoFocus="False" InputFieldSettings.AutoComplete="False" InputFieldSettings.MaxLength="0" InputFieldSettings.Hint="Indirizzo web a cui è possibile trovare i testi delle privacy policy." />
         <URLSitoWeb.InputField DisplayName="URL Sito Web" InputFieldSettings.Type="Url" InputFieldSettings.Required="True" InputFieldSettings.AutoFocus="False" InputFieldSettings.AutoComplete="False" InputFieldSettings.MaxLength="0" InputFieldSettings.Hint="Sito web della vostra azienda o della vostra attività (può anche essere un sito personale)." />
       </ConfigurazioneAppStore>
@@ -727,9 +728,9 @@
         <CellSecondaryText.ColorPickerField DisplayName="Sottotitolo elementi" ColorPickerFieldSettings.Hint="Colore del sottotitolo degli elementi delle liste." />
         <CellText.ColorPickerField DisplayName="Titolo elementi" ColorPickerFieldSettings.Hint="Colore del titolo degli elementi delle liste." />
         <ConfigStatus.HiddenStringField DisplayName="ConfigStatus" HiddenStringFieldSettings.Tokenized="True" />
-        <ImmagineSfondoApp.MediaLibraryPickerField DisplayName="Immagine Sfondo App" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="False" MediaLibraryPickerFieldSettings.Hint="Immagine di sfondo utilizzata dall'app." />
-        <LogoApp.MediaLibraryPickerField DisplayName="Logo App" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="False" MediaLibraryPickerFieldSettings.Hint="Logo presente all'interno dell'app." />
-        <ScriptAnteprima.InsertStuffField DisplayName="Script Anteprima" InsertStuffFieldSettings.RawHtml="	&lt;script type=&quot;text/javascript&quot;&gt;&#xD;&#xA;		$(function(){&#xD;&#xA;			$(&quot;div#layout-content&quot;).before(&quot;&lt;div id='preview-preview' style='width:130px;height:200px;border:1px solid black;position:fixed;top:74px;right:5px;z-index:200;background-color:white;border-radius:5px'&gt;&lt;/div&gt;&quot;);&#xD;&#xA;			$(&quot;div#preview-preview&quot;).append(&quot;&lt;div id='preview-menu' style='text-align:center;border-bottom:1px solid black;border-top-left-radius:5px;border-top-right-radius:5px'&gt;Sezione&lt;/div&gt;&quot;);&#xD;&#xA;			$(&quot;div#preview-preview&quot;).append(&quot;&lt;div id='preview-evidenza' style='width:40%;text-align:center;border-bottom:1px solid black;border-right:1px solid black;float:left'&gt;Evidenza&lt;/div&gt;&quot;);&#xD;&#xA;			$(&quot;div#preview-preview&quot;).append(&quot;&lt;div id='preview-filtro' style='width:60%;text-align:center;border-bottom:1px solid black;float:left'&gt;Filtro&lt;/div&gt;&quot;);&#xD;&#xA;			$(&quot;div#preview-preview&quot;).append(&quot;&lt;div id='preview-cella1' style='width:80%;text-align:center;border:1px solid black;clear:left;float:left;position:relative;top:5px;left:10%'&gt;&lt;span id='preview-titolo1'&gt;Titolo&lt;/span&gt;&lt;br/&gt;&lt;/div&gt;&quot;);&#xD;&#xA;			$(&quot;div#preview-cella1&quot;).append(&quot;&lt;span id='preview-sottotitolo1'&gt;Sottotitolo&lt;/span&gt;&quot;);&#xD;&#xA;			$(&quot;div#preview-preview&quot;).append(&quot;&lt;div id='preview-cella2' style='width:80%;text-align:center;border:1px solid black;clear:left;float:left;position:relative;top:10px;left:10%'&gt;&lt;span id='preview-titolo2'&gt;Titolo&lt;/span&gt;&lt;br/&gt;&lt;/div&gt;&quot;);&#xD;&#xA;			$(&quot;div#preview-cella2&quot;).append(&quot;&lt;span id='preview-sottotitolo2'&gt;Sottotitolo&lt;/span&gt;&quot;);&#xD;&#xA;			$(&quot;div#preview-preview&quot;).append(&quot;&lt;span id='preview-testo' style='position:absolute;bottom:10px;right:10%'&gt;Testo&lt;/span&gt;&quot;);&#xD;&#xA;			// Tint&#xD;&#xA;			$(&quot;#preview-menu&quot;).css(&quot;background-color&quot;, $(&quot;#ConfigurazioneGrafica_Tint_Value&quot;).val());&#xD;&#xA;			$(&quot;#preview-filtro&quot;).css(&quot;background-color&quot;, $(&quot;#ConfigurazioneGrafica_Tint_Value&quot;).val());&#xD;&#xA;			$(&quot;#ConfigurazioneGrafica_Tint_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-menu&quot;).css(&quot;background-color&quot;, color.toHexString()); $(&quot;#preview-filtro&quot;).css(&quot;background-color&quot;, color.toHexString()); });&#xD;&#xA;			// TextTint&#xD;&#xA;			$(&quot;#preview-menu&quot;).css(&quot;color&quot;, $(&quot;#ConfigurazioneGrafica_TextTint_Value&quot;).val());&#xD;&#xA;			$(&quot;#preview-filtro&quot;).css(&quot;color&quot;, $(&quot;#ConfigurazioneGrafica_TextTint_Value&quot;).val());&#xD;&#xA;			$(&quot;#ConfigurazioneGrafica_TextTint_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-menu&quot;).css(&quot;color&quot;, color.toHexString()); $(&quot;#preview-filtro&quot;).css(&quot;color&quot;, color.toHexString()); });&#xD;&#xA;			// Alternate&#xD;&#xA;			$(&quot;#preview-evidenza&quot;).css(&quot;background-color&quot;, $(&quot;#ConfigurazioneGrafica_Alternate_Value&quot;).val());&#xD;&#xA;			$(&quot;#ConfigurazioneGrafica_Alternate_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-evidenza&quot;).css(&quot;background-color&quot;, color.toHexString()); });&#xD;&#xA;			// TextAlternate&#xD;&#xA;			$(&quot;#preview-evidenza&quot;).css(&quot;color&quot;, $(&quot;#ConfigurazioneGrafica_TextAlternate_Value&quot;).val());&#xD;&#xA;			$(&quot;#ConfigurazioneGrafica_TextAlternate_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-evidenza&quot;).css(&quot;color&quot;, color.toHexString()); });&#xD;&#xA;			// BackgroundView&#xD;&#xA;			$(&quot;#preview-preview&quot;).css(&quot;background-color&quot;, $(&quot;#ConfigurazioneGrafica_BackgroundView_Value&quot;).val());&#xD;&#xA;			$(&quot;#ConfigurazioneGrafica_BackgroundView_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-preview&quot;).css(&quot;background-color&quot;, color.toHexString()); });&#xD;&#xA;			// TextColor&#xD;&#xA;			$(&quot;#preview-testo&quot;).css(&quot;color&quot;, $(&quot;#ConfigurazioneGrafica_TextColor_Value&quot;).val());&#xD;&#xA;			$(&quot;#ConfigurazioneGrafica_TextColor_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-testo&quot;).css(&quot;color&quot;, color.toHexString()); });&#xD;&#xA;			// CellBackground&#xD;&#xA;			$(&quot;#preview-cella1&quot;).css(&quot;background-color&quot;, $(&quot;#ConfigurazioneGrafica_CellBackground_Value&quot;).val());&#xD;&#xA;			$(&quot;#preview-cella2&quot;).css(&quot;background-color&quot;, $(&quot;#ConfigurazioneGrafica_CellBackground_Value&quot;).val());&#xD;&#xA;			$(&quot;#ConfigurazioneGrafica_CellBackground_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-cella1&quot;).css(&quot;background-color&quot;, color.toHexString()); $(&quot;#preview-cella2&quot;).css(&quot;background-color&quot;, color.toHexString()); });&#xD;&#xA;			// CellText&#xD;&#xA;			$(&quot;#preview-titolo1&quot;).css(&quot;color&quot;, $(&quot;#ConfigurazioneGrafica_CellText_Value&quot;).val());&#xD;&#xA;			$(&quot;#preview-titolo2&quot;).css(&quot;color&quot;, $(&quot;#ConfigurazioneGrafica_CellText_Value&quot;).val());&#xD;&#xA;			$(&quot;#ConfigurazioneGrafica_CellText_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-titolo1&quot;).css(&quot;color&quot;, color.toHexString()); $(&quot;#preview-titolo2&quot;).css(&quot;color&quot;, color.toHexString()); });&#xD;&#xA;			// CellSecondaryText&#xD;&#xA;			$(&quot;#preview-sottotitolo1&quot;).css(&quot;color&quot;, $(&quot;#ConfigurazioneGrafica_CellSecondaryText_Value&quot;).val());&#xD;&#xA;			$(&quot;#preview-sottotitolo2&quot;).css(&quot;color&quot;, $(&quot;#ConfigurazioneGrafica_CellSecondaryText_Value&quot;).val());&#xD;&#xA;			$(&quot;#ConfigurazioneGrafica_CellSecondaryText_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-sottotitolo1&quot;).css(&quot;color&quot;, color.toHexString()); $(&quot;#preview-sottotitolo2&quot;).css(&quot;color&quot;, color.toHexString()); });&#xD;&#xA;		});&#xD;&#xA;	&lt;/script&gt;" InsertStuffFieldSettings.OnFooter="true" />
+        <ImmagineSfondoApp.MediaLibraryPickerField DisplayName="Splashscreen dell'app" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="False" MediaLibraryPickerFieldSettings.Hint="Si tratta dell'immagine di sfondo che viene visualizzata (1) all'apertura dell'app, (2) quando l'utente si logga e (3) quando deve accettare le policy privacy (immagine in vettoriale; formati accettati: .psd, .ai, .svg, .esp, .pdf)" />
+        <ScriptAnteprima.InsertStuffField DisplayName="Script Anteprima" InsertStuffFieldSettings.RawHtml=" &lt;script type=&quot;text/javascript&quot;&gt;&#xD;&#xA;  $(function(){&#xD;&#xA;   $(&quot;div#layout-content&quot;).before(&quot;&lt;div id='preview-preview' style='width:130px;height:200px;border:1px solid black;position:fixed;top:74px;right:5px;z-index:200;background-color:white;border-radius:5px'&gt;&lt;/div&gt;&quot;);&#xD;&#xA;   $(&quot;div#preview-preview&quot;).append(&quot;&lt;div id='preview-menu' style='text-align:center;border-bottom:1px solid black;border-top-left-radius:5px;border-top-right-radius:5px'&gt;Sezione&lt;/div&gt;&quot;);&#xD;&#xA;   $(&quot;div#preview-preview&quot;).append(&quot;&lt;div id='preview-evidenza' style='width:40%;text-align:center;border-bottom:1px solid black;border-right:1px solid black;float:left'&gt;Evidenza&lt;/div&gt;&quot;);&#xD;&#xA;   $(&quot;div#preview-preview&quot;).append(&quot;&lt;div id='preview-filtro' style='width:60%;text-align:center;border-bottom:1px solid black;float:left'&gt;Filtro&lt;/div&gt;&quot;);&#xD;&#xA;   $(&quot;div#preview-preview&quot;).append(&quot;&lt;div id='preview-cella1' style='width:80%;text-align:center;border:1px solid black;clear:left;float:left;position:relative;top:5px;left:10%'&gt;&lt;span id='preview-titolo1'&gt;Titolo&lt;/span&gt;&lt;br/&gt;&lt;/div&gt;&quot;);&#xD;&#xA;   $(&quot;div#preview-cella1&quot;).append(&quot;&lt;span id='preview-sottotitolo1'&gt;Sottotitolo&lt;/span&gt;&quot;);&#xD;&#xA;   $(&quot;div#preview-preview&quot;).append(&quot;&lt;div id='preview-cella2' style='width:80%;text-align:center;border:1px solid black;clear:left;float:left;position:relative;top:10px;left:10%'&gt;&lt;span id='preview-titolo2'&gt;Titolo&lt;/span&gt;&lt;br/&gt;&lt;/div&gt;&quot;);&#xD;&#xA;   $(&quot;div#preview-cella2&quot;).append(&quot;&lt;span id='preview-sottotitolo2'&gt;Sottotitolo&lt;/span&gt;&quot;);&#xD;&#xA;   $(&quot;div#preview-preview&quot;).append(&quot;&lt;span id='preview-testo' style='position:absolute;bottom:10px;right:10%'&gt;Testo&lt;/span&gt;&quot;);&#xD;&#xA;   // Tint&#xD;&#xA;   $(&quot;#preview-menu&quot;).css(&quot;background-color&quot;, $(&quot;#ConfigurazioneGrafica_Tint_Value&quot;).val());&#xD;&#xA;   $(&quot;#preview-filtro&quot;).css(&quot;background-color&quot;, $(&quot;#ConfigurazioneGrafica_Tint_Value&quot;).val());&#xD;&#xA;   $(&quot;#ConfigurazioneGrafica_Tint_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-menu&quot;).css(&quot;background-color&quot;, color.toHexString()); $(&quot;#preview-filtro&quot;).css(&quot;background-color&quot;, color.toHexString()); });&#xD;&#xA;   // TextTint&#xD;&#xA;   $(&quot;#preview-menu&quot;).css(&quot;color&quot;, $(&quot;#ConfigurazioneGrafica_TextTint_Value&quot;).val());&#xD;&#xA;   $(&quot;#preview-filtro&quot;).css(&quot;color&quot;, $(&quot;#ConfigurazioneGrafica_TextTint_Value&quot;).val());&#xD;&#xA;   $(&quot;#ConfigurazioneGrafica_TextTint_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-menu&quot;).css(&quot;color&quot;, color.toHexString()); $(&quot;#preview-filtro&quot;).css(&quot;color&quot;, color.toHexString()); });&#xD;&#xA;   // Alternate&#xD;&#xA;   $(&quot;#preview-evidenza&quot;).css(&quot;background-color&quot;, $(&quot;#ConfigurazioneGrafica_Alternate_Value&quot;).val());&#xD;&#xA;   $(&quot;#ConfigurazioneGrafica_Alternate_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-evidenza&quot;).css(&quot;background-color&quot;, color.toHexString()); });&#xD;&#xA;   // TextAlternate&#xD;&#xA;   $(&quot;#preview-evidenza&quot;).css(&quot;color&quot;, $(&quot;#ConfigurazioneGrafica_TextAlternate_Value&quot;).val());&#xD;&#xA;   $(&quot;#ConfigurazioneGrafica_TextAlternate_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-evidenza&quot;).css(&quot;color&quot;, color.toHexString()); });&#xD;&#xA;   // BackgroundView&#xD;&#xA;   $(&quot;#preview-preview&quot;).css(&quot;background-color&quot;, $(&quot;#ConfigurazioneGrafica_BackgroundView_Value&quot;).val());&#xD;&#xA;   $(&quot;#ConfigurazioneGrafica_BackgroundView_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-preview&quot;).css(&quot;background-color&quot;, color.toHexString()); });&#xD;&#xA;   // TextColor&#xD;&#xA;   $(&quot;#preview-testo&quot;).css(&quot;color&quot;, $(&quot;#ConfigurazioneGrafica_TextColor_Value&quot;).val());&#xD;&#xA;   $(&quot;#ConfigurazioneGrafica_TextColor_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-testo&quot;).css(&quot;color&quot;, color.toHexString()); });&#xD;&#xA;   // CellBackground&#xD;&#xA;   $(&quot;#preview-cella1&quot;).css(&quot;background-color&quot;, $(&quot;#ConfigurazioneGrafica_CellBackground_Value&quot;).val());&#xD;&#xA;   $(&quot;#preview-cella2&quot;).css(&quot;background-color&quot;, $(&quot;#ConfigurazioneGrafica_CellBackground_Value&quot;).val());&#xD;&#xA;   $(&quot;#ConfigurazioneGrafica_CellBackground_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-cella1&quot;).css(&quot;background-color&quot;, color.toHexString()); $(&quot;#preview-cella2&quot;).css(&quot;background-color&quot;, color.toHexString()); });&#xD;&#xA;   // CellText&#xD;&#xA;   $(&quot;#preview-titolo1&quot;).css(&quot;color&quot;, $(&quot;#ConfigurazioneGrafica_CellText_Value&quot;).val());&#xD;&#xA;   $(&quot;#preview-titolo2&quot;).css(&quot;color&quot;, $(&quot;#ConfigurazioneGrafica_CellText_Value&quot;).val());&#xD;&#xA;   $(&quot;#ConfigurazioneGrafica_CellText_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-titolo1&quot;).css(&quot;color&quot;, color.toHexString()); $(&quot;#preview-titolo2&quot;).css(&quot;color&quot;, color.toHexString()); });&#xD;&#xA;   // CellSecondaryText&#xD;&#xA;   $(&quot;#preview-sottotitolo1&quot;).css(&quot;color&quot;, $(&quot;#ConfigurazioneGrafica_CellSecondaryText_Value&quot;).val());&#xD;&#xA;   $(&quot;#preview-sottotitolo2&quot;).css(&quot;color&quot;, $(&quot;#ConfigurazioneGrafica_CellSecondaryText_Value&quot;).val());&#xD;&#xA;   $(&quot;#ConfigurazioneGrafica_CellSecondaryText_Value&quot;).on(&quot;change.spectrum&quot;, function(e, color) { $(&quot;#preview-sottotitolo1&quot;).css(&quot;color&quot;, color.toHexString()); $(&quot;#preview-sottotitolo2&quot;).css(&quot;color&quot;, color.toHexString()); });&#xD;&#xA;  });&#xD;&#xA; &lt;/script&gt;" InsertStuffFieldSettings.OnFooter="true" />
+        <ScriptNascondiPulsanti.InsertStuffField DisplayName="Script Nascondi Pulsanti" InsertStuffFieldSettings.RawHtml="&lt;script&gt;&#xD;&#xA;$(function(){&#xD;&#xA;  var check = $(&quot;input[type=text][disabled][name$='ConfigStatus.Value']&quot;);&#xD;&#xA;  check.parent().hide();&#xD;&#xA;  if(check.val() == &quot;locked&quot;){&#xD;&#xA;    $(&quot;button&quot;).hide();&#xD;&#xA;  }&#xD;&#xA;});&#xD;&#xA;&lt;/script&gt;" InsertStuffFieldSettings.OnFooter="true" />
         <TextAlternate.ColorPickerField DisplayName="Testo in evidenza" ColorPickerFieldSettings.Hint="Colore del testo per le voci in evidenza." />
         <TextColor.ColorPickerField DisplayName="Testo" ColorPickerFieldSettings.Hint="Colore del testo nell'app mobile." />
         <TextTint.ColorPickerField DisplayName="Testo menu" ColorPickerFieldSettings.Hint="Colore del testo per il menu." />
@@ -763,10 +764,10 @@
       <ContentMenuItemPart />
       <CulturePickerPart ContentPartSettings.Attachable="True" />
       <Dipendente ContentPartSettings.Attachable="True">
-        <Cognome.TextField DisplayName="Cognome" TextFieldSettings.Required="True" TextFieldSettings.Hint="Cognome del dipendente." FieldIndexing.Included="True"/>
-        <Email.InputField DisplayName="Email" InputFieldSettings.Type="Email" InputFieldSettings.Required="True" InputFieldSettings.AutoFocus="False" InputFieldSettings.AutoComplete="False" InputFieldSettings.MaxLength="0" InputFieldSettings.Hint="Indirizzo e-mail del dipendente da usare per comunicazioni aziendali." FieldIndexing.Included="True"/>
-        <Nome.TextField DisplayName="Nome" TextFieldSettings.Required="True" TextFieldSettings.Hint="Nome del dipendente." FieldIndexing.Included="True"/>
-        <Store.ContentPickerField DisplayName="Store" ContentPickerFieldSettings.Required="True" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Store" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Store in cui lavora il dipendente." FieldIndexing.Included="True" />
+        <Cognome.TextField DisplayName="Cognome" TextFieldSettings.Required="True" TextFieldSettings.Hint="Cognome del dipendente." FieldIndexing.Included="True" />
+        <Email.InputField DisplayName="Email" InputFieldSettings.Type="Email" InputFieldSettings.Required="True" InputFieldSettings.AutoFocus="False" InputFieldSettings.AutoComplete="False" InputFieldSettings.MaxLength="0" InputFieldSettings.Hint="Indirizzo e-mail del dipendente." FieldIndexing.Included="True" />
+        <Nome.TextField DisplayName="Nome" TextFieldSettings.Required="True" TextFieldSettings.Hint="Nome del dipendente." FieldIndexing.Included="True" />
+        <Store.ContentPickerField DisplayName="Store" ContentPickerFieldSettings.Required="True" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Store" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Clic su &quot;aggiungi&quot; e associa il dipendente allo store in cui lavora." FieldIndexing.Included="True" />
         <UserID.HiddenStringField DisplayName="User ID" HiddenStringFieldSettings.Tokenized="False" />
       </Dipendente>
       <DisplayTextPart ContentPartSettings.Attachable="True" />
@@ -793,8 +794,8 @@
       <MenuWidgetPart />
       <MessaggioPromozionale ContentPartSettings.Attachable="True">
         <Categoria.TaxonomyField DisplayName="Categoria" TaxonomyFieldSettings.Taxonomy="Categoria Promo" TaxonomyFieldSettings.LeavesOnly="True" TaxonomyFieldSettings.Required="True" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="False" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldSettings.Hint="Categoria del Messaggio Promozionale." TaxonomyFieldLocalizationSettings.TryToLocalize="True" FieldIndexing.Included="True" />
-        <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="False" MediaLibraryPickerFieldSettings.Multiple="True" MediaLibraryPickerFieldSettings.Hint="Immagini a corredo del Messaggio Promozionale." />
-        <PuntoVendita.ContentPickerField DisplayName="Punto Vendita" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="True" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="PuntoVendita" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldExtensionSettings.TranslateContents="True" ContentPickerSearchFieldSettings.ShowSearchTab="True" ContentPickerSearchFieldSettings.SearchIndex="Search" ContentPickerSearchFieldSettings.DisplayedContentTypes="PuntoVendita" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Punti vendita a cui il Messaggio Promozionale si riferisce." FieldIndexing.Included="True" />
+        <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="False" MediaLibraryPickerFieldSettings.Multiple="True" MediaLibraryPickerFieldSettings.Hint="Clicca su &quot;Add&quot; e inserisci una o più immagini relative alla promozione." />
+        <PuntoVendita.ContentPickerField DisplayName="Punto Vendita" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="True" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="PuntoVendita" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldExtensionSettings.TranslateContents="True" ContentPickerSearchFieldSettings.ShowSearchTab="True" ContentPickerSearchFieldSettings.SearchIndex="Search" ContentPickerSearchFieldSettings.DisplayedContentTypes="PuntoVendita" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Clicca su &quot;Aggiungi&quot; per correlare la Promozione a uno o più Punti Vendita." FieldIndexing.Included="True" />
       </MessaggioPromozionale>
       <MobilePushPart ContentPartSettings.Attachable="True">
         <RelatedContent.ContentPickerField ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" />
@@ -806,29 +807,29 @@
       <NavigationQueryPart />
       <NewsClienti ContentPartSettings.Attachable="True">
         <Categoria.TaxonomyField DisplayName="Categoria" TaxonomyFieldSettings.Taxonomy="Categoria Promo" TaxonomyFieldSettings.LeavesOnly="True" TaxonomyFieldSettings.Required="False" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="False" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldLocalizationSettings.TryToLocalize="True" TaxonomyFieldSettings.Hint="Categoria della notizia." FieldIndexing.Included="True" />
-        <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="True" MediaLibraryPickerFieldSettings.Hint="Immagini a corredo della notizia." />
+        <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="True" MediaLibraryPickerFieldSettings.Hint="Clicca su &quot;Add&quot; e inserisci una o più immagini relative alla notizia." />
       </NewsClienti>
       <NewsDipendenti ContentPartSettings.Attachable="True">
-        <CategoriaNews.TaxonomyField DisplayName="Categoria News" TaxonomyFieldSettings.Taxonomy="Categoria News Dipendenti" TaxonomyFieldSettings.LeavesOnly="True" TaxonomyFieldSettings.Required="False" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="False" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldLocalizationSettings.TryToLocalize="True" TaxonomyFieldSettings.Hint="Categoria della notizia." FieldIndexing.Included="True"/>
-        <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="True" MediaLibraryPickerFieldSettings.Hint="Immagini a corredo della notizia." />
+        <CategoriaNews.TaxonomyField DisplayName="Categoria News" TaxonomyFieldSettings.Taxonomy="Categoria News Dipendenti" TaxonomyFieldSettings.LeavesOnly="True" TaxonomyFieldSettings.Required="False" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="False" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldLocalizationSettings.TryToLocalize="True" TaxonomyFieldSettings.Hint="Categoria della notizia." FieldIndexing.Included="True" />
+        <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="True" MediaLibraryPickerFieldSettings.Hint="Clicca su &quot;Add&quot; e inserisci una o più immagini relative alla notizia." />
       </NewsDipendenti>
       <OEmbedPart ContentPartSettings.Attachable="True" ContentPartSettings.Description="Provides common metadata for an OEmbed Media." />
       <OpenAuthenticationPart />
       <PolicyTextInfoPart ContentPartSettings.Attachable="False" />
       <Prodotto ContentPartSettings.Attachable="True">
-        <AbbinamentiSuggeriti.ContentPickerField DisplayName="Abbinamenti Suggeriti" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="True" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Prodotto" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Altri prodotti correlati con questo prodotto." />
-        <Abstract.TextField DisplayName="Abstract" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="False" TextFieldSettings.Hint="Breve descrizione del prodotto." FieldIndexing.Included="True" />
-        <Cataloghi.ContentPickerField DisplayName="Cataloghi" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="True" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Catalogo" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Cataloghi di cui il prodotto fa parte." />
+        <AbbinamentiSuggeriti.ContentPickerField DisplayName="Abbinamenti Suggeriti" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="True" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Prodotto" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Aggiungi uno o più prodotti correlati. Tali prodotti saranno visibili nella scheda di dettaglio del singolo prodotto visualizzato." />
+        <Abstract.TextField DisplayName="Abstract" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="False" TextFieldSettings.Hint="Descrizione breve del prodotto." FieldIndexing.Included="True" />
+        <Cataloghi.ContentPickerField DisplayName="Cataloghi" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="True" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Catalogo" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Associa il prodotto a uno o più cataloghi." />
         <Categoria.TaxonomyField DisplayName="Categoria" TaxonomyFieldSettings.Taxonomy="Categoria Prodotto" TaxonomyFieldSettings.LeavesOnly="True" TaxonomyFieldSettings.Required="False" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="False" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldLocalizationSettings.TryToLocalize="True" TaxonomyFieldSettings.Hint="Categoria del prodotto." FieldIndexing.Included="True" />
-        <Descrizione.TextField DisplayName="Descrizione" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="False" TextFieldSettings.Hint="Descrizione del prodotto." FieldIndexing.Included="True" />
-        <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="True" MediaLibraryPickerFieldSettings.Hint="Immagini che illustrano il prodotto." />
-        <Mettiinvetrina.BooleanField DisplayName="Metti in vetrina" BooleanFieldSettings.Optional="False" BooleanFieldSettings.OnLabel="Si" BooleanFieldSettings.OffLabel="No" BooleanFieldSettings.SelectionMode="Checkbox" BooleanFieldSettings.DefaultValue="False" BooleanFieldSettings.Hint="Selezionare per includere nella sezione di vetrina il prodotto." />
-        <NascondiPrezzo.BooleanField DisplayName="Nascondi Prezzo" BooleanFieldSettings.Hint="Selezionare per nascondere il prezzo del prodotto sull'app B2C." BooleanFieldSettings.Optional="False" BooleanFieldSettings.OnLabel="Nascondi" BooleanFieldSettings.OffLabel="Visualizza" BooleanFieldSettings.SelectionMode="Checkbox" BooleanFieldSettings.DefaultValue="False" />
-        <Prezzo.NumericField DisplayName="Prezzo" NumericFieldSettings.Required="True" NumericFieldSettings.Scale="2" NumericFieldSettings.Minimum="" NumericFieldSettings.Maximum="" NumericFieldSettings.Hint="Prezzo al pubblico del prodotto." />
+        <Descrizione.TextField DisplayName="Descrizione" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="False" TextFieldSettings.Hint="Descrizione dettagliata del prodotto (verrà mostrata nel dettaglio)." FieldIndexing.Included="True" />
+        <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="True" MediaLibraryPickerFieldSettings.Hint="Clicca su &quot;Add&quot; e inserisci una o più immagini relative al prodotto." />
+        <Mettiinvetrina.BooleanField DisplayName="Metti in vetrina" BooleanFieldSettings.Optional="False" BooleanFieldSettings.OnLabel="Si" BooleanFieldSettings.OffLabel="No" BooleanFieldSettings.SelectionMode="Checkbox" BooleanFieldSettings.DefaultValue="False" BooleanFieldSettings.Hint="Se clicchi su &quot;sì&quot;, il prodotto sarà visualizzabile anche in vetrina." />
+        <NascondiPrezzo.BooleanField DisplayName="Nascondi Prezzo" BooleanFieldSettings.Hint="Selezionare per nascondere il prezzo del prodotto all'utente finale." BooleanFieldSettings.Optional="False" BooleanFieldSettings.OnLabel="Nascondi" BooleanFieldSettings.OffLabel="Visualizza" BooleanFieldSettings.SelectionMode="Checkbox" BooleanFieldSettings.DefaultValue="False" />
+        <Prezzo.NumericField DisplayName="Prezzo" NumericFieldSettings.Required="True" NumericFieldSettings.Scale="2" NumericFieldSettings.Minimum="" NumericFieldSettings.Maximum="" NumericFieldSettings.Hint="Prezzo del prodotto riservato al pubblico." />
         <PrezzoListino.NumericField DisplayName="Prezzo Listino" NumericFieldSettings.Required="True" NumericFieldSettings.Scale="2" NumericFieldSettings.Minimum="0" NumericFieldSettings.Maximum="" NumericFieldSettings.Hint="Prezzo di listino del prodotto." />
         <ScriptNascondiPrezzo.InsertStuffField DisplayName="Script Nascondi Prezzo" InsertStuffFieldSettings.OnFooter="true" InsertStuffFieldSettings.RawHtml="&lt;script type=&quot;text/javascript&quot;&gt;&#xD;&#xA;$(&quot;label[for=Prodotto_NascondiPrezzo_Value]&quot;).parent().hide();&#xD;&#xA;&lt;/script&gt;" />
         <SKU.TextField DisplayName="SKU" TextFieldSettings.Required="False" TextFieldSettings.Hint="Codice del prodotto." />
-        <URLecommerce.InputField DisplayName="URL e-commerce" InputFieldSettings.Type="Url" InputFieldSettings.Required="False" InputFieldSettings.AutoFocus="False" InputFieldSettings.AutoComplete="False" InputFieldSettings.MaxLength="0" InputFieldSettings.Hint="Indirizzo web del prodotto sulla piattaforma e-commerce." />
+        <URLecommerce.InputField DisplayName="URL e-commerce" InputFieldSettings.Type="Url" InputFieldSettings.Required="False" InputFieldSettings.AutoFocus="False" InputFieldSettings.AutoComplete="False" InputFieldSettings.MaxLength="0" InputFieldSettings.Hint="Inserire l'eventuale url del prodotto all'interno del sito di e-commerce." />
       </Prodotto>
       <ProfilePart ContentPartSettings.Attachable="False" ContentPartLayoutSettings.Placeable="False">
         <Avatar.MediaLibraryPickerField DisplayName="Avatar" MediaLibraryPickerFieldSettings.Required="False" MediaLibraryPickerFieldSettings.Multiple="False" />
@@ -843,15 +844,15 @@
       <ProjectionPart />
       <PublishLaterPart ContentPartSettings.Attachable="True" ContentPartSettings.Description="Adds the ability to delay the publication of a content item to a later date and time." />
       <PuntoVendita ContentPartSettings.Attachable="True">
-        <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="True" MediaLibraryPickerFieldSettings.Hint="Immagini a corredo del Punto Vendita, per esempio foto dell'esterno e dell'interno del Punto Vendita stesso." />
+        <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="True" MediaLibraryPickerFieldSettings.Hint="Clicca su &quot;Add&quot; e inserisci una o più immagini relative al punto vendita." />
         <ScriptNascondiMapSource.InsertStuffField DisplayName="ScriptNascondiMapSource" InsertStuffFieldSettings.RawHtml="&lt;script type=&quot;text/javascript&quot;&gt;&#xD;&#xA;$(&quot;input#MapPart_MapSourceFile_SelectedIds&quot;).parent().hide();&#xD;&#xA;&lt;/script&gt;" InsertStuffFieldSettings.OnFooter="true" />
       </PuntoVendita>
       <PushClienti ContentPartSettings.Attachable="True">
-        <ContenutoCorrelato.ContentPickerField DisplayName="Contenuto Correlato" ContentPickerFieldSettings.Required="True" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="NewsClienti,MessaggioPromozionale" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="News o Messaggio Promozionale a cui la notifica push si riferisce." FieldIndexing.Included="True" />
+        <ContenutoCorrelato.ContentPickerField DisplayName="Contenuto Correlato" ContentPickerFieldSettings.Required="True" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="NewsClienti,MessaggioPromozionale" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Associa un contenuto (news/promozione) alla notifica push. Una volta tappata, l'app si aprirà direttamente sul contenuto correlato." FieldIndexing.Included="True" />
         <Preferenze.TaxonomyField DisplayName="Preferenze" TaxonomyFieldSettings.Taxonomy="Preferenze" TaxonomyFieldSettings.LeavesOnly="True" TaxonomyFieldSettings.Required="True" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="False" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldLocalizationSettings.TryToLocalize="True" TaxonomyFieldSettings.Hint="La notifica push verrà inviata a chi ha espresso almeno una delle preferenze indicate." FieldIndexing.Included="True" />
       </PushClienti>
       <PushDipendenti ContentPartSettings.Attachable="True">
-        <ContenutoCorrelato.ContentPickerField DisplayName="Contenuto Correlato" ContentPickerFieldSettings.Required="True" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="NewsDipendenti,Questionnaire" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="News o Questionario a cui la notifica push si riferisce." FieldIndexing.Included="True" />
+        <ContenutoCorrelato.ContentPickerField DisplayName="Contenuto Correlato" ContentPickerFieldSettings.Required="True" ContentPickerFieldSettings.Multiple="False" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="NewsDipendenti,Questionnaire" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Associa un contenuto (news/survey) alla notifica push. Una volta tappata, l'app si aprirà direttamente sul contenuto correlato." FieldIndexing.Included="True" />
       </PushDipendenti>
       <QueryPart />
       <QueryUserFilterExtensionPart ContentPartSettings.Attachable="False">
@@ -871,6 +872,7 @@
       <RichiestaPubblicazione ContentPartSettings.Attachable="True">
         <ConfigStatus.HiddenStringField DisplayName="ConfigStatus" HiddenStringFieldSettings.Tokenized="True" />
         <Note.TextField DisplayName="Note" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Hint="Note relative alla richiesta di pubblicazione dell'app." TextFieldSettings.Required="False" />
+        <ScriptNascondiPulsanti.InsertStuffField DisplayName="Script Nascondi Pulsanti" InsertStuffFieldSettings.RawHtml="&lt;script&gt;&#xD;&#xA;$(function(){&#xD;&#xA;  var check = $(&quot;input[type=text][disabled][name$='ConfigStatus.Value']&quot;);&#xD;&#xA;  check.parent().hide();&#xD;&#xA;  if(check.val() == &quot;locked&quot;){&#xD;&#xA;    $(&quot;button&quot;).hide();&#xD;&#xA;  }&#xD;&#xA;});&#xD;&#xA;&lt;/script&gt;" InsertStuffFieldSettings.OnFooter="true" />
       </RichiestaPubblicazione>
       <SearchFormPart />
       <ShapeMenuItemPart />
@@ -882,7 +884,7 @@
         <Twitter.InputField DisplayName="Twitter" InputFieldSettings.Required="False" InputFieldSettings.Type="Url" InputFieldSettings.Pattern="http[s]?:\/\/twitter\.com\/(#!\/)?[a-zA-Z0-9_]{1,15}$" InputFieldSettings.Hint="Inserire un indirizzo Twitter valido (preceduto da http://)." InputFieldSettings.AutoFocus="False" InputFieldSettings.AutoComplete="False" InputFieldSettings.MaxLength="0" />
       </SocialPart>
       <Store ContentPartSettings.Attachable="True">
-        <StoreAssistants.ContentPickerField DisplayName="Store Assistants" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="True" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Dipendente" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Personale dello Store a cui verranno inviate le richieste di prodotti indirizzate a questo store." FieldIndexing.Included="True" />
+        <StoreAssistants.ContentPickerField DisplayName="Store Assistants" ContentPickerFieldSettings.Required="False" ContentPickerFieldSettings.Multiple="True" ContentPickerFieldSettings.ShowContentTab="True" ContentPickerFieldSettings.DisplayedContentTypes="Dipendente" ContentPickerFieldExtensionSettings.CascadePublish="False" ContentPickerFieldLocalizationSettings.TryToLocalizeItems="True" ContentPickerFieldLocalizationSettings.RemoveItemsWithoutLocalization="False" ContentPickerFieldLocalizationSettings.RemoveItemsWithNoLocalizationPart="False" ContentPickerFieldLocalizationSettings.AssertItemsHaveSameCulture="False" ContentPickerFieldLocalizationSettings.BlockForItemsWithNoLocalizationPart="False" ContentPickerFieldSettings.Hint="Aggiungi i dipendenti del singolo store ai quali verranno inviate le richieste dei prodotti." FieldIndexing.Included="True" />
       </Store>
       <SummaryAdminToolbarPart ContentPartSettings.Attachable="True" />
       <TagsPart ContentPartSettings.Attachable="True" ContentPartSettings.Description="Allows to describe your content using non-hierarchical keywords." ContentPartLayoutSettings.Placeable="True" />
@@ -953,25 +955,25 @@
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="categoria-news-dipendenti/unica" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=categoria-news-dipendenti" CreatedUtc="2017-08-03T15:38:05.5670635Z" PublishedUtc="2017-08-03T15:38:05.6502635Z" ModifiedUtc="2017-08-03T15:38:05.6176792Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=categoria-news-dipendenti" CreatedUtc="2017-08-03T15:38:05.5670635Z" PublishedUtc="2017-10-12T14:39:29.4788687Z" ModifiedUtc="2017-10-12T14:39:29.4375386Z" />
       <TermPart Count="2" Selectable="true" Weight="0" TaxonomyId="/alias=categoria-news-dipendenti" Path="" />
-      <TitlePart Title="Unica" />
+      <TitlePart Title="News" />
     </CategoriaNewsDipendentiTerm>
     <CategoriaProdottoTerm Id="/alias=categoria-prodotto\/unica" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="categoria-prodotto/unica" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=categoria-prodotto" CreatedUtc="2017-07-31T10:52:18.9835166Z" PublishedUtc="2017-07-31T10:52:19.1156887Z" ModifiedUtc="2017-07-31T10:52:19.0635191Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=categoria-prodotto" CreatedUtc="2017-07-31T10:52:18.9835166Z" PublishedUtc="2017-10-12T14:42:33.6702203Z" ModifiedUtc="2017-10-12T14:42:33.6309863Z" />
       <TermPart Count="8" Selectable="true" Weight="0" TaxonomyId="/alias=categoria-prodotto" Path="" />
-      <TitlePart Title="Unica" />
+      <TitlePart Title="Generica" />
     </CategoriaProdottoTerm>
     <CategoriaPromoTerm Id="/alias=categoria-promo\/unica" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="categoria-promo/unica" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=categoria-promo" CreatedUtc="2017-08-03T15:44:01.0986536Z" PublishedUtc="2017-08-03T15:44:01.1673Z" ModifiedUtc="2017-08-03T15:44:01.1357246Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=categoria-promo" CreatedUtc="2017-08-03T15:44:01.0986536Z" PublishedUtc="2017-10-12T14:42:43.4526204Z" ModifiedUtc="2017-10-12T14:42:43.4285829Z" />
       <TermPart Count="1" Selectable="true" Weight="0" TaxonomyId="/alias=categoria-promo" Path="" />
-      <TitlePart Title="Unica" />
+      <TitlePart Title="Generica" />
     </CategoriaPromoTerm>
     <ConfigurazioneAppStore Id="/alias=config\/appstore/Identifier=53ad20a30e93466ca8d5d62c87436246" Status="Published">
       <HiddenStringField.ConfigStatus />
@@ -1026,17 +1028,37 @@
       <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T15:23:13.3729818Z" PublishedUtc="2017-09-18T14:06:19.2728711Z" ModifiedUtc="2017-09-18T14:06:19.1900179Z" />
       <IdentityPart Identifier="5dcefc21a2464e31aef91fbb71ba68f9" />
     </ConfigurazioneGrafica>
+    <InfoPage Id="/alias=infos\/page-b2b/Identifier=d219ba415b4642cba931edc6c9d8da4a" Status="Published">
+      <InputField.EMail Value="" />
+      <InputField.SitoWeb Value="" />
+      <InputField.Telefono Value="" />
+      <InputField.Facebook />
+      <InputField.Instagram />
+      <InputField.Pinterest />
+      <InputField.Twitter />
+      <MediaLibraryPickerField.Gallery ContentItems="" />
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <AutoroutePart Alias="infos/page-b2b" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <BodyPart Text="&lt;p&gt;Testo da definire.&lt;/p&gt;" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-10-12T15:25:49.115682Z" PublishedUtc="2017-10-12T15:25:49.7634386Z" ModifiedUtc="2017-10-12T15:25:49.6429978Z" />
+      <IdentityPart Identifier="d219ba415b4642cba931edc6c9d8da4a" />
+      <LocalizationPart Culture="it-IT" />
+      <MapPart Latitude="0" Longitude="0" LocationAddress="" LocationInfo="" />
+      <ShareLinkPart SharedLink="" SharedText="" SharedBody="" SharedImage="" />
+      <TitlePart Title="Page B2B" />
+    </InfoPage>
     <Page Id="/alias=home" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="home" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="true" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-09-07T08:14:00Z" PublishedUtc="2017-09-18T12:46:33.6710221Z" ModifiedUtc="2017-09-18T12:46:33.6431738Z" />
       <LayoutPart>
-        <LayoutData>{"elements":[{"typeName":"Orchard.Layouts.Elements.Canvas","data":"","exportableData":"","index":0,"elements":[{"typeName":"Orchard.Layouts.Elements.Html","data":"Content=%3cp%3eSe+sei+un+utente+autorizzato%2c+procedi+con+la+login+e+accedi+al+Pannello+di+controllo+per+operare+sulla+piattaforma+digitale.%3c%2fp%3e","exportableData":"","index":0,"elements":[],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""},{"typeName":"Orchard.Layouts.Elements.Grid","data":"","exportableData":"","index":1,"elements":[{"typeName":"Orchard.Layouts.Elements.Row","data":"","exportableData":"","index":0,"elements":[{"typeName":"Orchard.Layouts.Elements.Column","data":"Width=12&amp;Offset=0&amp;Collapsible=null","exportableData":"","index":0,"elements":[],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""}],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""}],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""}],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""}]}</LayoutData>
+        <LayoutData>{"elements":[{"typeName":"Orchard.Layouts.Elements.Canvas","data":"","exportableData":"","index":0,"elements":[{"typeName":"Orchard.Layouts.Elements.Html","data":"Content=%3cp%3eSe+sei+un+utente+autorizzato%2c+procedi+con+la+login+e+accedi+al+%22Pannello+di+controllo%22.%3c%2fp%3e","exportableData":"","index":0,"elements":[],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""},{"typeName":"Orchard.Layouts.Elements.Grid","data":"","exportableData":"","index":1,"elements":[{"typeName":"Orchard.Layouts.Elements.Row","data":"","exportableData":"","index":0,"elements":[{"typeName":"Orchard.Layouts.Elements.Column","data":"Width=12&amp;Offset=0&amp;Collapsible=null","exportableData":"","index":0,"elements":[],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""}],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""}],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""}],"isTemplated":false,"htmlId":"","htmlClass":"","htmlStyle":"","rule":""}]}</LayoutData>
       </LayoutPart>
       <LocalizationPart Culture="it-IT" />
       <TagsPart Tags="" />
-      <TitlePart Title="Benvenuto nella console App Retail" />
+      <TitlePart Title="Benvenuto nella console di Retwins" />
     </Page>
     <PolicyText Id="/alias=policy\/cessione-dati-a-terzi" Status="Published">
       <NumericField.Creator Value="2" />
@@ -1068,13 +1090,21 @@
       <PolicyTextInfoPart PolicyType="CommercialUse" Priority="0" UserHaveToAccept="false" />
       <TitlePart Title="Uso Commerciale" />
     </PolicyText>
+    <PreferenzeTerm Id="/alias=preferenze\/categoria-prodotto" Status="Published">
+      <NumericField.Creator Value="2" />
+      <NumericField.LastModifier Value="2" />
+      <AutoroutePart Alias="preferenze/categoria-prodotto" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=preferenze" CreatedUtc="2017-10-12T14:44:29.1546948Z" PublishedUtc="2017-10-12T14:44:29.3940534Z" ModifiedUtc="2017-10-12T14:44:29.2772396Z" />
+      <TermPart Count="0" Selectable="true" Weight="0" TaxonomyId="/alias=preferenze" Path="" />
+      <TitlePart Title="Categoria prodotto" />
+    </PreferenzeTerm>
     <PreferenzeTerm Id="/alias=preferenze\/offerte" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="preferenze/offerte" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=preferenze" CreatedUtc="2017-08-03T15:37:04.187942Z" PublishedUtc="2017-08-03T15:37:04.2609154Z" ModifiedUtc="2017-08-03T15:37:04.2233154Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=preferenze" CreatedUtc="2017-08-03T15:37:04.187942Z" PublishedUtc="2017-10-12T14:43:46.6428228Z" ModifiedUtc="2017-10-12T14:43:46.5904755Z" />
       <TermPart Count="4" Selectable="true" Weight="0" TaxonomyId="/alias=preferenze" Path="" />
-      <TitlePart Title="Offerte" />
+      <TitlePart Title="Promozioni" />
     </PreferenzeTerm>
     <ProjectionPage Id="/alias=contatti-per-generatore" Status="Published">
       <NumericField.Creator Value="2" />
@@ -1534,37 +1564,41 @@
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="categoria-news-dipendenti" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T15:37:50.91036Z" PublishedUtc="2017-08-03T15:37:50.9800474Z" ModifiedUtc="2017-08-03T15:37:50.9504825Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T15:37:50.91036Z" PublishedUtc="2017-10-12T14:38:06.3830059Z" ModifiedUtc="2017-10-12T14:38:06.1193822Z" />
+      <LocalizationPart Culture="it-IT" />
       <TaxonomyExtensionPart OrderBy="Title" />
       <TaxonomyPart TermTypeName="CategoriaNewsDipendentiTerm" />
-      <TitlePart Title="Categoria News Dipendenti" />
+      <TitlePart Title="Categorie News Dipendenti" />
     </Taxonomy>
     <Taxonomy Id="/alias=categoria-prodotto" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="categoria-prodotto" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-07-28T08:28:31.4814034Z" PublishedUtc="2017-07-28T08:28:31.9935812Z" ModifiedUtc="2017-07-28T08:28:31.7418532Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-07-28T08:28:31.4814034Z" PublishedUtc="2017-10-12T14:38:18.6824751Z" ModifiedUtc="2017-10-12T14:38:18.6677938Z" />
+      <LocalizationPart Culture="it-IT" />
       <TaxonomyExtensionPart OrderBy="Title" />
       <TaxonomyPart TermTypeName="CategoriaProdottoTerm" />
-      <TitlePart Title="Categoria Prodotto" />
+      <TitlePart Title="Categorie Prodotto" />
     </Taxonomy>
     <Taxonomy Id="/alias=categoria-promo" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="categoria-promo" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T15:43:44.2597765Z" PublishedUtc="2017-08-03T15:43:44.3184886Z" ModifiedUtc="2017-08-03T15:43:44.2943744Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T15:43:44.2597765Z" PublishedUtc="2017-10-12T14:38:31.3114705Z" ModifiedUtc="2017-10-12T14:38:31.2807288Z" />
+      <LocalizationPart Culture="it-IT" />
       <TaxonomyExtensionPart OrderBy="Title" />
       <TaxonomyPart TermTypeName="CategoriaPromoTerm" />
-      <TitlePart Title="Categoria Promo" />
+      <TitlePart Title="Categorie Promozioni" />
     </Taxonomy>
     <Taxonomy Id="/alias=preferenze" Status="Published">
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="preferenze" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T15:36:31.3679262Z" PublishedUtc="2017-08-03T15:36:31.4947636Z" ModifiedUtc="2017-08-03T15:36:31.4696863Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T15:36:31.3679262Z" PublishedUtc="2017-10-12T14:38:46.0209412Z" ModifiedUtc="2017-10-12T14:38:46.0046082Z" />
+      <LocalizationPart Culture="it-IT" />
       <TaxonomyExtensionPart OrderBy="Title" />
       <TaxonomyPart TermTypeName="PreferenzeTerm" />
-      <TitlePart Title="Preferenze" />
+      <TitlePart Title="Preferenze di profilazione" />
     </Taxonomy>
   </Content>
   <CurrentTheme id="KrakeDefaultTheme" />
@@ -1575,7 +1609,7 @@
     <Role Name="Author" Permissions="PublishOwnContent,EditOwnContent,DeleteOwnContent,PreviewOwnContent,AccessAdminPanel,CreateTaxonomy,AddComment,ManageOwnMedia,ManageOwnBlogs,ViewOwnProfile,CanSeeOwnContents" />
     <Role Name="BrandAdminB2B" Permissions="AccessAdminPanel,Delete_PolicyText,Edit_PolicyText,Preview_PolicyText,Publish_PolicyText,Delete_Questionnaire,Edit_Questionnaire,Preview_Questionnaire,Publish_Questionnaire,View_Questionnaire,Delete_Catalogo,Edit_Catalogo,Preview_Catalogo,Publish_Catalogo,View_Catalogo,Edit_Dipendente,Preview_Dipendente,Publish_Dipendente,Delete_NewsDipendenti,Edit_NewsDipendenti,Preview_NewsDipendenti,Publish_NewsDipendenti,Edit_Prodotto,Preview_Prodotto,Publish_Prodotto,Delete_PushDipendenti,Edit_PushDipendenti,Preview_PushDipendenti,Publish_PushDipendenti,Delete_Store,Edit_Store,Preview_Store,Publish_Store,ManageTerms,ManageOwnMedia,CanSeeOwnContents,SeesAllContent,Laser.DynamicButtonToWorkflows.Permissions/ConfermaConfig,Laser.DynamicButtonToWorkflows.Permissions/DeliverApp,Laser.DynamicButtonToWorkflows.Permissions/InviaCredenziali,AccessExportContacts,ShowCommunicationContacts,ShowMenuCommunication,AccessExportQuestionnairesStatistics,AccessStatistics" />
     <Role Name="BrandAdminB2C" Permissions="AccessAdminPanel,Delete_PolicyText,Edit_PolicyText,Preview_PolicyText,Publish_PolicyText,Delete_Questionnaire,Edit_Questionnaire,Preview_Questionnaire,Publish_Questionnaire,View_Questionnaire,Delete_Catalogo,Edit_Catalogo,Preview_Catalogo,Publish_Catalogo,View_Catalogo,Delete_MessaggioPromozionale,Edit_MessaggioPromozionale,Preview_MessaggioPromozionale,Publish_MessaggioPromozionale,Delete_NewsClienti,Edit_NewsClienti,Preview_NewsClienti,Publish_NewsClienti,Delete_PuntoVendita,Edit_PuntoVendita,Preview_PuntoVendita,Publish_PuntoVendita,Delete_PushClienti,Edit_PushClienti,Preview_PushClienti,Publish_PushClienti,ManageTerms,CanSeeOwnContents,SeesAllContent,Laser.DynamicButtonToWorkflows.Permissions/ConfermaConfig,Laser.DynamicButtonToWorkflows.Permissions/DeliverApp,AccessExportQuestionnairesStatistics,AccessStatistics" />
-    <Role Name="BrandAdminConfig" Permissions="Edit_ConfigurazioneAppStore,Edit_ConfigurazioneGrafica,Edit_RichiestaPubblicazione,Publish_RichiestaPubblicazione" />
+    <Role Name="BrandAdminConfig" Permissions="Edit_ConfigurazioneAppStore,Edit_ConfigurazioneGrafica,Edit_RichiestaPubblicazione,Publish_RichiestaPubblicazione,MaySeeHiddenFields" />
     <Role Name="Contributor" Permissions="EditOwnContent,PreviewOwnContent,AccessAdminPanel,AddComment,ManageOwnMedia,EditOwnBlogPost,ViewOwnProfile,CanSeeOwnContents" />
     <Role Name="Editor" Permissions="PublishContent,EditContent,DeleteContent,PreviewContent,SetHomePage,AccessAdminPanel,ManageTaxonomies,ManageQueries,AddComment,ManageMediaContent,ManageTags,PublishBlogPost,EditBlogPost,DeleteBlogPost,ManageLayouts,ViewOwnProfile,SeesAllContent,AccessStatistics,GameRanking" />
     <Role Name="MobileAdmin" Permissions="AccessAdminPanel,View_ConfigurazioneBase" />
@@ -1586,318 +1620,322 @@
   <Workflows>
     <Workflow Name="DeliverApp" Enabled="true">
       <Activities>
-        <Activity Id="86" Name="DynamicButtonEvent" Start="true" X="10" Y="0">
+        <Activity Id="66" Name="DynamicButtonEvent" Start="true" X="10" Y="0">
           <State>{"DynamicButton":"3"}</State>
         </Activity>
-        <Activity Id="87" Name="SendTemplatedEmail" Start="false" X="336" Y="119">
+        <Activity Id="67" Name="SendTemplatedEmail" Start="false" X="336" Y="119">
           <State>{"Recipient":"other","RecipientOther":"giuseppe.musso@laser-group.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"6"}</State>
         </Activity>
-        <Activity Id="88" Name="Notify" Start="false" X="381" Y="240">
+        <Activity Id="68" Name="Notify" Start="false" X="381" Y="240">
           <State>{"Notification":"Information","Message":"La richiesta di pubblicazione dell'app è stata inviata."}</State>
         </Activity>
-        <Activity Id="89" Name="RazorExecute" Start="false" X="230" Y="0">
-          <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"HideConfigs.cshtml"}</State>
+        <Activity Id="69" Name="RazorExecute" Start="false" X="230" Y="0">
+          <State>{"RazorExecuteActivity_Outcomes":"Error,Ok,AlreadyLocked","RazorExecuteActivity_RazorView":"HideConfigs.cshtml"}</State>
         </Activity>
-        <Activity Id="90" Name="Logging" Start="false" X="471" Y="4">
+        <Activity Id="70" Name="Logging" Start="false" X="471" Y="4">
           <State>{"Level":"Error","Message":"Error in workflow DeliverApp (HideConfigs.cshtml): {Workflow.State:ErrorMessage}"}</State>
+        </Activity>
+        <Activity Id="71" Name="Notify" Start="false" X="216" Y="216">
+          <State>{"Notification":"Warning","Message":"Richiesta di pubblicazione già inoltrata in precedenza."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="87" SourceEndpoint="Sent" DestinationActivityId="88" DestinationEndpoint="" />
-        <Transition SourceActivityId="89" SourceEndpoint="Error" DestinationActivityId="90" DestinationEndpoint="" />
-        <Transition SourceActivityId="86" SourceEndpoint="Done" DestinationActivityId="89" DestinationEndpoint="" />
-        <Transition SourceActivityId="89" SourceEndpoint="Ok" DestinationActivityId="87" DestinationEndpoint="" />
-        <Transition SourceActivityId="90" SourceEndpoint="Done" DestinationActivityId="87" DestinationEndpoint="" />
+        <Transition SourceActivityId="67" SourceEndpoint="Sent" DestinationActivityId="68" DestinationEndpoint="" />
+        <Transition SourceActivityId="69" SourceEndpoint="Error" DestinationActivityId="70" DestinationEndpoint="" />
+        <Transition SourceActivityId="66" SourceEndpoint="Done" DestinationActivityId="69" DestinationEndpoint="" />
+        <Transition SourceActivityId="69" SourceEndpoint="Ok" DestinationActivityId="67" DestinationEndpoint="" />
+        <Transition SourceActivityId="70" SourceEndpoint="Done" DestinationActivityId="67" DestinationEndpoint="" />
+        <Transition SourceActivityId="69" SourceEndpoint="AlreadyLocked" DestinationActivityId="71" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Dipendente" Enabled="true">
       <Activities>
-        <Activity Id="4" Name="ContentUpdated" Start="true" X="164" Y="37">
+        <Activity Id="6" Name="ContentUpdated" Start="true" X="164" Y="37">
           <State>{"ContentTypes":"Dipendente"}</State>
         </Activity>
-        <Activity Id="5" Name="RazorExecute" Start="false" X="177" Y="287">
+        <Activity Id="7" Name="RazorExecute" Start="false" X="177" Y="287">
           <State>{"RazorExecuteActivity_Outcomes":"Ok,Error","RazorExecuteActivity_RazorView":"CreaUtenzaKrake.cshtml"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="4" SourceEndpoint="Done" DestinationActivityId="5" DestinationEndpoint="" />
+        <Transition SourceActivityId="6" SourceEndpoint="Done" DestinationActivityId="7" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Invio Credenziali" Enabled="true">
       <Activities>
-        <Activity Id="6" Name="SendTemplatedEmail" Start="false" X="283" Y="268">
+        <Activity Id="8" Name="SendTemplatedEmail" Start="false" X="283" Y="268">
           <State>{"Recipient":"other","RecipientOther":"{Content.Fields.Dipendente.Email}","RecipientCC":"","RecipientBCC":"","FromEmail":"","ReplyTo":"","EmailTemplate":"8"}</State>
         </Activity>
-        <Activity Id="7" Name="RazorExecute" Start="false" X="299" Y="119">
+        <Activity Id="9" Name="RazorExecute" Start="false" X="299" Y="119">
           <State>{"RazorExecuteActivity_Outcomes":"Ok,Error","RazorExecuteActivity_RazorView":"GetCredenziali.cshtml"}</State>
         </Activity>
-        <Activity Id="8" Name="Logging" Start="false" X="570" Y="140">
+        <Activity Id="10" Name="Logging" Start="false" X="570" Y="140">
           <State>{"Level":"Error","Message":"{Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="9" Name="Notify" Start="false" X="587" Y="295">
+        <Activity Id="11" Name="Notify" Start="false" X="587" Y="295">
           <State>{"Notification":"Error","Message":"Si è verificato un errore durante l'invio della e-mail."}</State>
         </Activity>
-        <Activity Id="10" Name="DynamicButtonEvent" Start="true" X="222" Y="0">
+        <Activity Id="12" Name="DynamicButtonEvent" Start="true" X="222" Y="0">
           <State>{"DynamicButton":"1"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="7" SourceEndpoint="Ok" DestinationActivityId="6" DestinationEndpoint="" />
-        <Transition SourceActivityId="7" SourceEndpoint="Error" DestinationActivityId="8" DestinationEndpoint="" />
-        <Transition SourceActivityId="8" SourceEndpoint="Done" DestinationActivityId="9" DestinationEndpoint="" />
-        <Transition SourceActivityId="10" SourceEndpoint="Done" DestinationActivityId="7" DestinationEndpoint="" />
+        <Transition SourceActivityId="9" SourceEndpoint="Ok" DestinationActivityId="8" DestinationEndpoint="" />
+        <Transition SourceActivityId="9" SourceEndpoint="Error" DestinationActivityId="10" DestinationEndpoint="" />
+        <Transition SourceActivityId="10" SourceEndpoint="Done" DestinationActivityId="11" DestinationEndpoint="" />
+        <Transition SourceActivityId="12" SourceEndpoint="Done" DestinationActivityId="9" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Messaggio Promozionale" Enabled="true">
       <Activities>
-        <Activity Id="11" Name="ContentPublished" Start="true" X="254" Y="-6">
+        <Activity Id="13" Name="ContentPublished" Start="true" X="254" Y="-6">
           <State>{"ContentTypes":"MessaggioPromozionale"}</State>
         </Activity>
-        <Activity Id="12" Name="RazorExecute" Start="false" X="262" Y="126">
+        <Activity Id="14" Name="RazorExecute" Start="false" X="262" Y="126">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"UpdateMessaggioPromozionale.cshtml"}</State>
         </Activity>
-        <Activity Id="13" Name="Logging" Start="false" X="591" Y="142">
+        <Activity Id="15" Name="Logging" Start="false" X="591" Y="142">
           <State>{"Level":"Error","Message":"Error in workflow Messaggio Promozionale: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="14" Name="Notify" Start="false" X="602" Y="267">
+        <Activity Id="16" Name="Notify" Start="false" X="602" Y="267">
           <State>{"Notification":"Error","Message":"Si è verificato un errore durante il salvataggio. Verificare i dati inseriti e riprovare."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="11" SourceEndpoint="Done" DestinationActivityId="12" DestinationEndpoint="" />
-        <Transition SourceActivityId="12" SourceEndpoint="Error" DestinationActivityId="13" DestinationEndpoint="" />
         <Transition SourceActivityId="13" SourceEndpoint="Done" DestinationActivityId="14" DestinationEndpoint="" />
+        <Transition SourceActivityId="14" SourceEndpoint="Error" DestinationActivityId="15" DestinationEndpoint="" />
+        <Transition SourceActivityId="15" SourceEndpoint="Done" DestinationActivityId="16" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="PublishConfigs" Enabled="true">
       <Activities>
-        <Activity Id="15" Name="ContentUpdated" Start="true" X="93" Y="33">
+        <Activity Id="17" Name="ContentUpdated" Start="true" X="93" Y="33">
           <State>{"ContentTypes":"ConfigurazioneAppStore,ConfigurazioneGrafica"}</State>
         </Activity>
-        <Activity Id="16" Name="IsInRole" Start="false" X="120" Y="146">
+        <Activity Id="18" Name="IsInRole" Start="false" X="120" Y="146">
           <State>{"Roles":"BrandAdminB2B,BrandAdminB2C"}</State>
         </Activity>
-        <Activity Id="17" Name="RazorExecute" Start="false" X="91" Y="292">
+        <Activity Id="19" Name="RazorExecute" Start="false" X="91" Y="292">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"CheckUpdatedConfig.cshtml"}</State>
         </Activity>
-        <Activity Id="18" Name="RazorExecute" Start="false" X="466" Y="148">
+        <Activity Id="20" Name="RazorExecute" Start="false" X="466" Y="148">
           <State>{"RazorExecuteActivity_Outcomes":"Error,ConfigurazioneGrafica,ConfigurazioneAppStore,AlreadyLocked","RazorExecuteActivity_RazorView":"LockConfig.cshtml"}</State>
         </Activity>
-        <Activity Id="19" Name="Logging" Start="false" X="717" Y="150">
+        <Activity Id="21" Name="Logging" Start="false" X="717" Y="150">
           <State>{"Level":"Error","Message":"Error in workflow PublishConfigs LockConfig. Errore durante il cambiamento di owner della configurazione \"{Content.ContentType}\" (id: {Content.Id}). {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="20" Name="Notify" Start="false" X="727" Y="296">
+        <Activity Id="22" Name="Notify" Start="false" X="727" Y="296">
           <State>{"Notification":"Error","Message":"Si è verificato un errore. Provare a pubblicare nuovamente la configurazione."}</State>
         </Activity>
-        <Activity Id="21" Name="Notify" Start="false" X="152" Y="501">
+        <Activity Id="23" Name="Notify" Start="false" X="152" Y="501">
           <State>{"Notification":"Error","Message":"Non è possibile modificare la configurazione dopo averla confermata. Se necessario, contattare l'assistenza."}</State>
         </Activity>
-        <Activity Id="22" Name="DynamicButtonEvent" Start="true" X="451" Y="31">
+        <Activity Id="24" Name="DynamicButtonEvent" Start="true" X="451" Y="31">
           <State>{"DynamicButton":"2"}</State>
         </Activity>
-        <Activity Id="23" Name="SendTemplatedEmail" Start="false" X="510" Y="297">
+        <Activity Id="25" Name="SendTemplatedEmail" Start="false" X="510" Y="297">
           <State>{"Recipient":"other","RecipientOther":"laser.srl.ao@gmail.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"7"}</State>
         </Activity>
-        <Activity Id="24" Name="SendTemplatedEmail" Start="false" X="306" Y="296">
+        <Activity Id="26" Name="SendTemplatedEmail" Start="false" X="306" Y="296">
           <State>{"Recipient":"other","RecipientOther":"laser.srl.ao@gmail.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"3"}</State>
         </Activity>
-        <Activity Id="25" Name="Notify" Start="false" X="450" Y="465">
+        <Activity Id="27" Name="Notify" Start="false" X="450" Y="465">
           <State>{"Notification":"Information","Message":"I tuoi dati verranno presi in carico e gestiti dai nostri tecnici. Avendo confermato i dati, questi non saranno più modificabili."}</State>
         </Activity>
-        <Activity Id="26" Name="Notify" Start="false" X="737" Y="85">
+        <Activity Id="28" Name="Notify" Start="false" X="737" Y="85">
           <State>{"Notification":"Warning","Message":"Configurazione già confermata in precedenza."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="15" SourceEndpoint="Done" DestinationActivityId="16" DestinationEndpoint="" />
-        <Transition SourceActivityId="16" SourceEndpoint="Yes" DestinationActivityId="17" DestinationEndpoint="" />
-        <Transition SourceActivityId="17" SourceEndpoint="Error" DestinationActivityId="21" DestinationEndpoint="" />
-        <Transition SourceActivityId="18" SourceEndpoint="Error" DestinationActivityId="19" DestinationEndpoint="" />
-        <Transition SourceActivityId="19" SourceEndpoint="Done" DestinationActivityId="20" DestinationEndpoint="" />
-        <Transition SourceActivityId="22" SourceEndpoint="Done" DestinationActivityId="18" DestinationEndpoint="" />
-        <Transition SourceActivityId="18" SourceEndpoint="ConfigurazioneAppStore" DestinationActivityId="24" DestinationEndpoint="" />
-        <Transition SourceActivityId="18" SourceEndpoint="ConfigurazioneGrafica" DestinationActivityId="23" DestinationEndpoint="" />
-        <Transition SourceActivityId="24" SourceEndpoint="Sent" DestinationActivityId="25" DestinationEndpoint="" />
-        <Transition SourceActivityId="23" SourceEndpoint="Sent" DestinationActivityId="25" DestinationEndpoint="" />
-        <Transition SourceActivityId="18" SourceEndpoint="AlreadyLocked" DestinationActivityId="26" DestinationEndpoint="" />
+        <Transition SourceActivityId="17" SourceEndpoint="Done" DestinationActivityId="18" DestinationEndpoint="" />
+        <Transition SourceActivityId="18" SourceEndpoint="Yes" DestinationActivityId="19" DestinationEndpoint="" />
+        <Transition SourceActivityId="19" SourceEndpoint="Error" DestinationActivityId="23" DestinationEndpoint="" />
+        <Transition SourceActivityId="20" SourceEndpoint="Error" DestinationActivityId="21" DestinationEndpoint="" />
+        <Transition SourceActivityId="21" SourceEndpoint="Done" DestinationActivityId="22" DestinationEndpoint="" />
+        <Transition SourceActivityId="24" SourceEndpoint="Done" DestinationActivityId="20" DestinationEndpoint="" />
+        <Transition SourceActivityId="20" SourceEndpoint="ConfigurazioneAppStore" DestinationActivityId="26" DestinationEndpoint="" />
+        <Transition SourceActivityId="20" SourceEndpoint="ConfigurazioneGrafica" DestinationActivityId="25" DestinationEndpoint="" />
+        <Transition SourceActivityId="26" SourceEndpoint="Sent" DestinationActivityId="27" DestinationEndpoint="" />
+        <Transition SourceActivityId="25" SourceEndpoint="Sent" DestinationActivityId="27" DestinationEndpoint="" />
+        <Transition SourceActivityId="20" SourceEndpoint="AlreadyLocked" DestinationActivityId="28" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Richiesta Prodotto" Enabled="true">
       <Activities>
-        <Activity Id="27" Name="RazorExecute" Start="false" X="499" Y="157">
+        <Activity Id="29" Name="RazorExecute" Start="false" X="499" Y="157">
           <State>{"RazorExecuteActivity_Outcomes":"Error,NonEvasa,Evasa,Annullata,Rifiutata","RazorExecuteActivity_RazorView":"UpdateRichiestaProdotto.cshtml"}</State>
         </Activity>
-        <Activity Id="28" Name="Logging" Start="false" X="767" Y="145">
+        <Activity Id="30" Name="Logging" Start="false" X="767" Y="145">
           <State>{"Level":"Error","Message":"Error in workflow UpdateRichiestaProdotto: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="29" Name="SendPush" Start="false" X="496" Y="349">
+        <Activity Id="31" Name="SendPush" Start="false" X="496" Y="349">
           <State>{"allDevice":"UserId","userId":"{Workflow.State:UserIdToNotify}","allLanguage":"All","Produzione":"Produzione","idRelated":"{Content.Id}","PushMessage":"La richiesta # {Content.Id} del prodotto {Content.Fields.RichiestaProdotto.Prodotto.Content.DisplayText} è stata annullata."}</State>
         </Activity>
-        <Activity Id="30" Name="SendPush" Start="false" X="607" Y="347">
+        <Activity Id="32" Name="SendPush" Start="false" X="607" Y="347">
           <State>{"allDevice":"UserId","userId":"{Workflow.State:UserIdToNotify}","allLanguage":"All","Produzione":"Produzione","idRelated":"{Content.Id}","PushMessage":"Si prega di prendere in carico la Richiesta # {Content.Id} del prodotto {Content.Fields.RichiestaProdotto.Prodotto.Content.DisplayText}."}</State>
         </Activity>
-        <Activity Id="31" Name="SendPush" Start="false" X="716" Y="345">
+        <Activity Id="33" Name="SendPush" Start="false" X="716" Y="345">
           <State>{"allDevice":"UserId","userId":"{Workflow.State:UserIdToNotify}","allLanguage":"All","Produzione":"Produzione","idRelated":"{Content.Id}","PushMessage":"La richiesta # {Content.Id} del prodotto {Content.Fields.RichiestaProdotto.Prodotto.Content.DisplayText} è stata evasa."}</State>
         </Activity>
-        <Activity Id="32" Name="Signal" Start="true" X="3" Y="52">
+        <Activity Id="34" Name="Signal" Start="true" X="3" Y="52">
           <State>{"Signal":"RichiestaNonEvasa"}</State>
         </Activity>
-        <Activity Id="33" Name="Signal" Start="true" X="108" Y="0">
+        <Activity Id="35" Name="Signal" Start="true" X="108" Y="0">
           <State>{"Signal":"RichiestaAnnullata"}</State>
         </Activity>
-        <Activity Id="34" Name="Signal" Start="true" X="187" Y="0">
+        <Activity Id="36" Name="Signal" Start="true" X="187" Y="0">
           <State>{"Signal":"RichiestaEvasa"}</State>
         </Activity>
-        <Activity Id="35" Name="RazorExecute" Start="false" X="99" Y="135">
+        <Activity Id="37" Name="RazorExecute" Start="false" X="99" Y="135">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"SignalRichiestaProdotto.cshtml"}</State>
         </Activity>
-        <Activity Id="36" Name="Logging" Start="false" X="57" Y="333">
+        <Activity Id="38" Name="Logging" Start="false" X="57" Y="333">
           <State>{"Level":"Error","Message":"Error in workflow UpdateRichiestaProdotto (signal): {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="37" Name="WebApiResponse" Start="false" X="30" Y="458">
+        <Activity Id="39" Name="WebApiResponse" Start="false" X="30" Y="458">
           <State>{"Message":"","ErrorCode":"GenericError","ResolutionAction":"NoAction"}</State>
         </Activity>
-        <Activity Id="38" Name="WebApiResponse" Start="false" X="244" Y="348">
+        <Activity Id="40" Name="WebApiResponse" Start="false" X="244" Y="348">
           <State>{"Successful":"true","Message":"","ErrorCode":"NoError","ResolutionAction":"NoAction"}</State>
         </Activity>
-        <Activity Id="39" Name="SendPush" Start="false" X="391" Y="276">
+        <Activity Id="41" Name="SendPush" Start="false" X="391" Y="276">
           <State>{"allDevice":"UserId","userId":"{Workflow.State:UserIdToNotify}","allLanguage":"All","Produzione":"Produzione","idRelated":"{Content.Id}","PushMessage":"La richiesta # {Content.Id} del prodotto {Content.Fields.RichiestaProdotto.Prodotto.Content.DisplayText} è stata rifiutata."}</State>
         </Activity>
-        <Activity Id="40" Name="Signal" Start="true" X="298" Y="49">
+        <Activity Id="42" Name="Signal" Start="true" X="298" Y="49">
           <State>{"Signal":"RichiestaRifiutata"}</State>
         </Activity>
-        <Activity Id="41" Name="ContentUpdated" Start="true" X="549" Y="45">
+        <Activity Id="43" Name="ContentUpdated" Start="true" X="549" Y="45">
           <State>{"ContentTypes":"RichiestaProdotto"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="27" SourceEndpoint="Error" DestinationActivityId="28" DestinationEndpoint="" />
-        <Transition SourceActivityId="27" SourceEndpoint="Annullata" DestinationActivityId="29" DestinationEndpoint="" />
-        <Transition SourceActivityId="27" SourceEndpoint="NonEvasa" DestinationActivityId="30" DestinationEndpoint="" />
-        <Transition SourceActivityId="27" SourceEndpoint="Evasa" DestinationActivityId="31" DestinationEndpoint="" />
-        <Transition SourceActivityId="32" SourceEndpoint="Done" DestinationActivityId="35" DestinationEndpoint="" />
-        <Transition SourceActivityId="33" SourceEndpoint="Done" DestinationActivityId="35" DestinationEndpoint="" />
-        <Transition SourceActivityId="34" SourceEndpoint="Done" DestinationActivityId="35" DestinationEndpoint="" />
-        <Transition SourceActivityId="35" SourceEndpoint="Ok" DestinationActivityId="38" DestinationEndpoint="" />
-        <Transition SourceActivityId="35" SourceEndpoint="Error" DestinationActivityId="36" DestinationEndpoint="" />
+        <Transition SourceActivityId="29" SourceEndpoint="Error" DestinationActivityId="30" DestinationEndpoint="" />
+        <Transition SourceActivityId="29" SourceEndpoint="Annullata" DestinationActivityId="31" DestinationEndpoint="" />
+        <Transition SourceActivityId="29" SourceEndpoint="NonEvasa" DestinationActivityId="32" DestinationEndpoint="" />
+        <Transition SourceActivityId="29" SourceEndpoint="Evasa" DestinationActivityId="33" DestinationEndpoint="" />
+        <Transition SourceActivityId="34" SourceEndpoint="Done" DestinationActivityId="37" DestinationEndpoint="" />
+        <Transition SourceActivityId="35" SourceEndpoint="Done" DestinationActivityId="37" DestinationEndpoint="" />
         <Transition SourceActivityId="36" SourceEndpoint="Done" DestinationActivityId="37" DestinationEndpoint="" />
-        <Transition SourceActivityId="27" SourceEndpoint="Rifiutata" DestinationActivityId="39" DestinationEndpoint="" />
-        <Transition SourceActivityId="40" SourceEndpoint="Done" DestinationActivityId="35" DestinationEndpoint="" />
-        <Transition SourceActivityId="41" SourceEndpoint="Done" DestinationActivityId="27" DestinationEndpoint="" />
-        <Transition SourceActivityId="38" SourceEndpoint="Done" DestinationActivityId="27" DestinationEndpoint="" />
+        <Transition SourceActivityId="37" SourceEndpoint="Ok" DestinationActivityId="40" DestinationEndpoint="" />
+        <Transition SourceActivityId="37" SourceEndpoint="Error" DestinationActivityId="38" DestinationEndpoint="" />
+        <Transition SourceActivityId="38" SourceEndpoint="Done" DestinationActivityId="39" DestinationEndpoint="" />
+        <Transition SourceActivityId="29" SourceEndpoint="Rifiutata" DestinationActivityId="41" DestinationEndpoint="" />
+        <Transition SourceActivityId="42" SourceEndpoint="Done" DestinationActivityId="37" DestinationEndpoint="" />
+        <Transition SourceActivityId="43" SourceEndpoint="Done" DestinationActivityId="29" DestinationEndpoint="" />
+        <Transition SourceActivityId="40" SourceEndpoint="Done" DestinationActivityId="29" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Unpublish Richieste Prodotto" Enabled="true">
       <Activities>
-        <Activity Id="42" Name="Signal" Start="true" X="190" Y="4">
+        <Activity Id="44" Name="Signal" Start="true" X="190" Y="4">
           <State>{"Signal":"UnpublishRichiesteProdotto"}</State>
         </Activity>
-        <Activity Id="43" Name="RazorExecute" Start="false" X="172" Y="149">
+        <Activity Id="45" Name="RazorExecute" Start="false" X="172" Y="149">
           <State>{"RazorExecuteActivity_Outcomes":"Ok,Error","RazorExecuteActivity_RazorView":"UnpublishRichiesteProdotto.cshtml"}</State>
         </Activity>
-        <Activity Id="44" Name="Logging" Start="false" X="541" Y="174">
+        <Activity Id="46" Name="Logging" Start="false" X="541" Y="174">
           <State>{"Level":"Error","Message":"Error in workflow UnpublishRichiesteProdotto: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="42" SourceEndpoint="Done" DestinationActivityId="43" DestinationEndpoint="" />
-        <Transition SourceActivityId="43" SourceEndpoint="Error" DestinationActivityId="44" DestinationEndpoint="" />
+        <Transition SourceActivityId="44" SourceEndpoint="Done" DestinationActivityId="45" DestinationEndpoint="" />
+        <Transition SourceActivityId="45" SourceEndpoint="Error" DestinationActivityId="46" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Unpublish Stores" Enabled="true">
       <Activities>
-        <Activity Id="45" Name="ContentPublished" Start="true" X="207" Y="4">
+        <Activity Id="47" Name="ContentPublished" Start="true" X="207" Y="4">
           <State>{"ContentTypes":"Store"}</State>
         </Activity>
-        <Activity Id="46" Name="Signal" Start="true" X="463" Y="4">
+        <Activity Id="48" Name="Signal" Start="true" X="463" Y="4">
           <State>{"Signal":"CheckStores"}</State>
         </Activity>
-        <Activity Id="47" Name="RazorExecute" Start="false" X="319" Y="129">
+        <Activity Id="49" Name="RazorExecute" Start="false" X="319" Y="129">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok,Unpublished","RazorExecuteActivity_RazorView":"UnpublishStores.cshtml"}</State>
         </Activity>
-        <Activity Id="48" Name="Logging" Start="false" X="600" Y="139">
+        <Activity Id="50" Name="Logging" Start="false" X="600" Y="139">
           <State>{"Level":"Error","Message":"Error in workflow UnpublishStores: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="49" Name="Logging" Start="false" X="80" Y="144">
+        <Activity Id="51" Name="Logging" Start="false" X="80" Y="144">
           <State>{"Level":"Error","Message":"Workflow UnpublishStores: forced store unpublish."}</State>
         </Activity>
-        <Activity Id="50" Name="Notify" Start="false" X="87" Y="271">
+        <Activity Id="52" Name="Notify" Start="false" X="87" Y="271">
           <State>{"Notification":"Error","Message":"E' stato raggiunto il numero di Store acquistati. Lo Store non è stato pubblicato."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="45" SourceEndpoint="Done" DestinationActivityId="47" DestinationEndpoint="" />
-        <Transition SourceActivityId="46" SourceEndpoint="Done" DestinationActivityId="47" DestinationEndpoint="" />
-        <Transition SourceActivityId="47" SourceEndpoint="Error" DestinationActivityId="48" DestinationEndpoint="" />
-        <Transition SourceActivityId="47" SourceEndpoint="Unpublished" DestinationActivityId="49" DestinationEndpoint="" />
-        <Transition SourceActivityId="49" SourceEndpoint="Done" DestinationActivityId="50" DestinationEndpoint="" />
+        <Transition SourceActivityId="47" SourceEndpoint="Done" DestinationActivityId="49" DestinationEndpoint="" />
+        <Transition SourceActivityId="48" SourceEndpoint="Done" DestinationActivityId="49" DestinationEndpoint="" />
+        <Transition SourceActivityId="49" SourceEndpoint="Error" DestinationActivityId="50" DestinationEndpoint="" />
+        <Transition SourceActivityId="49" SourceEndpoint="Unpublished" DestinationActivityId="51" DestinationEndpoint="" />
+        <Transition SourceActivityId="51" SourceEndpoint="Done" DestinationActivityId="52" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Update Configurazione Base" Enabled="true">
       <Activities>
-        <Activity Id="51" Name="RazorExecute" Start="false" X="191" Y="127">
+        <Activity Id="53" Name="RazorExecute" Start="false" X="191" Y="127">
           <State>{"RazorExecuteActivity_Outcomes":"Ok,Error","RazorExecuteActivity_RazorView":"UpdateConfigurazioneBase.cshtml"}</State>
         </Activity>
-        <Activity Id="52" Name="Notify" Start="false" X="564" Y="153">
+        <Activity Id="54" Name="Notify" Start="false" X="564" Y="153">
           <State>{"Notification":"Error","Message":"Si è verificato un errore durante l'aggiornamento della struttura dei prodotti."}</State>
         </Activity>
-        <Activity Id="53" Name="Logging" Start="false" X="542" Y="278">
+        <Activity Id="55" Name="Logging" Start="false" X="542" Y="278">
           <State>{"Level":"Error","Message":"Error in workflow Update Configurazione Base: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="54" Name="ContentPublished" Start="true" X="228" Y="3">
+        <Activity Id="56" Name="ContentPublished" Start="true" X="228" Y="3">
           <State>{"ContentTypes":"ConfigurazioneBase"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="51" SourceEndpoint="Error" DestinationActivityId="52" DestinationEndpoint="" />
-        <Transition SourceActivityId="52" SourceEndpoint="Done" DestinationActivityId="53" DestinationEndpoint="" />
-        <Transition SourceActivityId="54" SourceEndpoint="Done" DestinationActivityId="51" DestinationEndpoint="" />
+        <Transition SourceActivityId="53" SourceEndpoint="Error" DestinationActivityId="54" DestinationEndpoint="" />
+        <Transition SourceActivityId="54" SourceEndpoint="Done" DestinationActivityId="55" DestinationEndpoint="" />
+        <Transition SourceActivityId="56" SourceEndpoint="Done" DestinationActivityId="53" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Update Contatto" Enabled="true">
       <Activities>
-        <Activity Id="55" Name="ContentUpdated" Start="true" X="212" Y="23">
+        <Activity Id="57" Name="ContentUpdated" Start="true" X="212" Y="23">
           <State>{"ContentTypes":"CommunicationContact"}</State>
         </Activity>
-        <Activity Id="56" Name="RazorExecute" Start="false" X="255" Y="176">
+        <Activity Id="58" Name="RazorExecute" Start="false" X="255" Y="176">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"UpdateContatto.cshtml"}</State>
         </Activity>
-        <Activity Id="57" Name="Logging" Start="false" X="640" Y="210">
+        <Activity Id="59" Name="Logging" Start="false" X="640" Y="210">
           <State>{"Level":"Error","Message":"Errore nel workflow UpdateContatto: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="58" Name="SendTemplatedEmail" Start="false" X="278" Y="423">
+        <Activity Id="60" Name="SendTemplatedEmail" Start="false" X="278" Y="423">
           <State>{"Recipient":"other","RecipientOther":"{Content.Fields.ContactInfoPart.EmailInfo}","RecipientCC":"giuseppe.musso@laser-group.com","RecipientBCC":"","FromEmail":"","ReplyTo":"","EmailTemplate":"5"}</State>
         </Activity>
-        <Activity Id="59" Name="IsInRole" Start="false" X="300" Y="299">
+        <Activity Id="61" Name="IsInRole" Start="false" X="300" Y="299">
           <State>{"Roles":"StoreAssistant"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="55" SourceEndpoint="Done" DestinationActivityId="56" DestinationEndpoint="" />
-        <Transition SourceActivityId="56" SourceEndpoint="Error" DestinationActivityId="57" DestinationEndpoint="" />
-        <Transition SourceActivityId="56" SourceEndpoint="Ok" DestinationActivityId="59" DestinationEndpoint="" />
-        <Transition SourceActivityId="59" SourceEndpoint="Yes" DestinationActivityId="58" DestinationEndpoint="" />
+        <Transition SourceActivityId="57" SourceEndpoint="Done" DestinationActivityId="58" DestinationEndpoint="" />
+        <Transition SourceActivityId="58" SourceEndpoint="Error" DestinationActivityId="59" DestinationEndpoint="" />
+        <Transition SourceActivityId="58" SourceEndpoint="Ok" DestinationActivityId="61" DestinationEndpoint="" />
+        <Transition SourceActivityId="61" SourceEndpoint="Yes" DestinationActivityId="60" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Update Push" Enabled="true">
       <Activities>
-        <Activity Id="60" Name="ContentUpdated" Start="true" X="243" Y="-9">
+        <Activity Id="62" Name="ContentUpdated" Start="true" X="243" Y="-9">
           <State>{"ContentTypes":"PushClienti,PushDipendenti"}</State>
         </Activity>
-        <Activity Id="61" Name="RazorExecute" Start="false" X="245" Y="159">
+        <Activity Id="63" Name="RazorExecute" Start="false" X="245" Y="159">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"UpdatePush.cshtml"}</State>
         </Activity>
-        <Activity Id="62" Name="Logging" Start="false" X="529" Y="321">
+        <Activity Id="64" Name="Logging" Start="false" X="529" Y="321">
           <State>{"Level":"Error","Message":"Error in Update Push workflow: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="63" Name="Notify" Start="false" X="539" Y="182">
+        <Activity Id="65" Name="Notify" Start="false" X="539" Y="182">
           <State>{"Notification":"Error","Message":"Si è verificato un errrore sull'aggiornamento dei dati. Provare a salvare nuovamente."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="60" SourceEndpoint="Done" DestinationActivityId="61" DestinationEndpoint="" />
-        <Transition SourceActivityId="61" SourceEndpoint="Error" DestinationActivityId="63" DestinationEndpoint="" />
-        <Transition SourceActivityId="63" SourceEndpoint="Done" DestinationActivityId="62" DestinationEndpoint="" />
+        <Transition SourceActivityId="62" SourceEndpoint="Done" DestinationActivityId="63" DestinationEndpoint="" />
+        <Transition SourceActivityId="63" SourceEndpoint="Error" DestinationActivityId="65" DestinationEndpoint="" />
+        <Transition SourceActivityId="65" SourceEndpoint="Done" DestinationActivityId="64" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
   </Workflows>
