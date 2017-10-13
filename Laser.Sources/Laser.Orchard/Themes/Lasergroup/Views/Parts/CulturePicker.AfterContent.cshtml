@@ -17,7 +17,7 @@
     }
     var selectedCulture = Model.UserCulture == null ? WorkContext.CurrentCulture : Model.UserCulture.CultureCode;
     if (availableCultureswithNames != null && availableCultureswithNames.Count > 0) {
-        <ul class="nav navbar-nav navbar-lang handel-got-d">
+        <ul class="nav navbar-nav navbar-lang navbar-lang-home-intro handel-got-d hidden-xs">
             @foreach (var cul in availableCultureswithNames) {
                 string activeCulture = cul.Key == selectedCulture ? "active" : "";
                 <li class="@activeCulture">
