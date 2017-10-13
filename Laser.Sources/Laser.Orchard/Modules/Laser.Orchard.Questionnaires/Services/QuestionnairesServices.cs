@@ -27,6 +27,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Hosting;
 using Orchard.Email.Services;
+using Orchard.Tokens;
 
 namespace Laser.Orchard.Questionnaires.Services {
 
@@ -46,6 +47,7 @@ namespace Laser.Orchard.Questionnaires.Services {
         private readonly IDateLocalizationServices _dateServices;
         private readonly ShellSettings _shellSettings;
         private readonly Lazy<ISmtpChannel> _messageManager;
+        private readonly ITokenizer _tokenizer;
 
         public Localizer T { get; set; }
 
@@ -59,7 +61,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             IControllerContextAccessor controllerContextAccessor,
             Lazy<ISmtpChannel> messageManager,
             ITemplateService templateService,
-
+            ITokenizer tokenizer,
             ITransactionManager transactionManager,
             IDateLocalization dateLocalization,
             IScheduledTaskManager taskManager,
@@ -76,6 +78,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             _controllerContextAccessor = controllerContextAccessor;
             _templateService = templateService;
             _messageManager = messageManager;
+            _tokenizer = tokenizer;
             // ISmtpChannel _messageManager = null;
 
 
@@ -450,7 +453,16 @@ namespace Laser.Orchard.Questionnaires.Services {
             bool result = false;
             var questionnaireModuleSettings = _orchardServices.WorkContext.CurrentSite.As<QuestionnaireModuleSettingsPart>();
             var questionnairePartSettings = _orchardServices.ContentManager.Get<QuestionnairePart>(editModel.Id).Settings.GetModel<QuestionnairesPartSettingVM>();
+            var content = _orchardServices.ContentManager.Get(editModel.Id);
             bool exit = false;
+            
+            if (String.IsNullOrWhiteSpace(editModel.Context)) { //fallback into questionnaire part settings context if context is null
+                // Tokenize Settings Context
+                editModel.Context = _tokenizer.Replace(questionnairePartSettings.QuestionnaireContext, new Dictionary<string, object> { { "Content", content } }); 
+            }
+            if (editModel.Context.Length > 255) {// limits context to 255 chars
+                editModel.Context = editModel.Context.Substring(0, 255);
+            }
             if (questionnaireModuleSettings.Disposable) {
                 if (currentUser != null) {
                     if (_repositoryUserAnswer.Fetch(x => x.User_Id == currentUser.Id && x.QuestionnairePartRecord_Id == editModel.Id && x.Context == editModel.Context).Count() > 0) {
@@ -509,7 +521,6 @@ namespace Laser.Orchard.Questionnaires.Services {
                     }
                 }
 
-                var content = _orchardServices.ContentManager.Get(editModel.Id);
                 _workflowManager.TriggerEvent("QuestionnaireSubmitted", content, () => new Dictionary<string, object> { { "Content", content }, { "QuestionnaireContext", editModel.Context } });
                 result = true;
             }

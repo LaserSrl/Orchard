@@ -32,7 +32,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             IQuestionnairesServices questionnairesServices
             , IContentManager contentManager
             , IOrchardServices orchardServices
-             , ICsrfTokenHelper csrfTokenHelper
+            , ICsrfTokenHelper csrfTokenHelper
             , IRepository<QuestionRecord> repositoryQuestions
             , IRepository<AnswerRecord> repositoryAnswer
             , IUtilsServices utilsServices
@@ -74,7 +74,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                 return (_utilsServices.GetResponse(ResponseType.Validation, "Validation: invalid input data structure."));
             }
         }
-        private Response ExecPost(List<AnswerWithResultViewModel> Risps, string QuestionnaireContext = "external") {
+        private Response ExecPost(List<AnswerWithResultViewModel> Risps, string QuestionnaireContext = "") {
 #if DEBUG
             Logger.Error(Request.Headers.ToString());
 #endif
@@ -90,8 +90,8 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                 else
                     QuestionId = Risps[0].QuestionRecord_Id;
                 Int32 id = _repositoryQuestions.Fetch(x => x.Id == QuestionId).FirstOrDefault().QuestionnairePartRecord_Id;
-
-                var qp = _contentManager.Get(id).As<QuestionnairePart>();
+                var content = _contentManager.Get(id);
+                var qp = content.As<QuestionnairePart>();
                 QuestionnaireWithResultsViewModel qVM = _questionnairesServices.BuildViewModelWithResultsForQuestionnairePart(qp);
                 foreach (QuestionWithResultsViewModel qresult in qVM.QuestionsWithResults) {
                     if (qresult.QuestionType == QuestionType.OpenAnswer) {
