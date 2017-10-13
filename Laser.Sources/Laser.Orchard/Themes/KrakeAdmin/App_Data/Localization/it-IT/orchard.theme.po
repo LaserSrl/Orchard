@@ -8,6 +8,46 @@
 # > msgid "{ identificativo del messaggio }"
 # > msgstr "{ messaggio }"
 
+msgctxt "~/Themes/KrakeAdmin/Views/Admin/ThemeSettings.cshtml"
+msgid "Base line text"
+msgstr "Testo base"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Admin/ThemeSettings.cshtml"
+msgid "Header logo URL"
+msgstr "URL del logo dell'intestazione"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Admin/ThemeSettings.cshtml"
+msgid "Krake admin theme settings"
+msgstr "Impostazioni del tema admin di Krake"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Admin/ThemeSettings.cshtml"
+msgid "Placeholder logo URL"
+msgstr "URL del logo placeholder"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Admin/ThemeSettings.cshtml"
+msgid "Placeholder small logo URL"
+msgstr "URL del logo placeholder piccolo"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Admin/ThemeSettings.cshtml"
+msgid "Save"
+msgstr "Salva"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Admin/ThemeSettings.cshtml"
+msgid "type a base line text"
+msgstr "digitare un testo di base"
+
+msgctxt "~/Themes/KrakeAdmin/Views/Admin/ThemeSettings.cshtml"
+msgid "type an URL for the header logo. Recommended size is 222x55."
+msgstr "digitare un URL per il logo dell'intestazione. Dimensione consigliata 222x55."
+
+msgctxt "~/Themes/KrakeAdmin/Views/Admin/ThemeSettings.cshtml"
+msgid "type an URL for the placeholder logo. Recommended size is 240x120."
+msgstr "digitare un URL per il logo placeholder. Dimensione consigliata 240x120."
+
+msgctxt "~/Themes/KrakeAdmin/Views/Admin/ThemeSettings.cshtml"
+msgid "type an URL for the placeholder small logo. Recommended size is 70x70."
+msgstr "digitare un URL per il logo placeholder piccolo. Dimensione consigliata 70x70."
+
 msgctxt "~/Themes/KrakeAdmin/Views/Content.SummaryAdmin.cshtml"
 msgid "Delete"
 msgstr "Elimina"
@@ -315,4 +355,20 @@ msgstr "Utente:"
 msgctxt "~/Themes/KrakeAdmin/Views/User.cshtml"
 msgid "Your site"
 msgstr "Il tuo sito"
+
+msgctxt "KrakeAdmin.Settings.AdminMenu"
+msgid "Krake admin theme options"
+msgstr "Opzioni del tema admin di Krake"
+
+msgctxt "KrakeAdmin.Settings.AdminMenu"
+msgid "Themes"
+msgstr "Temi"
+
+msgctxt "KrakeAdmin.Settings.Controllers.AdminController"
+msgid "Couldn't update theme settings"
+msgstr "Impossibile aggiornare le impostazioni del tema"
+
+msgctxt "KrakeAdmin.Settings.Controllers.AdminController"
+msgid "Your settings have been saved."
+msgstr "Le impostazioni sono state salvate."
 

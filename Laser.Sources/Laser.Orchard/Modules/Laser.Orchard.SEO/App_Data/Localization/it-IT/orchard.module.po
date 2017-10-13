@@ -256,7 +256,131 @@ msgctxt "~/Modules/Laser.Orchard.SEO/Views/EditorTemplates/Parts/SEO.cshtml"
 msgid "TitleOverrideDescription"
 msgstr "ATTENZIONE: lascia vuoto questo campo per usare il normale titolo del contenuto."
 
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RedirectsAdmin/Add.cshtml"
+msgid "Add new Redirect rule"
+msgstr "Aggiungi una nuova regola di Redirect"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RedirectsAdmin/Edit.cshtml"
+msgid "Edit Redirect rule"
+msgstr "Modifica regola di redirect"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RedirectsAdmin/EditorTemplates/RedirectRule.cshtml"
+msgid "Redirect should be permanent 301"
+msgstr "Il redirect dovrebbe essere permanente 301"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RedirectsAdmin/EditorTemplates/RedirectRule.cshtml"
+msgid "Relative Url from which redirect. Do not start with '~/'"
+msgstr "L'Url relativo dal quale effettuare il redirect. Non iniziare con '~/'"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RedirectsAdmin/EditorTemplates/RedirectRule.cshtml"
+msgid "Relative Url to which redirect. Do not start with '~/'"
+msgstr "L'Url relativo destinazione del redirect. Non iniziare con '~/'"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RedirectsAdmin/Index.cshtml"
+msgid "Add"
+msgstr "Aggiungi"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RedirectsAdmin/Index.cshtml"
+msgid "Redirects"
+msgstr "Redirezionamenti"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RedirectsAdmin/ListPartial.cshtml"
+msgid "Actions"
+msgstr "Azioni"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RedirectsAdmin/ListPartial.cshtml"
+msgid "Date"
+msgstr "Data"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RedirectsAdmin/ListPartial.cshtml"
+msgid "Delete"
+msgstr "Elimina"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RedirectsAdmin/ListPartial.cshtml"
+msgid "Destination URL"
+msgstr "URL di destinazione"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RedirectsAdmin/ListPartial.cshtml"
+msgid "Edit"
+msgstr "Modifica"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RedirectsAdmin/ListPartial.cshtml"
+msgid "Permanent"
+msgstr "Permanente"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RedirectsAdmin/ListPartial.cshtml"
+msgid "Redirect rules table"
+msgstr "Tabella delle regole di redirect"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RedirectsAdmin/ListPartial.cshtml"
+msgid "Source URL"
+msgstr "URL sorgente"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RobotsAdmin/Index.cshtml"
+msgid "Manage Robots.txt File"
+msgstr "Gestisci file robots.txt"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RobotsAdmin/Index.cshtml"
+msgid "Robots.txt Content"
+msgstr "Contenuto di Robots.txt"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RobotsAdmin/Index.cshtml"
+msgid "Save Robots.txt"
+msgstr "Salva robots.txt"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/RobotsAdmin/Index.cshtml"
+msgid "The default text provided will allow no content in the site to be indexed"
+msgstr "La configurazione di default è impostata per non indicizzare alcun contenuto del sito"
+
+msgctxt "Laser.Orchard.SEO.Controllers.RedirectsAdminController"
+msgid "A rule for this Source URL already exists."
+msgstr "Regola per l'URL di origine già presente."
+
+msgctxt "Laser.Orchard.SEO.Controllers.RedirectsAdminController"
+msgid "Redirect record was deleted"
+msgstr "L'elemento di redirect è stato eliminato"
+
+msgctxt "Laser.Orchard.SEO.Controllers.RedirectsAdminController"
+msgid "Source url is equal to Destination url"
+msgstr "L'url sorgente è uguale all'url di destinazione"
+
+msgctxt "Laser.Orchard.SEO.Controllers.RobotsAdminController"
+msgid "Cannot manage robots.txt file"
+msgstr "Impossibile gestire il file robots.txt"
+
+msgctxt "Laser.Orchard.SEO.Controllers.RobotsAdminController"
+msgid "Robots.txt saved with warnings"
+msgstr "Robots.txt salvato con avvertimenti"
+
+msgctxt "Laser.Orchard.SEO.Controllers.RobotsAdminController"
+msgid "Robots.txt settings successfully saved"
+msgstr "Impostazioni del robots.txt salvate correttamente"
+
 msgctxt "Laser.Orchard.SEO.Handlers.FaviconSettingsPartHandler"
 msgid "Favicon"
 msgstr "Favicon"
+
+msgctxt "Laser.Orchard.SEO.Navigation.AdminMenu"
+msgid "Robots.txt"
+msgstr "Robots.txt"
+
+msgctxt "Laser.Orchard.SEO.Navigation.AdminMenu"
+msgid "SEO"
+msgstr "SEO"
+
+msgctxt "Laser.Orchard.SEO.Navigation.RedirectsMenu"
+msgid "Redirects"
+msgstr "Redirezionamenti"
+
+msgctxt "Laser.Orchard.SEO.Navigation.RedirectsMenu"
+msgid "SEO"
+msgstr "SEO"
+
+msgctxt "Laser.Orchard.SEO.Services.RedirectService"
+msgid "Rules with same SourceURL are not valid."
+msgstr "Regole con lo stesso URL sorgente non sono valide."
+
+msgctxt "Laser.Orchard.SEO.Services.RobotsService"
+msgid "Line {0}: {1}, {2}"
+msgstr "Linea {0}: {1}, {2}"
 

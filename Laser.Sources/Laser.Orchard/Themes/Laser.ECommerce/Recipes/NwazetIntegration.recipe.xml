@@ -15,6 +15,7 @@
           disable="Stripe"/>
   <Metadata/>
   <Settings>
+    <PaymentGatewaySiteSettingsPart NonceMinutesDuration="20" />
     <BraintreeSiteSettingsPart CurrencyCode="EUR" MerchantId="rt56ycy7kqwbk2s8" PrivateKey="f1d8bb2e24fa81a400a6327231b832c1" ProductionEnvironment="false" PublicKey="tzptwscv223xgjy4" />
   </Settings>
   <ContentDefinition>
