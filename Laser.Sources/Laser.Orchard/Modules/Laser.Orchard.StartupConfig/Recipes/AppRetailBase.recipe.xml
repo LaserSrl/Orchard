@@ -295,10 +295,6 @@
         <DynamicButtonToWorkflowsPart DynamicButtonsSetting.Buttons="{2}" />
         <IdentityPart />
       </ConfigurazioneGrafica>
-      <ConfigurazioneMarketplace ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" DisplayName="Configurazione Marketplace">
-        <CommonPart />
-        <IdentityPart />
-      </ConfigurazioneMarketplace>
       <ContainerWidget Stereotype="Widget" DisplayName="Container Widget">
         <CommonPart />
         <ContainerWidgetPart />
