@@ -216,24 +216,28 @@
         <Catalogo />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <IdentityPart />
+        <LocalizationPart />
         <SummaryAdminToolbarPart SummaryAdminToolbarPartSettings.Labels="{ Label=Prodotti, Area=, Controller=, Action=, Parameters=, CustomUrl=AdvancedOptions.CPFIdToSearch={Content.Id}&amp;AdvancedOptions.CPFName=Prodotto.Cataloghi., Target=_self }," />
         <TitlePart />
       </Catalogo>
       <CategoriaNewsDipendentiTerm Taxonomy="Categoria News Dipendenti" DisplayName="Categoria News Dipendenti Term">
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" />
         <CommonPart />
+        <LocalizationPart />
         <TermPart />
         <TitlePart />
       </CategoriaNewsDipendentiTerm>
       <CategoriaProdottoTerm Taxonomy="Categoria Prodotto" DisplayName="Categoria Prodotto Term">
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" />
         <CommonPart />
+        <LocalizationPart />
         <TermPart />
         <TitlePart />
       </CategoriaProdottoTerm>
       <CategoriaPromoTerm Taxonomy="Categoria Promo" DisplayName="Categoria Promo Term">
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" />
         <CommonPart />
+        <LocalizationPart />
         <TermPart />
         <TitlePart />
       </CategoriaPromoTerm>
@@ -269,12 +273,12 @@
         <TitlePart />
         <UserPolicyPart />
       </CommunicationContact>
-      <ConfigurazioneAppStore ContentTypeSettings.Creatable="False" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="False" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:&quot;Nome&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:&quot;Descrizione&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:&quot;DescrizioneCorta&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:&quot;IconaApp&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;5&quot;,&quot;Differentiator&quot;:&quot;BannerAppAndroid&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:&quot;ParoleChiave&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:&quot;TestoPromozionale&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;8&quot;,&quot;Differentiator&quot;:&quot;URLSitoWeb&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;9&quot;,&quot;Differentiator&quot;:&quot;URLPolicyApp&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:&quot;emailTesterAndroid&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;11&quot;,&quot;Differentiator&quot;:&quot;emailTesteriOS&quot;},{&quot;ShapeType&quot;:&quot;Fields_Hidden_String_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;12&quot;,&quot;Differentiator&quot;:&quot;ConfigStatus&quot;},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;13&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;14&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Navigation_AdminMenu_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;15&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;16&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;17&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;18&quot;,&quot;Differentiator&quot;:null}]" DisplayName="Configurazione AppStore">
+      <ConfigurazioneAppStore ContentTypeSettings.Creatable="False" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="False" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:&quot;Nome&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:&quot;Descrizione&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:&quot;DescrizioneCorta&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:&quot;IconaApp&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;5&quot;,&quot;Differentiator&quot;:&quot;BannerAppAndroid&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;6&quot;,&quot;Differentiator&quot;:&quot;ParoleChiave&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;7&quot;,&quot;Differentiator&quot;:&quot;TestoPromozionale&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;8&quot;,&quot;Differentiator&quot;:&quot;URLSitoWeb&quot;},{&quot;ShapeType&quot;:&quot;Fields_Input_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;9&quot;,&quot;Differentiator&quot;:&quot;URLPolicyApp&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;10&quot;,&quot;Differentiator&quot;:&quot;emailTesterAndroid&quot;},{&quot;ShapeType&quot;:&quot;Fields_Common_Text_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;11&quot;,&quot;Differentiator&quot;:&quot;emailTesteriOS&quot;},{&quot;ShapeType&quot;:&quot;Fields_Hidden_String_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;12&quot;,&quot;Differentiator&quot;:&quot;ConfigStatus&quot;},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;13&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;14&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Navigation_AdminMenu_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;15&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;16&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;17&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;18&quot;,&quot;Differentiator&quot;:null}]" DisplayName="Configurazione AppStore" TypeIndexing.Indexes="">
         <AdminMenuPart />
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;config/appstore&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <ConfigurazioneAppStore />
-        <DynamicButtonToWorkflowsPart DynamicButtonsSetting.Buttons="{2}" />
+        <DynamicButtonToWorkflowsPart DynamicButtonsSetting.Buttons="{4b47827a-de3e-4ecc-9b0a-ed380dd0c5c2}" />
         <IdentityPart />
       </ConfigurazioneAppStore>
       <ConfigurazioneBase ContentTypeSettings.Creatable="False" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" DisplayName="Configurazione Base">
@@ -283,18 +287,14 @@
         <ConfigurazioneBase />
         <IdentityPart />
       </ConfigurazioneBase>
-      <ConfigurazioneGrafica ContentTypeSettings.Creatable="False" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="False" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:&quot;ImmagineSfondoApp&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:&quot;BannerAppAndroid&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:&quot;LogoApp&quot;},{&quot;ShapeType&quot;:&quot;Fields_Laser_Orchard_InsertStuff_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:&quot;ScriptAnteprima&quot;},{&quot;ShapeType&quot;:&quot;Fields_Custom_ColorPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;12&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;13&quot;,&quot;Differentiator&quot;:&quot;CellaCataloghi&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;14&quot;,&quot;Differentiator&quot;:&quot;CellaProdotti&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;15&quot;,&quot;Differentiator&quot;:&quot;CellaNews&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;16&quot;,&quot;Differentiator&quot;:&quot;CellaRichiesteProdotto&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;17&quot;,&quot;Differentiator&quot;:&quot;CellaPuntiVendita&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;18&quot;,&quot;Differentiator&quot;:&quot;CellaPromozioni&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;19&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Hidden_String_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;20&quot;,&quot;Differentiator&quot;:&quot;ConfigStatus&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;21&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Navigation_AdminMenu_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;22&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;23&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;24&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;25&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;}]" DisplayName="Configurazione Grafica">
+      <ConfigurazioneGrafica ContentTypeSettings.Creatable="False" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="False" ContentTypeSettings.Securable="True" ContentTypeLayoutSettings.Placeable="False" ContentTypeSettings.Placement.Editor="[{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;3&quot;,&quot;Differentiator&quot;:&quot;ImmagineSfondoApp&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;4&quot;,&quot;Differentiator&quot;:&quot;BannerAppAndroid&quot;},{&quot;ShapeType&quot;:&quot;Fields_MediaLibraryPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;1&quot;,&quot;Differentiator&quot;:&quot;LogoApp&quot;},{&quot;ShapeType&quot;:&quot;Fields_Laser_Orchard_InsertStuff_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;2&quot;,&quot;Differentiator&quot;:&quot;ScriptAnteprima&quot;},{&quot;ShapeType&quot;:&quot;Fields_Custom_ColorPicker_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;12&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;13&quot;,&quot;Differentiator&quot;:&quot;CellaCataloghi&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;14&quot;,&quot;Differentiator&quot;:&quot;CellaProdotti&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;15&quot;,&quot;Differentiator&quot;:&quot;CellaNews&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;16&quot;,&quot;Differentiator&quot;:&quot;CellaRichiesteProdotto&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;17&quot;,&quot;Differentiator&quot;:&quot;CellaPuntiVendita&quot;},{&quot;ShapeType&quot;:&quot;Fields_Enumeration_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;18&quot;,&quot;Differentiator&quot;:&quot;CellaPromozioni&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Owner_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;19&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Hidden_String_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;20&quot;,&quot;Differentiator&quot;:&quot;ConfigStatus&quot;},{&quot;ShapeType&quot;:&quot;Parts_Common_Container_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;21&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Navigation_AdminMenu_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;22&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Parts_Autoroute_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;23&quot;,&quot;Differentiator&quot;:null},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;24&quot;,&quot;Differentiator&quot;:&quot;Creator&quot;},{&quot;ShapeType&quot;:&quot;Fields_Numeric_Edit&quot;,&quot;Zone&quot;:&quot;Content&quot;,&quot;Position&quot;:&quot;25&quot;,&quot;Differentiator&quot;:&quot;LastModifier&quot;}]" DisplayName="Configurazione Grafica" TypeIndexing.Indexes="">
         <AdminMenuPart />
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;config/graphics&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <ConfigurazioneGrafica />
-        <DynamicButtonToWorkflowsPart DynamicButtonsSetting.Buttons="{2}" />
+        <DynamicButtonToWorkflowsPart DynamicButtonsSetting.Buttons="{4b47827a-de3e-4ecc-9b0a-ed380dd0c5c2}" />
         <IdentityPart />
       </ConfigurazioneGrafica>
-      <ConfigurazioneMarketplace ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Securable="True" DisplayName="Configurazione Marketplace">
-        <CommonPart />
-        <IdentityPart />
-      </ConfigurazioneMarketplace>
       <ContainerWidget Stereotype="Widget" DisplayName="Container Widget">
         <CommonPart />
         <ContainerWidgetPart />
@@ -327,7 +327,7 @@
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <Dipendente />
         <DisplayTextPart DisplayTextPartSettings.DisplayText="{Content.Fields.Dipendente.Cognome} {Content.Fields.Dipendente.Nome}" />
-        <DynamicButtonToWorkflowsPart DynamicButtonsSetting.Buttons="{1}" />
+        <DynamicButtonToWorkflowsPart DynamicButtonsSetting.Buttons="{d7306e11-e90c-4f3c-a8fa-6a68cead3fee}" />
         <IdentityPart />
       </Dipendente>
       <Document MediaFileNameEditorSettings.ShowFileNameEditor="True" Stereotype="Media" DisplayName="Document">
@@ -425,6 +425,7 @@
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <BodyPart BodyTypePartSettings.Flavor="Html" />
         <CommonPart DateEditorSettings.ShowDateEditor="False" OwnerEditorSettings.ShowOwnerEditor="True" />
+        <LocalizationPart />
         <MessaggioPromozionale />
         <TitlePart />
       </MessaggioPromozionale>
@@ -493,6 +494,7 @@
       <PreferenzeTerm Taxonomy="Preferenze" DisplayName="Preferenze Term">
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" />
         <CommonPart />
+        <LocalizationPart />
         <TermPart />
         <TitlePart />
       </PreferenzeTerm>
@@ -500,6 +502,7 @@
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <IdentityPart />
+        <LocalizationPart />
         <Prodotto />
         <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedBody="" ShareLinkPartSettingVM.SharedText="Ho appena visualizzato il prodotto {Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="{Content.Fields.Prodotto.Gallery}" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowBodyChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
         <TitlePart />
@@ -585,7 +588,7 @@
         <AdminMenuPart />
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;DeliverApp&quot;,&quot;Pattern&quot;:&quot;deliverapp&quot;,&quot;Description&quot;:null,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
-        <DynamicButtonToWorkflowsPart DynamicButtonsSetting.Buttons="{3}" />
+        <DynamicButtonToWorkflowsPart DynamicButtonsSetting.Buttons="{10b89531-f565-46da-928d-1c4d65e1862b}" />
         <IdentityPart />
         <RichiestaPubblicazione />
       </RichiestaPubblicazione>
@@ -606,7 +609,6 @@
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;store/{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <IdentityPart />
-        <LocalizationPart />
         <Store />
         <TitlePart />
       </Store>
@@ -698,7 +700,7 @@
         <BannerAppAndroid.MediaLibraryPickerField DisplayName="Banner App" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="False" MediaLibraryPickerFieldSettings.Hint="Banner associato all'app (visibile soltanto sul Google Play Store). Immagine PNG di dimensioni 1024x500." />
         <ConfigStatus.HiddenStringField DisplayName="ConfigStatus" HiddenStringFieldSettings.Tokenized="True" />
         <Descrizione.TextField DisplayName="Descrizione" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Qui devi presentare e descrivere la tua app, elencando caratteristiche e funzioni (max 4000 caratteri, spazi inclusi). Si tratta del testo che l'utente leggerà sull'Apple Store e sul Google Play Store." />
-        <DescrizioneCorta.TextField DisplayName="Descrizione Corta" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="La tua app in 80 caratteri, spazi inclusi." />
+        <DescrizioneCorta.TextField DisplayName="Descrizione Corta" TextFieldSettings.Flavor="Large" TextFieldSettings.Required="True" TextFieldSettings.Hint="La tua app in 80 caratteri, spazi inclusi." />
         <emailTesterAndroid.TextField DisplayName="e-mail Tester Android" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Indirizzi e-mail da utilizzare per testare la versione Android dell'app (devono corrispondere ai rispettivi utenti del Google Play Store). Inserire un indirizzo e-mail per riga." />
         <emailTesteriOS.TextField DisplayName="e-mail Tester iOS" TextFieldSettings.Flavor="Textarea" TextFieldSettings.Required="True" TextFieldSettings.Hint="Indirizzi e-mail da utilizzare per testare la versione iOS dell'app (devono corrispondere ai rispettivi utenti dell'Apple Store). Inserire un indirizzo e-mail per riga." />
         <IconaApp.MediaLibraryPickerField DisplayName="Icona App" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="False" MediaLibraryPickerFieldSettings.Hint="Logo presente all'interno dell'app (immagine in vettoriale; formati accettati: .psd, .ai, .svg, .esp, .pdf)." />
@@ -956,6 +958,7 @@
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="categoria-news-dipendenti/unica" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=categoria-news-dipendenti" CreatedUtc="2017-08-03T15:38:05.5670635Z" PublishedUtc="2017-10-12T14:39:29.4788687Z" ModifiedUtc="2017-10-12T14:39:29.4375386Z" />
+      <LocalizationPart Culture="it-IT" />
       <TermPart Count="2" Selectable="true" Weight="0" TaxonomyId="/alias=categoria-news-dipendenti" Path="" />
       <TitlePart Title="News" />
     </CategoriaNewsDipendentiTerm>
@@ -964,6 +967,7 @@
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="categoria-prodotto/unica" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=categoria-prodotto" CreatedUtc="2017-07-31T10:52:18.9835166Z" PublishedUtc="2017-10-12T14:42:33.6702203Z" ModifiedUtc="2017-10-12T14:42:33.6309863Z" />
+      <LocalizationPart Culture="it-IT" />
       <TermPart Count="8" Selectable="true" Weight="0" TaxonomyId="/alias=categoria-prodotto" Path="" />
       <TitlePart Title="Generica" />
     </CategoriaProdottoTerm>
@@ -972,6 +976,7 @@
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="categoria-promo/unica" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=categoria-promo" CreatedUtc="2017-08-03T15:44:01.0986536Z" PublishedUtc="2017-10-12T14:42:43.4526204Z" ModifiedUtc="2017-10-12T14:42:43.4285829Z" />
+      <LocalizationPart Culture="it-IT" />
       <TermPart Count="1" Selectable="true" Weight="0" TaxonomyId="/alias=categoria-promo" Path="" />
       <TitlePart Title="Generica" />
     </CategoriaPromoTerm>
@@ -1067,7 +1072,7 @@
       <BodyPart Text="&lt;p&gt;Testo da definire&lt;/p&gt;" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-10-02T16:19:01.9289798Z" PublishedUtc="2017-10-02T16:19:02.0254877Z" ModifiedUtc="2017-10-02T16:19:02.0034358Z" />
       <LocalizationPart Culture="it-IT" />
-      <PolicyTextInfoPart PolicyType="ThirdParty" Priority="0" UserHaveToAccept="false" />
+      <PolicyTextInfoPart PolicyType="ThirdParty" Priority="10" UserHaveToAccept="false" />
       <TitlePart Title="Cessione dati a terzi" />
     </PolicyText>
     <PolicyText Id="/alias=policy\/privacy" Status="Published">
@@ -1077,7 +1082,7 @@
       <BodyPart Text="&lt;p&gt;Testo da definire&lt;/p&gt;" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-10-02T16:17:47.3696691Z" PublishedUtc="2017-10-02T16:17:47.618168Z" ModifiedUtc="2017-10-02T16:17:47.5709843Z" />
       <LocalizationPart Culture="it-IT" />
-      <PolicyTextInfoPart PolicyType="Policy" Priority="0" UserHaveToAccept="true" />
+      <PolicyTextInfoPart PolicyType="Policy" Priority="90" UserHaveToAccept="true" />
       <TitlePart Title="Privacy" />
     </PolicyText>
     <PolicyText Id="/alias=policy\/uso-commerciale" Status="Published">
@@ -1087,7 +1092,7 @@
       <BodyPart Text="&lt;p&gt;Testo da definire&lt;/p&gt;" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-10-02T16:18:23.9452259Z" PublishedUtc="2017-10-02T16:18:24.0330255Z" ModifiedUtc="2017-10-02T16:18:24.0035093Z" />
       <LocalizationPart Culture="it-IT" />
-      <PolicyTextInfoPart PolicyType="CommercialUse" Priority="0" UserHaveToAccept="false" />
+      <PolicyTextInfoPart PolicyType="CommercialUse" Priority="50" UserHaveToAccept="false" />
       <TitlePart Title="Uso Commerciale" />
     </PolicyText>
     <PreferenzeTerm Id="/alias=preferenze\/categoria-prodotto" Status="Published">
@@ -1095,6 +1100,7 @@
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="preferenze/categoria-prodotto" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=preferenze" CreatedUtc="2017-10-12T14:44:29.1546948Z" PublishedUtc="2017-10-12T14:44:29.3940534Z" ModifiedUtc="2017-10-12T14:44:29.2772396Z" />
+      <LocalizationPart Culture="it-IT" />
       <TermPart Count="0" Selectable="true" Weight="0" TaxonomyId="/alias=preferenze" Path="" />
       <TitlePart Title="Categoria prodotto" />
     </PreferenzeTerm>
@@ -1103,6 +1109,7 @@
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="preferenze/offerte" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=preferenze" CreatedUtc="2017-08-03T15:37:04.187942Z" PublishedUtc="2017-10-12T14:43:46.6428228Z" ModifiedUtc="2017-10-12T14:43:46.5904755Z" />
+      <LocalizationPart Culture="it-IT" />
       <TermPart Count="4" Selectable="true" Weight="0" TaxonomyId="/alias=preferenze" Path="" />
       <TitlePart Title="Promozioni" />
     </PreferenzeTerm>
@@ -1251,11 +1258,11 @@
       <TitlePart Title="Prodotti in vetrina pubblico" />
     </ProjectionPage>
     <Query Id="/Identifier=2e1458ac588b448f9ad9706d6db80d76" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-08T16:08:58.8537567Z" PublishedUtc="2017-08-08T16:10:39.8648261Z" ModifiedUtc="2017-08-08T16:10:39.849225Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-08T16:08:58.8537567Z" PublishedUtc="2017-10-13T14:07:32.1784785Z" ModifiedUtc="2017-08-08T16:10:39.849225Z" />
       <IdentityPart Identifier="2e1458ac588b448f9ad9706d6db80d76" />
       <QueryPart>
         <FilterGroups>
@@ -1272,11 +1279,11 @@
       <TitlePart Title="Query Contatto per numero" />
     </Query>
     <Query Id="/Identifier=358f109ad483418393a9cbe85874ec02" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-04T12:39:36.9583597Z" PublishedUtc="2017-08-04T12:39:37.6519143Z" ModifiedUtc="2017-08-04T12:39:37.2288953Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-04T12:39:36.9583597Z" PublishedUtc="2017-10-13T14:07:32.5117239Z" ModifiedUtc="2017-08-04T12:39:37.2288953Z" />
       <IdentityPart Identifier="358f109ad483418393a9cbe85874ec02" />
       <QueryPart>
         <FilterGroups>
@@ -1284,6 +1291,7 @@
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;Prodotto&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
             <Filter Category="ProdottoContentFields" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;Operator&gt;Contains&lt;/Operator&gt;&lt;Value&gt;{{{Request.QueryString:id_catalogo}}}&lt;/Value&gt;&lt;/Form&gt;" Type="Prodotto.Cataloghi." />
             <Filter Category="Taxonomy" Description="" Position="2" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;TermToken&gt;{Request.QueryString:termids}&lt;/TermToken&gt;&lt;Operator&gt;0&lt;/Operator&gt;&lt;IncludeChildren&gt;true&lt;/IncludeChildren&gt;&lt;/Form&gt;" Type="HasTermsTokenized" />
+            <Filter Category="Localization" Description="" Position="3" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;/Form&gt;" Type="ForCurrentCultureOrDefault" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria>
@@ -1294,11 +1302,11 @@
       <TitlePart Title="Query Prodotti di un catalogo" />
     </Query>
     <Query Id="/Identifier=4f3f4932d3f24904aedb655244031ceb" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:26:04.195501Z" PublishedUtc="2017-08-03T16:26:04.2356515Z" ModifiedUtc="2017-08-03T16:26:04.223036Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:26:04.195501Z" PublishedUtc="2017-10-13T14:07:32.7869975Z" ModifiedUtc="2017-08-03T16:26:04.223036Z" />
       <IdentityPart Identifier="4f3f4932d3f24904aedb655244031ceb" />
       <QueryPart>
         <FilterGroups>
@@ -1316,11 +1324,11 @@
       <TitlePart Title="Query Richieste al mio Store" />
     </Query>
     <Query Id="/Identifier=4fac51dc4c8e4e39b2f38d6fe69bd8ba" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-10T08:33:33.9741193Z" PublishedUtc="2017-08-10T08:33:34.0989213Z" ModifiedUtc="2017-08-10T08:33:34.0833376Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-10T08:33:33.9741193Z" PublishedUtc="2017-10-13T14:07:33.0611847Z" ModifiedUtc="2017-08-10T08:33:34.0833376Z" />
       <IdentityPart Identifier="4fac51dc4c8e4e39b2f38d6fe69bd8ba" />
       <QueryPart>
         <FilterGroups>
@@ -1337,17 +1345,18 @@
       <TitlePart Title="Query Stores" />
     </Query>
     <Query Id="/Identifier=60117cefce384d35a7bd5fdacfa6d2d1" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:10:42.0846427Z" PublishedUtc="2017-08-03T16:10:42.1317467Z" ModifiedUtc="2017-08-03T16:10:42.1247245Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:10:42.0846427Z" PublishedUtc="2017-10-13T14:07:33.3039063Z" ModifiedUtc="2017-08-03T16:10:42.1247245Z" />
       <IdentityPart Identifier="60117cefce384d35a7bd5fdacfa6d2d1" />
       <QueryPart>
         <FilterGroups>
           <FilterGroup>
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;Catalogo&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
             <Filter Category="CalendarEvent" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;DateFrom&gt;{Date.Local}&lt;/DateFrom&gt;&lt;DateTo&gt;{Date.Local}&lt;/DateTo&gt;&lt;/Form&gt;" Type="ActivityRange" />
+            <Filter Category="Localization" Description="" Position="2" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;/Form&gt;" Type="ForCurrentCultureOrDefault" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria />
@@ -1356,11 +1365,11 @@
       <TitlePart Title="Query Cataloghi" />
     </Query>
     <Query Id="/Identifier=6e378f73980a440eb90eda93a6d194fb" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-08T14:52:41.5151419Z" PublishedUtc="2017-08-08T15:52:50.3797911Z" ModifiedUtc="2017-08-08T15:52:49.9585831Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-08T14:52:41.5151419Z" PublishedUtc="2017-10-13T14:07:33.6751898Z" ModifiedUtc="2017-08-08T15:52:49.9585831Z" />
       <IdentityPart Identifier="6e378f73980a440eb90eda93a6d194fb" />
       <QueryPart>
         <FilterGroups>
@@ -1375,16 +1384,17 @@
       <TitlePart Title="Query Contatto per email" />
     </Query>
     <Query Id="/Identifier=74aa18cc9ffa4ac5a5a48e44b74e190d" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:28:06.0208714Z" PublishedUtc="2017-08-03T16:28:06.0951387Z" ModifiedUtc="2017-08-03T16:28:06.0820531Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:28:06.0208714Z" PublishedUtc="2017-10-13T14:07:34.0619878Z" ModifiedUtc="2017-08-03T16:28:06.0820531Z" />
       <IdentityPart Identifier="74aa18cc9ffa4ac5a5a48e44b74e190d" />
       <QueryPart>
         <FilterGroups>
           <FilterGroup>
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;Questionnaire&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
+            <Filter Category="Localization" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;/Form&gt;" Type="ForCurrentCultureOrDefault" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria>
@@ -1395,11 +1405,11 @@
       <TitlePart Title="Query Sondaggi" />
     </Query>
     <Query Id="/Identifier=9c2b8991eab04a748cb5c8c9430af8b6" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-09T08:14:03.6843444Z" PublishedUtc="2017-08-09T08:14:03.9495522Z" ModifiedUtc="2017-08-09T08:14:03.9183689Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-09T08:14:03.6843444Z" PublishedUtc="2017-10-13T14:07:34.3070111Z" ModifiedUtc="2017-08-09T08:14:03.9183689Z" />
       <IdentityPart Identifier="9c2b8991eab04a748cb5c8c9430af8b6" />
       <QueryPart>
         <FilterGroups>
@@ -1413,11 +1423,11 @@
       <TitlePart Title="Query Contatti per generatore" />
     </Query>
     <Query Id="/Identifier=a234cf0cf8aa4efab7e5fd17bac50d4d" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:21:48.2897825Z" PublishedUtc="2017-08-03T16:21:48.3308994Z" ModifiedUtc="2017-08-03T16:21:48.3204042Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:21:48.2897825Z" PublishedUtc="2017-10-13T14:07:34.8584752Z" ModifiedUtc="2017-08-03T16:21:48.3204042Z" />
       <IdentityPart Identifier="a234cf0cf8aa4efab7e5fd17bac50d4d" />
       <QueryPart>
         <FilterGroups>
@@ -1434,17 +1444,18 @@
       <TitlePart Title="Query Richieste del mio store" />
     </Query>
     <Query Id="/Identifier=ae83769fd1a748a08a6ed8b7ba9fac82" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:07:48.7504243Z" PublishedUtc="2017-08-03T16:09:33.1935921Z" ModifiedUtc="2017-08-03T16:09:33.1852073Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:07:48.7504243Z" PublishedUtc="2017-10-13T14:07:35.2779855Z" ModifiedUtc="2017-08-03T16:09:33.1852073Z" />
       <IdentityPart Identifier="ae83769fd1a748a08a6ed8b7ba9fac82" />
       <QueryPart>
         <FilterGroups>
           <FilterGroup>
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;Prodotto&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
             <Filter Category="ProdottoContentFields" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;Value&gt;true&lt;/Value&gt;&lt;/Form&gt;" Type="Prodotto.Mettiinvetrina." />
+            <Filter Category="Localization" Description="" Position="2" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;/Form&gt;" Type="ForCurrentCultureOrDefault" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria />
@@ -1453,16 +1464,17 @@
       <TitlePart Title="Query Prodotti in vetrina" />
     </Query>
     <Query Id="/Identifier=b3a022495ec0431684310118bd2f4d70" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:19:22.4463854Z" PublishedUtc="2017-08-03T16:19:22.490504Z" ModifiedUtc="2017-08-03T16:19:22.4814748Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:19:22.4463854Z" PublishedUtc="2017-10-13T14:07:35.5467054Z" ModifiedUtc="2017-08-03T16:19:22.4814748Z" />
       <IdentityPart Identifier="b3a022495ec0431684310118bd2f4d70" />
       <QueryPart>
         <FilterGroups>
           <FilterGroup>
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;NewsDipendenti&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
+            <Filter Category="Localization" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;/Form&gt;" Type="ForCurrentCultureOrDefault" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria>
@@ -1473,16 +1485,17 @@
       <TitlePart Title="Query News interne" />
     </Query>
     <Query Id="/Identifier=b81d7076973e41009bad9d5b5276c0bd" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:20:17.7980514Z" PublishedUtc="2017-08-03T16:20:17.8471935Z" ModifiedUtc="2017-08-03T16:20:17.8351623Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:20:17.7980514Z" PublishedUtc="2017-10-13T14:07:35.9127856Z" ModifiedUtc="2017-08-03T16:20:17.8351623Z" />
       <IdentityPart Identifier="b81d7076973e41009bad9d5b5276c0bd" />
       <QueryPart>
         <FilterGroups>
           <FilterGroup>
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;MessaggioPromozionale&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
+            <Filter Category="Localization" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;/Form&gt;" Type="ForCurrentCultureOrDefault" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria />
@@ -1491,11 +1504,11 @@
       <TitlePart Title="Query Promozioni" />
     </Query>
     <Query Id="/Identifier=bb1f13e8769045c38f18ea3077134037" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-11T15:47:16.0419206Z" PublishedUtc="2017-08-11T15:47:16.2031456Z" ModifiedUtc="2017-08-11T15:47:16.1893192Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-11T15:47:16.0419206Z" PublishedUtc="2017-10-13T14:07:36.2982036Z" ModifiedUtc="2017-08-11T15:47:16.1893192Z" />
       <IdentityPart Identifier="bb1f13e8769045c38f18ea3077134037" />
       <QueryPart>
         <FilterGroups>
@@ -1511,16 +1524,17 @@
       <TitlePart Title="Test Richiesta Prodotto" />
     </Query>
     <Query Id="/Identifier=e3d42a1cdbbb4b0c933d9f1e639ad613" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:18:18.1771682Z" PublishedUtc="2017-08-03T16:18:18.2313995Z" ModifiedUtc="2017-08-03T16:18:18.2243014Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:18:18.1771682Z" PublishedUtc="2017-10-13T14:07:36.636085Z" ModifiedUtc="2017-08-03T16:18:18.2243014Z" />
       <IdentityPart Identifier="e3d42a1cdbbb4b0c933d9f1e639ad613" />
       <QueryPart>
         <FilterGroups>
           <FilterGroup>
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;NewsClienti&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
+            <Filter Category="Localization" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;/Form&gt;" Type="ForCurrentCultureOrDefault" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria>
@@ -1531,16 +1545,17 @@
       <TitlePart Title="Query News pubbliche" />
     </Query>
     <Query Id="/Identifier=e9f752a40db04622879e7da116192115" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:20:58.0245123Z" PublishedUtc="2017-08-03T16:20:58.0686324Z" ModifiedUtc="2017-08-03T16:20:58.0606158Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:20:58.0245123Z" PublishedUtc="2017-10-13T14:07:36.8718311Z" ModifiedUtc="2017-08-03T16:20:58.0606158Z" />
       <IdentityPart Identifier="e9f752a40db04622879e7da116192115" />
       <QueryPart>
         <FilterGroups>
           <FilterGroup>
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;PuntoVendita&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
+            <Filter Category="Localization" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;/Form&gt;" Type="ForCurrentCultureOrDefault" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria>
@@ -1620,322 +1635,322 @@
   <Workflows>
     <Workflow Name="DeliverApp" Enabled="true">
       <Activities>
-        <Activity Id="66" Name="DynamicButtonEvent" Start="true" X="10" Y="0">
-          <State>{"DynamicButton":"3"}</State>
+        <Activity Id="67" Name="DynamicButtonEvent" Start="true" X="10" Y="0">
+          <State>{"DynamicButton":"10b89531-f565-46da-928d-1c4d65e1862b"}</State>
         </Activity>
-        <Activity Id="67" Name="SendTemplatedEmail" Start="false" X="336" Y="119">
+        <Activity Id="68" Name="SendTemplatedEmail" Start="false" X="336" Y="119">
           <State>{"Recipient":"other","RecipientOther":"giuseppe.musso@laser-group.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"6"}</State>
         </Activity>
-        <Activity Id="68" Name="Notify" Start="false" X="381" Y="240">
+        <Activity Id="69" Name="Notify" Start="false" X="381" Y="240">
           <State>{"Notification":"Information","Message":"La richiesta di pubblicazione dell'app è stata inviata."}</State>
         </Activity>
-        <Activity Id="69" Name="RazorExecute" Start="false" X="230" Y="0">
+        <Activity Id="70" Name="RazorExecute" Start="false" X="230" Y="0">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok,AlreadyLocked","RazorExecuteActivity_RazorView":"HideConfigs.cshtml"}</State>
         </Activity>
-        <Activity Id="70" Name="Logging" Start="false" X="471" Y="4">
+        <Activity Id="71" Name="Logging" Start="false" X="471" Y="4">
           <State>{"Level":"Error","Message":"Error in workflow DeliverApp (HideConfigs.cshtml): {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="71" Name="Notify" Start="false" X="216" Y="216">
+        <Activity Id="72" Name="Notify" Start="false" X="216" Y="216">
           <State>{"Notification":"Warning","Message":"Richiesta di pubblicazione già inoltrata in precedenza."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="67" SourceEndpoint="Sent" DestinationActivityId="68" DestinationEndpoint="" />
-        <Transition SourceActivityId="69" SourceEndpoint="Error" DestinationActivityId="70" DestinationEndpoint="" />
-        <Transition SourceActivityId="66" SourceEndpoint="Done" DestinationActivityId="69" DestinationEndpoint="" />
-        <Transition SourceActivityId="69" SourceEndpoint="Ok" DestinationActivityId="67" DestinationEndpoint="" />
-        <Transition SourceActivityId="70" SourceEndpoint="Done" DestinationActivityId="67" DestinationEndpoint="" />
-        <Transition SourceActivityId="69" SourceEndpoint="AlreadyLocked" DestinationActivityId="71" DestinationEndpoint="" />
+        <Transition SourceActivityId="68" SourceEndpoint="Sent" DestinationActivityId="69" DestinationEndpoint="" />
+        <Transition SourceActivityId="70" SourceEndpoint="Error" DestinationActivityId="71" DestinationEndpoint="" />
+        <Transition SourceActivityId="67" SourceEndpoint="Done" DestinationActivityId="70" DestinationEndpoint="" />
+        <Transition SourceActivityId="70" SourceEndpoint="Ok" DestinationActivityId="68" DestinationEndpoint="" />
+        <Transition SourceActivityId="71" SourceEndpoint="Done" DestinationActivityId="68" DestinationEndpoint="" />
+        <Transition SourceActivityId="70" SourceEndpoint="AlreadyLocked" DestinationActivityId="72" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Dipendente" Enabled="true">
       <Activities>
-        <Activity Id="6" Name="ContentUpdated" Start="true" X="164" Y="37">
+        <Activity Id="7" Name="ContentUpdated" Start="true" X="164" Y="37">
           <State>{"ContentTypes":"Dipendente"}</State>
         </Activity>
-        <Activity Id="7" Name="RazorExecute" Start="false" X="177" Y="287">
+        <Activity Id="8" Name="RazorExecute" Start="false" X="177" Y="287">
           <State>{"RazorExecuteActivity_Outcomes":"Ok,Error","RazorExecuteActivity_RazorView":"CreaUtenzaKrake.cshtml"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="6" SourceEndpoint="Done" DestinationActivityId="7" DestinationEndpoint="" />
+        <Transition SourceActivityId="7" SourceEndpoint="Done" DestinationActivityId="8" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Invio Credenziali" Enabled="true">
       <Activities>
-        <Activity Id="8" Name="SendTemplatedEmail" Start="false" X="283" Y="268">
+        <Activity Id="73" Name="SendTemplatedEmail" Start="false" X="283" Y="268">
           <State>{"Recipient":"other","RecipientOther":"{Content.Fields.Dipendente.Email}","RecipientCC":"","RecipientBCC":"","FromEmail":"","ReplyTo":"","EmailTemplate":"8"}</State>
         </Activity>
-        <Activity Id="9" Name="RazorExecute" Start="false" X="299" Y="119">
+        <Activity Id="74" Name="RazorExecute" Start="false" X="299" Y="119">
           <State>{"RazorExecuteActivity_Outcomes":"Ok,Error","RazorExecuteActivity_RazorView":"GetCredenziali.cshtml"}</State>
         </Activity>
-        <Activity Id="10" Name="Logging" Start="false" X="570" Y="140">
+        <Activity Id="75" Name="Logging" Start="false" X="570" Y="140">
           <State>{"Level":"Error","Message":"{Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="11" Name="Notify" Start="false" X="587" Y="295">
+        <Activity Id="76" Name="Notify" Start="false" X="587" Y="295">
           <State>{"Notification":"Error","Message":"Si è verificato un errore durante l'invio della e-mail."}</State>
         </Activity>
-        <Activity Id="12" Name="DynamicButtonEvent" Start="true" X="222" Y="0">
-          <State>{"DynamicButton":"1"}</State>
+        <Activity Id="77" Name="DynamicButtonEvent" Start="true" X="222" Y="0">
+          <State>{"DynamicButton":"d7306e11-e90c-4f3c-a8fa-6a68cead3fee"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="9" SourceEndpoint="Ok" DestinationActivityId="8" DestinationEndpoint="" />
-        <Transition SourceActivityId="9" SourceEndpoint="Error" DestinationActivityId="10" DestinationEndpoint="" />
-        <Transition SourceActivityId="10" SourceEndpoint="Done" DestinationActivityId="11" DestinationEndpoint="" />
-        <Transition SourceActivityId="12" SourceEndpoint="Done" DestinationActivityId="9" DestinationEndpoint="" />
+        <Transition SourceActivityId="74" SourceEndpoint="Ok" DestinationActivityId="73" DestinationEndpoint="" />
+        <Transition SourceActivityId="74" SourceEndpoint="Error" DestinationActivityId="75" DestinationEndpoint="" />
+        <Transition SourceActivityId="75" SourceEndpoint="Done" DestinationActivityId="76" DestinationEndpoint="" />
+        <Transition SourceActivityId="77" SourceEndpoint="Done" DestinationActivityId="74" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Messaggio Promozionale" Enabled="true">
       <Activities>
-        <Activity Id="13" Name="ContentPublished" Start="true" X="254" Y="-6">
+        <Activity Id="14" Name="ContentPublished" Start="true" X="254" Y="-6">
           <State>{"ContentTypes":"MessaggioPromozionale"}</State>
         </Activity>
-        <Activity Id="14" Name="RazorExecute" Start="false" X="262" Y="126">
+        <Activity Id="15" Name="RazorExecute" Start="false" X="262" Y="126">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"UpdateMessaggioPromozionale.cshtml"}</State>
         </Activity>
-        <Activity Id="15" Name="Logging" Start="false" X="591" Y="142">
+        <Activity Id="16" Name="Logging" Start="false" X="591" Y="142">
           <State>{"Level":"Error","Message":"Error in workflow Messaggio Promozionale: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="16" Name="Notify" Start="false" X="602" Y="267">
+        <Activity Id="17" Name="Notify" Start="false" X="602" Y="267">
           <State>{"Notification":"Error","Message":"Si è verificato un errore durante il salvataggio. Verificare i dati inseriti e riprovare."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="13" SourceEndpoint="Done" DestinationActivityId="14" DestinationEndpoint="" />
-        <Transition SourceActivityId="14" SourceEndpoint="Error" DestinationActivityId="15" DestinationEndpoint="" />
-        <Transition SourceActivityId="15" SourceEndpoint="Done" DestinationActivityId="16" DestinationEndpoint="" />
+        <Transition SourceActivityId="14" SourceEndpoint="Done" DestinationActivityId="15" DestinationEndpoint="" />
+        <Transition SourceActivityId="15" SourceEndpoint="Error" DestinationActivityId="16" DestinationEndpoint="" />
+        <Transition SourceActivityId="16" SourceEndpoint="Done" DestinationActivityId="17" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="PublishConfigs" Enabled="true">
       <Activities>
-        <Activity Id="17" Name="ContentUpdated" Start="true" X="93" Y="33">
+        <Activity Id="78" Name="ContentUpdated" Start="true" X="93" Y="33">
           <State>{"ContentTypes":"ConfigurazioneAppStore,ConfigurazioneGrafica"}</State>
         </Activity>
-        <Activity Id="18" Name="IsInRole" Start="false" X="120" Y="146">
+        <Activity Id="79" Name="IsInRole" Start="false" X="120" Y="146">
           <State>{"Roles":"BrandAdminB2B,BrandAdminB2C"}</State>
         </Activity>
-        <Activity Id="19" Name="RazorExecute" Start="false" X="91" Y="292">
+        <Activity Id="80" Name="RazorExecute" Start="false" X="91" Y="292">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"CheckUpdatedConfig.cshtml"}</State>
         </Activity>
-        <Activity Id="20" Name="RazorExecute" Start="false" X="466" Y="148">
+        <Activity Id="81" Name="RazorExecute" Start="false" X="466" Y="148">
           <State>{"RazorExecuteActivity_Outcomes":"Error,ConfigurazioneGrafica,ConfigurazioneAppStore,AlreadyLocked","RazorExecuteActivity_RazorView":"LockConfig.cshtml"}</State>
         </Activity>
-        <Activity Id="21" Name="Logging" Start="false" X="717" Y="150">
+        <Activity Id="82" Name="Logging" Start="false" X="717" Y="150">
           <State>{"Level":"Error","Message":"Error in workflow PublishConfigs LockConfig. Errore durante il cambiamento di owner della configurazione \"{Content.ContentType}\" (id: {Content.Id}). {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="22" Name="Notify" Start="false" X="727" Y="296">
+        <Activity Id="83" Name="Notify" Start="false" X="727" Y="296">
           <State>{"Notification":"Error","Message":"Si è verificato un errore. Provare a pubblicare nuovamente la configurazione."}</State>
         </Activity>
-        <Activity Id="23" Name="Notify" Start="false" X="152" Y="501">
+        <Activity Id="84" Name="Notify" Start="false" X="152" Y="501">
           <State>{"Notification":"Error","Message":"Non è possibile modificare la configurazione dopo averla confermata. Se necessario, contattare l'assistenza."}</State>
         </Activity>
-        <Activity Id="24" Name="DynamicButtonEvent" Start="true" X="451" Y="31">
-          <State>{"DynamicButton":"2"}</State>
+        <Activity Id="85" Name="DynamicButtonEvent" Start="true" X="451" Y="31">
+          <State>{"DynamicButton":"4b47827a-de3e-4ecc-9b0a-ed380dd0c5c2"}</State>
         </Activity>
-        <Activity Id="25" Name="SendTemplatedEmail" Start="false" X="510" Y="297">
+        <Activity Id="86" Name="SendTemplatedEmail" Start="false" X="510" Y="297">
           <State>{"Recipient":"other","RecipientOther":"laser.srl.ao@gmail.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"7"}</State>
         </Activity>
-        <Activity Id="26" Name="SendTemplatedEmail" Start="false" X="306" Y="296">
+        <Activity Id="87" Name="SendTemplatedEmail" Start="false" X="306" Y="296">
           <State>{"Recipient":"other","RecipientOther":"laser.srl.ao@gmail.com","RecipientCC":"","RecipientBCC":"","FromEmail":"{User.Email}","ReplyTo":"","EmailTemplate":"3"}</State>
         </Activity>
-        <Activity Id="27" Name="Notify" Start="false" X="450" Y="465">
+        <Activity Id="88" Name="Notify" Start="false" X="450" Y="465">
           <State>{"Notification":"Information","Message":"I tuoi dati verranno presi in carico e gestiti dai nostri tecnici. Avendo confermato i dati, questi non saranno più modificabili."}</State>
         </Activity>
-        <Activity Id="28" Name="Notify" Start="false" X="737" Y="85">
+        <Activity Id="89" Name="Notify" Start="false" X="737" Y="85">
           <State>{"Notification":"Warning","Message":"Configurazione già confermata in precedenza."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="17" SourceEndpoint="Done" DestinationActivityId="18" DestinationEndpoint="" />
-        <Transition SourceActivityId="18" SourceEndpoint="Yes" DestinationActivityId="19" DestinationEndpoint="" />
-        <Transition SourceActivityId="19" SourceEndpoint="Error" DestinationActivityId="23" DestinationEndpoint="" />
-        <Transition SourceActivityId="20" SourceEndpoint="Error" DestinationActivityId="21" DestinationEndpoint="" />
-        <Transition SourceActivityId="21" SourceEndpoint="Done" DestinationActivityId="22" DestinationEndpoint="" />
-        <Transition SourceActivityId="24" SourceEndpoint="Done" DestinationActivityId="20" DestinationEndpoint="" />
-        <Transition SourceActivityId="20" SourceEndpoint="ConfigurazioneAppStore" DestinationActivityId="26" DestinationEndpoint="" />
-        <Transition SourceActivityId="20" SourceEndpoint="ConfigurazioneGrafica" DestinationActivityId="25" DestinationEndpoint="" />
-        <Transition SourceActivityId="26" SourceEndpoint="Sent" DestinationActivityId="27" DestinationEndpoint="" />
-        <Transition SourceActivityId="25" SourceEndpoint="Sent" DestinationActivityId="27" DestinationEndpoint="" />
-        <Transition SourceActivityId="20" SourceEndpoint="AlreadyLocked" DestinationActivityId="28" DestinationEndpoint="" />
+        <Transition SourceActivityId="78" SourceEndpoint="Done" DestinationActivityId="79" DestinationEndpoint="" />
+        <Transition SourceActivityId="79" SourceEndpoint="Yes" DestinationActivityId="80" DestinationEndpoint="" />
+        <Transition SourceActivityId="80" SourceEndpoint="Error" DestinationActivityId="84" DestinationEndpoint="" />
+        <Transition SourceActivityId="81" SourceEndpoint="Error" DestinationActivityId="82" DestinationEndpoint="" />
+        <Transition SourceActivityId="82" SourceEndpoint="Done" DestinationActivityId="83" DestinationEndpoint="" />
+        <Transition SourceActivityId="85" SourceEndpoint="Done" DestinationActivityId="81" DestinationEndpoint="" />
+        <Transition SourceActivityId="81" SourceEndpoint="ConfigurazioneAppStore" DestinationActivityId="87" DestinationEndpoint="" />
+        <Transition SourceActivityId="81" SourceEndpoint="ConfigurazioneGrafica" DestinationActivityId="86" DestinationEndpoint="" />
+        <Transition SourceActivityId="87" SourceEndpoint="Sent" DestinationActivityId="88" DestinationEndpoint="" />
+        <Transition SourceActivityId="86" SourceEndpoint="Sent" DestinationActivityId="88" DestinationEndpoint="" />
+        <Transition SourceActivityId="81" SourceEndpoint="AlreadyLocked" DestinationActivityId="89" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Richiesta Prodotto" Enabled="true">
       <Activities>
-        <Activity Id="29" Name="RazorExecute" Start="false" X="499" Y="157">
+        <Activity Id="30" Name="RazorExecute" Start="false" X="499" Y="157">
           <State>{"RazorExecuteActivity_Outcomes":"Error,NonEvasa,Evasa,Annullata,Rifiutata","RazorExecuteActivity_RazorView":"UpdateRichiestaProdotto.cshtml"}</State>
         </Activity>
-        <Activity Id="30" Name="Logging" Start="false" X="767" Y="145">
+        <Activity Id="31" Name="Logging" Start="false" X="767" Y="145">
           <State>{"Level":"Error","Message":"Error in workflow UpdateRichiestaProdotto: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="31" Name="SendPush" Start="false" X="496" Y="349">
+        <Activity Id="32" Name="SendPush" Start="false" X="496" Y="349">
           <State>{"allDevice":"UserId","userId":"{Workflow.State:UserIdToNotify}","allLanguage":"All","Produzione":"Produzione","idRelated":"{Content.Id}","PushMessage":"La richiesta # {Content.Id} del prodotto {Content.Fields.RichiestaProdotto.Prodotto.Content.DisplayText} è stata annullata."}</State>
         </Activity>
-        <Activity Id="32" Name="SendPush" Start="false" X="607" Y="347">
+        <Activity Id="33" Name="SendPush" Start="false" X="607" Y="347">
           <State>{"allDevice":"UserId","userId":"{Workflow.State:UserIdToNotify}","allLanguage":"All","Produzione":"Produzione","idRelated":"{Content.Id}","PushMessage":"Si prega di prendere in carico la Richiesta # {Content.Id} del prodotto {Content.Fields.RichiestaProdotto.Prodotto.Content.DisplayText}."}</State>
         </Activity>
-        <Activity Id="33" Name="SendPush" Start="false" X="716" Y="345">
+        <Activity Id="34" Name="SendPush" Start="false" X="716" Y="345">
           <State>{"allDevice":"UserId","userId":"{Workflow.State:UserIdToNotify}","allLanguage":"All","Produzione":"Produzione","idRelated":"{Content.Id}","PushMessage":"La richiesta # {Content.Id} del prodotto {Content.Fields.RichiestaProdotto.Prodotto.Content.DisplayText} è stata evasa."}</State>
         </Activity>
-        <Activity Id="34" Name="Signal" Start="true" X="3" Y="52">
+        <Activity Id="35" Name="Signal" Start="true" X="3" Y="52">
           <State>{"Signal":"RichiestaNonEvasa"}</State>
         </Activity>
-        <Activity Id="35" Name="Signal" Start="true" X="108" Y="0">
+        <Activity Id="36" Name="Signal" Start="true" X="108" Y="0">
           <State>{"Signal":"RichiestaAnnullata"}</State>
         </Activity>
-        <Activity Id="36" Name="Signal" Start="true" X="187" Y="0">
+        <Activity Id="37" Name="Signal" Start="true" X="187" Y="0">
           <State>{"Signal":"RichiestaEvasa"}</State>
         </Activity>
-        <Activity Id="37" Name="RazorExecute" Start="false" X="99" Y="135">
+        <Activity Id="38" Name="RazorExecute" Start="false" X="99" Y="135">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"SignalRichiestaProdotto.cshtml"}</State>
         </Activity>
-        <Activity Id="38" Name="Logging" Start="false" X="57" Y="333">
+        <Activity Id="39" Name="Logging" Start="false" X="57" Y="333">
           <State>{"Level":"Error","Message":"Error in workflow UpdateRichiestaProdotto (signal): {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="39" Name="WebApiResponse" Start="false" X="30" Y="458">
+        <Activity Id="40" Name="WebApiResponse" Start="false" X="30" Y="458">
           <State>{"Message":"","ErrorCode":"GenericError","ResolutionAction":"NoAction"}</State>
         </Activity>
-        <Activity Id="40" Name="WebApiResponse" Start="false" X="244" Y="348">
+        <Activity Id="41" Name="WebApiResponse" Start="false" X="244" Y="348">
           <State>{"Successful":"true","Message":"","ErrorCode":"NoError","ResolutionAction":"NoAction"}</State>
         </Activity>
-        <Activity Id="41" Name="SendPush" Start="false" X="391" Y="276">
+        <Activity Id="42" Name="SendPush" Start="false" X="391" Y="276">
           <State>{"allDevice":"UserId","userId":"{Workflow.State:UserIdToNotify}","allLanguage":"All","Produzione":"Produzione","idRelated":"{Content.Id}","PushMessage":"La richiesta # {Content.Id} del prodotto {Content.Fields.RichiestaProdotto.Prodotto.Content.DisplayText} è stata rifiutata."}</State>
         </Activity>
-        <Activity Id="42" Name="Signal" Start="true" X="298" Y="49">
+        <Activity Id="43" Name="Signal" Start="true" X="298" Y="49">
           <State>{"Signal":"RichiestaRifiutata"}</State>
         </Activity>
-        <Activity Id="43" Name="ContentUpdated" Start="true" X="549" Y="45">
+        <Activity Id="44" Name="ContentUpdated" Start="true" X="549" Y="45">
           <State>{"ContentTypes":"RichiestaProdotto"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="29" SourceEndpoint="Error" DestinationActivityId="30" DestinationEndpoint="" />
-        <Transition SourceActivityId="29" SourceEndpoint="Annullata" DestinationActivityId="31" DestinationEndpoint="" />
-        <Transition SourceActivityId="29" SourceEndpoint="NonEvasa" DestinationActivityId="32" DestinationEndpoint="" />
-        <Transition SourceActivityId="29" SourceEndpoint="Evasa" DestinationActivityId="33" DestinationEndpoint="" />
-        <Transition SourceActivityId="34" SourceEndpoint="Done" DestinationActivityId="37" DestinationEndpoint="" />
-        <Transition SourceActivityId="35" SourceEndpoint="Done" DestinationActivityId="37" DestinationEndpoint="" />
-        <Transition SourceActivityId="36" SourceEndpoint="Done" DestinationActivityId="37" DestinationEndpoint="" />
-        <Transition SourceActivityId="37" SourceEndpoint="Ok" DestinationActivityId="40" DestinationEndpoint="" />
-        <Transition SourceActivityId="37" SourceEndpoint="Error" DestinationActivityId="38" DestinationEndpoint="" />
-        <Transition SourceActivityId="38" SourceEndpoint="Done" DestinationActivityId="39" DestinationEndpoint="" />
-        <Transition SourceActivityId="29" SourceEndpoint="Rifiutata" DestinationActivityId="41" DestinationEndpoint="" />
-        <Transition SourceActivityId="42" SourceEndpoint="Done" DestinationActivityId="37" DestinationEndpoint="" />
-        <Transition SourceActivityId="43" SourceEndpoint="Done" DestinationActivityId="29" DestinationEndpoint="" />
-        <Transition SourceActivityId="40" SourceEndpoint="Done" DestinationActivityId="29" DestinationEndpoint="" />
+        <Transition SourceActivityId="30" SourceEndpoint="Error" DestinationActivityId="31" DestinationEndpoint="" />
+        <Transition SourceActivityId="30" SourceEndpoint="Annullata" DestinationActivityId="32" DestinationEndpoint="" />
+        <Transition SourceActivityId="30" SourceEndpoint="NonEvasa" DestinationActivityId="33" DestinationEndpoint="" />
+        <Transition SourceActivityId="30" SourceEndpoint="Evasa" DestinationActivityId="34" DestinationEndpoint="" />
+        <Transition SourceActivityId="35" SourceEndpoint="Done" DestinationActivityId="38" DestinationEndpoint="" />
+        <Transition SourceActivityId="36" SourceEndpoint="Done" DestinationActivityId="38" DestinationEndpoint="" />
+        <Transition SourceActivityId="37" SourceEndpoint="Done" DestinationActivityId="38" DestinationEndpoint="" />
+        <Transition SourceActivityId="38" SourceEndpoint="Ok" DestinationActivityId="41" DestinationEndpoint="" />
+        <Transition SourceActivityId="38" SourceEndpoint="Error" DestinationActivityId="39" DestinationEndpoint="" />
+        <Transition SourceActivityId="39" SourceEndpoint="Done" DestinationActivityId="40" DestinationEndpoint="" />
+        <Transition SourceActivityId="30" SourceEndpoint="Rifiutata" DestinationActivityId="42" DestinationEndpoint="" />
+        <Transition SourceActivityId="43" SourceEndpoint="Done" DestinationActivityId="38" DestinationEndpoint="" />
+        <Transition SourceActivityId="44" SourceEndpoint="Done" DestinationActivityId="30" DestinationEndpoint="" />
+        <Transition SourceActivityId="41" SourceEndpoint="Done" DestinationActivityId="30" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Unpublish Richieste Prodotto" Enabled="true">
       <Activities>
-        <Activity Id="44" Name="Signal" Start="true" X="190" Y="4">
+        <Activity Id="45" Name="Signal" Start="true" X="190" Y="4">
           <State>{"Signal":"UnpublishRichiesteProdotto"}</State>
         </Activity>
-        <Activity Id="45" Name="RazorExecute" Start="false" X="172" Y="149">
+        <Activity Id="46" Name="RazorExecute" Start="false" X="172" Y="149">
           <State>{"RazorExecuteActivity_Outcomes":"Ok,Error","RazorExecuteActivity_RazorView":"UnpublishRichiesteProdotto.cshtml"}</State>
         </Activity>
-        <Activity Id="46" Name="Logging" Start="false" X="541" Y="174">
+        <Activity Id="47" Name="Logging" Start="false" X="541" Y="174">
           <State>{"Level":"Error","Message":"Error in workflow UnpublishRichiesteProdotto: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="44" SourceEndpoint="Done" DestinationActivityId="45" DestinationEndpoint="" />
-        <Transition SourceActivityId="45" SourceEndpoint="Error" DestinationActivityId="46" DestinationEndpoint="" />
+        <Transition SourceActivityId="45" SourceEndpoint="Done" DestinationActivityId="46" DestinationEndpoint="" />
+        <Transition SourceActivityId="46" SourceEndpoint="Error" DestinationActivityId="47" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Unpublish Stores" Enabled="true">
       <Activities>
-        <Activity Id="47" Name="ContentPublished" Start="true" X="207" Y="4">
+        <Activity Id="48" Name="ContentPublished" Start="true" X="207" Y="4">
           <State>{"ContentTypes":"Store"}</State>
         </Activity>
-        <Activity Id="48" Name="Signal" Start="true" X="463" Y="4">
+        <Activity Id="49" Name="Signal" Start="true" X="463" Y="4">
           <State>{"Signal":"CheckStores"}</State>
         </Activity>
-        <Activity Id="49" Name="RazorExecute" Start="false" X="319" Y="129">
+        <Activity Id="50" Name="RazorExecute" Start="false" X="319" Y="129">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok,Unpublished","RazorExecuteActivity_RazorView":"UnpublishStores.cshtml"}</State>
         </Activity>
-        <Activity Id="50" Name="Logging" Start="false" X="600" Y="139">
+        <Activity Id="51" Name="Logging" Start="false" X="600" Y="139">
           <State>{"Level":"Error","Message":"Error in workflow UnpublishStores: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="51" Name="Logging" Start="false" X="80" Y="144">
+        <Activity Id="52" Name="Logging" Start="false" X="80" Y="144">
           <State>{"Level":"Error","Message":"Workflow UnpublishStores: forced store unpublish."}</State>
         </Activity>
-        <Activity Id="52" Name="Notify" Start="false" X="87" Y="271">
+        <Activity Id="53" Name="Notify" Start="false" X="87" Y="271">
           <State>{"Notification":"Error","Message":"E' stato raggiunto il numero di Store acquistati. Lo Store non è stato pubblicato."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="47" SourceEndpoint="Done" DestinationActivityId="49" DestinationEndpoint="" />
-        <Transition SourceActivityId="48" SourceEndpoint="Done" DestinationActivityId="49" DestinationEndpoint="" />
-        <Transition SourceActivityId="49" SourceEndpoint="Error" DestinationActivityId="50" DestinationEndpoint="" />
-        <Transition SourceActivityId="49" SourceEndpoint="Unpublished" DestinationActivityId="51" DestinationEndpoint="" />
-        <Transition SourceActivityId="51" SourceEndpoint="Done" DestinationActivityId="52" DestinationEndpoint="" />
+        <Transition SourceActivityId="48" SourceEndpoint="Done" DestinationActivityId="50" DestinationEndpoint="" />
+        <Transition SourceActivityId="49" SourceEndpoint="Done" DestinationActivityId="50" DestinationEndpoint="" />
+        <Transition SourceActivityId="50" SourceEndpoint="Error" DestinationActivityId="51" DestinationEndpoint="" />
+        <Transition SourceActivityId="50" SourceEndpoint="Unpublished" DestinationActivityId="52" DestinationEndpoint="" />
+        <Transition SourceActivityId="52" SourceEndpoint="Done" DestinationActivityId="53" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Update Configurazione Base" Enabled="true">
       <Activities>
-        <Activity Id="53" Name="RazorExecute" Start="false" X="191" Y="127">
+        <Activity Id="54" Name="RazorExecute" Start="false" X="191" Y="127">
           <State>{"RazorExecuteActivity_Outcomes":"Ok,Error","RazorExecuteActivity_RazorView":"UpdateConfigurazioneBase.cshtml"}</State>
         </Activity>
-        <Activity Id="54" Name="Notify" Start="false" X="564" Y="153">
+        <Activity Id="55" Name="Notify" Start="false" X="564" Y="153">
           <State>{"Notification":"Error","Message":"Si è verificato un errore durante l'aggiornamento della struttura dei prodotti."}</State>
         </Activity>
-        <Activity Id="55" Name="Logging" Start="false" X="542" Y="278">
+        <Activity Id="56" Name="Logging" Start="false" X="542" Y="278">
           <State>{"Level":"Error","Message":"Error in workflow Update Configurazione Base: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="56" Name="ContentPublished" Start="true" X="228" Y="3">
+        <Activity Id="57" Name="ContentPublished" Start="true" X="228" Y="3">
           <State>{"ContentTypes":"ConfigurazioneBase"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="53" SourceEndpoint="Error" DestinationActivityId="54" DestinationEndpoint="" />
-        <Transition SourceActivityId="54" SourceEndpoint="Done" DestinationActivityId="55" DestinationEndpoint="" />
-        <Transition SourceActivityId="56" SourceEndpoint="Done" DestinationActivityId="53" DestinationEndpoint="" />
+        <Transition SourceActivityId="54" SourceEndpoint="Error" DestinationActivityId="55" DestinationEndpoint="" />
+        <Transition SourceActivityId="55" SourceEndpoint="Done" DestinationActivityId="56" DestinationEndpoint="" />
+        <Transition SourceActivityId="57" SourceEndpoint="Done" DestinationActivityId="54" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Update Contatto" Enabled="true">
       <Activities>
-        <Activity Id="57" Name="ContentUpdated" Start="true" X="212" Y="23">
+        <Activity Id="58" Name="ContentUpdated" Start="true" X="212" Y="23">
           <State>{"ContentTypes":"CommunicationContact"}</State>
         </Activity>
-        <Activity Id="58" Name="RazorExecute" Start="false" X="255" Y="176">
+        <Activity Id="59" Name="RazorExecute" Start="false" X="255" Y="176">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"UpdateContatto.cshtml"}</State>
         </Activity>
-        <Activity Id="59" Name="Logging" Start="false" X="640" Y="210">
+        <Activity Id="60" Name="Logging" Start="false" X="640" Y="210">
           <State>{"Level":"Error","Message":"Errore nel workflow UpdateContatto: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="60" Name="SendTemplatedEmail" Start="false" X="278" Y="423">
+        <Activity Id="61" Name="SendTemplatedEmail" Start="false" X="278" Y="423">
           <State>{"Recipient":"other","RecipientOther":"{Content.Fields.ContactInfoPart.EmailInfo}","RecipientCC":"giuseppe.musso@laser-group.com","RecipientBCC":"","FromEmail":"","ReplyTo":"","EmailTemplate":"5"}</State>
         </Activity>
-        <Activity Id="61" Name="IsInRole" Start="false" X="300" Y="299">
+        <Activity Id="62" Name="IsInRole" Start="false" X="300" Y="299">
           <State>{"Roles":"StoreAssistant"}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="57" SourceEndpoint="Done" DestinationActivityId="58" DestinationEndpoint="" />
-        <Transition SourceActivityId="58" SourceEndpoint="Error" DestinationActivityId="59" DestinationEndpoint="" />
-        <Transition SourceActivityId="58" SourceEndpoint="Ok" DestinationActivityId="61" DestinationEndpoint="" />
-        <Transition SourceActivityId="61" SourceEndpoint="Yes" DestinationActivityId="60" DestinationEndpoint="" />
+        <Transition SourceActivityId="58" SourceEndpoint="Done" DestinationActivityId="59" DestinationEndpoint="" />
+        <Transition SourceActivityId="59" SourceEndpoint="Error" DestinationActivityId="60" DestinationEndpoint="" />
+        <Transition SourceActivityId="59" SourceEndpoint="Ok" DestinationActivityId="62" DestinationEndpoint="" />
+        <Transition SourceActivityId="62" SourceEndpoint="Yes" DestinationActivityId="61" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
     <Workflow Name="Update Push" Enabled="true">
       <Activities>
-        <Activity Id="62" Name="ContentUpdated" Start="true" X="243" Y="-9">
+        <Activity Id="63" Name="ContentUpdated" Start="true" X="243" Y="-9">
           <State>{"ContentTypes":"PushClienti,PushDipendenti"}</State>
         </Activity>
-        <Activity Id="63" Name="RazorExecute" Start="false" X="245" Y="159">
+        <Activity Id="64" Name="RazorExecute" Start="false" X="245" Y="159">
           <State>{"RazorExecuteActivity_Outcomes":"Error,Ok","RazorExecuteActivity_RazorView":"UpdatePush.cshtml"}</State>
         </Activity>
-        <Activity Id="64" Name="Logging" Start="false" X="529" Y="321">
+        <Activity Id="65" Name="Logging" Start="false" X="529" Y="321">
           <State>{"Level":"Error","Message":"Error in Update Push workflow: {Workflow.State:ErrorMessage}"}</State>
         </Activity>
-        <Activity Id="65" Name="Notify" Start="false" X="539" Y="182">
+        <Activity Id="66" Name="Notify" Start="false" X="539" Y="182">
           <State>{"Notification":"Error","Message":"Si è verificato un errrore sull'aggiornamento dei dati. Provare a salvare nuovamente."}</State>
         </Activity>
       </Activities>
       <Transitions>
-        <Transition SourceActivityId="62" SourceEndpoint="Done" DestinationActivityId="63" DestinationEndpoint="" />
-        <Transition SourceActivityId="63" SourceEndpoint="Error" DestinationActivityId="65" DestinationEndpoint="" />
-        <Transition SourceActivityId="65" SourceEndpoint="Done" DestinationActivityId="64" DestinationEndpoint="" />
+        <Transition SourceActivityId="63" SourceEndpoint="Done" DestinationActivityId="64" DestinationEndpoint="" />
+        <Transition SourceActivityId="64" SourceEndpoint="Error" DestinationActivityId="66" DestinationEndpoint="" />
+        <Transition SourceActivityId="66" SourceEndpoint="Done" DestinationActivityId="65" DestinationEndpoint="" />
       </Transitions>
     </Workflow>
   </Workflows>

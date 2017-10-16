@@ -9,6 +9,9 @@
 @using System.Linq;
 
 @functions{
+    // Model.ContentItem is a RichiestaPubblicazione
+    // Locks RichiestaPubblicazione.
+    // If the item is already locked, restore previously published version.
     string retString = "Error"; //possile outcomes: Ok,Error,AlreadyLocked
     string eMsg = String.Empty;
 
