@@ -15,8 +15,9 @@
 
             if (isAuthorized) {
                 @Html.Raw("&nbsp;")
-                <button type="submit" name="submit.Save" value="@Html.Raw("submit.DynamicCustomButton." + Model[i].ButtonText)">
-                    @T(Model[i].ButtonText)
+                var text = !string.IsNullOrWhiteSpace(Model[i].ButtonText) ? Model[i].ButtonText : Model[i].ButtonName;
+                <button type="submit" name="submit.Save" value="@Html.Raw("submit.DynamicCustomButton." + Model[i].GlobalIdentifier)">
+                    @T(text)
                 </button>
             }
 
@@ -25,6 +26,7 @@
             @Html.HiddenFor(m => m[i].ButtonDescription)
             @Html.HiddenFor(m => m[i].ButtonMessage)
             @Html.HiddenFor(m => m[i].ButtonAsync)
+            @Html.HiddenFor(m => m[i].GlobalIdentifier)
         }
     }
 </div>
