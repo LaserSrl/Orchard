@@ -216,24 +216,28 @@
         <Catalogo />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <IdentityPart />
+        <LocalizationPart />
         <SummaryAdminToolbarPart SummaryAdminToolbarPartSettings.Labels="{ Label=Prodotti, Area=, Controller=, Action=, Parameters=, CustomUrl=AdvancedOptions.CPFIdToSearch={Content.Id}&amp;AdvancedOptions.CPFName=Prodotto.Cataloghi., Target=_self }," />
         <TitlePart />
       </Catalogo>
       <CategoriaNewsDipendentiTerm Taxonomy="Categoria News Dipendenti" DisplayName="Categoria News Dipendenti Term">
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" />
         <CommonPart />
+        <LocalizationPart />
         <TermPart />
         <TitlePart />
       </CategoriaNewsDipendentiTerm>
       <CategoriaProdottoTerm Taxonomy="Categoria Prodotto" DisplayName="Categoria Prodotto Term">
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" />
         <CommonPart />
+        <LocalizationPart />
         <TermPart />
         <TitlePart />
       </CategoriaProdottoTerm>
       <CategoriaPromoTerm Taxonomy="Categoria Promo" DisplayName="Categoria Promo Term">
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" />
         <CommonPart />
+        <LocalizationPart />
         <TermPart />
         <TitlePart />
       </CategoriaPromoTerm>
@@ -425,6 +429,7 @@
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <BodyPart BodyTypePartSettings.Flavor="Html" />
         <CommonPart DateEditorSettings.ShowDateEditor="False" OwnerEditorSettings.ShowOwnerEditor="True" />
+        <LocalizationPart />
         <MessaggioPromozionale />
         <TitlePart />
       </MessaggioPromozionale>
@@ -493,6 +498,7 @@
       <PreferenzeTerm Taxonomy="Preferenze" DisplayName="Preferenze Term">
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" />
         <CommonPart />
+        <LocalizationPart />
         <TermPart />
         <TitlePart />
       </PreferenzeTerm>
@@ -500,6 +506,7 @@
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <IdentityPart />
+        <LocalizationPart />
         <Prodotto />
         <ShareLinkPart ShareLinkPartSettingVM.SharedLink="{Content.DisplayUrl}" ShareLinkPartSettingVM.SharedBody="" ShareLinkPartSettingVM.SharedText="Ho appena visualizzato il prodotto {Content.DisplayText}" ShareLinkPartSettingVM.SharedImage="{Content.Fields.Prodotto.Gallery}" ShareLinkPartSettingVM.ShowImageChoise="False" ShareLinkPartSettingVM.ShowBodyChoise="False" ShareLinkPartSettingVM.ShowTextChoise="False" ShareLinkPartSettingVM.ShowLinkChoise="False" />
         <TitlePart />
@@ -606,7 +613,6 @@
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="False" AutorouteSettings.UseCulturePattern="False" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;store/{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:null},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;en-US&quot;},{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-title&quot;,&quot;Culture&quot;:&quot;it-IT&quot;}]" AutorouteSettings.DefaultPatternDefinitions="[{&quot;Culture&quot;:&quot;&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;en-US&quot;,&quot;PatternIndex&quot;:&quot;0&quot;},{&quot;Culture&quot;:&quot;it-IT&quot;,&quot;PatternIndex&quot;:&quot;0&quot;}]" />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="True" DateEditorSettings.ShowDateEditor="False" />
         <IdentityPart />
-        <LocalizationPart />
         <Store />
         <TitlePart />
       </Store>
@@ -956,6 +962,7 @@
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="categoria-news-dipendenti/unica" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=categoria-news-dipendenti" CreatedUtc="2017-08-03T15:38:05.5670635Z" PublishedUtc="2017-10-12T14:39:29.4788687Z" ModifiedUtc="2017-10-12T14:39:29.4375386Z" />
+      <LocalizationPart Culture="it-IT" />
       <TermPart Count="2" Selectable="true" Weight="0" TaxonomyId="/alias=categoria-news-dipendenti" Path="" />
       <TitlePart Title="News" />
     </CategoriaNewsDipendentiTerm>
@@ -964,6 +971,7 @@
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="categoria-prodotto/unica" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=categoria-prodotto" CreatedUtc="2017-07-31T10:52:18.9835166Z" PublishedUtc="2017-10-12T14:42:33.6702203Z" ModifiedUtc="2017-10-12T14:42:33.6309863Z" />
+      <LocalizationPart Culture="it-IT" />
       <TermPart Count="8" Selectable="true" Weight="0" TaxonomyId="/alias=categoria-prodotto" Path="" />
       <TitlePart Title="Generica" />
     </CategoriaProdottoTerm>
@@ -972,6 +980,7 @@
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="categoria-promo/unica" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=categoria-promo" CreatedUtc="2017-08-03T15:44:01.0986536Z" PublishedUtc="2017-10-12T14:42:43.4526204Z" ModifiedUtc="2017-10-12T14:42:43.4285829Z" />
+      <LocalizationPart Culture="it-IT" />
       <TermPart Count="1" Selectable="true" Weight="0" TaxonomyId="/alias=categoria-promo" Path="" />
       <TitlePart Title="Generica" />
     </CategoriaPromoTerm>
@@ -1095,6 +1104,7 @@
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="preferenze/categoria-prodotto" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=preferenze" CreatedUtc="2017-10-12T14:44:29.1546948Z" PublishedUtc="2017-10-12T14:44:29.3940534Z" ModifiedUtc="2017-10-12T14:44:29.2772396Z" />
+      <LocalizationPart Culture="it-IT" />
       <TermPart Count="0" Selectable="true" Weight="0" TaxonomyId="/alias=preferenze" Path="" />
       <TitlePart Title="Categoria prodotto" />
     </PreferenzeTerm>
@@ -1103,6 +1113,7 @@
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="preferenze/offerte" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
       <CommonPart Owner="/Identifier=/User.UserName=admin" Container="/alias=preferenze" CreatedUtc="2017-08-03T15:37:04.187942Z" PublishedUtc="2017-10-12T14:43:46.6428228Z" ModifiedUtc="2017-10-12T14:43:46.5904755Z" />
+      <LocalizationPart Culture="it-IT" />
       <TermPart Count="4" Selectable="true" Weight="0" TaxonomyId="/alias=preferenze" Path="" />
       <TitlePart Title="Promozioni" />
     </PreferenzeTerm>
@@ -1251,11 +1262,11 @@
       <TitlePart Title="Prodotti in vetrina pubblico" />
     </ProjectionPage>
     <Query Id="/Identifier=2e1458ac588b448f9ad9706d6db80d76" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-08T16:08:58.8537567Z" PublishedUtc="2017-08-08T16:10:39.8648261Z" ModifiedUtc="2017-08-08T16:10:39.849225Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-08T16:08:58.8537567Z" PublishedUtc="2017-10-13T14:07:32.1784785Z" ModifiedUtc="2017-08-08T16:10:39.849225Z" />
       <IdentityPart Identifier="2e1458ac588b448f9ad9706d6db80d76" />
       <QueryPart>
         <FilterGroups>
@@ -1272,11 +1283,11 @@
       <TitlePart Title="Query Contatto per numero" />
     </Query>
     <Query Id="/Identifier=358f109ad483418393a9cbe85874ec02" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-04T12:39:36.9583597Z" PublishedUtc="2017-08-04T12:39:37.6519143Z" ModifiedUtc="2017-08-04T12:39:37.2288953Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-04T12:39:36.9583597Z" PublishedUtc="2017-10-13T14:07:32.5117239Z" ModifiedUtc="2017-08-04T12:39:37.2288953Z" />
       <IdentityPart Identifier="358f109ad483418393a9cbe85874ec02" />
       <QueryPart>
         <FilterGroups>
@@ -1284,6 +1295,7 @@
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;Prodotto&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
             <Filter Category="ProdottoContentFields" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;Operator&gt;Contains&lt;/Operator&gt;&lt;Value&gt;{{{Request.QueryString:id_catalogo}}}&lt;/Value&gt;&lt;/Form&gt;" Type="Prodotto.Cataloghi." />
             <Filter Category="Taxonomy" Description="" Position="2" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;TermToken&gt;{Request.QueryString:termids}&lt;/TermToken&gt;&lt;Operator&gt;0&lt;/Operator&gt;&lt;IncludeChildren&gt;true&lt;/IncludeChildren&gt;&lt;/Form&gt;" Type="HasTermsTokenized" />
+            <Filter Category="Localization" Description="" Position="3" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;/Form&gt;" Type="ForCurrentCultureOrDefault" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria>
@@ -1294,11 +1306,11 @@
       <TitlePart Title="Query Prodotti di un catalogo" />
     </Query>
     <Query Id="/Identifier=4f3f4932d3f24904aedb655244031ceb" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:26:04.195501Z" PublishedUtc="2017-08-03T16:26:04.2356515Z" ModifiedUtc="2017-08-03T16:26:04.223036Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:26:04.195501Z" PublishedUtc="2017-10-13T14:07:32.7869975Z" ModifiedUtc="2017-08-03T16:26:04.223036Z" />
       <IdentityPart Identifier="4f3f4932d3f24904aedb655244031ceb" />
       <QueryPart>
         <FilterGroups>
@@ -1316,11 +1328,11 @@
       <TitlePart Title="Query Richieste al mio Store" />
     </Query>
     <Query Id="/Identifier=4fac51dc4c8e4e39b2f38d6fe69bd8ba" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-10T08:33:33.9741193Z" PublishedUtc="2017-08-10T08:33:34.0989213Z" ModifiedUtc="2017-08-10T08:33:34.0833376Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-10T08:33:33.9741193Z" PublishedUtc="2017-10-13T14:07:33.0611847Z" ModifiedUtc="2017-08-10T08:33:34.0833376Z" />
       <IdentityPart Identifier="4fac51dc4c8e4e39b2f38d6fe69bd8ba" />
       <QueryPart>
         <FilterGroups>
@@ -1337,17 +1349,18 @@
       <TitlePart Title="Query Stores" />
     </Query>
     <Query Id="/Identifier=60117cefce384d35a7bd5fdacfa6d2d1" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:10:42.0846427Z" PublishedUtc="2017-08-03T16:10:42.1317467Z" ModifiedUtc="2017-08-03T16:10:42.1247245Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:10:42.0846427Z" PublishedUtc="2017-10-13T14:07:33.3039063Z" ModifiedUtc="2017-08-03T16:10:42.1247245Z" />
       <IdentityPart Identifier="60117cefce384d35a7bd5fdacfa6d2d1" />
       <QueryPart>
         <FilterGroups>
           <FilterGroup>
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;Catalogo&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
             <Filter Category="CalendarEvent" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;DateFrom&gt;{Date.Local}&lt;/DateFrom&gt;&lt;DateTo&gt;{Date.Local}&lt;/DateTo&gt;&lt;/Form&gt;" Type="ActivityRange" />
+            <Filter Category="Localization" Description="" Position="2" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;/Form&gt;" Type="ForCurrentCultureOrDefault" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria />
@@ -1356,11 +1369,11 @@
       <TitlePart Title="Query Cataloghi" />
     </Query>
     <Query Id="/Identifier=6e378f73980a440eb90eda93a6d194fb" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-08T14:52:41.5151419Z" PublishedUtc="2017-08-08T15:52:50.3797911Z" ModifiedUtc="2017-08-08T15:52:49.9585831Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-08T14:52:41.5151419Z" PublishedUtc="2017-10-13T14:07:33.6751898Z" ModifiedUtc="2017-08-08T15:52:49.9585831Z" />
       <IdentityPart Identifier="6e378f73980a440eb90eda93a6d194fb" />
       <QueryPart>
         <FilterGroups>
@@ -1375,16 +1388,17 @@
       <TitlePart Title="Query Contatto per email" />
     </Query>
     <Query Id="/Identifier=74aa18cc9ffa4ac5a5a48e44b74e190d" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:28:06.0208714Z" PublishedUtc="2017-08-03T16:28:06.0951387Z" ModifiedUtc="2017-08-03T16:28:06.0820531Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:28:06.0208714Z" PublishedUtc="2017-10-13T14:07:34.0619878Z" ModifiedUtc="2017-08-03T16:28:06.0820531Z" />
       <IdentityPart Identifier="74aa18cc9ffa4ac5a5a48e44b74e190d" />
       <QueryPart>
         <FilterGroups>
           <FilterGroup>
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;Questionnaire&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
+            <Filter Category="Localization" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;/Form&gt;" Type="ForCurrentCultureOrDefault" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria>
@@ -1395,11 +1409,11 @@
       <TitlePart Title="Query Sondaggi" />
     </Query>
     <Query Id="/Identifier=9c2b8991eab04a748cb5c8c9430af8b6" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-09T08:14:03.6843444Z" PublishedUtc="2017-08-09T08:14:03.9495522Z" ModifiedUtc="2017-08-09T08:14:03.9183689Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-09T08:14:03.6843444Z" PublishedUtc="2017-10-13T14:07:34.3070111Z" ModifiedUtc="2017-08-09T08:14:03.9183689Z" />
       <IdentityPart Identifier="9c2b8991eab04a748cb5c8c9430af8b6" />
       <QueryPart>
         <FilterGroups>
@@ -1413,11 +1427,11 @@
       <TitlePart Title="Query Contatti per generatore" />
     </Query>
     <Query Id="/Identifier=a234cf0cf8aa4efab7e5fd17bac50d4d" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:21:48.2897825Z" PublishedUtc="2017-08-03T16:21:48.3308994Z" ModifiedUtc="2017-08-03T16:21:48.3204042Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:21:48.2897825Z" PublishedUtc="2017-10-13T14:07:34.8584752Z" ModifiedUtc="2017-08-03T16:21:48.3204042Z" />
       <IdentityPart Identifier="a234cf0cf8aa4efab7e5fd17bac50d4d" />
       <QueryPart>
         <FilterGroups>
@@ -1434,17 +1448,18 @@
       <TitlePart Title="Query Richieste del mio store" />
     </Query>
     <Query Id="/Identifier=ae83769fd1a748a08a6ed8b7ba9fac82" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:07:48.7504243Z" PublishedUtc="2017-08-03T16:09:33.1935921Z" ModifiedUtc="2017-08-03T16:09:33.1852073Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:07:48.7504243Z" PublishedUtc="2017-10-13T14:07:35.2779855Z" ModifiedUtc="2017-08-03T16:09:33.1852073Z" />
       <IdentityPart Identifier="ae83769fd1a748a08a6ed8b7ba9fac82" />
       <QueryPart>
         <FilterGroups>
           <FilterGroup>
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;Prodotto&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
             <Filter Category="ProdottoContentFields" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;Value&gt;true&lt;/Value&gt;&lt;/Form&gt;" Type="Prodotto.Mettiinvetrina." />
+            <Filter Category="Localization" Description="" Position="2" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;/Form&gt;" Type="ForCurrentCultureOrDefault" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria />
@@ -1453,16 +1468,17 @@
       <TitlePart Title="Query Prodotti in vetrina" />
     </Query>
     <Query Id="/Identifier=b3a022495ec0431684310118bd2f4d70" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:19:22.4463854Z" PublishedUtc="2017-08-03T16:19:22.490504Z" ModifiedUtc="2017-08-03T16:19:22.4814748Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:19:22.4463854Z" PublishedUtc="2017-10-13T14:07:35.5467054Z" ModifiedUtc="2017-08-03T16:19:22.4814748Z" />
       <IdentityPart Identifier="b3a022495ec0431684310118bd2f4d70" />
       <QueryPart>
         <FilterGroups>
           <FilterGroup>
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;NewsDipendenti&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
+            <Filter Category="Localization" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;/Form&gt;" Type="ForCurrentCultureOrDefault" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria>
@@ -1473,16 +1489,17 @@
       <TitlePart Title="Query News interne" />
     </Query>
     <Query Id="/Identifier=b81d7076973e41009bad9d5b5276c0bd" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:20:17.7980514Z" PublishedUtc="2017-08-03T16:20:17.8471935Z" ModifiedUtc="2017-08-03T16:20:17.8351623Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:20:17.7980514Z" PublishedUtc="2017-10-13T14:07:35.9127856Z" ModifiedUtc="2017-08-03T16:20:17.8351623Z" />
       <IdentityPart Identifier="b81d7076973e41009bad9d5b5276c0bd" />
       <QueryPart>
         <FilterGroups>
           <FilterGroup>
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;MessaggioPromozionale&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
+            <Filter Category="Localization" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;/Form&gt;" Type="ForCurrentCultureOrDefault" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria />
@@ -1491,11 +1508,11 @@
       <TitlePart Title="Query Promozioni" />
     </Query>
     <Query Id="/Identifier=bb1f13e8769045c38f18ea3077134037" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-11T15:47:16.0419206Z" PublishedUtc="2017-08-11T15:47:16.2031456Z" ModifiedUtc="2017-08-11T15:47:16.1893192Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-11T15:47:16.0419206Z" PublishedUtc="2017-10-13T14:07:36.2982036Z" ModifiedUtc="2017-08-11T15:47:16.1893192Z" />
       <IdentityPart Identifier="bb1f13e8769045c38f18ea3077134037" />
       <QueryPart>
         <FilterGroups>
@@ -1511,16 +1528,17 @@
       <TitlePart Title="Test Richiesta Prodotto" />
     </Query>
     <Query Id="/Identifier=e3d42a1cdbbb4b0c933d9f1e639ad613" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:18:18.1771682Z" PublishedUtc="2017-08-03T16:18:18.2313995Z" ModifiedUtc="2017-08-03T16:18:18.2243014Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:18:18.1771682Z" PublishedUtc="2017-10-13T14:07:36.636085Z" ModifiedUtc="2017-08-03T16:18:18.2243014Z" />
       <IdentityPart Identifier="e3d42a1cdbbb4b0c933d9f1e639ad613" />
       <QueryPart>
         <FilterGroups>
           <FilterGroup>
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;NewsClienti&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
+            <Filter Category="Localization" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;/Form&gt;" Type="ForCurrentCultureOrDefault" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria>
@@ -1531,16 +1549,17 @@
       <TitlePart Title="Query News pubbliche" />
     </Query>
     <Query Id="/Identifier=e9f752a40db04622879e7da116192115" Status="Published">
-      <BooleanField.UserQuery Value="false" />
       <BooleanField.OneShotQuery Value="false" />
+      <BooleanField.UserQuery Value="false" />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
-      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:20:58.0245123Z" PublishedUtc="2017-08-03T16:20:58.0686324Z" ModifiedUtc="2017-08-03T16:20:58.0606158Z" />
+      <CommonPart Owner="/Identifier=/User.UserName=admin" CreatedUtc="2017-08-03T16:20:58.0245123Z" PublishedUtc="2017-10-13T14:07:36.8718311Z" ModifiedUtc="2017-08-03T16:20:58.0606158Z" />
       <IdentityPart Identifier="e9f752a40db04622879e7da116192115" />
       <QueryPart>
         <FilterGroups>
           <FilterGroup>
             <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;PuntoVendita&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
+            <Filter Category="Localization" Description="" Position="1" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;/Form&gt;" Type="ForCurrentCultureOrDefault" />
           </FilterGroup>
         </FilterGroups>
         <SortCriteria>
