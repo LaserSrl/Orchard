@@ -7,9 +7,15 @@ namespace Laser.Orchard.AppDirect.Models {
             get { return this.Retrieve(r => r.BaseUrl); }
             set { this.Store(r => r.BaseUrl, value); }
         }
+        public bool EnableHttpForDebug {
+            get { return this.Retrieve(r => r.EnableHttpForDebug); }
+            set { this.Store(r => r.EnableHttpForDebug, value); }
+        }
+        
     }
     public class AppDirectSettingsPartRecord: ContentPartRecord {
         public virtual string BaseUrl { get; set; }
+        public virtual bool  EnableHttpForDebug { get; set; }
     }
     public class AppDirectSettingsRecord {
         public virtual int Id { get; set; }
