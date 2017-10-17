@@ -904,18 +904,18 @@
         <PuntiVendita.EnumerationField DisplayName="Punti Vendita" EnumerationFieldSettings.Required="False" EnumerationFieldSettings.Options="SquareImage&#xD;&#xA;SquareImageToEnd&#xD;&#xA;CircleImage&#xD;&#xA;CircleImageToEnd&#xD;&#xA;FullImageViewCellLight&#xD;&#xA;FullImageViewCellDark" EnumerationFieldSettings.ListMode="Dropdown" />
       </Temacelle>
       <Temapalette ContentPartSettings.Attachable="True">
-        <Alternate.ColorPickerField DisplayName="​Sfondo in evidenza" />
+        <Alternate.ColorPickerField DisplayName="Alternate" ColorPickerFieldSettings.Hint="Colore di sfondo per le voci in evidenza." />
         <AndroidXml.TextField DisplayName="Android Xml" TextFieldSettings.Required="False" TextFieldSettings.Flavor="Textarea" />
-        <BackgroundView.ColorPickerField DisplayName="Sfondo" />
-        <CellBackground.ColorPickerField DisplayName="​Sfondo elementi" />
-        <CellSecondaryText.ColorPickerField DisplayName="Sottotitolo elementi" />
-        <CellText.ColorPickerField DisplayName="​Titolo elementi" />
+        <BackgroundView.ColorPickerField DisplayName="BackgroundView" ColorPickerFieldSettings.Hint="Colore di sfondo dell'app mobile." />
+        <CellBackground.ColorPickerField DisplayName="CellBackground" ColorPickerFieldSettings.Hint="Colore di sfondo degli elementi delle liste." />
+        <CellSecondaryText.ColorPickerField DisplayName="CellSecondaryText" ColorPickerFieldSettings.Hint="Colore del sottotitolo degli elementi delle liste." />
+        <CellText.ColorPickerField DisplayName="CellText" ColorPickerFieldSettings.Hint="Colore del titolo degli elementi delle liste." />
         <Gallery.MediaLibraryPickerField DisplayName="Gallery" MediaLibraryPickerFieldSettings.Required="True" MediaLibraryPickerFieldSettings.Multiple="True" />
         <iOSInfoplist.TextField DisplayName="iOS Info plist" TextFieldSettings.Required="False" TextFieldSettings.Flavor="Textarea" />
-        <TextAlternate.ColorPickerField DisplayName="Testo in evidenza" />
-        <TextColor.ColorPickerField DisplayName="​Testo" />
-        <TextTint.ColorPickerField DisplayName="​Testo menu" />
-        <Tint.ColorPickerField DisplayName="Sfondo menu" />
+        <TextAlternate.ColorPickerField DisplayName="TextAlternate" ColorPickerFieldSettings.Hint="Colore del testo per le voci in evidenza." />
+        <TextColor.ColorPickerField DisplayName="TextColor" ColorPickerFieldSettings.Hint="Colore del testo nell'app mobile." />
+        <TextTint.ColorPickerField DisplayName="TextTint" ColorPickerFieldSettings.Hint="Colore del testo per il menu." />
+        <Tint.ColorPickerField DisplayName="Tint" ColorPickerFieldSettings.Hint="Colore di sfondo per il menu." />
       </Temapalette>
       <TemplatePart ContentPartSettings.Attachable="True" />
       <TermPart>
