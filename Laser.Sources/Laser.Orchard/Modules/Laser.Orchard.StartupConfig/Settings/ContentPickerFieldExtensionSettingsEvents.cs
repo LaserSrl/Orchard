@@ -24,8 +24,9 @@ namespace Laser.Orchard.StartupConfig.Settings {
             var model = new ContentPickerFieldExtensionSettings();
             if (updateModel.TryUpdateModel(model, "ContentPickerFieldExtensionSettings", null, null)) {
                 builder.WithSetting("ContentPickerFieldExtensionSettings.CascadePublish", model.CascadePublish.ToString(CultureInfo.InvariantCulture));
+                builder.WithSetting("ContentPickerFieldExtensionSettings.SummaryView", model.SummaryView);
+                builder.WithSetting("ContentPickerFieldExtensionSettings.PreviewSelected", model.PreviewSelected); 
             }
-
             yield return DefinitionTemplate(model);
         }
     }
