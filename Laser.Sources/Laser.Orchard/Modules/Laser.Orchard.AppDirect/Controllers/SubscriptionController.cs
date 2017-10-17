@@ -218,7 +218,10 @@ namespace Laser.Orchard.AppDirect.Controllers {
                     if (usertenant != null) {
                         var accountIdentifier = usertenant.AccountIdentifier;
                         //      accountIdentifier = "185.11.22.191:1235/Laser.Orchard";
-                        Response.Redirect(string.Format("https://{0}/OpenId/LogOn?openid={1}&productKey={2}", accountIdentifier, stropenid, product));
+                        var protocol = "https";
+                        if (_orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>().EnableHttpForDebug)
+                            protocol = "http";
+                        Response.Redirect(string.Format("{0}://{1}/OpenId/AppDirectLogOn?openid={2}&productKey={3}", protocol, accountIdentifier, stropenid, product));
                     }
                     else
                         Logger.Error(T("Can't login user {0}, openid :", email, stropenid).ToString());

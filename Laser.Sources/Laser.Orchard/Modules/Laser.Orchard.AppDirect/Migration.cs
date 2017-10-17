@@ -103,5 +103,12 @@ namespace Laser.Orchard.AppDirect {
                  );
             return 3;
         }
+        public int UpdateFrom3() {
+            SchemaBuilder.AlterTable(typeof(AppDirectSettingsPartRecord).Name, table => table
+               .AddColumn<bool>("EnableHttpForDebug",x=>x.WithDefault(false))
+                 );
+            return 4;
+        }
+        
     }
 }
