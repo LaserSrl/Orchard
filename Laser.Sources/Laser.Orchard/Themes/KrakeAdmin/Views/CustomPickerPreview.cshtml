@@ -1,5 +1,6 @@
 ﻿@using Orchard.ContentManagement
 @using Orchard.Environment.Configuration
+@using Orchard.MediaLibrary.Fields
 @{
     Script.Require("ContentPicker").AtFoot();
     Script.Require("jQueryUI_Sortable").AtFoot();
@@ -29,7 +30,7 @@
           data-not-published-text="@T("Not Published")"
           data-types="@types">
     @if (!String.IsNullOrWhiteSpace(displayName)) {
-        <label @if (required) { <text> class="required" </text>   }>@displayName</label>
+        <label @if (required) { <text> class="required" </text>     }>@displayName</label>
     }
     <div class="message message-Warning content-picker-message">@T("You need to save your changes.")</div>
     <table class="items content-picker" summary="@displayName">
@@ -41,7 +42,7 @@
         <thead>
             <tr>
                 <th scope="col">&nbsp;&darr;</th>
-                <th scope="col">@T("Content Item")</th>
+                <th scope="col" colspan="2">@T("Content Item")</th>
                 <th scope="col">&nbsp;</th>
             </tr>
         </thead>
@@ -49,20 +50,27 @@
             @foreach (var contentItem in contentItems) {
                 <tr>
                     <td>&nbsp;</td>
-                    <td>
+                    <td style="vertical-align:top">
                         <span data-id="@contentItem.Id" data-fieldid="@idsFieldId" class="content-picker-item">@Html.ItemAdminLink(contentItem) @if (!contentItem.HasPublished()) {<text> - </text>@T("Not Published")}</span>
                     </td>
-                    <td style="text-align:left">
-                        @{ foreach (var mediapart in ((List<Orchard.MediaLibrary.Models.MediaPart>)((dynamic)contentItem).Product.ProductImage.MediaParts).Take(5)) {
-                                <img src="@Display.ResizeMediaUrl(Width: 50, Height: 68, Mode: "pad", Alignment: "middlecenter", Path: mediapart.MediaUrl)" alt=" " class="img-responsive" />
+                    <td style="text-align:left;vertical-align:top">
+                        @{
+                            var contentPart = contentItem.Parts.SingleOrDefault(x => x.PartDefinition.Name == contentItem.ContentType);
+                            if (contentPart != null) {
+                                MediaLibraryPickerField field = (MediaLibraryPickerField)contentItem.Parts.SingleOrDefault(x => x.PartDefinition.Name == contentItem.ContentType).Fields.FirstOrDefault(f => f.PartFieldDefinition.FieldDefinition.Name == "MediaLibraryPickerField");
+                                if (field != null) {
+                                    foreach (var mediapart in field.MediaParts.Take(6)) {
+                                        <img src="@Display.ResizeMediaUrl(Width: 100, Height: 100, Mode: "resize", Alignment: "middlecenter", Path: mediapart.MediaUrl)" alt="" class="img-responsive" style="float:left;margin-right:5px;"/>
+                                    }
                                 }
                             }
+                        }
                     </td>
-                    <td>
+                    <td style="vertical-align:bottom">
                         <span data-id="@contentItem.Id" class="content-picker-remove button grey">@T("Remove")</span>
                     </td>
                 </tr>
-            }
+                            }
         </tbody>
     </table>
 
