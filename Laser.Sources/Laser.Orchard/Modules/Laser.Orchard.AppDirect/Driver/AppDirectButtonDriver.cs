@@ -74,7 +74,10 @@ namespace Laser.Orchard.AppDirect.Driver {
                 var AccountIdentifier = _orchardServices.WorkContext.HttpContext.Request.Form["Laser.Orchard.AppDirect.AppDirectUserPart.AccountIdentifier"];
                 if (!string.IsNullOrEmpty(AccountIdentifier)) {
                     bool success = false;
-                    var request = (HttpWebRequest)WebRequest.Create("https://" + AccountIdentifier + "/OpenId/LogOn");
+                    var protocol = "https";
+                    if (_orchardServices.WorkContext.CurrentSite.As<AppDirectSettingsPart>().EnableHttpForDebug)
+                        protocol = "http";
+                    var request = (HttpWebRequest)WebRequest.Create(protocol+"://" + AccountIdentifier + "/OpenId/AppDirectLogOn");
                     request.Method = "HEAD";
                     try {
                         var response = (HttpWebResponse)request.GetResponse();
@@ -83,7 +86,7 @@ namespace Laser.Orchard.AppDirect.Driver {
                         updater.AddModelError("NoIdentifierError", T(ex.Message) );
                     }
                     if (!success) {
-                        updater.AddModelError("NoIdentifierMessage", T("https://" + AccountIdentifier + "/OpenId/LogOn is not available"));
+                        updater.AddModelError("NoIdentifierMessage", T(protocol + "://" + AccountIdentifier + "/OpenId/AppDirectLogOn is not available"));
                     }
                     else {
                         string outresponse;

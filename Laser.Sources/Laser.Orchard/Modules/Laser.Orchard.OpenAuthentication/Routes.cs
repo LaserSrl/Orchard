@@ -86,11 +86,11 @@ namespace Laser.Orchard.OpenAuthentication {
                                                   
                                                  },
                 new RouteDescriptor {  Route = new Route(
-                                                         "OpenId/LogOn",
+                                                         "OpenId/AppDirectLogOn",
                                                          new RouteValueDictionary {
                                                                                       {"area", Constants.LocalArea},
                                                                                       {"controller", "OpenId"},
-                                                                                      {"action", "LogOn"}
+                                                                                      {"action", "AppDirectLogOn"}
                                                                                   },
                                                          new RouteValueDictionary(),
                                                          new RouteValueDictionary {

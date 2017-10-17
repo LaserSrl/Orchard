@@ -6,8 +6,12 @@
 }
 <fieldset>
     @Html.LabelFor(x => x.BaseUrl,T("Market Base Url"))
-    @Html.TextBoxFor(x => x.BaseUrl)
+    @Html.TextBoxFor(x => x.BaseUrl, new { @class = "text large" })
     <div class="hint">@T("Base Url like https://marketplace.appdirect.com")</div>
+</fieldset>
+<fieldset>
+    <label>@T("Disable https (used for debug )")</label>
+    @Html.CheckBoxFor(x => x.EnableHttpForDebug)
 </fieldset>
 <fieldset>
     <legend>@T("Add OAuth Setting")</legend>

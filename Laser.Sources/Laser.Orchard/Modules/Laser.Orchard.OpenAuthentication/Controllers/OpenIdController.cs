@@ -50,7 +50,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             Logger = NullLogger.Instance;
 
         }
-        public ActionResult LogOn() {
+        public ActionResult AppDirectLogOn() {
             string stropenid = Request.QueryString["openid"];
             var baseurl = _orchardServices.WorkContext.CurrentSite.As<OpenAuthenticationSettingsPart>().AppDirectBaseUrl ?? "";
             if (stropenid != null && stropenid.ToLower().StartsWith(baseurl.ToLower() + "/openid/id")) {
@@ -76,21 +76,19 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                                 return this.RedirectLocal(null, "~/admin");
                             }
                             else {
-                                // TODO : Add test if config.autogenerateuser then CreateUserOrchard
                                 Logger.Error("User {0} Authenticated by OpenId is denied to access", orchardUserName);
-                                return this.RedirectToAction("LogOn");
+                                return this.RedirectLocal(null, "~/admin");
                             }
                             break;
                         case AuthenticationStatus.Canceled:
                             Logger.Error("User {0}: generate event Canceled", accountIdentifier);
-
                             _notifier.Error(T("Your authentication request canceled."));
-                            return this.RedirectToAction("LogOn");
+                            return this.RedirectLocal(null, "~/admin");
                             break;
                         case AuthenticationStatus.Failed:
                             Logger.Error("User {0}: generate event Failed", accountIdentifier);
                             _notifier.Error(T("Your authentication request failed."));
-                            return this.RedirectToAction("LogOn");
+                            return this.RedirectLocal(null, "~/admin");
                             break;
                     }
 
