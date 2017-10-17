@@ -4,6 +4,9 @@
 @using System.Linq;
 
 @functions{
+    // Model.ContentItem is a RichiestaProdotto
+    // Unpublish the items older than the number of days specified in ConfigurazioneBase
+    // in order not to overload results to mobile.
     string retString = "Error"; //possible outcomes: Ok,Error
     string eMsg = String.Empty;
     //services

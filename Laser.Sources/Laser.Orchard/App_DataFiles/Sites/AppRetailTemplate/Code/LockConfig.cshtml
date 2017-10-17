@@ -3,7 +3,9 @@
 @using System.Linq;
 
 @functions{
-    // Model.ContentItem is a MessaggioPromozionale
+    // Model.ContentItem is a Configurazione
+    // Locks the current configuration.
+    // If the item is already locked, restore previously published version.
     string retString = "Error"; //possible outcomes: Error,ConfigurazioneGrafica,ConfigurazioneAppStore,AlreadyLocked
     string eMsg = "";
     //services

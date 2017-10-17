@@ -8,6 +8,7 @@ namespace Laser.Orchard.Questionnaires.Models {
     public class QuestionRecord {
         public QuestionRecord() {
             Answers = new List<AnswerRecord>();
+            Published = true;
         }
         public virtual int Id { get; set; }
         [MaxLength(500)]
