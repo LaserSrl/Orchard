@@ -15,7 +15,7 @@
 @{
     var url = Model.Href ?? "#";
     if (Model.Content != null && Model.Content.ContentItem != null && Model.Content.ContentItem.ContentType == "CategorieEventiTerm") {
-        string returnUrl = "eventi"; 
+        string returnUrl = "eventi";
         ILocalizableContentService _localizableContentService;
         if (WorkContext.TryResolve<ILocalizableContentService>(out _localizableContentService)){
             AutoroutePart currentRoutePart;
@@ -28,10 +28,10 @@
                 }
             }
         }
-        var urlPattern = "~/" + returnUrl + "?datainizio={0}&datafine={1}&termids={2}";  //"~/eventi?datainizio={0}&datafine={1}&termids={2}";
-        url = String.Format(urlPattern,
-            Request.QueryString["datainizio"] ?? DateTime.Today.ToString("dd/MM/yyyy"),
-            Request.QueryString["datafine"] ?? DateTime.Today.ToString("dd/MM/yyyy"),
+        var urlPattern = "~/" + returnUrl + "?{0}{1}termids={2}";
+        url = string.Format(urlPattern,
+            string.IsNullOrWhiteSpace(Request.QueryString["datainizio"]) ? "" : "datainizio=" + Request.QueryString["datainizio"] + "&",
+            string.IsNullOrWhiteSpace(Request.QueryString["datafine"]) ? "" : "datafine=" + Request.QueryString["datafine"] + "&",
             Model.Content.ContentItem.Id.ToString());
         url = NormalizeUrl(url, prefix);
     }
