@@ -265,7 +265,9 @@
   <ItemGroup>
     <Content Include="Views\Admin\ThemeSettings.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\CustomPickerPreview.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\CustomPickerSummaryAdmin.cshtml" />
   </ItemGroup>

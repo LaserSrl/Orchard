@@ -55,8 +55,8 @@
                     <td style="text-align:left">
                         @{ foreach (var mediapart in ((List<Orchard.MediaLibrary.Models.MediaPart>)((dynamic)contentItem).Product.ProductImage.MediaParts).Take(5)) {
                                 <img src="@Display.ResizeMediaUrl(Width: 50, Height: 68, Mode: "pad", Alignment: "middlecenter", Path: mediapart.MediaUrl)" alt=" " class="img-responsive" />
-                                }
-                            }
+                           }
+                         }
                     </td>
                     <td>
                         <span data-id="@contentItem.Id" class="content-picker-remove button grey">@T("Remove")</span>
