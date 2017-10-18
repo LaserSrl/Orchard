@@ -170,10 +170,12 @@
     // rendo le occurrences un array sotto schedule e per retrocompatibilità lascio un noto occurrence sotto schedule
     mydoc = aggiungipadre(mydoc, "/Event/Schedule", "Occurrences", "occurrence");
     foreach (System.Xml.XmlNode occurrences in mydoc.SelectNodes("//Event/Schedule/Occurrences")) {
-        var firstChild = occurrences.FirstChild.CloneNode(true);
-        if (firstChild != null) {
-            var parent = occurrences.ParentNode;
-            parent.AppendChild(firstChild);
+        if (occurrences != null && occurrences.FirstChild != null) {
+            var firstChild = occurrences.FirstChild.CloneNode(true);
+            if (firstChild != null) {
+                var parent = occurrences.ParentNode;
+                parent.AppendChild(firstChild);
+            }
         }
     }
     mydoc = aggiungifiglio(mydoc, "/Event/Schedule/Occurrences", "occurrence");
