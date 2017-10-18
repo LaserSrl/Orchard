@@ -901,10 +901,11 @@
         <News.EnumerationField DisplayName="News" EnumerationFieldSettings.Required="False" EnumerationFieldSettings.Options="SquareImageCat&#xD;&#xA;SquareImage&#xD;&#xA;SquareImageToEnd&#xD;&#xA;CircleImageCat&#xD;&#xA;CircleImage&#xD;&#xA;CircleImageToEnd&#xD;&#xA;FullImageViewCellLightCat&#xD;&#xA;FullImageViewCellDarkCat&#xD;&#xA;FullImageViewCellLightGrid&#xD;&#xA;FullImageViewCellDarkGrid&#xD;&#xA;FullImageViewCellLightNoCat&#xD;&#xA;FullImageViewCellDarkNoCat" EnumerationFieldSettings.ListMode="Dropdown" />
         <Prodotti.EnumerationField DisplayName="Prodotti" EnumerationFieldSettings.Required="False" EnumerationFieldSettings.Options="ProductCellPriceModern&#xD;&#xA;ProductCellPriceLargeModern&#xD;&#xA;ProductCellPriceGrid&#xD;&#xA;ProductCellPriceGridModern" EnumerationFieldSettings.ListMode="Dropdown" />
         <Promozioni.EnumerationField DisplayName="Promozioni" EnumerationFieldSettings.Required="False" EnumerationFieldSettings.ListMode="Dropdown" EnumerationFieldSettings.Options="SquareImageCat&#xD;&#xA;SquareImage&#xD;&#xA;SquareImageToEnd&#xD;&#xA;CircleImageCat&#xD;&#xA;CircleImage&#xD;&#xA;CircleImageToEnd&#xD;&#xA;FullImageViewCellLightCat&#xD;&#xA;FullImageViewCellDarkCat&#xD;&#xA;FullImageViewCellLightGrid&#xD;&#xA;FullImageViewCellDarkGrid&#xD;&#xA;FullImageViewCellLightNoCat&#xD;&#xA;FullImageViewCellDarkNoCat" />
-        <PuntiVendita.EnumerationField DisplayName="Punti Vendita" EnumerationFieldSettings.Required="False" EnumerationFieldSettings.Options="SquareImage&#xD;&#xA;SquareImageToEnd&#xD;&#xA;CircleImage&#xD;&#xA;CircleImageToEnd&#xD;&#xA;FullImageViewCellLight&#xD;&#xA;FullImageViewCellDark" EnumerationFieldSettings.ListMode="Dropdown" />
+        <PuntiVendita.EnumerationField DisplayName="Punti Vendita" EnumerationFieldSettings.Required="False" EnumerationFieldSettings.Options="SquareImageCat&#xD;&#xA;SquareImage&#xD;&#xA;SquareImageToEnd&#xD;&#xA;CircleImageCat&#xD;&#xA;CircleImage&#xD;&#xA;CircleImageToEnd&#xD;&#xA;FullImageViewCellLightCat&#xD;&#xA;FullImageViewCellDarkCat&#xD;&#xA;FullImageViewCellLightGrid&#xD;&#xA;FullImageViewCellDarkGrid&#xD;&#xA;FullImageViewCellLightNoCat&#xD;&#xA;FullImageViewCellDarkNoCat" EnumerationFieldSettings.ListMode="Dropdown" />
       </Temacelle>
       <Temapalette ContentPartSettings.Attachable="True">
         <Alternate.ColorPickerField DisplayName="Alternate" ColorPickerFieldSettings.Hint="Colore di sfondo per le voci in evidenza." />
+        <AlternateDarker.ColorPickerField DisplayName="AlternateDarker" ColorPickerFieldSettings.Hint="Colore di sfondo per l'alternate view." />
         <AndroidXml.TextField DisplayName="Android Xml" TextFieldSettings.Required="False" TextFieldSettings.Flavor="Textarea" />
         <BackgroundView.ColorPickerField DisplayName="BackgroundView" ColorPickerFieldSettings.Hint="Colore di sfondo dell'app mobile." />
         <CellBackground.ColorPickerField DisplayName="CellBackground" ColorPickerFieldSettings.Hint="Colore di sfondo degli elementi delle liste." />
@@ -916,6 +917,7 @@
         <TextColor.ColorPickerField DisplayName="TextColor" ColorPickerFieldSettings.Hint="Colore del testo nell'app mobile." />
         <TextTint.ColorPickerField DisplayName="TextTint" ColorPickerFieldSettings.Hint="Colore del testo per il menu." />
         <Tint.ColorPickerField DisplayName="Tint" ColorPickerFieldSettings.Hint="Colore di sfondo per il menu." />
+        <TintDarker.ColorPickerField DisplayName="TintDarker" ColorPickerFieldSettings.Hint="Colore di sfondo per l'alternate view." />
       </Temapalette>
       <TemplatePart ContentPartSettings.Attachable="True" />
       <TermPart>
