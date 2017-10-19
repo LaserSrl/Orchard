@@ -120,6 +120,10 @@
     </CacheSettingsPart>
     <CaptchaSettingsPart CustomCaptchaMarkup="" PrivateKey="" PublicKey="" Theme="" />
     <CommentSettingsPart ClosedCommentsDelay="0" ModerateComments="false" NotificationEmail="false" />
+    <ContentTypePermissionSettingsPart>
+      <Permission ContentType="User" PostPermission="ViewOwnProfile" GetPermission="ViewOwnProfile" DeletePermission="ViewOwnProfile" PublishPermission="ViewOwnProfile" />
+      <Permission ContentType="CommunicationContact" PostPermission="ManageContact" GetPermission="ShowCommunicationContacts" DeletePermission="ManageContact" PublishPermission="ManageContact" />
+    </ContentTypePermissionSettingsPart>
     <DynamicButtonToWorkflowsSettingsPart>
       <ButtonSettings ButtonName="InviaCredenziali" ButtonText="Invia Credenziali" ButtonDescription="Invia credenziali al dipendente" ButtonMessage="" ButtonAsync="false" GlobalIdentifier="8cdd1893-d16b-4f11-9695-cb16a43f764a" />
       <ButtonSettings ButtonName="ConfermaConfig" ButtonText="Conferma" ButtonDescription="" ButtonMessage="" ButtonAsync="false" GlobalIdentifier="84798290-9112-41d2-8ea6-07898eedc842" />
