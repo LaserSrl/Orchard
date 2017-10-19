@@ -137,7 +137,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
                         }
                     }
                     if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy") && UserRegistrationExtensionsSettings.IncludePendingPolicy == Policy.IncludePendingPolicyOptions.Yes) {
-                        _policySerivces.PolicyForUserMassiveUpdate(policyAnswers);
+                        _policySerivces.PolicyForUserMassiveUpdate(policyAnswers, createdUser);
                     }
                     if ((RegistrationSettings.UsersAreModerated == false) && (RegistrationSettings.UsersMustValidateEmail == false)) {
                         _authenticationService.SignIn(createdUser, true);
