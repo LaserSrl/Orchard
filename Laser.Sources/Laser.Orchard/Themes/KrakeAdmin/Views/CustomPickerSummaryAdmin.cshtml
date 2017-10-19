@@ -3,6 +3,26 @@
 @using Orchard.Utility.Extensions
 @using Orchard.MediaLibrary.Fields
 @{
+    Script.Require("jQueryUI_Tooltip").AtFoot();
+    using (Script.Foot()) {
+        <script>
+        $( function() {
+            $( document ).tooltip({
+                items: "[data-zoomimage]",
+                content: function() {
+                    var element = $( this );
+                    if (element.is("[data-zoomimage]")) {
+                        return "<img src='" + element.data("zoomimage") + "'>";
+                    }
+                    if ( element.is( "img" ) ) {
+                        return element.attr( "alt" );
+                    }
+                }
+            });
+        } );
+        </script>
+
+    }
     foreach (var item in Model.ContentItems.Items) {
         ContentItem contentItem = item.ContentItem;
         <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
@@ -35,7 +55,7 @@
                                     @foreach (var url in allUrls) {
                                         <div class="col-xs-3">
                                             <div class="thumb-image">
-                                                <img src="@Display.ResizeMediaUrl(Width: 175, Height: 175, Mode: "resize", Alignment: "middlecenter", Path: url)" data-imagezoom="true" class="img-responsive" />
+                                                <img data-zoomimage="@Display.ResizeMediaUrl(Width: 400, Height: 400, Mode: "resize", Alignment: "middlecenter", Path: url)" src="@Display.ResizeMediaUrl(Width: 175, Height: 175, Mode: "resize", Alignment: "middlecenter", Path: url)" data-imagezoom="true" class="img-responsive" />
                                             </div>
                                         </div>
                                     }

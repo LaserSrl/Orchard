@@ -4,6 +4,8 @@
 @{
     Script.Require("ContentPicker").AtFoot();
     Script.Require("jQueryUI_Sortable").AtFoot();
+    Script.Require("jQueryUI_Tooltip").AtFoot();
+
     Style.Include("content-picker-admin.css");
 
     var required = ((bool?)Model.Required) ?? false;
@@ -18,7 +20,25 @@
     var baseUrl = Url.Content("~/") + WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
     var types = "";// String.Join(",", (IEnumerable<string>)Model.Types ?? Enumerable.Empty<string>());
 }
+@using (Script.Foot()) {
+    <script>
+        $( function() {
+            $("#itemstable_@(fieldName)").tooltip({
+                items: "[data-zoomimage]",
+                content: function() {
+                    var element = $( this );
+                    if (element.is("[data-zoomimage]")) {
+                        return "<img src='" + element.data("zoomimage") + "'>";
+                    }
+                    if ( element.is( "img" ) ) {
+                        return element.attr( "alt" );
+                    }
+                }
+            });
+        } );
+    </script>
 
+}
 <fieldset class="content-picker-field"
           data-required="@required.ToString().ToLower()"
           data-multiple="@multiple.ToString().ToLower()"
@@ -30,10 +50,10 @@
           data-not-published-text="@T("Not Published")"
           data-types="@types">
     @if (!String.IsNullOrWhiteSpace(displayName)) {
-        <label @if (required) { <text> class="required" </text>     }>@displayName</label>
+        <label @if (required) { <text> class="required" </text>      }>@displayName</label>
     }
     <div class="message message-Warning content-picker-message">@T("You need to save your changes.")</div>
-    <table class="items content-picker" summary="@displayName">
+    <table class="items content-picker" id="itemstable_@(fieldName)" summary="@displayName">
         <colgroup>
             <col id="Col1" style="width:20px" />
             <col id="Col2" />
@@ -60,10 +80,10 @@
                                 MediaLibraryPickerField field = (MediaLibraryPickerField)contentItem.Parts.SingleOrDefault(x => x.PartDefinition.Name == contentItem.ContentType).Fields.FirstOrDefault(f => f.PartFieldDefinition.FieldDefinition.Name == "MediaLibraryPickerField");
                                 if (field != null) {
                                     foreach (var mediapart in field.MediaParts.Take(8)) {
-                                        <img src="@Display.ResizeMediaUrl(Width: 100, Height: 100, Mode: "resize", Alignment: "middlecenter", Path: mediapart.MediaUrl)" alt="" class="img-responsive" style="float:left;margin-right:5px;"/>
+                                        <img data-zoomimage="@Display.ResizeMediaUrl(Width: 400, Height: 400, Mode: "resize", Alignment: "middlecenter", Path: mediapart.MediaUrl)" src="@Display.ResizeMediaUrl(Width: 100, Height: 100, Mode: "resize", Alignment: "middlecenter", Path: mediapart.MediaUrl)" alt="" class="img-responsive img-zoomable" style="float:left;margin-right:5px;" />
                                     }
-                           }
-                         }
+                                }
+                            }
                         }
                     </td>
                     <td style="text-align:right; vertical-align:bottom;">
