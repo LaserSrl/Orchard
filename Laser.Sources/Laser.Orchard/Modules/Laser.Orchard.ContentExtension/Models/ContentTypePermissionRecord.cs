@@ -22,7 +22,7 @@ namespace Laser.Orchard.ContentExtension.Models {
          public virtual IList<ContentTypePermissionRecord> ListContPermission { get; set; }
     }
     /// <summary>
-    /// This is a fake class. It is usefull to manage import and export of settings.
+    /// This is an empty class. It is usefull to manage import and export of settings.
     /// </summary>
     public class ContentTypePermissionSettingsPart : ContentPart {
     }
