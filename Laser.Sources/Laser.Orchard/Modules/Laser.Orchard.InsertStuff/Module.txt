@@ -6,4 +6,5 @@ Description: Inserts javascript, css, or raw html into the edit form for a conte
 Features:
     Laser.Orchard.InsertStuff:
         Description: insert javascript, css, or raw html.
+		Dependencies: Laser.Orchard.jQueryPlugins
 		Category: Developer

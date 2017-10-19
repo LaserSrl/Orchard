@@ -106,10 +106,12 @@ namespace Laser.Orchard.ButtonToWorkflows.Drivers {
         }
 
         protected override void Importing(DynamicButtonToWorkflowsSettingsPart part, ImportContentContext context) {
+            var root = context.Data.Element(part.PartDefinition.Name);
+            if (root == null) {
+                return;
+            }
             var newDefinitions = new List<DynamicButtonToWorkflowsEdit>();
             var existingDefinitions = _dynamicButtonToWorkflowsService.GetButtons();
-
-            var root = context.Data.Element(part.PartDefinition.Name);
             var buttonSettings = root.Elements("ButtonSettings");
 
             foreach (var button in buttonSettings) {
