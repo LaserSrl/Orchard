@@ -132,6 +132,8 @@
     <EnvironmentVariablesSettingsPart FallbackTenants="AppRetailTemplate" />
     <GoogleAnalyticsSettingsPart AnonymizeIp="true" DomainName="" GoogleAnalyticsKey="UA-37701956-23" TrackOnAdmin="false" TrackOnFrontEnd="true" UseAsyncTracking="true" />
     <LuceneSettingsPart LuceneAnalyzerSelectorMappingsSerialized="[{&quot;IndexName&quot;:&quot;Default&quot;,&quot;AnalyzerName&quot;:&quot;Default&quot;}]" />
+    <KrakeAdminThemeSettingsPart HeaderLogoUrl="https://retwins.mykrake.com/Media/AppRetailTemplate/Loghi/retwin-logo222x55.png" PlaceholderLogoUrl="https://retwins.mykrake.com/Media/AppRetailTemplate/Loghi/retwin-logo240x120.png" PlaceholderSmallLogoUrl="https://retwins.mykrake.com/Media/AppRetailTemplate/Loghi/retwin-logo70x70.png" BaseLineText="Retwins - powered by Krake®" />
+    <KrakeDefaultThemeSettingsPart HeaderLogoUrl="https://retwins.mykrake.com/Media/AppRetailTemplate/Loghi/retwin-logo1000x300.png" PlaceholderLogoUrl="https://retwins.mykrake.com/Media/AppRetailTemplate/Loghi/retwin-logo185x185.png" BaseLineText="Retwins - powered by Krake®" />
     <MapsSiteSettingsPart MaxZoom="0" />
     <OpenAuthenticationSettingsPart AppDirectBaseUrl="https://marketplace.appdirect.com" AutoRegistrationEnabled="true" />
     <ProtectionSettingsPart ProtectedEntries="Laser.Orchard.WebServices.Json.GetByAlias,Laser.Orchard.WebServices.Signal.Trigger,Laser.Orchard.Braintree.Paypal.GetClientToken,Laser.Orchard.Braintree.Paypal.Pay,Laser.Orchard.WebServices.WebApi.Display" />

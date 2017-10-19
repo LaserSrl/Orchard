@@ -198,7 +198,10 @@
     <Compile Include="Settings\AdminMenu.cs" />
     <Compile Include="Settings\Constants.cs" />
     <Compile Include="Settings\Controllers\AdminController.cs" />
+    <Compile Include="Settings\Drivers\KrakeAdminThemeSettingsDriver.cs" />
+    <Compile Include="Settings\Handlers\KrakeAdminThemeSettingsHandler.cs" />
     <Compile Include="Settings\Migration.cs" />
+    <Compile Include="Settings\Models\KrakeAdminThemeSettingsPart.cs" />
     <Compile Include="Settings\Models\ThemeSettingsRecord.cs" />
     <Compile Include="Settings\Services\ThemeSettingsService.cs" />
     <Compile Include="Settings\ViewModels\ThemeSettingsViewModel.cs" />
@@ -280,6 +283,7 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Fields\ContentPicker.Edit.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
