@@ -139,12 +139,12 @@
     <ProtectionSettingsPart ProtectedEntries="Laser.Orchard.WebServices.Json.GetByAlias,Laser.Orchard.WebServices.Signal.Trigger,Laser.Orchard.Braintree.Paypal.GetClientToken,Laser.Orchard.Braintree.Paypal.Pay,Laser.Orchard.WebServices.WebApi.Display" />
     <PushMobileSettingsPart AndroidApiKey="AIzaSyDIPtcdYFIaC-yh_96-E8ecY6CenxYuYKg" AndroidApiKeyDevelopment="AIzaSyDIPtcdYFIaC-yh_96-E8ecY6CenxYuYKg" AndroidPushServiceUrl="https://fcm.googleapis.com/fcm/send" CommitSentOnly="false" DelayMinutesBeforeRetry="1" MaxNumRetry="0" MaxPushPerIteration="0" PushSendBufferSize="50" ShowTestOptions="false" />
     <QuestionnaireModuleSettingsPart Disposable="false" />
-    <RegistrationSettingsPart EnableLostPassword="true" NotificationsRecipients="" NotifyModeration="false" UsersAreModerated="false" UsersCanRegister="true" UsersMustValidateEmail="true" ValidateEmailContactEMail="" ValidateEmailRegisteredWebsite="" />
+    <RegistrationSettingsPart EnableLostPassword="true" NotificationsRecipients="" NotifyModeration="false" UsersAreModerated="false" UsersCanRegister="true" UsersMustValidateEmail="true" ValidateEmailContactEMail="" ValidateEmailRegisteredWebsite="Retwins" />
     <SearchSettingsPart SearchFields="Default:title,Categoria,prodotto-abstract,prodotto-descrizione,body" DisplayType="Summary" FilterCulture="false" SearchIndex="Default" />
     <ShareLinkModuleSettingPart Fb_App="" SharedBody="" SharedImage="" SharedLink="" SharedText="" />
     <ShortLinksSettingsPart GoogleApiKey="" />
     <SiteSettingsPart SupportedCultures="it-IT" DefaultParserEngine="Laser.Orchard.TemplateManagement.Parsers.RazorParserEngine" MaxPagedCount="0" MaxPageSize="0" PageSize="10" PageTitleSeparator=" - " SiteCalendar="" SiteCulture="it-IT" SiteName="App Retail" SiteSalt="ca962f8f8dde4dc2b3d8198ba6b5cb61" SiteTimeZone="W. Europe Standard Time" SuperUser="admin" UseCdn="false" DefaultParserIdSelected="Laser.Orchard.TemplateManagement.Parsers.RazorParserEngine" />
-    <SmtpSettingsPart Address="krake.ao@gmail.com" EnableSsl="true" Host="smtp.gmail.com" Password="laseradmin" Port="25" RequireCredentials="true" UseDefaultCredentials="false" UserName="krake.ao@gmail.com" />
+    <SmtpSettingsPart Address="noreply.retwins@mykrake.com" EnableSsl="true" Host="smtp.gmail.com" Password="laseradmin" Port="25" RequireCredentials="true" UseDefaultCredentials="false" UserName="krake.ao@gmail.com" />
     <SslSettingsPart CustomEnabled="false" Enabled="false" InsecureHostName="retwins.mykrake.com" SecureEverything="true" SecureHostName="retwins.mykrake.com" SendStrictTransportSecurityHeaders="false" StrictTransportSecurityIncludeSubdomains="false" StrictTransportSecurityMaxAge="31536000" StrictTransportSecurityPreload="false" Urls="" />
     <ThemeSiteSettingsPart CurrentThemeName="KrakeDefaultTheme" />
     <WebServiceSettingsPart LogWebservice="false" />
