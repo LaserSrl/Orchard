@@ -137,6 +137,10 @@ msgid "Sender missing or wrong"
 msgstr "Mittente mancante o errato"
 
 msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
+msgid "Thank you for registering. We sent you an e-mail with instructions to enable your account."
+msgstr "Grazie per esserti registrato. Ti abbiamo inviato una e-mail con le istruzioni per attivare la tua utenza."
+
+msgctxt "Laser.Orchard.UsersExtensions.Controllers.UserActionsController"
 msgid "Users cannot recover lost password due to site settings."
 msgstr "Le impostazioni del sito non permettono il recupero della password."
 

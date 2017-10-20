@@ -176,17 +176,21 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
             try {
                 _usersExtensionsServices.Register(userRegistrationParams);
                 List<string> roles = new List<string>();
+                var message = "";
                 if (_orchardServices.WorkContext.CurrentUser != null) {
                     roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
                     userId = _orchardServices.WorkContext.CurrentUser.Id;
+                } else {
+                    if (registrationSettings.UsersMustValidateEmail) {
+                        message = T("Thank you for registering. We sent you an e-mail with instructions to enable your account.").ToString();
+                	}
                 }
-
                 var registeredServicesData = new {
                     RegisteredServices = _controllerContextAccessor.Context.Controller.TempData,
                     Roles = roles,
                     UserId = userId
                 };
-                result = _utilsServices.GetResponse(ResponseType.Success, data: registeredServicesData);
+                result = _utilsServices.GetResponse(ResponseType.Success, message, registeredServicesData);
             } catch (Exception ex) {
                 result = _utilsServices.GetResponse(ResponseType.None, ex.Message);
             }
