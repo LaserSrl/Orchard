@@ -384,12 +384,14 @@
     <Compile Include="Tokens\TaxonomyTokens.cs" />
     <Compile Include="ViewModels\UsersGroupsSettingsVM.cs" />
     <Compile Include="ViewModels\UsersGroupsVM.cs" />
+    <Compile Include="WebApiProtection\Drivers\ProtectionSettingsDriver.cs" />
     <Compile Include="WebApiProtection\Filters\ApiKeyFilter.cs" />
     <Compile Include="WebApiProtection\Filters\WebApiKeyFilter.cs" />
     <Compile Include="WebApiProtection\Handlers\ProtectionSettingsHandler.cs" />
     <Compile Include="WebApiProtection\Migrations.cs" />
     <Compile Include="WebApiProtection\Models\ProtectionSettingsPart.cs" />
     <Compile Include="WebApiProtection\Services\IWebApiFilterService.cs" />
+    <Compile Include="WebApiProtection\WebApiUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Activity-RequestInspector.cshtml" />
