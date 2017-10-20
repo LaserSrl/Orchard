@@ -63,6 +63,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
 
         public Response RegisterLogic(UserRegistration userRegistrationParams) {
             Response result;
+            int userId = 0;
             // ensure users can request lost password
             var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
             if (!registrationSettings.UsersCanRegister) {
@@ -75,12 +76,13 @@ namespace Laser.Orchard.UsersExtensions.Services {
                 List<string> roles = new List<string>();
                 if (_orchardServices.WorkContext.CurrentUser != null) {
                     roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
+                    userId = _orchardServices.WorkContext.CurrentUser.Id;
                 }
 
                 var registeredServicesData = new {
                     RegisteredServices = _controllerContextAccessor.Context.Controller.TempData,
-                    Roles = roles
-
+                    Roles = roles,
+                    UserId = userId
                 };
 
 
@@ -95,18 +97,18 @@ namespace Laser.Orchard.UsersExtensions.Services {
 
         public Response SignInLogic(UserLogin login) {
             Response result;
+            int userId = 0;
             try {
                 _usersExtensionsServices.SignIn(login);
                 List<string> roles = new List<string>();
                 if (_orchardServices.WorkContext.CurrentUser != null) {
                     roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
+                    userId = _orchardServices.WorkContext.CurrentUser.Id;
                 }
 
-                //var registeredServicesData = new {
-                //    RegisteredServices = _controllerContextAccessor.Context.Controller.TempData
-                //};
                 dynamic registeredServicesData = new {
-                    Roles = roles
+                    Roles = roles,
+                    UserId = userId
                 };
                 result = _utilsServices.GetResponse(ResponseType.Success, "", registeredServicesData);
             } catch (Exception ex) {
