@@ -136,7 +136,10 @@
     <KrakeDefaultThemeSettingsPart HeaderLogoUrl="https://retwins.mykrake.com/Media/AppRetailTemplate/Loghi/retwin-logo1000x300.png" PlaceholderLogoUrl="https://retwins.mykrake.com/Media/AppRetailTemplate/Loghi/retwin-logo185x185.png" BaseLineText="Retwins - powered by Krake®" />
     <MapsSiteSettingsPart MaxZoom="0" />
     <OpenAuthenticationSettingsPart AppDirectBaseUrl="https://marketplace.appdirect.com" AutoRegistrationEnabled="true" />
-    <ProtectionSettingsPart ProtectedEntries="Laser.Orchard.WebServices.Json.GetByAlias,Laser.Orchard.WebServices.Signal.Trigger,Laser.Orchard.Braintree.Paypal.GetClientToken,Laser.Orchard.Braintree.Paypal.Pay,Laser.Orchard.WebServices.WebApi.Display" />
+    <ProtectionSettingsPart ProtectedEntries="Laser.Orchard.WebServices.Json.GetByAlias,Laser.Orchard.WebServices.Signal.Trigger,Laser.Orchard.Braintree.Paypal.GetClientToken,Laser.Orchard.Braintree.Paypal.Pay,Laser.Orchard.WebServices.WebApi.Display">
+      <ExternalApplication Name="iOSApp" EnableTimeStampVerification="true" Validity="10" />
+      <ExternalApplication Name="AndroidApp" EnableTimeStampVerification="true" Validity="10" />
+    </ProtectionSettingsPart>
     <PushMobileSettingsPart AndroidApiKey="AIzaSyDIPtcdYFIaC-yh_96-E8ecY6CenxYuYKg" AndroidApiKeyDevelopment="AIzaSyDIPtcdYFIaC-yh_96-E8ecY6CenxYuYKg" AndroidPushServiceUrl="https://fcm.googleapis.com/fcm/send" CommitSentOnly="false" DelayMinutesBeforeRetry="1" MaxNumRetry="0" MaxPushPerIteration="0" PushSendBufferSize="50" ShowTestOptions="false" />
     <QuestionnaireModuleSettingsPart Disposable="false" />
     <RegistrationSettingsPart EnableLostPassword="true" NotificationsRecipients="" NotifyModeration="false" UsersAreModerated="false" UsersCanRegister="true" UsersMustValidateEmail="true" ValidateEmailContactEMail="" ValidateEmailRegisteredWebsite="Retwins" />
