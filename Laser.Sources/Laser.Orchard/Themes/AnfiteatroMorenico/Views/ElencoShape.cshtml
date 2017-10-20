@@ -22,26 +22,38 @@
     var tag = Tag(Model, "article");
     var i = 0;
 
-    if (Request.Url.LocalPath.Contains("/eventi")) {
-        var synteticQs = Request.QueryString["datainizio"] ?? "" +
-            Request.QueryString["datafine"] ?? "";
-        var termIds = Request.QueryString["termids"] ?? "";
-        if (String.IsNullOrWhiteSpace(synteticQs) && !String.IsNullOrWhiteSpace(termIds)) {
+    var localPath = Request.Url.LocalPath;
+    var synteticQs = Request.QueryString["datainizio"] ?? "" +
+        Request.QueryString["datafine"] ?? "";
+    var termIds = Request.QueryString["termids"] ?? "";
+    if (localPath.Contains("/eventi-search")) {
+        //if there is no start or end date, redirect to the "main" path
+        if (string.IsNullOrWhiteSpace(synteticQs)) {
             var url = "";
-            var urlPattern = "~/{0}eventi?datainizio={1}&datafine={2}&termids={3}";
+            var urlPattern = "~/{0}eventi{1}";
             url = String.Format(urlPattern,
                 langPattern,
-                DateTime.Today.ToString("dd/MM/yyyy"),
-                DateTime.Today.ToString("dd/MM/yyyy"),
-                termIds
+                string.IsNullOrWhiteSpace(termIds) ? "" : "?termids=" + termIds
                 );
             url = NormalizeUrl(url, prefix);
-
+            Response.Redirect(url);
+        }
+    } else if (localPath.Contains("/eventi")) {
+        //if there is  start or end date, redirect to the "search" path
+        if (!string.IsNullOrWhiteSpace(synteticQs)) {
+            var url = "";
+            var urlPattern = "~/{0}eventi-search?{1}{2}{3}";
+            url = String.Format(urlPattern,
+                langPattern,
+                string.IsNullOrWhiteSpace(Request.QueryString["datainizio"]) ? "" : "datainizio=" + Request.QueryString["datainizio"] + "&",
+                string.IsNullOrWhiteSpace(Request.QueryString["datafine"]) ? "" : "datafine=" + Request.QueryString["datafine"] + "&",
+                string.IsNullOrWhiteSpace(termIds) ? "" : "termids=" + termIds
+                );
+            url = url.TrimEnd('&');
+            url = NormalizeUrl(url, prefix);
             Response.Redirect(url);
         }
     }
-    //WorkContext.Layout.Zones["AsideSecond"].Items.Clear();
-    //WorkContext.Layout.Zones["AsideSecond"].Add(New.RicercaEventiForm(ContentItem: Model.ContentItem), "0");
     var contentItems = Model.ContentItems;
     if (contentItems == null || (contentItems as IEnumerable<dynamic>).Count() == 0) {
     @T("No contents found!")
