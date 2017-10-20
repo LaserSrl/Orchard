@@ -61,7 +61,9 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection {
                 var name = "";
                 apps.Add(new ExternalApplication {
                     Name = name = String.Format("{0}App", _settings.Name),
-                    ApiKey = api = RandomString(22)
+                    ApiKey = api = RandomString(22),
+                    EnableTimeStampVerification = true,
+                    Validity = 10
                 });
                 appList.ExternalApplications = apps;
                 settings.ExternalApplicationList = appList;
