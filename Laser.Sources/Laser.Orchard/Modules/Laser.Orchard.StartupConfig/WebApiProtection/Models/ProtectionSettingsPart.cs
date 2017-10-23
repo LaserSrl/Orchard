@@ -33,6 +33,11 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Models {
             get { return this.Retrieve(x => x.ProtectedEntries); }
             set { this.Store(x => x.ProtectedEntries, value); }
         }
+
+        public string EncryptionKey {
+            get { return this.Retrieve(x => x.EncryptionKey); }
+            set { this.Store(x => x.EncryptionKey, value); }
+        }
     }
 
     public class ExternalApplicationList {
@@ -53,6 +58,8 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Models {
 
         [ValidateExternalApplication]
         public bool EnableTimeStampVerification { get; set; }
+
+        public string EncryptionKey { get; set; }
 
         public int Validity { get; set; }
 
