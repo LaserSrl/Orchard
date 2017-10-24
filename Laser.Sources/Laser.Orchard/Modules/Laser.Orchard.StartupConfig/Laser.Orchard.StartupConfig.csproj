@@ -256,6 +256,7 @@
     <Compile Include="Controllers\MaintenanceAdminController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UsersAutocompleteController.cs" />
+    <Compile Include="CultureCommands\CultureCommandsExtension.cs" />
     <Compile Include="Drivers\AuthenticationRequiredPartDriver.cs" />
     <Compile Include="RazorBase\Drivers\EnvironmentVariablesSettingsPartDriver.cs" />
     <Compile Include="Drivers\FavoriteCulturePartDriver.cs" />
