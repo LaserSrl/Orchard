@@ -8,6 +8,7 @@
 }
 <div id="@appId" class="j_extapp">
     <fieldset>
+        <br/>
         @Html.HiddenFor(m => m.Delete, new { @class = "ph-mark-for-delete" })
         @Html.TextBoxFor(m => m.EncryptionKey, new { placeholder = T("EncryptionKey (optional)"), @class = "text large" })
         <span class="hint">Generate random : @SymmetricAlgorithm.Create(encryptionAlgorithm).Key.ToHexString() </span>
