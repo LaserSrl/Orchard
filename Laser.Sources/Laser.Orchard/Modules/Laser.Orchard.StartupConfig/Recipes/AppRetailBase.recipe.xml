@@ -1076,7 +1076,7 @@
       <InputField.Instagram />
       <InputField.Pinterest />
       <InputField.Twitter />
-      <MediaLibraryPickerField.Gallery ContentItems="" />
+      <MediaLibraryPickerField.Gallery />
       <NumericField.Creator Value="2" />
       <NumericField.LastModifier Value="2" />
       <AutoroutePart Alias="infos/page-b2b" UseCustomPattern="false" UseCulturePattern="false" PromoteToHomePage="false" />
