@@ -1,48 +1,37 @@
-﻿using Orchard.ContentManagement;
-using Orchard.Localization;
-using Orchard.Tokens;
 using System;
 using System.Linq;
+using System.Web;
+using Orchard.Localization;
 
-namespace Laser.Orchard.StartupConfig.Tokens {
-    public class ParameterToken : ITokenProvider {
+namespace Orchard.Tokens.Providers {
+    public class ReplaceToken : ITokenProvider {
+        public ReplaceToken() {
+            T = NullLocalizer.Instance;
+
+        }
 
         public Localizer T { get; set; }
 
         public void Describe(DescribeContext context) {
-            context.For("Content")
-                   .Token("Parameter:*", T("Parameter:<PartName-PropertyName>"), T("Return the property value of a part specified"));
+            context.For("Text")
+                .Token("Replace:*", T("Replace:<(oldcharacters|newcharacters)>"), T("Replace the specified old characters with the new characters."))
+                ;
         }
 
         public void Evaluate(EvaluateContext context) {
-            //If you want to Chain TextTokens you have to use the (PartName-PropertyName).SomeOtherTextToken
-            context.For<IContent>("Content")
-                .Token(FilterTokenParam, //t.StartsWith("Parameter:", StringComparison.OrdinalIgnoreCase) ? t.Substring("Parameter:".Length) : null,
-                    (fullToken, data) => { return FindProperty(fullToken, data, context); })
-                .Chain(FilterChainParam, "Text", (token, data) => { return FindProperty(token, data, context); });
+            context.For<String>("Text", () => "")
+                // {Text.Replace:<"oldchars"|"newchar">}
+                .Token(FilterTokenParam,
+                    (fullToken, data) => { return Replace(fullToken, data, context); })
+                .Chain(FilterChainParam, "Text", (token, data) => { return Replace(token, data, context); });
         }
 
-        private string FindProperty(string fullToken, IContent data, EvaluateContext context) {
-            string[] names = fullToken.Split('-');
-            ContentItem content = data.ContentItem;
-
-            if(names.Length < 2) {
+        private string Replace(string fullToken, string data, EvaluateContext context) {
+            string[] chars = fullToken.Split('|');
+            if (chars.Length < 2) {
                 return "";
             }
-
-            string partName = names[0];
-            string propName = names[1];
-            try {
-                foreach (var part in content.Parts) {
-                    string partType = part.GetType().ToString().Split('.').Last();
-                    if (partType.Equals(partName, StringComparison.InvariantCultureIgnoreCase)) {
-                        return part.GetType().GetProperty(propName).GetValue(part, null).ToString();
-                    }
-                }
-            }catch {
-                return "parameter error";
-            }
-            return "parameter not found";
+            return data.Replace(chars[0], chars[1]);
         }
 
         private static string FilterTokenParam(string token) {
@@ -52,7 +41,7 @@ namespace Laser.Orchard.StartupConfig.Tokens {
                 return null;
             }
             tokenPrefix = token.Substring(0, token.IndexOf(":"));
-            if (!tokenPrefix.Equals("Parameter", StringComparison.InvariantCultureIgnoreCase)) {
+            if (!tokenPrefix.Equals("Replace", StringComparison.InvariantCultureIgnoreCase)) {
                 return null;
             }
 
@@ -75,7 +64,7 @@ namespace Laser.Orchard.StartupConfig.Tokens {
                 return null;
             }
             tokenPrefix = token.Substring(0, token.IndexOf(":"));
-            if (!tokenPrefix.Equals("Parameter", StringComparison.InvariantCultureIgnoreCase)){
+            if (!tokenPrefix.Equals("Replace", StringComparison.InvariantCultureIgnoreCase)) {
                 return null;
             }
 
