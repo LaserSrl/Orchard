@@ -13,6 +13,7 @@ using System.Linq;
 using Laser.Orchard.OpenAuthentication.Services.Clients;
 using System.Reflection;
 using System.Collections.Generic;
+using Laser.Orchard.StartupConfig.Services;
 
 namespace Laser.Orchard.OpenAuthentication.Controllers {
     [Admin]
@@ -20,13 +21,15 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IProviderConfigurationService _providerConfigurationService;
         private readonly IExternalAuthenticationClient _externalAuthenticationClient;
-
+        private readonly IUtilsServices _utilServices;
         public AdminController(IOrchardServices orchardServices,
             IProviderConfigurationService providerConfigurationService,
-             IExternalAuthenticationClient externalAuthenticationClient) {
+             IExternalAuthenticationClient externalAuthenticationClient,
+             IUtilsServices utilServices) {
             _orchardServices = orchardServices;
             _providerConfigurationService = providerConfigurationService;
             _externalAuthenticationClient = externalAuthenticationClient;
+            _utilServices = utilServices;
         }
 
         public Localizer T { get; set; }
@@ -41,9 +44,11 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
             var viewModel = new IndexViewModel {
                 AutoRegistrationEnabled = settings.AutoRegistrationEnabled,
-                CurrentProviders = currentProviders
+                CurrentProviders = currentProviders,
+                ShowAppDirectSetting = _utilServices.FeatureIsEnabled("Laser.Orchard.OpenAuthentication.AppDirect"),
+                AppDirectBaseUrl = settings.AppDirectBaseUrl
             };
-
+            
             return View(viewModel);
         }
 
@@ -54,7 +59,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
             var settings = _orchardServices.WorkContext.CurrentSite.As<OpenAuthenticationSettingsPart>();
             settings.AutoRegistrationEnabled = viewModel.AutoRegistrationEnabled;
-
+            settings.AppDirectBaseUrl = viewModel.AppDirectBaseUrl;
             return RedirectToAction("Index");
         }
 

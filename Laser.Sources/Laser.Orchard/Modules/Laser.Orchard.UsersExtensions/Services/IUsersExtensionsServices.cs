@@ -97,12 +97,10 @@ namespace Laser.Orchard.UsersExtensions.Services {
                         if (answer != null) {
                             if (!answer.PolicyAnswer && policyRequired) {
                                 allRight = false;
-                                //break;
                             }
                         }
                         else if (answer == null && policyRequired) {
                             allRight = false;
-                            //break;
                         }
                         if (answer != null) {
                             policyAnswers.Add(new PolicyForUserViewModel {
@@ -134,25 +132,18 @@ namespace Laser.Orchard.UsersExtensions.Services {
                             favCulture.Culture_Id = culture.Id;
                         }
                         else {
-                            //culture = _repositoryCultures.Fetch(x => userRegistrationParams.Culture.StartsWith(x.Culture)).SingleOrDefault();
-                            //if (culture != null) {
-                            //    favCulture.Culture_Id = culture.Id;
-                            //}
-                            //else {
-                                // usa la culture di default del sito
-                                favCulture.Culture_Id = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture()).Id;
-                            //}
+                            // usa la culture di default del sito
+                            favCulture.Culture_Id = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture()).Id;
                         }
                     }
-                    if((RegistrationSettings.UsersAreModerated == false) && (RegistrationSettings.UsersMustValidateEmail == false)) {
+                    if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy") && UserRegistrationExtensionsSettings.IncludePendingPolicy == Policy.IncludePendingPolicyOptions.Yes) {
+                        _policySerivces.PolicyForUserMassiveUpdate(policyAnswers, createdUser);
+                    }
+                    if ((RegistrationSettings.UsersAreModerated == false) && (RegistrationSettings.UsersMustValidateEmail == false)) {
                         _authenticationService.SignIn(createdUser, true);
 
                         // solleva l'evento LoggedIn sull'utente
                         _userEventHandler.LoggedIn(createdUser);
-
-                        if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy") && UserRegistrationExtensionsSettings.IncludePendingPolicy == Policy.IncludePendingPolicyOptions.Yes) {
-                            _policySerivces.PolicyForUserMassiveUpdate(policyAnswers);
-                        }
                     }
                     if (RegistrationSettings.UsersMustValidateEmail) {
                         // send challenge e-mail

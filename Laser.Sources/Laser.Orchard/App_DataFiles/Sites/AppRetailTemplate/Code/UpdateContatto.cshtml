@@ -1,0 +1,124 @@
+@using Orchard.ContentManagement;
+@using System.Linq;
+@using Orchard.Taxonomies.Models;
+@using Orchard.Taxonomies.Services;
+@using Orchard.Data;
+@using Laser.Orchard.CommunicationGateway.Models;
+
+@functions{
+    // Model.ContentItem is a CommunicationContact
+    // Sets email and sms of the contact.
+    // If the contact has no user associated with him, copy ContactInfoPart values in ProfilePart values.
+    // Gets policies accepted by the contact and sets them in workflow state variable.
+    string retString = "Error"; //possible outcomes: Error,Ok
+    string eMsg = "";
+    //services
+    IContentManager _contentManager;
+    ITaxonomyService _taxonomyService;
+    IRepository<CommunicationEmailRecord> _repoEmail;
+    IRepository<CommunicationSmsRecord> _repoSms;
+    // methods
+    private int[] GetIdPuntiVendita() {
+        var puntiVenditaList = _contentManager.Query("PuntoVendita").List().Select(x => x.Id);
+        return puntiVenditaList.ToArray();
+    }
+}
+@{
+    try {
+        // resolve services
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _taxonomyService = Model.OrchardServices.WorkContext.Resolve<ITaxonomyService>();
+        _repoEmail = Model.OrchardServices.WorkContext.Resolve<IRepository<CommunicationEmailRecord>>();
+        _repoSms = Model.OrchardServices.WorkContext.Resolve<IRepository<CommunicationSmsRecord>>();
+
+        ContentItem contatto = Model.ContentItem;
+        dynamic part = contatto.Parts.FirstOrDefault(x => x.PartDefinition.Name == "CommunicationContactPart");
+        dynamic info = contatto.Parts.FirstOrDefault(x => x.PartDefinition.Name == "ContactInfoPart");
+        // email
+        string email = "";
+        if (info.EmailInfo != null) {
+            email = info.EmailInfo.Value;
+        }
+        if (string.IsNullOrWhiteSpace(email) == false) {
+            var count = _repoEmail.Count(r => r.Email == email);
+            if (count == 0) {
+                var mail = new CommunicationEmailRecord {
+                    Email = email,
+                    Validated = true,
+                    Produzione = true,
+                    AccettatoUsoCommerciale = true,
+                    AutorizzatoTerzeParti = true,
+                    EmailContactPartRecord_Id = contatto.Id,
+                    DataInserimento = DateTime.Now,
+                    DataModifica = DateTime.Now
+                };
+                _repoEmail.Create(mail);
+            }
+        }
+        // sms
+        string prefisso = "";
+        if (info.PrefissotelefonicoInfo != null) {
+            prefisso = info.PrefissotelefonicoInfo.Value;
+        }
+        if (string.IsNullOrWhiteSpace(prefisso)) {
+            prefisso = "+39"; // default value
+        }
+        string telefono = "";
+        if (info.NumerotelefonicoInfo != null) {
+            telefono = info.NumerotelefonicoInfo.Value;
+        }
+        if (string.IsNullOrWhiteSpace(telefono) == false) {
+            var count = _repoSms.Count(r => r.Prefix.Trim() == prefisso.Trim() && r.Sms.Replace(" ", "").Replace(".", "").Replace("-", "") == telefono.Replace(" ", "").Replace(".", "").Replace("-", ""));
+            if (count == 0) {
+                var sms = new CommunicationSmsRecord {
+                    Prefix = prefisso,
+                    Sms = telefono,
+                    Validated = true,
+                    Produzione = true,
+                    AccettatoUsoCommerciale = true,
+                    AutorizzatoTerzeParti = true,
+                    SmsContactPartRecord_Id = contatto.Id,
+                    DataInserimento = DateTime.Now,
+                    DataModifica = DateTime.Now
+                };
+                _repoSms.Create(sms);
+            }
+        }
+        // check user existence
+        if (part.UserIdentifier == 0) {
+            //copy fields from ContactInfoPart to ProfilePart
+            dynamic profile = contatto.Parts.FirstOrDefault(x => x.PartDefinition.Name == "ProfilePart");
+            profile.Avatar.Ids = info.AvatarInfo.Ids;
+            profile.Cognome.Value = info.CognomeInfo.Value;
+            profile.Nome.Value = info.NomeInfo.Value;
+            profile.Sesso.Value = info.SessoInfo.Value;
+            profile.Datadinascita.DateTime = info.DatadinascitaInfo.DateTime;
+            profile.PuntoVendita.Ids = info.PuntoVenditaInfo.Ids;
+            // assign taxo field
+            var terms = _taxonomyService.GetTermsForContentItem(contatto.Id, "PreferenzeInfo");
+            _taxonomyService.UpdateTerms(contatto, terms, "Preferenze");
+            //publish
+            contatto.VersionRecord.Published = false;
+            _contentManager.Publish(contatto);
+        }
+        // gets info for email to this contact
+        var policyList = new Dictionary<string, string>();
+        dynamic policyPart = contatto.Parts.FirstOrDefault(x => x.PartDefinition.Name == "UserPolicyPart");
+        if(policyPart != null) {
+            dynamic policy = null;
+            foreach (dynamic answer in policyPart.UserPolicyAnswers) {
+                if(answer.Accepted) {
+                    policy = _contentManager.Get(answer.PolicyTextInfoPartRecord.Id);
+                    policyList.Add(policy.TitlePart.Title, policy.BodyPart.Text);
+                }
+            }
+        }
+        Model.Tokens["Workflow"].SetState("Policies", policyList);
+        Model.Tokens["Workflow"].SetState("Cognome", info.CognomeInfo.Value);
+        Model.Tokens["Workflow"].SetState("Nome", info.NomeInfo.Value);
+        retString = "Ok";
+    } catch (Exception ex) {
+        eMsg += string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    }
+}@retString

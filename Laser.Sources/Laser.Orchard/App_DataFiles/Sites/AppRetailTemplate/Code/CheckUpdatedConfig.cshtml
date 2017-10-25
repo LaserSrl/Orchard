@@ -1,0 +1,38 @@
+@using Orchard.ContentManagement;
+@using Laser.Orchard.HiddenFields.Fields;
+@using System.Linq;
+
+@functions{
+    // Model.ContentItem is a Config
+    // If field ConfigStatus is not empty, it cancels current version and restore previously published version
+    // because Brand Admin tried to chenge a configuration that was anready confirmed.
+    string retString = "Ok"; //possible outcomes: Error,Ok
+    string eMsg = "";
+    //services
+    IContentManager _contentManager;
+}
+@{
+    try {
+        // resolve services
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        ContentItem config = Model.ContentItem;
+        string contentType = config.ContentType;
+        ContentPart part = config.Parts.FirstOrDefault(x => x.PartDefinition.Name == contentType);
+        if (part != null) {
+            ContentField field = part.Fields.FirstOrDefault(x => x.Name == "ConfigStatus");
+            if (field != null) {
+                HiddenStringField hidden = field as HiddenStringField;
+                if(string.IsNullOrWhiteSpace(hidden.Value) == false) {
+                    // annullo la versione corrente
+                    config.VersionRecord.Latest = false;
+                    ContentItem previous = _contentManager.Get(config.Id, VersionOptions.Published);
+                    previous.VersionRecord.Latest = true;
+                    retString = "Error";
+                }
+            }
+        }
+    } catch (Exception ex) {
+        eMsg += string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    }
+}@retString

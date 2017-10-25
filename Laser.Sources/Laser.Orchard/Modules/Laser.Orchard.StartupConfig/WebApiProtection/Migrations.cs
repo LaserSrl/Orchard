@@ -61,7 +61,9 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection {
                 var name = "";
                 apps.Add(new ExternalApplication {
                     Name = name = String.Format("{0}App", _settings.Name),
-                    ApiKey = api = RandomString(22)
+                    ApiKey = api = new WebApiUtils().RandomString(22),
+                    EnableTimeStampVerification = true,
+                    Validity = 10
                 });
                 appList.ExternalApplications = apps;
                 settings.ExternalApplicationList = appList;
@@ -91,12 +93,6 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection {
             return 1;
         }
         #endregion [ DataMigration Implementation ]
-        private string RandomString(int length) {
-            const string chars = "0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
-            var rnd = new Random();
-            return new string(Enumerable.Repeat(chars, length).Select(s => s[rnd.Next(s.Length)]).ToArray());
-        }
-
     }
 
 

@@ -24,23 +24,22 @@ namespace Laser.Orchard.Questionnaires.Drivers {
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IOrchardServices _orchardServices;
         private readonly ICaptchaService _capthcaServices;
-        private readonly ICurrentContentAccessor _currentContentAccessor;
         private readonly ITokenizer _tokenizer;
+        private readonly ICurrentContentAccessor _currentContentAccessor;
 
         public QuestionnairePartDriver(IQuestionnairesServices questServices,
+            ICurrentContentAccessor currentContentAccessor,
             IOrchardServices orchardServices,
             IControllerContextAccessor controllerContextAccessor,
             ICaptchaService capthcaServices,
-            ICurrentContentAccessor currentContentAccessor,
             ITokenizer tokenizer) {
             _questServices = questServices;
             _orchardServices = orchardServices;
             _controllerContextAccessor = controllerContextAccessor;
             T = NullLocalizer.Instance;
             _capthcaServices = capthcaServices;
-            _currentContentAccessor = currentContentAccessor;
             _tokenizer = tokenizer;
-
+            _currentContentAccessor = currentContentAccessor;
             _isAuthorized = new Lazy<bool>(() => 
                 _orchardServices.Authorizer.Authorize(Permissions.SubmitQuestionnaire)
             );
@@ -253,7 +252,7 @@ namespace Laser.Orchard.Questionnaires.Drivers {
                 foreach (var a in answers) { // recupero le answers
                     var answerEditModel = new AnswerEditModel {
                         Position = a.Attribute("Position") != null ? int.Parse(a.Attribute("Position").Value) : 0,
-                        Published = a.Attribute("Publshed") != null ? bool.Parse(a.Attribute("Published").Value) : false,
+                        Published = a.Attribute("Published") != null ? bool.Parse(a.Attribute("Published").Value) : false,
                         Answer = a.Attribute("Answer") != null ? a.Attribute("Answer").Value : "",
                         OriginalId = a.Attribute("OriginalId") != null ? int.Parse(a.Attribute("OriginalId").Value) : 0,
                         CorrectResponse = a.Attribute("CorrectResponse") != null ? bool.Parse(a.Attribute("CorrectResponse").Value) : false,

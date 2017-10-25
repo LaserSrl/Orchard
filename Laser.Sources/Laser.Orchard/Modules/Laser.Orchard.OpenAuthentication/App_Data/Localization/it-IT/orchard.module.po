@@ -121,8 +121,16 @@ msgid "Actions"
 msgstr "Azioni"
 
 msgctxt "~/Modules/Laser.Orchard.OpenAuthentication/Views/Admin/Index.cshtml"
+msgid "App Direct BaseUrl"
+msgstr "Url di base di AppDirect"
+
+msgctxt "~/Modules/Laser.Orchard.OpenAuthentication/Views/Admin/Index.cshtml"
 msgid "Auto Registration Enabled"
 msgstr "Registrazione Automatica Abilitata"
+
+msgctxt "~/Modules/Laser.Orchard.OpenAuthentication/Views/Admin/Index.cshtml"
+msgid "Base Url like https://marketplace.appdirect.com"
+msgstr "Url di base (es: https://marketplace.appdirect.com)"
 
 msgctxt "~/Modules/Laser.Orchard.OpenAuthentication/Views/Admin/Index.cshtml"
 msgid "Edit"
@@ -339,6 +347,18 @@ msgstr "Il nome del provider esiste già"
 msgctxt "Laser.Orchard.OpenAuthentication.Controllers.AdminController"
 msgid "Your configuration has been saved."
 msgstr "La tua configurazione è stata salvata."
+
+msgctxt "Laser.Orchard.OpenAuthentication.Controllers.OpenIdController"
+msgid "You have been logged using your OpenId account."
+msgstr "Hai fatto accesso con il tuo account OpenId"
+
+msgctxt "Laser.Orchard.OpenAuthentication.Controllers.OpenIdController"
+msgid "Your authentication request canceled."
+msgstr "La tua richiesta di autenticazione è stata annullata."
+
+msgctxt "Laser.Orchard.OpenAuthentication.Controllers.OpenIdController"
+msgid "Your authentication request failed."
+msgstr "La tua richiesta di autenticazione non è andata a buon fine."
 
 msgctxt "Laser.Orchard.OpenAuthentication.Services.OpenAuthMembershipServices"
 msgid "Auto Registered User"

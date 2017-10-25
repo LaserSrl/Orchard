@@ -1,0 +1,102 @@
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Data;
+@using Orchard.Fields.Fields;
+@using Orchard.Roles.Models;
+@using Orchard.Roles.Services;
+@using System.Collections.Generic;
+@using Laser.Orchard.HiddenFields.Fields;
+@using System.Linq;
+
+@functions{
+    // Model.ContentItem is a RichiestaPubblicazione
+    // Locks RichiestaPubblicazione.
+    // If the item is already locked, restore previously published version.
+    string retString = "Error"; //possile outcomes: Ok,Error,AlreadyLocked
+    string eMsg = String.Empty;
+
+    //services
+    IOrchardServices _orchardServices;
+    IContentManager _contentManager;
+    IRoleService _roleService;
+    IRepository<UserRolesPartRecord> _userRolesRepository;
+
+    private void HideConfig(string configContentTyepName) {
+        // set content type listable
+        var ctDefinition = _contentManager.GetContentTypeDefinitions().FirstOrDefault(x => x.Name == configContentTyepName);
+        ctDefinition.Settings["ContentTypeSettings.Listable"] = "true";
+        // remove realted menu item
+        var configContent = _contentManager.Query(configContentTyepName).List();
+        var part = configContent.First().Parts.FirstOrDefault(x => x.PartDefinition.Name == "AdminMenuPart");
+        var adminMenuPart = part as Orchard.Core.Navigation.Models.AdminMenuPart;
+        adminMenuPart.OnAdminMenu = false;
+    }
+    private int[] GetBrandAdmins() {
+        var roleBrandAdminB2B = _roleService.GetRoleByName("BrandAdminB2B");
+        var roleBrandAdminB2C = _roleService.GetRoleByName("BrandAdminB2C");
+        var usersId = _userRolesRepository.Fetch(x => x.Role == roleBrandAdminB2B || x.Role == roleBrandAdminB2C).Select(x => x.UserId).Distinct().ToArray<int>();
+        //var users = _userRolesRepository.Fetch(x => x.Role == roleBrandAdminB2B || x.Role == roleBrandAdminB2C, y => y.UserId).ToList();
+        return usersId;
+    }
+    private void AssignRole(int userId, string roleName) {
+        var role = _roleService.GetRoleByName(roleName);
+        if (role != null) {
+            _userRolesRepository.Create(new UserRolesPartRecord {
+                UserId = userId,
+                Role = role
+            });
+        }
+    }
+    private void RevokeRoleToUsers(int[] usersId, RoleRecord role) {
+        var usersAlreadyInRole = _userRolesRepository.Fetch(x => x.Role == role).ToDictionary(x => x.UserId);
+        foreach (var uid in usersId) {
+            if (usersAlreadyInRole.Keys.Contains(uid)) {
+                _userRolesRepository.Delete(usersAlreadyInRole[uid]);
+            }
+        }
+    }
+}
+@{
+    try {
+        //Resolve services.
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _orchardServices = Model.OrchardServices.WorkContext.Resolve<IOrchardServices>();
+        _roleService = Model.OrchardServices.WorkContext.Resolve<IRoleService>();
+        _userRolesRepository = Model.OrchardServices.WorkContext.Resolve<IRepository<UserRolesPartRecord>>();
+
+        ContentItem config = Model.ContentItem;
+        string contentType = config.ContentType;
+        ContentPart part = config.Parts.FirstOrDefault(x => x.PartDefinition.Name == contentType);
+        if (part != null) {
+            ContentField field = part.Fields.FirstOrDefault(x => x.Name == "ConfigStatus");
+            if (field != null) {
+                HiddenStringField hidden = field as HiddenStringField;
+                if (string.IsNullOrWhiteSpace(hidden.Value)) {
+                    hidden.Value = "locked";
+                    _contentManager.Publish(config);
+                    retString = "Ok";
+                } else {
+                    // annullo la versione corrente
+                    config.VersionRecord.Published = false;
+                    ContentItem previous = _contentManager.Get(config.Id, VersionOptions.Latest);
+                    previous.VersionRecord.Published = true;
+                    retString = "AlreadyLocked";
+                }
+            }
+        }
+
+        // hide config items on admin menu
+        //HideConfig("RichiestaPubblicazione");
+        //HideConfig("ConfigurazioneAppStore");
+        //HideConfig("ConfigurazioneGrafica");
+
+        // update roles of brand Admins
+        //var brandAdminsId = GetBrandAdmins();
+        //var roleBrandAdminConfig = _roleService.GetRoleByName("BrandAdminConfig");
+        //RevokeRoleToUsers(brandAdminsId, roleBrandAdminConfig);
+    } catch (Exception ex) {
+        retString = "Error";
+        eMsg += string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    }
+}@retString

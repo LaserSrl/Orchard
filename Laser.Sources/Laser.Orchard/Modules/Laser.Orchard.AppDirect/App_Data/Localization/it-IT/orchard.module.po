@@ -1,0 +1,34 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2017 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.AppDirect/Views/EditorTemplates/Parts/AppDirectSettings_Edit.cshtml"
+msgid "Add OAuth Setting"
+msgstr "Aggiungi impostazioni OAuth"
+
+msgctxt "~/Modules/Laser.Orchard.AppDirect/Views/EditorTemplates/Parts/AppDirectUser.cshtml"
+msgid "AppDirect User"
+msgstr "Utente AppDirect"
+
+msgctxt "~/Modules/Laser.Orchard.AppDirect/Views/EditorTemplates/Parts/AppDirectUser.cshtml"
+msgid "AppDirect User Company"
+msgstr "Azienda dell'utente AppDirect"
+
+msgctxt "Laser.Orchard.AppDirect.Driver.AppDirectButtonDriver"
+msgid "AccountIdentifier must not be empty"
+msgstr "L'identificativo account (AccountIdentifier) è obbligatorio"
+
+msgctxt "Laser.Orchard.AppDirect.Driver.AppDirectButtonDriver"
+msgid "Assign User"
+msgstr "Assegna utente"
+
+msgctxt "Laser.Orchard.AppDirect.Tokens.AppDirectEmail"
+msgid "AppDirect User Email"
+msgstr "Email dell'utente AppDirect"
+

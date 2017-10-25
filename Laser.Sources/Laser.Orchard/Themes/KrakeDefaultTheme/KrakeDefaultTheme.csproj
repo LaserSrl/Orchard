@@ -221,7 +221,10 @@
     <Compile Include="Settings\AdminMenu.cs" />
     <Compile Include="Settings\Constants.cs" />
     <Compile Include="Settings\Controllers\AdminController.cs" />
+    <Compile Include="Settings\Drivers\KrakeDefaultThemeSettingsDriver.cs" />
+    <Compile Include="Settings\Handlers\KrakeDefaultThemeSettingsHandler.cs" />
     <Compile Include="Settings\Migration.cs" />
+    <Compile Include="Settings\Models\KrakeDefaultThemeSettingsPart.cs" />
     <Compile Include="Settings\Models\ThemeSettingsRecord.cs" />
     <Compile Include="Settings\Services\ThemeSettingsService.cs" />
     <Compile Include="Settings\ViewModels\ThemeSettingsViewModel.cs" />
@@ -232,9 +235,12 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\ThemeSettings.cshtml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="Views\PlaceholderLogo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Content.Edit-User.cshtml" />
+    <Content Include="Views\Content.SaveButton-User.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

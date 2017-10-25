@@ -1,0 +1,104 @@
+@using Orchard.ContentManagement;
+@using Orchard.Data;
+@using Orchard.Fields.Fields;
+@using Orchard.Roles.Models;
+@using Orchard.Roles.Services;
+@using System.Linq;
+@using System.Collections.Generic;
+
+
+@functions{
+    // Model.ContentItem is ConfigurazioneBase
+    // Updates content type Prodotto according to application type (B2B, B2C, B2B+B2C).
+    // Updates brand administrators roles, too.
+    //services
+    IContentManager _contentManager;
+    IRoleService _roleService;
+    IRepository<UserRolesPartRecord> _userRolesRepository;
+    string retString = "Error"; //possible outcomes: Error,Ok
+    string eMsg = "";
+    private void AssignRole(int userId, string roleName) {
+        var role = _roleService.GetRoleByName(roleName);
+        if (role != null) {
+            _userRolesRepository.Create(new UserRolesPartRecord {
+                UserId = userId,
+                Role = role
+            });
+        }
+    }
+    private int[] GetBrandAdmins() {
+        var roleBrandAdminB2B = _roleService.GetRoleByName("BrandAdminB2B");
+        var roleBrandAdminB2C = _roleService.GetRoleByName("BrandAdminB2C");
+        var usersId = _userRolesRepository.Fetch(x => x.Role == roleBrandAdminB2B || x.Role == roleBrandAdminB2C).Select(x => x.UserId).Distinct().ToArray<int>();
+        //var users = _userRolesRepository.Fetch(x => x.Role == roleBrandAdminB2B || x.Role == roleBrandAdminB2C, y => y.UserId).ToList();
+        return usersId;
+    }
+    private void AssignRoleToUsers(int[] usersId, RoleRecord role) {
+        var usersAlreadyInRole = _userRolesRepository.Fetch(x => x.Role == role).Select(x => x.UserId).Distinct().ToArray<int>();
+        foreach(var uid in usersId) {
+            if(usersAlreadyInRole.Contains(uid) == false) {
+                _userRolesRepository.Create(new UserRolesPartRecord {
+                    UserId = uid,
+                    Role = role
+                });
+            }
+        }
+    }
+    private void RevokeRoleToUsers(int[] usersId, RoleRecord role) {
+        var usersAlreadyInRole = _userRolesRepository.Fetch(x => x.Role == role).ToDictionary(x => x.UserId);
+        foreach (var uid in usersId) {
+            if (usersAlreadyInRole.Keys.Contains(uid)) {
+                _userRolesRepository.Delete(usersAlreadyInRole[uid]);
+            }
+        }
+    }
+}
+@{
+    try {
+        // resolve services
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _roleService = Model.OrchardServices.WorkContext.Resolve<IRoleService>();
+        _userRolesRepository = Model.OrchardServices.WorkContext.Resolve<IRepository<UserRolesPartRecord>>();
+        // get app type
+        ContentItem config = Model.ContentItem;
+        string contentType = config.ContentType;
+        ContentPart part = config.Parts.FirstOrDefault(x => x.PartDefinition.Name == contentType);
+        if (part != null) {
+            ContentField field = part.Fields.FirstOrDefault(x => x.Name == "Type");
+            if (field != null) {
+                EnumerationField enumField = field as EnumerationField;
+                // get settings of ScriptNascondiPrezzo in content type Prodotto
+                var settings = _contentManager.GetContentTypeDefinitions().First(x => x.Name == "Prodotto").Parts.First(x => x.PartDefinition.Name == "Prodotto").PartDefinition.Fields.First(x => x.Name == "ScriptNascondiPrezzo").Settings;
+                var script = (settings.ContainsKey("InsertStuffFieldSettings.RawHtml")) ? settings["InsertStuffFieldSettings.RawHtml"] : "";
+                // update script if necesssary
+                if (enumField.Value.Contains("B2C") == false && string.IsNullOrWhiteSpace(script)) {
+                    settings["InsertStuffFieldSettings.RawHtml"] = "<script type='text/javascript'>\r\n$('label[for=Prodotto_NascondiPrezzo_Value]').parent().hide();\r\n</script>";
+                } else if (enumField.Value.Contains("B2C") && string.IsNullOrWhiteSpace(script) == false) {
+                    settings["InsertStuffFieldSettings.RawHtml"] = "";
+                }
+                // update roles of brand Admins
+                var brandAdminsId = GetBrandAdmins();
+                var roleBrandAdminB2B = _roleService.GetRoleByName("BrandAdminB2B");
+                var roleBrandAdminB2C = _roleService.GetRoleByName("BrandAdminB2C");
+                switch (enumField.Value) {
+                    case "B2B":
+                        AssignRoleToUsers(brandAdminsId, roleBrandAdminB2B);
+                        RevokeRoleToUsers(brandAdminsId, roleBrandAdminB2C);
+                        break;
+                    case "B2C":
+                        AssignRoleToUsers(brandAdminsId, roleBrandAdminB2C);
+                        RevokeRoleToUsers(brandAdminsId, roleBrandAdminB2B);
+                        break;
+                    case "B2B+B2C":
+                        AssignRoleToUsers(brandAdminsId, roleBrandAdminB2B);
+                        AssignRoleToUsers(brandAdminsId, roleBrandAdminB2C);
+                        break;
+                }
+                retString = "Ok";
+            }
+        }
+    } catch (Exception ex) {
+        eMsg += string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    }
+}@retString

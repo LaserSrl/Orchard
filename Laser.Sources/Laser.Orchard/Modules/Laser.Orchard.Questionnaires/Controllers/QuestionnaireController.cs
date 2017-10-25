@@ -12,7 +12,7 @@ using Orchard.DisplayManagement;
 using Orchard.UI.Admin;
 using Orchard.Workflows.Services;
 using Orchard.Captcha.Services;
-
+using Laser.Orchard.Questionnaires.Settings;
 
 namespace Laser.Orchard.Questionnaires.Controllers {
     public class QuestionnaireController : Controller {
@@ -48,20 +48,29 @@ namespace Laser.Orchard.Questionnaires.Controllers {
         public ActionResult Save(string returnUrl) {
             var editModel = new ViewModels.QuestionnaireWithResultsViewModel();
             var currentUser = _orchardServices.WorkContext.CurrentUser;
+
             try {
                 if (TryUpdateModel(editModel, _prefix)) {
                     TempData["QuestUpdatedEditModel"] = editModel; // devo avere modo di fare non perdere le risposte date finora!!!
                     TempData["HasAcceptedTerms"] = editModel.HasAcceptedTerms;
 
+                    QuestionnairesPartSettingVM questionnairePartSettings = null;
+                    var questionnaire = _orchardServices.ContentManager.Get(editModel.Id);
+                    if (questionnaire != null && questionnaire.As<QuestionnairePart>() != null) {
+                        questionnairePartSettings = questionnaire.As<QuestionnairePart>().Settings.GetModel<QuestionnairesPartSettingVM>();
+                    }
+
                     // verifica se il questionario può essere compilato una volta sola ed è già stato compilato
                     bool canBeFilled = true;
                     var questionnaireModuleSettings = _orchardServices.WorkContext.CurrentSite.As<QuestionnaireModuleSettingsPart>();
                     if (questionnaireModuleSettings.Disposable) {
-                        var cookie = Request.Cookies["Questionnaires"];
-                        if (cookie != null) {
-                            var ids = cookie.Value;
-                            if (ids.Contains("," + editModel.Id + ",")) {
-                                canBeFilled = false;
+                        if (currentUser == null || (questionnairePartSettings != null && questionnairePartSettings.ForceAnonymous)) {
+                            var cookie = Request.Cookies["Questionnaires"];
+                            if (cookie != null) {
+                                var ids = cookie.Value;
+                                if (ids.Contains("," + editModel.Id + ",")) {
+                                    canBeFilled = false;
+                                }
                             }
                         }
                     }
@@ -117,12 +126,11 @@ namespace Laser.Orchard.Questionnaires.Controllers {
                     if (canBeFilled == false) {
                         TempData["QuestError"] = T("Sorry, you already submitted this questionnaire.");
                         TempData["AlreadySubmitted"] = true;
-                    }
-                    else {
+                    } else {
                         TempData["QuestSuccess"] = T("Thank you for submitting your feedback.");
                     }
-                        //var content = _orchardServices.ContentManager.Get(editModel.Id);
-                        //_workflowManager.TriggerEvent("QuestionnaireSubmitted", content, () => new Dictionary<string, object> { { "Content", content } });
+                    //var content = _orchardServices.ContentManager.Get(editModel.Id);
+                    //_workflowManager.TriggerEvent("QuestionnaireSubmitted", content, () => new Dictionary<string, object> { { "Content", content } });
 
 
                     //}
@@ -135,7 +143,7 @@ namespace Laser.Orchard.Questionnaires.Controllers {
             } catch (Exception ex) {
                 TempData["QuestUpdatedEditModel"] = editModel; // devo avere modo di fare non perdere le risposte date finora!!!
                 _transactionManager.Cancel();
-                TempData["QuestError"] = T(ex.Message)+ ex.StackTrace;
+                TempData["QuestError"] = T(ex.Message) + ex.StackTrace;
             }
             return this.RedirectLocal(returnUrl, "~/");
 

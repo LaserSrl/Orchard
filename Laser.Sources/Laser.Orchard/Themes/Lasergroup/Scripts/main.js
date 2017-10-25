@@ -93,7 +93,7 @@ jQuery(document).ready(function () {
 
                 jQuery('#load-showcase-div-button').append(html);
 
-                jQuery('#load_showcase').bind('inview', function (e, isInView) {
+                jQuery('#load-showcase-div-button').bind('inview', function (e, isInView) {
                     if (isInView) load_more_showcase(e);
                 });
                 jQuery(document).on('click', '#load_showcase', load_more_showcase);

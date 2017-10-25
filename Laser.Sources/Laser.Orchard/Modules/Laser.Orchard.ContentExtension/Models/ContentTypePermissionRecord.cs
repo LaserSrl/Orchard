@@ -21,4 +21,9 @@ namespace Laser.Orchard.ContentExtension.Models {
     public class SettingsModel {
          public virtual IList<ContentTypePermissionRecord> ListContPermission { get; set; }
     }
+    /// <summary>
+    /// This is an empty class. It is usefull to manage import and export of settings.
+    /// </summary>
+    public class ContentTypePermissionSettingsPart : ContentPart {
+    }
 }

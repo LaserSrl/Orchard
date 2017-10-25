@@ -35,18 +35,22 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Sites\AppRetailN\Code\CheckUpdatedConfig.cshtml" />
-    <None Include="Sites\AppRetailN\Code\CreaUtenzaKrake.cshtml" />
-    <None Include="Sites\AppRetailN\Code\GetCredenziali.cshtml" />
-    <None Include="Sites\AppRetailN\Code\LockConfig.cshtml" />
-    <None Include="Sites\AppRetailN\Code\SignalRichiestaProdotto.cshtml" />
-    <None Include="Sites\AppRetailN\Code\UnpublishRichiesteProdotto.cshtml" />
-    <None Include="Sites\AppRetailN\Code\UnpublishStores.cshtml" />
-    <None Include="Sites\AppRetailN\Code\UpdateConfigurazioneBase.cshtml" />
-    <None Include="Sites\AppRetailN\Code\UpdateContatto.cshtml" />
-    <None Include="Sites\AppRetailN\Code\UpdateMessaggioPromozionale.cshtml" />
-    <None Include="Sites\AppRetailN\Code\UpdatePush.cshtml" />
-    <None Include="Sites\AppRetailN\Code\UpdateRichiestaProdotto.cshtml" />
+    <None Include="Sites\AppRetailTemplate\Code\CheckUpdatedConfig.cshtml" />
+    <None Include="Sites\AppRetailTemplate\Code\CreaUtenzaKrake.cshtml" />
+    <None Include="Sites\AppRetailTemplate\Code\GetCredenziali.cshtml" />
+    <None Include="Sites\AppRetailTemplate\Code\HideConfigs.cshtml" />
+    <None Include="Sites\AppRetailTemplate\Code\LockConfig.cshtml" />
+    <None Include="Sites\AppRetailTemplate\Code\SignalRichiestaProdotto.cshtml" />
+    <None Include="Sites\AppRetailTemplate\Code\UnpublishRichiesteProdotto.cshtml" />
+    <None Include="Sites\AppRetailTemplate\Code\UnpublishStores.cshtml" />
+    <None Include="Sites\AppRetailTemplate\Code\UpdateConfigurazioneBase.cshtml" />
+    <None Include="Sites\AppRetailTemplate\Code\UpdateContatto.cshtml" />
+    <None Include="Sites\AppRetailTemplate\Code\UpdateMessaggioPromozionale.cshtml" />
+    <None Include="Sites\AppRetailTemplate\Code\UpdatePush.cshtml" />
+    <None Include="Sites\AppRetailTemplate\Code\UpdateRichiestaProdotto.cshtml" />
+    <None Include="Sites\AppRetailTemplate\Mobile\DevRetwins.p12" />
+    <None Include="Sites\AppRetailTemplate\Mobile\ProdRetwins.p12" />
+    <None Include="Sites\AppRetailTemplate\Validation\CommunicationContact.cshtml" />
     <None Include="Sites\AutoMotoEpoca\Mobile\AME_DEV.p12" />
     <None Include="Sites\AutoMotoEpoca\Mobile\AME_PROD.p12" />
     <None Include="Sites\common.cshtml" />
