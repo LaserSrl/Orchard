@@ -78,9 +78,10 @@ namespace Laser.Orchard.StartupConfig.Services {
             }
 
             if (check == true) {
+                var myApiChannel = _request.QueryString["ApiChannel"] ?? _request.Headers["ApiChannel"];
                 var myApikey = _request.QueryString["ApiKey"] ?? _request.Headers["ApiKey"];
                 var myAkiv = _request.QueryString["AKIV"] ?? _request.Headers["AKIV"];
-                if (!TryValidateKey(myApikey, myAkiv, (_request.QueryString["ApiKey"] != null && _request.QueryString["clear"] != "false"))) {
+                if (!TryValidateKey(myApikey, myAkiv, (_request.QueryString["ApiKey"] != null && _request.QueryString["clear"] != "false"), myApiChannel)) {
                     additionalCacheKey = "UnauthorizedApi";
                 } else {
                     additionalCacheKey = "AuthorizedApi";
@@ -95,6 +96,9 @@ namespace Laser.Orchard.StartupConfig.Services {
             byte[] myiv = Convert.FromBase64String(sIV);
             try {
                 var settings = _orchardServices.WorkContext.CurrentSite.As<ProtectionSettingsPart>();
+                if (!string.IsNullOrEmpty(settings.EncryptionKey))
+                    mykey = settings.EncryptionKey.ToByteArray();
+
                 var defaulApp = DefaultApplication;
                 string aux = defaulApp.ApiKey;
                 if (useTimeStamp) {
@@ -116,17 +120,24 @@ namespace Laser.Orchard.StartupConfig.Services {
         }
 
 
-        private bool TryValidateKey(string token, string akiv, bool clearText) {
-            byte[] mykey = _shellSettings.EncryptionKey.ToByteArray();
+        private bool TryValidateKey(string token, string akiv, bool clearText,string channel) {
             string cacheKey;
             _request = HttpContext.Current.Request;
             try {
+                var  mykey = _shellSettings.EncryptionKey.ToByteArray();
+                var settings = _orchardServices.WorkContext.CurrentSite.As<ProtectionSettingsPart>();
+                if (!string.IsNullOrEmpty(settings.EncryptionKey))
+                    mykey = settings.EncryptionKey.ToByteArray();
+                if (!string.IsNullOrEmpty(channel)) {
+                    var conf = settings.ExternalApplicationList.ExternalApplications.FirstOrDefault(x => x.Name.Equals(channel));
+                    if (conf != null && !string.IsNullOrEmpty(conf.EncryptionKey))
+                        mykey = conf.EncryptionKey.ToByteArray();
+                }
                 byte[] myiv = Convert.FromBase64String(akiv);
                 if (String.IsNullOrWhiteSpace(token)) {
                     Logger.Error("Empty Token");
                     return false;
                 }
-
                 string key = token;
                 if (!clearText) {
                     var encryptedAES = Convert.FromBase64String(token);
@@ -145,14 +156,14 @@ namespace Laser.Orchard.StartupConfig.Services {
                 }
                 // test if key has a time stamp
                 var tokens = key.Split(':');
-                string pureKey = tokens[0];
+                var pureKey = tokens[0];
                 int unixTimeStamp, unixTimeStampNow;
                 unixTimeStamp = 0;
                 unixTimeStampNow = ((Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
                 if (tokens.Length >= 2) {
                     unixTimeStamp = Convert.ToInt32(tokens[1]);
                 }
-                var settings = _orchardServices.WorkContext.CurrentSite.As<ProtectionSettingsPart>();
+                //var settings = _orchardServices.WorkContext.CurrentSite.As<ProtectionSettingsPart>();
                 var item = settings.ExternalApplicationList.ExternalApplications.FirstOrDefault(x => x.ApiKey.Equals(pureKey));
                 if (item == null) {
                     item = DefaultApplication.ApiKey.Equals(pureKey) ? DefaultApplication : item; //this may be a test request

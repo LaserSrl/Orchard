@@ -1,4 +1,14 @@
 ﻿@model Laser.Orchard.StartupConfig.WebApiProtection.Models.ProtectionSettingsPart
+@using System.Security.Cryptography
+@using Orchard.Utility.Extensions
+@{
+    string encryptionAlgorithm = "AES";
+}
+<style>
+    div#extapp div:nth-child(odd) {
+        background-color: #f1efef;
+    }
+</style>
 @{
     using (Script.Head()) {
     <script type="text/javascript">
@@ -25,8 +35,13 @@
 
     </div>
     <div>
+        <div >
+            @Html.LabelFor(x => x.EncryptionKey, T("EncryptionKey"))
+            @Html.TextBoxFor(x => x.EncryptionKey, new { @class = "text large" })
+            <span class="hint">Generate random : @SymmetricAlgorithm.Create(encryptionAlgorithm).Key.ToHexString() </span>
+        </div>
         <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x => x.ExternalApplicationList.ExternalApplications, T("Add External Application").Text, "#extapp", ".j_extapp")
-        <div id="extapp">
+         <div id="extapp">
             @Html.EditorFor(x => x.ExternalApplicationList.ExternalApplications)
         </div>
     </div>
