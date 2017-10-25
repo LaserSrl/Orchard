@@ -5,6 +5,7 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Security;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Contrib.Profile.Services {
     public class FrontEndProfileService : IFrontEndProfileService {
@@ -33,7 +34,8 @@ namespace Contrib.Profile.Services {
         }
 
         public bool UserHasNoProfilePart(IUser user) {
-            return user.As<ProfilePart>() == null && user.ContentItem.As<ProfilePart>() == null;
+            return !user.ContentItem.Parts.Any(pa => pa.PartDefinition.Name == "ProfilePart");
+            //return user.As<ProfilePart>() == null && user.ContentItem.As<ProfilePart>() == null;
         }
 
         private bool MayAllowPartDisplay(ContentTypePartDefinition definition, string typeName) {
