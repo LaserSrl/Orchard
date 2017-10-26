@@ -4,27 +4,11 @@
 @using Orchard.MediaLibrary.Fields
 @{
     Script.Require("jQueryUI_Tooltip").AtFoot();
-    using (Script.Foot()) {
-        <script>
-        $( function() {
-            $( document ).tooltip({
-                items: "[data-zoomimage]",
-                content: function() {
-                    var element = $( this );
-                    if (element.is("[data-zoomimage]")) {
-                        return "<img src='" + element.data("zoomimage") + "'>";
-                    }
-                    if ( element.is( "img" ) ) {
-                        return element.attr( "alt" );
-                    }
-                }
-            });
-        } );
-        </script>
+    Script.Require("TooltipsZoomimage").AtFoot();
+    Style.Require("jQueryUI").AtHead();
 
-    }
-    foreach (var item in Model.ContentItems.Items) {
-        ContentItem contentItem = item.ContentItem;
+foreach (var item in Model.ContentItems.Items) {
+    ContentItem contentItem = item.ContentItem;
         <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
             <input type="checkbox" class="content-picker-itemCheck" />
             <div class="container content-picker-item">

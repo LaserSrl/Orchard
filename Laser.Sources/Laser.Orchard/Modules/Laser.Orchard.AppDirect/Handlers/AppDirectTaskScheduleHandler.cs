@@ -28,7 +28,7 @@ namespace Laser.Orchard.AppDirect.Handlers {
                     case "ToCancel":
                         action = "Cancel";
                         break;
-                    case "Edit":
+                    case "ToModify":
                         action = "Edit";
                         break;
                     case "ToAssignUser":
