@@ -235,10 +235,6 @@
       <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
       <Name>Laser.Orchard.Commons</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Contrib.Profile\Contrib.Profile.csproj">
-      <Project>{bb5c57f4-d9cb-4440-89a6-d9ff9f41e4e3}</Project>
-      <Name>Contrib.Profile</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\WebApiResponseActivity.cs" />
@@ -277,7 +273,6 @@
     <Compile Include="Projections\OwnerNameFilter.cs" />
     <Compile Include="Projections\OwnerStringForm.cs" />
     <Compile Include="RazorBase\Services\IRazorBaseService.cs" />
-    <Compile Include="Services\FavoriteCultureDefaultFrontEndSettingsProvider.cs" />
     <Compile Include="Settings\DisplayTextPartSettingsHooks.cs" />
     <Compile Include="Settings\IdentityPartOnEveryTypeDefinitionHooks.cs" />
     <Compile Include="TaxonomiesExtensions\Drivers\TaxonomyExtensionPartDriver.cs" />
