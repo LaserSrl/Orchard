@@ -3,8 +3,8 @@
 @using Orchard.Fields.Fields;
 @using Orchard.Roles.Models;
 @using Orchard.Roles.Services;
+@using Orchard.ContentManagement.MetaData;
 @using System.Linq;
-@using System.Collections.Generic;
 
 
 @functions{
@@ -15,6 +15,8 @@
     IContentManager _contentManager;
     IRoleService _roleService;
     IRepository<UserRolesPartRecord> _userRolesRepository;
+    IContentDefinitionManager _contentDefinitionManager;
+
     string retString = "Error"; //possible outcomes: Error,Ok
     string eMsg = "";
     private void AssignRole(int userId, string roleName) {
@@ -30,13 +32,12 @@
         var roleBrandAdminB2B = _roleService.GetRoleByName("BrandAdminB2B");
         var roleBrandAdminB2C = _roleService.GetRoleByName("BrandAdminB2C");
         var usersId = _userRolesRepository.Fetch(x => x.Role == roleBrandAdminB2B || x.Role == roleBrandAdminB2C).Select(x => x.UserId).Distinct().ToArray<int>();
-        //var users = _userRolesRepository.Fetch(x => x.Role == roleBrandAdminB2B || x.Role == roleBrandAdminB2C, y => y.UserId).ToList();
         return usersId;
     }
     private void AssignRoleToUsers(int[] usersId, RoleRecord role) {
         var usersAlreadyInRole = _userRolesRepository.Fetch(x => x.Role == role).Select(x => x.UserId).Distinct().ToArray<int>();
-        foreach(var uid in usersId) {
-            if(usersAlreadyInRole.Contains(uid) == false) {
+        foreach (var uid in usersId) {
+            if (usersAlreadyInRole.Contains(uid) == false) {
                 _userRolesRepository.Create(new UserRolesPartRecord {
                     UserId = uid,
                     Role = role
@@ -59,6 +60,7 @@
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
         _roleService = Model.OrchardServices.WorkContext.Resolve<IRoleService>();
         _userRolesRepository = Model.OrchardServices.WorkContext.Resolve<IRepository<UserRolesPartRecord>>();
+        _contentDefinitionManager = Model.OrchardServices.WorkContext.Resolve<IContentDefinitionManager>();
         // get app type
         ContentItem config = Model.ContentItem;
         string contentType = config.ContentType;
@@ -68,13 +70,18 @@
             if (field != null) {
                 EnumerationField enumField = field as EnumerationField;
                 // get settings of ScriptNascondiPrezzo in content type Prodotto
-                var settings = _contentManager.GetContentTypeDefinitions().First(x => x.Name == "Prodotto").Parts.First(x => x.PartDefinition.Name == "Prodotto").PartDefinition.Fields.First(x => x.Name == "ScriptNascondiPrezzo").Settings;
-                var script = (settings.ContainsKey("InsertStuffFieldSettings.RawHtml")) ? settings["InsertStuffFieldSettings.RawHtml"] : "";
+                var defPart = _contentDefinitionManager.GetPartDefinition("Prodotto");
+                var defField = defPart.Fields.SingleOrDefault(x => x.Name == "ScriptNascondiPrezzo");
+                var script = (defField.Settings.ContainsKey("InsertStuffFieldSettings.RawHtml")) ? defField.Settings["InsertStuffFieldSettings.RawHtml"] : "";
                 // update script if necesssary
                 if (enumField.Value.Contains("B2C") == false && string.IsNullOrWhiteSpace(script)) {
-                    settings["InsertStuffFieldSettings.RawHtml"] = "<script type='text/javascript'>\r\n$('label[for=Prodotto_NascondiPrezzo_Value]').parent().hide();\r\n</script>";
+                    defField.Settings["InsertStuffFieldSettings.RawHtml"] = "<script type='text/javascript'>\r\n$('label[for=Prodotto_NascondiPrezzo_Value]').parent().hide();\r\n</script>";
+                    // saves field settings on db (you need method StorePartDefinition instead of StoreTypeDefinition)
+                    _contentDefinitionManager.StorePartDefinition(defPart);
                 } else if (enumField.Value.Contains("B2C") && string.IsNullOrWhiteSpace(script) == false) {
-                    settings["InsertStuffFieldSettings.RawHtml"] = "";
+                    defField.Settings["InsertStuffFieldSettings.RawHtml"] = "";
+                    // saves field settings on db (you need method StorePartDefinition instead of StoreTypeDefinition)
+                    _contentDefinitionManager.StorePartDefinition(defPart);
                 }
                 // update roles of brand Admins
                 var brandAdminsId = GetBrandAdmins();
