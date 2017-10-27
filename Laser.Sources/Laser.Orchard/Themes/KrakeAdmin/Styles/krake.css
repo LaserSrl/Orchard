@@ -1569,3 +1569,8 @@ div#appliedFilters {
 .primary{
     padding-top:10px;
 }
+
+/*seo script text area*/
+#templateArea{
+    height:auto;
+}
