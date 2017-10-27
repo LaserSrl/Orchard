@@ -24,5 +24,10 @@ namespace Laser.Orchard.SEO.Models {
         public bool GoogleNoSiteLinkSearchBox { get; set; }
         [Display(Name = "notranslate")]
         public bool GoogleNoTranslate { get; set; }
+
+        [Display(Name = "JSON-LD")]
+        public string JsonLd { get; set; }
+        [Display(Name = "Templates")]
+        public Dictionary<string, string> Templates;
     }
 }

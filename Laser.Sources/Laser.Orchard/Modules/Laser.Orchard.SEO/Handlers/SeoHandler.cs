@@ -1,21 +1,23 @@
 ﻿using Laser.Orchard.SEO.Models;
-using Laser.Orchard.StartupConfig.Localization;
-using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
-using Orchard.Localization.Services;
+using Orchard.Tokens;
 using System;
-using Orchard.ContentManagement.Aspects;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using Orchard.DisplayManagement.Shapes;
+using System.Web.Mvc;
+using System.Web;
 
 namespace Laser.Orchard.SEO.Handlers {
 
     public class SeoHandler : ContentHandler {
-
-        
-
-        public SeoHandler(IRepository<SeoVersionRecord> repository) {
+        private readonly ITokenizer _tokenizer;
 
 
+        public SeoHandler(IRepository<SeoVersionRecord> repository, ITokenizer tokenizer) {
+
+            _tokenizer = tokenizer;
 
             Filters.Add(StorageFilter.For(repository));
 
@@ -42,10 +44,29 @@ namespace Laser.Orchard.SEO.Handlers {
                 part.GoogleNoSiteLinkSearchBox = settings.GoogleNoSiteLinkSearchBox;
                 part.GoogleNoTranslate = settings.GoogleNoTranslate;
             });
-            
-            
+
+
+
+            OnGetDisplayShape<SeoPart>((context, part) => {
+                if (context.DisplayType == "Detail") {
+                    var settings = part.Settings.GetModel<SeoPartSettings>();
+                    //eval text box area
+                    if (!String.IsNullOrEmpty(settings.JsonLd)) {
+                        var layout = (dynamic)context.Layout;
+                        string script = scriptEval(settings, part);
+                        var output = new { Microscript = script };
+                        layout.Head.Add(context.New.SeoMicrodataScript(ScriptMicrodata: script));
+                    }
+                }
+            });
+
         }
-        
+
+        private string scriptEval(SeoPartSettings settings, SeoPart part) {
+            var tokensDictionary = new Dictionary<string, object> { { "Content", part.ContentItem } };
+            return _tokenizer.Replace(settings.JsonLd, tokensDictionary); ;
+        }
+
     }
 
 }
