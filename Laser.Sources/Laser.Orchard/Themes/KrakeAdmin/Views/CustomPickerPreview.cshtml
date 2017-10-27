@@ -5,8 +5,9 @@
     Script.Require("ContentPicker").AtFoot();
     Script.Require("jQueryUI_Sortable").AtFoot();
     Script.Require("jQueryUI_Tooltip").AtFoot();
-
+    Script.Require("TooltipsZoomimage").AtFoot();
     Style.Include("content-picker-admin.css");
+    Style.Require("jQueryUI").AtHead();
 
     var required = ((bool?)Model.Required) ?? false;
     var multiple = ((bool?)Model.Multiple) ?? false;
@@ -20,23 +21,6 @@
     var baseUrl = Url.Content("~/") + WorkContext.Resolve<ShellSettings>().RequestUrlPrefix;
     var types = "";// String.Join(",", (IEnumerable<string>)Model.Types ?? Enumerable.Empty<string>());
 }
-@using (Script.Foot()) {
-    <script>
-        $( function() {
-            $("#itemstable_@(fieldName)").tooltip({
-                items: "[data-zoomimage]",
-                content: function() {
-                    var element = $( this );
-                    if (element.is("[data-zoomimage]")) {
-                        return "<img src='" + element.data("zoomimage") + "'>";
-                    }
-                    if ( element.is( "img" ) ) {
-                        return element.attr( "alt" );
-                    }
-                }
-            });
-        } );
-    </script>
 
 }
 <fieldset class="content-picker-field"
