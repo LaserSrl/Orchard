@@ -4,7 +4,7 @@
   "@type": "Product",
   "name": "{Content.DisplayText}",
   "image": [
-    "{Site.BaseUrl}{Content.Fields.CONTENTNAME.GALLEY.Url}"
+    "{Site.BaseUrl}{Content.Fields.CONTENTNAME.GALLERY.Url}"
    ],
   "description": "{Content.Fields.CONTENTNAME.FIELDDESCRIPTION}",
   "offers": {{

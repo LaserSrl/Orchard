@@ -29,5 +29,8 @@ namespace Laser.Orchard.SEO.Models {
         public string JsonLd { get; set; }
         [Display(Name = "Templates")]
         public Dictionary<string, string> Templates;
+
+        [Display(Name = "ShowAggregatedMicrodata")]
+        public bool ShowAggregatedMicrodata { get; set; }
     }
 }
