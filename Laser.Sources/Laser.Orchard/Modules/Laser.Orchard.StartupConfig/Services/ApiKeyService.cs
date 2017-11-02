@@ -13,6 +13,7 @@ using System.Text;
 using Orchard.Environment.Extensions;
 using Orchard.Caching.Services;
 
+
 namespace Laser.Orchard.StartupConfig.Services {
     [OrchardFeature("Laser.Orchard.StartupConfig.WebApiProtection")]
     public class ApiKeyService : IApiKeyService {
@@ -21,8 +22,9 @@ namespace Laser.Orchard.StartupConfig.Services {
         private HttpRequest _request;
         public ILogger Logger;
         private ICacheStorageProvider _cacheStorage;
-
-        public ApiKeyService(ShellSettings shellSettings, IOrchardServices orchardServices, ICacheStorageProvider cacheManager) {
+        private readonly IApiKeySettingService _apiKeySettingService;
+        public ApiKeyService(ShellSettings shellSettings, IOrchardServices orchardServices, ICacheStorageProvider cacheManager, IApiKeySettingService apiKeySettingService) {
+            _apiKeySettingService = apiKeySettingService;
             _shellSettings = shellSettings;
             _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
@@ -66,14 +68,16 @@ namespace Laser.Orchard.StartupConfig.Services {
                 if (action == null) {
                     // caso che si verifica con le web api (ApiController)
                     entryToVerify = String.Format("{0}.{1}", area, controller);
-                } else {
+                }
+                else {
                     // caso che si verifica con i normali Controller
                     entryToVerify = String.Format("{0}.{1}.{2}", area, controller, action);
                 }
                 if (protectedControllers.Contains(entryToVerify, StringComparer.InvariantCultureIgnoreCase)) {
                     check = true;
                 }
-            } else {
+            }
+            else {
                 check = true;
             }
 
@@ -83,7 +87,8 @@ namespace Laser.Orchard.StartupConfig.Services {
                 var myAkiv = _request.QueryString["AKIV"] ?? _request.Headers["AKIV"];
                 if (!TryValidateKey(myApikey, myAkiv, (_request.QueryString["ApiKey"] != null && _request.QueryString["clear"] != "false"), myApiChannel)) {
                     additionalCacheKey = "UnauthorizedApi";
-                } else {
+                }
+                else {
                     additionalCacheKey = "AuthorizedApi";
                 }
             }
@@ -92,12 +97,10 @@ namespace Laser.Orchard.StartupConfig.Services {
 
         public string GetValidApiKey(string sIV, bool useTimeStamp = false) {
             string key = "";
-            byte[] mykey = _shellSettings.EncryptionKey.ToByteArray();
+            byte[] mykey;
             byte[] myiv = Convert.FromBase64String(sIV);
             try {
-                var settings = _orchardServices.WorkContext.CurrentSite.As<ProtectionSettingsPart>();
-                if (!string.IsNullOrEmpty(settings.EncryptionKey))
-                    mykey = settings.EncryptionKey.ToByteArray();
+                mykey = _apiKeySettingService.EncryptionKeys("TheDefaultChannel").ToByteArray();
 
                 var defaulApp = DefaultApplication;
                 string aux = defaulApp.ApiKey;
@@ -108,7 +111,8 @@ namespace Laser.Orchard.StartupConfig.Services {
 
                 byte[] encryptedAES = EncryptStringToBytes_Aes(aux, mykey, myiv);
                 key = Convert.ToBase64String(encryptedAES);
-            } catch {
+            }
+            catch {
                 // ignora volutamente qualsiasi errore e restituisce una stringa vuota
             }
             return key;
@@ -120,19 +124,13 @@ namespace Laser.Orchard.StartupConfig.Services {
         }
 
 
-        private bool TryValidateKey(string token, string akiv, bool clearText,string channel) {
+        private bool TryValidateKey(string token, string akiv, bool clearText, string channel= "TheDefaultChannel") {
             string cacheKey;
             _request = HttpContext.Current.Request;
             try {
-                var  mykey = _shellSettings.EncryptionKey.ToByteArray();
+                byte[] mykey;
                 var settings = _orchardServices.WorkContext.CurrentSite.As<ProtectionSettingsPart>();
-                if (!string.IsNullOrEmpty(settings.EncryptionKey))
-                    mykey = settings.EncryptionKey.ToByteArray();
-                if (!string.IsNullOrEmpty(channel)) {
-                    var conf = settings.ExternalApplicationList.ExternalApplications.FirstOrDefault(x => x.Name.Equals(channel));
-                    if (conf != null && !string.IsNullOrEmpty(conf.EncryptionKey))
-                        mykey = conf.EncryptionKey.ToByteArray();
-                }
+                mykey = _apiKeySettingService.EncryptionKeys(channel).ToByteArray();
                 byte[] myiv = Convert.FromBase64String(akiv);
                 if (String.IsNullOrWhiteSpace(token)) {
                     Logger.Error("Empty Token");
@@ -143,7 +141,8 @@ namespace Laser.Orchard.StartupConfig.Services {
                     var encryptedAES = Convert.FromBase64String(token);
                     key = DecryptStringFromBytes_Aes(encryptedAES, mykey, myiv);
                     //key = aes.Decrypt(token, mykey, myiv);
-                } else {
+                }
+                else {
                     var encryptedAES = EncryptStringToBytes_Aes(token, mykey, myiv);
                     var base64EncryptedAES = Convert.ToBase64String(encryptedAES, Base64FormattingOptions.None);
                     //var encrypted = aes.Crypt(token, mykey, myiv);
@@ -184,12 +183,14 @@ namespace Laser.Orchard.StartupConfig.Services {
                     if (floorLimit > ((item.Validity > 0 ? item.Validity : 5)/*minutes*/ * 60)) {
                         Logger.Error("Timestamp validity expired: key = " + key);
                         return false;
-                    } else {
+                    }
+                    else {
                         _cacheStorage.Put(cacheKey, "", new TimeSpan(0, item.Validity > 0 ? item.Validity : 5, 0));
                     }
                 }
                 return true;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 Logger.Error("Exception: " + ex.Message);
                 return false;
             }

@@ -1,17 +1,12 @@
 ﻿@model Laser.Orchard.StartupConfig.WebApiProtection.Models.ExternalApplication
-@using System.Security.Cryptography
-@using Orchard.Utility.Extensions
 @{ MvcHtmlString answerBlock = Html.UniqueClientId("externalapplication"); }
 @{
-    string encryptionAlgorithm = "AES";
     var appId = "phNum_" + answerBlock;
 }
 <div id="@appId" class="j_extapp">
     <fieldset>
         <br/>
         @Html.HiddenFor(m => m.Delete, new { @class = "ph-mark-for-delete" })
-        @Html.TextBoxFor(m => m.EncryptionKey, new { placeholder = T("EncryptionKey (optional)"), @class = "text large" })
-        <span class="hint">Generate random : @SymmetricAlgorithm.Create(encryptionAlgorithm).Key.ToHexString() </span>
         @Html.TextBoxFor(m => m.Name, new { placeholder = T("Name"), @class = "text medium" })
         @Html.TextBoxFor(m => m.ApiKey, new { placeholder = T("Api Secret Key"), @class = "text medium" })
         <br/>
