@@ -36,9 +36,7 @@
     </div>
     <div>
         <div >
-            @Html.LabelFor(x => x.EncryptionKey, T("EncryptionKey"))
-            @Html.TextBoxFor(x => x.EncryptionKey, new { @class = "text large" })
-            <span class="hint">Generate random : @SymmetricAlgorithm.Create(encryptionAlgorithm).Key.ToHexString() </span>
+             <span class="hint">Generated encryptionkey random : @SymmetricAlgorithm.Create(encryptionAlgorithm).Key.ToHexString() </span>
         </div>
         <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x => x.ExternalApplicationList.ExternalApplications, T("Add External Application").Text, "#extapp", ".j_extapp")
          <div id="extapp">
