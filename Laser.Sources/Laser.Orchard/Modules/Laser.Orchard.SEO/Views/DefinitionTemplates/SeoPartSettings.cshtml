@@ -1,5 +1,10 @@
-﻿
-@model Laser.Orchard.SEO.Models.SeoPartSettings
+﻿@model Laser.Orchard.SEO.Models.SeoPartSettings
+@{
+    Script.Require("jQuery");
+
+    //Model.Templates.Add("", "");
+}
+
 
 @helper CbAndLabelFor(System.Linq.Expressions.Expression<Func<Laser.Orchard.SEO.Models.SeoPartSettings, bool>> expression, string titleTag = "") {
     @Html.CheckBoxFor(expression, new { @title = titleTag })
@@ -10,7 +15,7 @@
 <fieldset>
     <div>
         @CbAndLabelFor(m => m.RobotsNoIndex, @T("Prevents the page from being indexed in search engines.").ToString())
-            
+
         @CbAndLabelFor(m => m.RobotsNoFollow, @T("Prevents crawlers from following page links").ToString())
 
         @CbAndLabelFor(m => m.RobotsNoSnippet, @T("Prevents page snippets from being shown in search results").ToString())
@@ -22,10 +27,34 @@
         @CbAndLabelFor(m => m.RobotsUnavailableAfter, @T("Specify the exact date to stop crawling and indexing the page").ToString())
 
         @CbAndLabelFor(m => m.RobotsNoImageIndex, @T("Prevents the page to appear as referring page for an image that appears in search results").ToString())
-        
+
         @CbAndLabelFor(m => m.GoogleNoSiteLinkSearchBox, @T("If this website has a search functionality powered by Google, this tag prevents a search box from being displayed in Google's search results.").ToString())
 
         @CbAndLabelFor(m => m.GoogleNoTranslate, @T("Prevents Google from providing a translation link for the page in its search results").ToString())
-        
+
     </div>
+
+    <br />
+    <h4>MicroData:</h4>
+    <label for="@Html.FieldIdFor(m => m.JsonLd)">@T("Json dl text")</label>
+    <div>
+        @Html.TextAreaFor(m => m.JsonLd, new { @id = "templateArea", @class = "textMedium", rows = "20"})
+        <span class="hint">@T("Insert a json-ld that describe the content. For the list of elements avaible in structured data see http://schema.org/docs/schemas.html, for testing the script use https://search.google.com/structured-data/testing-tool. The text is tokenized.")</span>
+    </div>
+
+    <label for="@Html.FieldIdFor(m => m.Templates)">@T("Json dl Templates")</label>
+    @Html.DropDownListFor(m => m.Templates, new SelectList(Model.Templates.OrderBy(x => x.Key), "Value", "Key"), "", new { @id = "dropDownTemplate" })
+    <span class="hint">@T("Select a template of json-ld object.")</span>
 </fieldset>
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#dropDownTemplate").change(function () {
+                var data = $("#dropDownTemplate option:selected").val();
+                $("#templateArea").val(data);
+            });
+        });
+
+    </script>
+}

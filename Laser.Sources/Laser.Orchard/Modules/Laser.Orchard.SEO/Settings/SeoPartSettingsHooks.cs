@@ -6,8 +6,11 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Web;
+using System.Web.Hosting;
 
 namespace Laser.Orchard.SEO.Settings {
     public class SeoPartSettingsHooks : ContentDefinitionEditorEventsBase {
@@ -18,6 +21,8 @@ namespace Laser.Orchard.SEO.Settings {
             if (definition.PartDefinition.Name != "SeoPart") yield break;
 
             var model = definition.Settings.GetModel<SeoPartSettings>();
+
+            model.Templates = getMicrodataTemplate();
 
             yield return DefinitionTemplate(model);
         }
@@ -39,10 +44,23 @@ namespace Laser.Orchard.SEO.Settings {
                 builder.WithSetting("SeoPartSettings.GoogleNoSiteLinkSearchBox", model.GoogleNoSiteLinkSearchBox.ToString());
                 builder.WithSetting("SeoPartSettings.GoogleNoTranslate", model.GoogleNoTranslate.ToString());
 
+                builder.WithSetting("SeoPartSettings.JsonLd", model.JsonLd != null ? model.JsonLd.ToString() : "");
                 yield return DefinitionTemplate(model);
             }
 
             yield break;
         }
+
+        private Dictionary<string, string> getMicrodataTemplate() {
+            Dictionary<string, string> templates = new Dictionary<string, string>();
+
+            string[] filelist = Directory.GetFiles(HostingEnvironment.MapPath(@"~/Modules/Laser.Orchard.SEO/MicrodataTemplate"));
+            foreach (string filepath in filelist) {
+                templates.Add(Path.GetFileNameWithoutExtension(filepath), File.ReadAllText(filepath));
+            }
+            //da fare il blocco try per IOException
+            return templates;
+        }
+
     }
 }
