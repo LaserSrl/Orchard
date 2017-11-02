@@ -57,11 +57,11 @@ namespace Contrib.Profile.Services {
         public void ShapeTableCreated(ShapeTable shapeTable) {
 
             var typeDefinitions = _contentDefinitionManager.Value
-                .ListTypeDefinitions().
-                Where(ctd => ctd.Parts.Any(ctpd => ctpd.PartDefinition.Name == "ProfilePart"));
+                .ListTypeDefinitions()
+                .Where(ctd => ctd.Parts.Any(ctpd => ctpd.PartDefinition.Name == "ProfilePart"));
 
             var allPlacements = typeDefinitions
-                .SelectMany(td => GetEditorPlacement(td)
+                .SelectMany(td => _frontEndProfileService.GetFrontEndPlacement(td)
                     .Select(p => new TypePlacement { Placement = p, ContentType = td.Name }));
 
             // group all placement settings by shape type
@@ -105,11 +105,6 @@ namespace Contrib.Profile.Services {
             }
 
         }
-
-        private IEnumerable<PlacementSettings> GetEditorPlacement(ContentTypeDefinition definition) {
-            // this will read the setting we are saving when the type definition editor is updated
-        }
-
-
+        
     }
 }

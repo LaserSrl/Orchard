@@ -1,5 +1,6 @@
 ﻿using Orchard;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentTypes.Settings;
 using Orchard.Security;
 using System;
 
@@ -45,5 +46,12 @@ namespace Contrib.Profile.Services {
         /// A delegate for the tests to decide which fields may be edited on the front end.
         /// </summary>
         Func<ContentPartFieldDefinition, bool> MayAllowFieldEdit { get; }
+
+        /// <summary>
+        /// Get the FrontEnd Editor Placement information for the type defined by the argument.
+        /// </summary>
+        /// <param name="contentTypeDefinition">The definition of the type.</param>
+        /// <returns>An array of the FrontEnd editor PlacementSettings for the parts and fields in the type.</returns>
+        PlacementSettings[] GetFrontEndPlacement(ContentTypeDefinition contentTypeDefinition);
     }
 }

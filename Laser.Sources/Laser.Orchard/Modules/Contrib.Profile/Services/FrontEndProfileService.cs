@@ -2,10 +2,12 @@
 using Contrib.Profile.Settings;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentTypes.Settings;
 using Orchard.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Script.Serialization;
 
 namespace Contrib.Profile.Services {
     public class FrontEndProfileService : IFrontEndProfileService {
@@ -78,5 +80,16 @@ namespace Contrib.Profile.Services {
 
             return shape;
         }
+
+        public PlacementSettings[] GetFrontEndPlacement(ContentTypeDefinition contentTypeDefinition) {
+            var currentSettings = contentTypeDefinition.Settings;
+            string placement;
+            var serializer = new JavaScriptSerializer();
+
+            currentSettings.TryGetValue("ContentTypeSettings.Placement.ProfileFrontEndEditor", out placement);
+
+            return String.IsNullOrEmpty(placement) ? new PlacementSettings[0] : serializer.Deserialize<PlacementSettings[]>(placement);
+        }
+        
     }
 }
