@@ -1,6 +1,4 @@
-﻿using Contrib.Profile.Models;
-using Contrib.Profile.Settings;
-using Orchard.ContentManagement;
+﻿using Contrib.Profile.Settings;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentTypes.Settings;
 using Orchard.Security;

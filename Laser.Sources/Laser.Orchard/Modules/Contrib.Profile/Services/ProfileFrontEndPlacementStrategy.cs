@@ -1,51 +1,26 @@
 ﻿using Orchard;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Drivers;
-using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Models;
-using Orchard.ContentTypes.Extensions;
 using Orchard.ContentTypes.Services;
-using Orchard.ContentTypes.Settings;
-using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.Environment;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
-using Orchard.Themes.Services;
 using Orchard.UI.Admin;
-using Orchard.UI.Zones;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Routing;
 
 namespace Contrib.Profile.Services {
     public class ProfileFrontEndPlacementStrategy : IShapeTableEventHandler {
 
         private readonly Work<IContentDefinitionManager> _contentDefinitionManager;
-        private readonly IContentManager _contentManager;
-        private readonly IShapeFactory _shapeFactory;
-        private readonly IEnumerable<IContentPartDriver> _contentPartDrivers;
-        private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
         private readonly IFrontEndProfileService _frontEndProfileService;
         private readonly IWorkContextAccessor _workContextAccessor;
 
         public ProfileFrontEndPlacementStrategy(
             Work<IContentDefinitionManager> contentDefinitionManager,
-            IContentManager contentManager,
-            IShapeFactory shapeFactory,
-            IEnumerable<IContentPartDriver> contentPartDrivers,
-            IEnumerable<IContentFieldDriver> contentFieldDrivers,
             IFrontEndProfileService frontEndProfileService,
             IWorkContextAccessor workContextAccessor) {
 
             _contentDefinitionManager = contentDefinitionManager;
-            _contentManager = contentManager;
-            _shapeFactory = shapeFactory;
-            _contentPartDrivers = contentPartDrivers;
-            _contentFieldDrivers = contentFieldDrivers;
             _frontEndProfileService = frontEndProfileService;
             _workContextAccessor = workContextAccessor;
 

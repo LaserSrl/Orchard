@@ -16,7 +16,6 @@ using Orchard.Logging;
 using Orchard.UI.Zones;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -78,7 +77,8 @@ namespace Contrib.Profile.Settings {
                     var partDefinition = _contentDefinitionManager.GetPartDefinition(builder.PartName);
                     var typeDefinitions = _contentDefinitionManager
                         .ListTypeDefinitions()
-                        .Where(ctd => ctd.Parts.Any(ctpd => ctpd.PartDefinition.Name == partDefinition.Name));
+                        .Where(ctd => ctd.Parts.Any(ctpd => ctpd.PartDefinition.Name == "ProfilePart") && 
+                            ctd.Parts.Any(ctpd => ctpd.PartDefinition.Name == partDefinition.Name));
                     foreach (var typeDefinition in typeDefinitions) {
                         // At this stage, the settings in the FieldDefinition are not updated, so the IFrontEndProfileService 
                         // has no way of knowing whether the value of settings.AllowFrontEndEdit has changed. We need to pass 
@@ -144,6 +144,7 @@ namespace Contrib.Profile.Settings {
             // At this stage, check whether this is a type with a ProfilePart
             var typeDefinition = builder.Current;
             if (typeDefinition.Parts.Any(cptd => cptd.PartDefinition.Name == "ProfilePart")) {
+                _typeHasProfilePart = true;
                 // In this case we want to save in a setting for the type all the configuration regarding
                 // front-end display/edit for the different fields and parts. This is similar to what
                 // is done in Orchard.ContentTypes for the "Edit Placement" functionality
@@ -153,7 +154,7 @@ namespace Contrib.Profile.Settings {
                 builder.WithSetting("ContentTypeSettings.Placement.ProfileFrontEndEditor",
                     serializer.Serialize(placements.ToArray()));
 
-                // persist changes: The type definition is persisted already after this events are processed
+                // persist changes: The type definition is persisted already after these events are processed
                 //_contentDefinitionManager.StoreTypeDefinition(contentTypeDefinition);
                 // schedules a re-evaluation of the shell
                 _settingsManagerEventHandlers.Value.Invoke(x => x.Saved(_shellSettings), Logger);
@@ -172,51 +173,59 @@ namespace Contrib.Profile.Settings {
         private IEnumerable<PlacementSettings> GetEditorPlacement(
             ContentTypeDefinition definition) {
             var contentType = definition.Name;
-            var content = _contentManager.New(contentType); //our dummy content
 
-            dynamic itemShape = CreateItemShape("Content_Edit");
-            itemShape.ContentItem = content;
-
-            var context = new BuildEditorContext(itemShape, content, string.Empty, _shapeFactory);
-            //get the default placements: if we don't provide these ourselves, placement for shapes will default
-            //to null, preventing them to be displayed at all times.
-            var defaultPlacements = definition.GetPlacement(PlacementType.Editor);
-            BindPlacement(context, null, "Content", defaultPlacements);
+            var context = BuildContext(definition);
 
             var placementSettings = new List<PlacementSettings>();
-            
-            _contentPartDrivers.Invoke(driver => {
-                var result = driver.BuildEditor(context);
+
+            foreach (var result in GetPartDriversResults(context).Values) {
                 if (result != null) {
                     placementSettings.AddRange(ProcessEditDriverResult(result, context, contentType));
                 }
-            }, Logger);
-            
-            _contentFieldDrivers.Invoke(driver => {
-                var result = driver.BuildEditorShape(context);
-                if (result != null) {
-                    placementSettings.AddRange(ProcessEditDriverResult(result, context, contentType));
+            }
+
+            //_contentPartDrivers.Invoke(driver => {
+            //    var result = driver.BuildEditor(context);
+            //    if (result != null) {
+            //        placementSettings.AddRange(ProcessEditDriverResult(result, context, contentType));
+            //    }
+            //}, Logger);
+
+            foreach (var results in GetFieldDriversResults(context).Values) {
+                if (results != null) {
+                    foreach (var result in results) {
+                        placementSettings.AddRange(ProcessEditDriverResult(result, context, contentType));
+                    }
                 }
-            }, Logger);
+            }
+
+            //_contentFieldDrivers.Invoke(driver => {
+            //    var result = driver.BuildEditorShape(context);
+            //    if (result != null) {
+            //        placementSettings.AddRange(ProcessEditDriverResult(result, context, contentType));
+            //    }
+            //}, Logger);
 
             foreach (var placementSetting in placementSettings) {
                 yield return placementSetting;
             }
         }
 
+        /// <summary>
+        /// We build a dummy content item in order to execute the drivers for a specific ContentPart and its ContentFields.
+        /// This way we can process the resulting shapes one by one and set the placement to "-" (don't place) for
+        /// those we don't want to show on front end editors. We need this to prevent their UpdateEditor methods to
+        /// be executed.
+        /// </summary>
+        /// <param name="definition">The definition of the ContentType we are working on.</param>
+        /// <param name="partDefinition">The definition for the part we are processing.</param>
+        /// <param name="showEditor">The new value for the flag telling wheter the editor should be shown on frontend.</param>
+        /// <returns>The PlacementSettings objects for the ContentPart and its ContentFields.</returns>
         private IEnumerable<PlacementSettings> GetEditorPlacement(
             ContentTypeDefinition definition, ContentPartDefinition partDefinition, bool showEditor) {
             var contentType = definition.Name;
-            var content = _contentManager.New(contentType); //our dummy content
 
-            dynamic itemShape = CreateItemShape("Content_Edit");
-            itemShape.ContentItem = content;
-
-            var context = new BuildEditorContext(itemShape, content, string.Empty, _shapeFactory);
-            //get the default placements: if we don't provide these ourselves, placement for shapes will default
-            //to null, preventing them to be displayed at all times.
-            var defaultPlacements = definition.GetPlacement(PlacementType.Editor);
-            BindPlacement(context, null, "Content", defaultPlacements);
+            var context = BuildContext(definition);
 
             var placementSettings = new List<PlacementSettings>();
 
@@ -226,73 +235,184 @@ namespace Contrib.Profile.Settings {
                 partDrivers = partDrivers
                     .Where(cpd => cpd.GetPartInfo()
                         .Any(pi => pi.PartName == partDefinition.Name ||
-                            pi.PartName == "ContentPart")); // this to handle metadata parts without their own driver
+                            pi.PartName == "ContentPart")); // this to handle metadata parts that do not have their own driver
             }
 
-            partDrivers.Invoke(driver => {
-                var result = driver.BuildEditor(context);
-                if (result != null) {
+            var resultsDictionary = GetPartDriversResults(context);
+            foreach (var driver in partDrivers) {
+                DriverResult result = null;
+                if (resultsDictionary.TryGetValue(driver, out result) && result != null) {
                     placementSettings.AddRange(ProcessEditDriverResult(result, context, contentType, showEditor));
                 }
-            }, Logger);
+            }
 
+            //partDrivers.Invoke(driver => {
+            //    var result = driver.BuildEditor(context);
+            //    if (result != null) {
+            //        placementSettings.AddRange(ProcessEditDriverResult(result, context, contentType, showEditor));
+            //    }
+            //}, Logger);
 
-            fieldDrivers.Invoke(driver => {
-                var result = driver.BuildEditorShape(context);
-                if (result != null) {
-                    if (result.ContentPart != null && 
-                        result.ContentPart.PartDefinition.Name == partDefinition.Name) {
-                        // Only the fields in the Part we are processing
-                        placementSettings.AddRange(ProcessEditDriverResult(result, context, contentType, showEditor));
-                    }
+            foreach (var results in GetFieldDriversResults(context).Values
+                .Where(dr => dr != null && dr.Any())) {
+                foreach (var result in results.Where(dr => dr != null && 
+                    dr.ContentPart != null &&
+                    dr.ContentPart.PartDefinition.Name == partDefinition.Name)) {
+
+                    placementSettings.AddRange(ProcessEditDriverResult(result, context, contentType, showEditor));
                 }
-            }, Logger);
+            }
+
+            //fieldDrivers.Invoke(driver => {
+            //    var result = driver.BuildEditorShape(context);
+            //    if (result != null) {
+            //        if (result.ContentPart != null && 
+            //            result.ContentPart.PartDefinition.Name == partDefinition.Name) {
+            //            // Only the fields in the Part we are processing
+            //            placementSettings.AddRange(ProcessEditDriverResult(result, context, contentType, showEditor));
+            //        }
+            //    }
+            //}, Logger);
 
             foreach (var placementSetting in placementSettings) {
                 yield return placementSetting;
             }
         }
 
+        /// <summary>
+        /// We build a dummy content item in order to execute the drivers for a specific ContentField.
+        /// This way we can process the resulting shapes one by one and set the placement to "-" (don't place) for
+        /// those we don't want to show on front end editors. We need this to prevent their UpdateEditor methods to
+        /// be executed.
+        /// </summary>
+        /// <param name="definition">The definition of the ContentType we are working on.</param>
+        /// <param name="partDefinition">The definition for the part we are processing.</param>
+        /// <param name="fieldDefinition">The definition for the field we are processing.</param>
+        /// <param name="showEditor">The new value for the flag telling wheter the editor should be shown on frontend.</param>
+        /// <returns>The PlacementSettings objects for the ContentField.</returns>
         private IEnumerable<PlacementSettings> GetEditorPlacement(
             ContentTypeDefinition definition, ContentPartDefinition partDefinition, ContentPartFieldDefinition fieldDefinition, bool showEditor) {
             var contentType = definition.Name;
-            var content = _contentManager.New(contentType); //our dummy content
 
-            dynamic itemShape = CreateItemShape("Content_Edit");
-            itemShape.ContentItem = content;
-
-            var context = new BuildEditorContext(itemShape, content, string.Empty, _shapeFactory);
-            //get the default placements: if we don't provide these ourselves, placement for shapes will default
-            //to null, preventing them to be displayed at all times.
-            var defaultPlacements = definition.GetPlacement(PlacementType.Editor);
-            BindPlacement(context, null, "Content", defaultPlacements);
+            var context = BuildContext(definition);
 
             var placementSettings = new List<PlacementSettings>();
-            
+
             var fieldDrivers = _contentFieldDrivers;
-            if (fieldDefinition != null) {
+            if (fieldDefinition != null) { // only drivers for the field we are processing
                 fieldDrivers = fieldDrivers
                     .Where(cfd => cfd.GetFieldInfo().Any(fi => fi.FieldTypeName == fieldDefinition.FieldDefinition.Name));
             }
 
-            fieldDrivers.Invoke(driver => {
-                var result = driver.BuildEditorShape(context);
-                if (result != null) {
-                    if (result.ContentPart != null &&
-                        result.ContentPart.PartDefinition.Name == partDefinition.Name &&
-                        result.ContentField != null &&
-                        result.ContentField.Name == fieldDefinition.Name) {
-                        // Only the fields in the Part we are processing
+            var resultsDictionary = GetFieldDriversResults(context);
+            foreach (var driver in fieldDrivers) {
+                IEnumerable<DriverResult> results;
+                if (resultsDictionary.TryGetValue(driver, out results) && results != null && results.Any()) {
+                    foreach (var result in results.Where(dr => dr != null &&
+                        dr.ContentPart != null &&
+                        dr.ContentPart.PartDefinition.Name == partDefinition.Name &&
+                        dr.ContentField != null &&
+                        dr.ContentField.Name == fieldDefinition.Name)) {
                         placementSettings.AddRange(ProcessEditDriverResult(result, context, contentType, showEditor));
                     }
                 }
-            }, Logger);
+            }
+
+            //fieldDrivers.Invoke(driver => {
+            //    var result = driver.BuildEditorShape(context);
+            //    if (result != null) {
+            //        if (result.ContentPart != null &&
+            //            result.ContentPart.PartDefinition.Name == partDefinition.Name &&
+            //            result.ContentField != null &&
+            //            result.ContentField.Name == fieldDefinition.Name) {
+            //            // Only the fields in the Part we are processing
+            //            placementSettings.AddRange(ProcessEditDriverResult(result, context, contentType, showEditor));
+            //        }
+            //    }
+            //}, Logger);
 
             foreach (var placementSetting in placementSettings) {
                 yield return placementSetting;
             }
         }
 
+        private BuildEditorContext _defaultContext;
+
+        /// <summary>
+        /// Create a context for the execution of the drivers we use to compute the shapes we will have to place
+        /// on the frontend editor views. The context is computed only once per request.
+        /// </summary>
+        /// <param name="definition">The definition of the ContentType we are working on.</param>
+        /// <returns>The context for the drivers.</returns>
+        private BuildEditorContext BuildContext(ContentTypeDefinition definition) {
+            if (_defaultContext == null) {
+                var content = _contentManager.New(definition.Name); //our dummy content
+
+                dynamic itemShape = CreateItemShape("Content_Edit");
+                itemShape.ContentItem = content;
+
+                _defaultContext = new BuildEditorContext(itemShape, content, string.Empty, _shapeFactory);
+                //get the default placements: if we don't provide these ourselves, placement for shapes will default
+                //to null, preventing them to be displayed at all times.
+                var defaultPlacements = definition.GetPlacement(PlacementType.Editor);
+                BindPlacement(_defaultContext, defaultPlacements);
+            }
+            return _defaultContext;
+        }
+
+        private Dictionary<IContentPartDriver, DriverResult> _partDriverResults;
+
+        /// <summary>
+        /// Computes the Dictionary of the results for the drivers for the parts. This lets us avoid running the
+        /// methods from the drivers several times.
+        /// </summary>
+        /// <param name="context">The context for the drivers.</param>
+        /// <returns></returns>
+        private Dictionary<IContentPartDriver, DriverResult> GetPartDriversResults(BuildEditorContext context) {
+            if (_partDriverResults == null) {
+                _partDriverResults = new Dictionary<IContentPartDriver, DriverResult>(_contentPartDrivers.Count());
+                _contentPartDrivers.Invoke(driver => {
+                    var result = driver.BuildEditor(context);
+                    if (result != null) {
+                        _partDriverResults.Add(driver, result);
+                    }
+                }, Logger);
+            }
+            return _partDriverResults;
+        }
+
+        private Dictionary<IContentFieldDriver, IEnumerable<DriverResult>> _fieldDriverResults;
+
+        /// <summary>
+        /// Computes the Dictionary of the results for the drivers for the fields. This lets us avoid running the
+        /// methods from the drivers several times.
+        /// </summary>
+        /// <param name="context">The context for the drivers.</param>
+        /// <returns></returns>
+        private Dictionary<IContentFieldDriver, IEnumerable<DriverResult>> GetFieldDriversResults(BuildEditorContext context) {
+            if (_fieldDriverResults == null) {
+                _fieldDriverResults = new Dictionary<IContentFieldDriver, IEnumerable<DriverResult>>(_contentFieldDrivers.Count());
+                _contentFieldDrivers.Invoke(driver => {
+                    var result = driver.BuildEditorShape(context);
+                    if (result != null) {
+                        if (result is CombinedResult) {
+                            _fieldDriverResults.Add(driver, ((CombinedResult)result).GetResults());
+                        } else {
+                            _fieldDriverResults.Add(driver, new List<DriverResult>(1) { result });
+                        }
+                    }
+                }, Logger);
+            }
+            return _fieldDriverResults;
+        }
+
+        /// <summary>
+        /// Extract the PlacementSetting objects for the shapes returned by a driver.
+        /// </summary>
+        /// <param name="result">The result of executing a Driver.BuildEditor method.</param>
+        /// <param name="context">The execution context for the driver.</param>
+        /// <param name="typeName">The name of the ContentType we are processing.</param>
+        /// <returns>The PlacementSetting objects for the results of the driver.</returns>
         private IEnumerable<PlacementSettings> ProcessEditDriverResult(
             DriverResult result, BuildShapeContext context, string typeName) {
 
@@ -321,6 +441,14 @@ namespace Contrib.Profile.Settings {
             }
         }
 
+        /// <summary>
+        /// Extract the PlacementSetting objects for the shapes returned by a driver.
+        /// </summary>
+        /// <param name="result">The result of executing a Driver.BuildEditor method.</param>
+        /// <param name="context">The execution context for the driver.</param>
+        /// <param name="typeName">The name of the ContentType we are processing.</param>
+        /// <param name="showEditor">A boolean telling whether the results being processed should appear on the frontend.</param>
+        /// <returns>The PlacementSetting objects for the results of the driver.</returns>
         private IEnumerable<PlacementSettings> ProcessEditDriverResult(
             DriverResult result, BuildShapeContext context, string typeName, bool showEditor = true) {
 
@@ -338,6 +466,14 @@ namespace Contrib.Profile.Settings {
             }
         }
 
+        /// <summary>
+        /// Compute the PlacementSetting object for a specific driver result.
+        /// </summary>
+        /// <param name="result">The driver result.</param>
+        /// <param name="context">The execution context for the driver.</param>
+        /// <param name="typeName">The name of the ContentType we are processing.</param>
+        /// <param name="hidden">A boolean telling whether the results should be hidden on the frontend.</param>
+        /// <returns>Th PlacementSetting object for the results being processed.</returns>
         private PlacementSettings GetPlacement(
             ContentShapeResult result, BuildShapeContext context, string typeName, bool hidden = false) {
 
@@ -367,15 +503,24 @@ namespace Contrib.Profile.Settings {
             };
         }
 
+        /// <summary>
+        /// Creates a default shape to hold the ones that are used to compute placement information.
+        /// </summary>
+        /// <param name="actualShapeType">The type for the shape.</param>
+        /// <returns>The default shape we will use to hold the one sin the remainder of the processing.</returns>
         private dynamic CreateItemShape(string actualShapeType) {
             var zoneHolding = new ZoneHolding(() => _shapeFactory.Create("ContentZone", Arguments.Empty()));
             zoneHolding.Metadata.Type = actualShapeType;
             return zoneHolding;
         }
 
+        /// <summary>
+        /// Binds a default placement to the context for a part's driver execution.
+        /// </summary>
+        /// <param name="context">The execution context.</param>
+        /// <param name="defaultSettings">PlacementSetting objects to fall back on.</param>
         private void BindPlacement(
-            BuildShapeContext context, string displayType,
-            string stereotype, IEnumerable<PlacementSettings> defaultSettings) {
+            BuildShapeContext context, IEnumerable<PlacementSettings> defaultSettings) {
 
             context.FindPlacement = (partShapeType, differentiator, defaultLocation) => {
                 var mockSetting = new PlacementSettings {
@@ -393,18 +538,50 @@ namespace Contrib.Profile.Settings {
             };
         }
 
+        /// <summary>
+        /// Update the settings for the placement in the TypeDefinition.
+        /// </summary>
+        /// <param name="contentTypeDefinition">The definition of the ContentType that we will update.</param>
+        /// <param name="newPlacements">The new placement settings, that will either replace their old versions,
+        /// or be added anew to the settings.</param>
         private void UpdateFrontEndPlacements(
             ContentTypeDefinition contentTypeDefinition, IEnumerable<PlacementSettings> newPlacements) {
 
-            var currentPlacements = _frontEndProfileService.GetFrontEndPlacement(contentTypeDefinition);
+            var currentPlacements = GetCurrentPlacement(contentTypeDefinition);
             var placements = currentPlacements
                 .Where(ps => newPlacements.Any(np => np.IsSameAs(ps)))
                 .ToList();
             placements.AddRange(newPlacements);
 
+            SetCurrentPlacement(contentTypeDefinition, placements);
+        }
+
+        private Dictionary<string, PlacementSettings[]> _currentPlacement;
+        private PlacementSettings[] GetCurrentPlacement(ContentTypeDefinition contentTypeDefinition) {
+            if (_currentPlacement == null) {
+                _currentPlacement = new Dictionary<string, PlacementSettings[]>();
+            }
+            if (!_currentPlacement.ContainsKey(contentTypeDefinition.Name)) {
+                _currentPlacement.Add(contentTypeDefinition.Name, _frontEndProfileService.GetFrontEndPlacement(contentTypeDefinition));
+            }
+
+            return _currentPlacement[contentTypeDefinition.Name];
+        }
+        private PlacementSettings[] SetCurrentPlacement(
+            ContentTypeDefinition contentTypeDefinition, IEnumerable<PlacementSettings> newPlacements) {
+
+            var placementsArray = newPlacements.ToArray();
+
+            if (_currentPlacement.ContainsKey(contentTypeDefinition.Name)) {
+                _currentPlacement.Remove(contentTypeDefinition.Name);
+            }
+            _currentPlacement.Add(contentTypeDefinition.Name, placementsArray);
+
             var serializer = new JavaScriptSerializer();
             contentTypeDefinition.Settings["ContentTypeSettings.Placement.ProfileFrontEndEditor"] =
-                serializer.Serialize(placements.ToArray());
+                serializer.Serialize(placementsArray);
+
+            return placementsArray;
         }
     }
 }
