@@ -31,6 +31,7 @@ using PushSharp.Apple;
 using PushSharp.Core;
 using PushSharp.Google;
 using PushSharp.Windows;
+using Orchard.Core.Common.Fields;
 
 namespace Laser.Orchard.Mobile.Services {
 
@@ -579,7 +580,7 @@ namespace Laser.Orchard.Mobile.Services {
             _result = new PushState();
             _result.CompletedIteration = true;
             senderContentItemContainer = ci;
-            bool SendPushToSpecificDevices;
+            bool SendPushToSpecificDevices = false;
             try {
                 LogInfo("Iniziato invio Push del content " + ci.Id);
                 ContentItem savedCi = _orchardServices.ContentManager.Get(ci.Id);
@@ -767,6 +768,13 @@ namespace Laser.Orchard.Mobile.Services {
                     done = true;
                 }
             }
+            if (mpp.ContentItem.ContentType == "BackgroundPush") {
+                if (!string.IsNullOrEmpty(((dynamic)(mpp.ContentItem)).BackgroundPush.ExternalUrl.Value)) {
+                    string shortlink = _communicationService.GetCampaignLink("Push", mpp);
+                    pushMessage.Eu = shortlink;
+                    done = true;
+                }
+            }
             if (done == false) {
                 string ctype = "";
                 string displayalias = "";
@@ -791,11 +799,16 @@ namespace Laser.Orchard.Mobile.Services {
         }
 
         private string GetQueryDevice(Dictionary<string, object> contesto, MobilePushPart mpp) {
-            string withtoken = mpp.Settings.GetModel<PushMobilePartSettingVM>().QueryDevice;
-            if (string.IsNullOrEmpty(withtoken))
-                return "";
-            else
-                return _tokenizer.Replace(withtoken.Replace("\r\n", " ").Replace("\t", " "), contesto);
+            if(mpp.ContentItem.ContentType == "BackgroundPush") {
+                var queryField = mpp.ContentItem.Parts.FirstOrDefault(x => x.PartDefinition.Name == "BackgroundPush").Fields.FirstOrDefault(x => x.Name == "QueryDevice");
+                return (queryField as TextField).Value;
+            } else {
+                string withtoken = mpp.Settings.GetModel<PushMobilePartSettingVM>().QueryDevice;
+                if (string.IsNullOrEmpty(withtoken))
+                    return "";
+                else
+                    return _tokenizer.Replace(withtoken.Replace("\r\n", " ").Replace("\t", " "), contesto);
+            }
         }
 
         private List<PushNotificationVM> GetListMobileDevice(string contenttype, string queryDevice, TipoDispositivo tipodisp, bool produzione, string language, int[] queryIds) {

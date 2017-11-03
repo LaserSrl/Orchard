@@ -334,5 +334,30 @@ namespace Laser.Orchard.Mobile {
             );
             return 34;
         }
+        public int UpdateFrom34() {
+            ContentDefinitionManager.AlterTypeDefinition("BackgroundPush", t => 
+                t.Creatable(false)
+                .Draftable(false)
+                .Listable(false)
+                .Securable(true)
+                .WithPart("MobilePushPart")
+            );
+            return 35;
+        }
+        public int UpdateFrom35() {
+            ContentDefinitionManager.AlterPartDefinition("BackgroundPush", f => f
+                .WithField("ExternalUrl", cfg => cfg.OfType("TextField"))
+            );
+            ContentDefinitionManager.AlterTypeDefinition("BackgroundPush", t =>
+                t.WithPart("BackgroundPush")
+            );
+            return 36;
+        }
+        public int UpdateFrom36() {
+            ContentDefinitionManager.AlterPartDefinition("BackgroundPush", f => f
+                .WithField("QueryDevice", cfg => cfg.OfType("TextField"))
+            );
+            return 37;
+        }
     }
 }

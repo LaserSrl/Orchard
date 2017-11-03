@@ -56,7 +56,7 @@ namespace Laser.Orchard.Mobile.Handlers {
             OnPublished<MobilePushPart>((context, part) => {
                 try {
                     if ((part.ToPush == true) && (part.PushSent == false)) {
-                        _taskManager.CreateTask("Laser.Orchard.PushNotification.Task", DateTime.UtcNow.AddMinutes(1), part.ContentItem);
+                        _taskManager.CreateTask("Laser.Orchard.PushNotification.Task", DateTime.UtcNow.AddMinutes(-1), part.ContentItem);
                         part.PushSent = true;
                     }
                 }

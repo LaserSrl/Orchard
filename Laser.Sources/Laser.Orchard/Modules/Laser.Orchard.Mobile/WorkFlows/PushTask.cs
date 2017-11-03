@@ -6,10 +6,15 @@ using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
+using Orchard.Logging;
+using Orchard.Tasks.Scheduling;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using Orchard.ContentPicker.Fields;
+using Orchard.Core.Common.Fields;
 
 namespace Laser.Orchard.Mobile.WorkFlows {
     [OrchardFeature("Laser.Orchard.PushGateway")]
@@ -17,16 +22,21 @@ namespace Laser.Orchard.Mobile.WorkFlows {
         private readonly IOrchardServices _orchardServices;
         private readonly IPushGatewayService _pushGatewayService;
         private readonly IRepository<UserDeviceRecord> _userDeviceRecord;
+        private readonly IScheduledTaskManager _taskManager;
+        public ILogger Logger { get; set; }
 
         public PushTask(
             IOrchardServices orchardServices,
             IPushGatewayService pushGatewayService,
-            IRepository<UserDeviceRecord> userDeviceRecord
+            IRepository<UserDeviceRecord> userDeviceRecord,
+            IScheduledTaskManager taskManager
             ) {
             _pushGatewayService = pushGatewayService;
             _orchardServices = orchardServices;
             _userDeviceRecord = userDeviceRecord;
+            _taskManager = taskManager;
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
@@ -80,10 +90,6 @@ namespace Laser.Orchard.Mobile.WorkFlows {
                 int.TryParse(stateIdRelated, out idRelated);
             }
             string language = activityContext.GetState<string>("allLanguage");
-            string messageApple = PushMessage;
-            string messageAndroid = PushMessage;
-            string messageWindows = PushMessage;
-            string sound = "";
             string querydevice = "";
             if (device == "ContentOwner") {
                 querydevice = " SELECT  distinct P.* " +
@@ -116,8 +122,32 @@ namespace Laser.Orchard.Mobile.WorkFlows {
 
                 device = "All";
             }
-            _pushGatewayService.SendPushService(produzione, device, idRelated, contentItem, language, messageApple, messageAndroid, messageWindows, sound, querydevice);
-
+            // schedule the sending of the push notification
+            try {
+                var ci = _orchardServices.ContentManager.Create("BackgroundPush");
+                var part = ci.As<MobilePushPart>();
+                part.DevicePush = device;
+                part.PushSent = false;
+                part.TestPush = !produzione;
+                part.TestPushToDevice = false;
+                part.TextPush = PushMessage;
+                part.ToPush = true;
+                part.UseRecipientList = false;
+                var relatedContentField = part.Fields.FirstOrDefault(x => x.Name == "RelatedContent");
+                if(relatedContentField != null) {
+                    (relatedContentField as ContentPickerField).Ids = new int[] { idRelated };
+                }
+                // we cannot use part settings to specify this queryDevice value because it can change for each BackgroundPush item
+                // so we use a dedicated field on this content item
+                var queryField = ci.Parts.FirstOrDefault(x => x.PartDefinition.Name == "BackgroundPush").Fields.FirstOrDefault(x => x.Name == "QueryDevice");
+                (queryField as TextField).Value = querydevice;
+                // force publish of content item to manage the content picker field the right way (field index)
+                // and to start scheduled task that will send push notifications
+                ci.VersionRecord.Published = false;
+                _orchardServices.ContentManager.Publish(ci);
+            } catch (Exception ex) {
+                Logger.Error(ex, "PushTask - Error starting asynchronous thread to send push notifications.");
+            }
             yield return T("Sent");
         }
 
