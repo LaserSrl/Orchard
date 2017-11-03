@@ -35,7 +35,7 @@
 @using Laser.Orchard.Maps.Models;
 @using Laser.Orchard.ShareLink.Models;
 @functions{
-    
+
     string retString = "";
 
     //declare services
@@ -92,8 +92,8 @@
     }
 
     //update everything except the localization part
-    public void UpdateEvent(ContentItem newCalEvent, 
-        Dictionary<string,CalendarEventStorage> translatableEvents, 
+    public void UpdateEvent(ContentItem newCalEvent,
+        Dictionary<string,CalendarEventStorage> translatableEvents,
         string thisLanguage){
 
         //retString += thisLanguage;
@@ -209,7 +209,7 @@
         }
         //Autoroute
         newCalEvent.As<AutoroutePart>().DisplayAlias = _autorouteService.GenerateAlias(newCalEvent.As<AutoroutePart>());
-		_autorouteService.ProcessPath(newCalEvent.As<AutoroutePart>());
+        _autorouteService.ProcessPath(newCalEvent.As<AutoroutePart>());
         _autorouteService.PublishAlias(newCalEvent.As<AutoroutePart>());
         //Activity Part
         newCalEvent.As<ActivityPart>().DateTimeEnd = translatableEvents[""].endTime;
@@ -282,6 +282,21 @@
             "{" + translatableEvents[""].remoteId.ToString() + "}",
             typeof(string)
         );
+        //OnTop
+        Func<ContentField, bool> IsOnTop = fi => fi.Name == "OnTop";
+        var idBoolField = (BooleanField)newCalEvent.Parts.Where(IsEventFields).FirstOrDefault().Fields.Where(IsOnTop).FirstOrDefault();
+        if (idBoolField.Value == null) {
+            idBoolField.Value = false;
+
+            _fieldIndexService.Set(
+            fiPart,
+            "CalendarEvent",
+            "OnTop",
+            "",
+            false,
+            typeof(bool)
+        );
+        }
         //CommonPart: here we set the creator for the imported content item
         Func<ContentPart, bool> IsCommonPart = part => part.PartDefinition.Name == "CommonPart";
         Func<ContentField, bool> IsCreatorField = fi => fi.Name == "Creator";
