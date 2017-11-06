@@ -69,24 +69,45 @@ namespace Laser.Orchard.Mobile.WorkFlows {
             var PushMessage = activityContext.GetState<string>("PushMessage");
             bool produzione = activityContext.GetState<string>("Produzione") == "Produzione";
             var userId = activityContext.GetState<string>("userId") ?? "";
+            var userName = activityContext.GetState<string>("userName") ?? "";
+            var userEmail = activityContext.GetState<string>("userEmail") ?? "";
             int iUser = 0;
-            List<int> iUserList = new List<int>();
+
             string users = ""; 
+            string[] userList;
+            if (device == "UserId") {
             int.TryParse(userId, out iUser);
-            string[] userList = userId.Split(',', ' ');
+                userList = userId.Split(',', ' ');
+                List<int> iUserList = new List<int>();
             foreach (string uId in userList) {
                 if (int.TryParse(uId, out iUser)) {
                     iUserList.Add(iUser);
                 }
             }
             users = string.Join(",", iUserList);
+            } else if (device.Equals("UserEmail")) {
+                userList = userEmail.Split(',', ' ');
+                List<string> neUserList = new List<string>();
+                foreach (string neUser in userList) {
+                    neUserList.Add("'" + neUser + "'");
+                }
+                users = string.Join(",", neUserList);
+            } else if (device.Equals("UserName")) {
+                userList = userName.Split(',', ' ');
+                List<string> neUserList = new List<string>();
+                foreach (string neUser in userList) {
+                    neUserList.Add("'" + neUser + "'");
+                }
+
+                users = string.Join(",", neUserList);
+            }
+
 
             Int32 idRelated = 0;
             string stateIdRelated = activityContext.GetState<string>("idRelated");
             if (stateIdRelated == "idRelated") { //caso necessario per il pregresso
                 idRelated = contentItem.Id;
-            }
-            else {
+            } else {
                 int.TryParse(stateIdRelated, out idRelated);
             }
             string language = activityContext.GetState<string>("allLanguage");
@@ -122,6 +143,25 @@ namespace Laser.Orchard.Mobile.WorkFlows {
 
                 device = "All";
             }
+            if (device == "UserEmail") {
+                querydevice = " SELECT  distinct P.* " +
+                                    " FROM  Laser_Orchard_Mobile_PushNotificationRecord AS P " +
+                                    " LEFT OUTER JOIN Laser_Orchard_Mobile_UserDeviceRecord AS U ON P.UUIdentifier = U.UUIdentifier " +
+                                    " INNER JOIN Orchard_Users_UserPartRecord AS Ou ON Ou.Id = U.UserPartRecord_Id " +
+                                    " Where Ou.Email in (" + users + ")";
+
+                device = "All";
+            }
+            if (device == "UserName") {
+                querydevice = " SELECT  distinct P.* " +
+                                    " FROM  Laser_Orchard_Mobile_PushNotificationRecord AS P " +
+                                    " LEFT OUTER JOIN Laser_Orchard_Mobile_UserDeviceRecord AS U ON P.UUIdentifier = U.UUIdentifier " +
+                                    " INNER JOIN Orchard_Users_UserPartRecord AS Ou ON Ou.Id = U.UserPartRecord_Id " +
+                                    " Where Ou.UserName in (" + users + ")";
+
+                device = "All";
+            }
+
             // schedule the sending of the push notification
             try {
                 var ci = _orchardServices.ContentManager.Create("BackgroundPush");
