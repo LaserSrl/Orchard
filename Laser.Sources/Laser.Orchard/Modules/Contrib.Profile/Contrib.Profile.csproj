@@ -54,9 +54,6 @@
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Orchard.ContentTypes">
-      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.ContentTypes\bin\Orchard.ContentTypes.dll</HintPath>
-    </Reference>
     <Reference Include="Orchard.Core, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
@@ -64,9 +61,6 @@
     <Reference Include="Orchard.Framework, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Orchard.Themes">
-      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Themes\bin\Orchard.Themes.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -116,21 +110,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Drivers\ProfilePartDriver.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Models\ProfilePart.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Security\AuthorizationEventHandler.cs" />
-    <Compile Include="Services\DefaultFrontEndSettingsProviderBase.cs" />
-    <Compile Include="Services\FrontEndProfileService.cs" />
-    <Compile Include="Services\IDefaultFrontEndSettingsProvider.cs" />
-    <Compile Include="Services\IFrontEndProfileService.cs" />
-    <Compile Include="Services\ProfileFrontEndPlacementStrategy.cs" />
-    <Compile Include="Services\ProfilePartDefaultSettingsProvider.cs" />
-    <Compile Include="Settings\FrontEndContentDefinitionEventHandler.cs" />
-    <Compile Include="Settings\ProfileFrontEndEditorEvents.cs" />
-    <Compile Include="Settings\ProfileFrontEndSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\Edit.cshtml" />
@@ -152,7 +135,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="Views\DefinitionTemplates\ProfileFrontEndSettings.cshtml" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -160,7 +142,6 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
