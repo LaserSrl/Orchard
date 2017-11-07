@@ -4,12 +4,8 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Web;
 using System.Web.Hosting;
 
 namespace Laser.Orchard.SEO.Settings {
@@ -45,6 +41,9 @@ namespace Laser.Orchard.SEO.Settings {
                 builder.WithSetting("SeoPartSettings.GoogleNoTranslate", model.GoogleNoTranslate.ToString());
 
                 builder.WithSetting("SeoPartSettings.JsonLd", model.JsonLd != null ? model.JsonLd.ToString() : "");
+
+                builder.WithSetting("SeoPartSettings.ShowAggregatedMicrodata", model.ShowAggregatedMicrodata.ToString());
+
                 yield return DefinitionTemplate(model);
             }
 
