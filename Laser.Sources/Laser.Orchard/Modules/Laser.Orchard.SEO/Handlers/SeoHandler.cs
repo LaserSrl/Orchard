@@ -59,7 +59,7 @@ namespace Laser.Orchard.SEO.Handlers {
                         layout.Head.Add(context.New.SeoMicrodataScript(ScriptMicrodata: script));
                     }
 
-                    //carousel microdata
+                    //carousel microdata - attualmente funzionante per projection e taxonomy term
                     if (layout.SummaryMicrodata != null && settings.ShowAggregatedMicrodata) {
                         string script = buildCarouselMicrodata(layout.SummaryMicrodata);
                         layout.Head.Add(context.New.SeoMicrodataScript(ScriptMicrodata: script));

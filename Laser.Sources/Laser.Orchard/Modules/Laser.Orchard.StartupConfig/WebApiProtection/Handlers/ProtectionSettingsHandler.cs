@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.WebApiProtection.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -12,7 +13,9 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Handlers {
 
     [OrchardFeature("Laser.Orchard.StartupConfig.WebApiProtection")]
     public class ProtectionSettingsHandler : ContentHandler {
-        public ProtectionSettingsHandler() {
+        private readonly IApiKeySettingService _apiKeySettingService;
+        public ProtectionSettingsHandler(IApiKeySettingService apiKeySettingService) {
+            _apiKeySettingService = apiKeySettingService;
             T = NullLocalizer.Instance;
             Filters.Add(new ActivatingFilter<ProtectionSettingsPart>("Site"));
             Filters.Add(new TemplateFilterForPart<ProtectionSettingsPart>("ProtectionSettings_Edit", "Parts/ProtectionSettingsPart.Edit", T("WebApi").Text));
@@ -20,6 +23,7 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Handlers {
                 part.ExternalApplicationList = new ExternalApplicationList {
                     ExternalApplications = part.ExternalApplicationList.ExternalApplications.Where(w => !w.Delete),
                 };
+                _apiKeySettingService.Refresh();
             });
 
         }

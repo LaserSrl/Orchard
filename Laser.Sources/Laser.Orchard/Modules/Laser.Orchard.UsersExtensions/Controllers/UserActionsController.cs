@@ -183,7 +183,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                 } else {
                     if (registrationSettings.UsersMustValidateEmail) {
                         message = T("Thank you for registering. We sent you an e-mail with instructions to enable your account.").ToString();
-                    }
+                	}
                 }
                 var registeredServicesData = new {
                     RegisteredServices = _controllerContextAccessor.Context.Controller.TempData,
