@@ -35,7 +35,6 @@ namespace Contrib.Profile.Services {
 
         public bool UserHasNoProfilePart(IUser user) {
             return !user.ContentItem.Parts.Any(pa => pa.PartDefinition.Name == "ProfilePart");
-            //return user.As<ProfilePart>() == null && user.ContentItem.As<ProfilePart>() == null;
         }
 
         private bool MayAllowPartDisplay(ContentTypePartDefinition definition, string typeName) {
