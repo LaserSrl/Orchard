@@ -68,42 +68,38 @@ namespace Laser.Orchard.Mobile.WorkFlows {
             var device = activityContext.GetState<string>("allDevice");
             var PushMessage = activityContext.GetState<string>("PushMessage");
             bool produzione = activityContext.GetState<string>("Produzione") == "Produzione";
-            var userId = activityContext.GetState<string>("userId") ?? "";
-            var userName = activityContext.GetState<string>("userName") ?? "";
-            var userEmail = activityContext.GetState<string>("userEmail") ?? "";
+            var usersList = activityContext.GetState<string>("usersList") ?? "";
             int iUser = 0;
 
-            string users = ""; 
+            string users = "";
             string[] userList;
             if (device == "UserId") {
-            int.TryParse(userId, out iUser);
-                userList = userId.Split(',', ' ');
+                int.TryParse(usersList, out iUser);
+                userList = usersList.Split(',', ' ');
                 List<int> iUserList = new List<int>();
-            foreach (string uId in userList) {
-                if (int.TryParse(uId, out iUser)) {
-                    iUserList.Add(iUser);
+                foreach (string uId in userList) {
+                    if (int.TryParse(uId, out iUser)) {
+                        iUserList.Add(iUser);
+                    }
                 }
-            }
-            users = string.Join(",", iUserList);
+                users = string.Join(",", iUserList);
             } else if (device.Equals("UserEmail")) {
-                userList = userEmail.Split(',', ' ');
+                userList = usersList.Split(',', ' ');
                 List<string> neUserList = new List<string>();
                 foreach (string neUser in userList) {
-                    neUserList.Add("'" + neUser + "'");
+                    neUserList.Add("'" + GetSafeSqlString(neUser) + "'");
                 }
                 users = string.Join(",", neUserList);
             } else if (device.Equals("UserName")) {
-                userList = userName.Split(',', ' ');
+                userList = usersList.Split(',', ' ');
                 List<string> neUserList = new List<string>();
                 foreach (string neUser in userList) {
-                    neUserList.Add("'" + neUser + "'");
+                    neUserList.Add("'" + GetSafeSqlString(neUser) + "'");
                 }
-
                 users = string.Join(",", neUserList);
             }
-
-
-            Int32 idRelated = 0;
+            
+            int idRelated = 0;
             string stateIdRelated = activityContext.GetState<string>("idRelated");
             if (stateIdRelated == "idRelated") { //caso necessario per il pregresso
                 idRelated = contentItem.Id;
@@ -174,7 +170,7 @@ namespace Laser.Orchard.Mobile.WorkFlows {
                 part.ToPush = true;
                 part.UseRecipientList = false;
                 var relatedContentField = part.Fields.FirstOrDefault(x => x.Name == "RelatedContent");
-                if(relatedContentField != null) {
+                if (relatedContentField != null) {
                     (relatedContentField as ContentPickerField).Ids = new int[] { idRelated };
                 }
                 // we cannot use part settings to specify this queryDevice value because it can change for each BackgroundPush item
@@ -194,6 +190,10 @@ namespace Laser.Orchard.Mobile.WorkFlows {
         private static IEnumerable<string> SplitEmail(string commaSeparated) {
             if (commaSeparated == null) return null;
             return commaSeparated.Split(new[] { ',', ';' });
+        }
+        // Converts a string in a safe string for SQL commands replacing single quotes(')
+        private string GetSafeSqlString(string text) {
+            return text.Replace("'", "''");
         }
     }
 }
