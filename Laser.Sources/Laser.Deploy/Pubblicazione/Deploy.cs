@@ -173,9 +173,7 @@ namespace Pubblicazione {
         }
 
         private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e) {
-            var perc = e.ProgressPercentage;
-            if (perc > 100) perc = 100;
-            TheprogressBar.Value = perc;
+ 			TheprogressBar.Value = e.ProgressPercentage;
         }
 
         private void bw_DoWork(object sender, DoWorkEventArgs e) {
