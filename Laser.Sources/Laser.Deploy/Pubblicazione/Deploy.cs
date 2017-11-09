@@ -203,7 +203,9 @@ namespace Pubblicazione {
 
                 case "btnAll":
 
-                    totaleprogress = 1 + (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count) * 2;
+                    totaleprogress = 1 + (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count 
+                        + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count
+                        + this.clbLibrary.CheckedItems.Count + this.clbLibraryOrchard.CheckedItems.Count) ;
 
                     action = () => btnAll.Enabled = false;
                     btnAll.Invoke(action);
