@@ -481,11 +481,15 @@ namespace Laser.Orchard.Mobile.Services {
                         if (relatedContentItem == null) {
                             relatedContentItem = _orchardServices.ContentManager.GetLatest(idContentRelated);
                         }
-                        contentForPush = (dynamic)relatedContentItem;
-                        if (!relatedContentItem.IsPublished()) {
-                            NotifyNoPush();
-                            LogInfo("No push will be sent, related content must be published");
-                            stopPush = true;
+                        if(relatedContentItem == null) {
+                            contentForPush = ciDynamic;
+                        } else {
+                            contentForPush = (dynamic)relatedContentItem;
+                            if (!relatedContentItem.IsPublished()) {
+                                NotifyNoPush();
+                                LogInfo("No push will be sent, related content must be published");
+                                stopPush = true;
+                            }
                         }
                     }
                     else {
