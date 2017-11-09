@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Markdown.Services;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Orchard;
 using Orchard.ContentManagement;
@@ -29,6 +30,7 @@ namespace Laser.Orchard.StartupConfig.Services {
         private readonly IProjectionManager _projectionManager;
         private readonly ITaxonomyService _taxonomyService;
         private readonly ILocalizationService _localizationService;
+        private readonly MarkdownFilter _markdownFilter;
 
         private readonly string[] _skipAlwaysProperties;
         private readonly string _skipAlwaysPropertiesEndWith;
@@ -51,6 +53,7 @@ namespace Laser.Orchard.StartupConfig.Services {
             _projectionManager = projectionManager;
             _taxonomyService = taxonomyService;
             _localizationService = localizationService;
+            _markdownFilter = new MarkdownFilter();
 
             _skipAlwaysProperties = new string[] { "ContentItemRecord", "ContentItemVersionRecord" };
             _skipAlwaysPropertiesEndWith =  "Proxy" ;
@@ -294,6 +297,11 @@ namespace Laser.Orchard.StartupConfig.Services {
             else if (field.FieldDefinition.Name == "TextField") {
                 var textField = field as TextField;
                 object val = textField.Value;
+                if (textField.PartFieldDefinition.Settings.ContainsKey("TextFieldSettings.Flavor")) {
+                    var flavor = textField.PartFieldDefinition.Settings["TextFieldSettings.Flavor"];
+                    // markdownFilter acts only if flavor is "markdown"
+                    val = _markdownFilter.ProcessContent(val.ToString(), flavor);
+                }
                 FormatValue(ref val);
                 return new JProperty(field.Name + field.FieldDefinition.Name, val);
             }
