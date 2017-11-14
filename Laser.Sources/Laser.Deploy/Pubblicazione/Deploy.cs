@@ -173,7 +173,7 @@ namespace Pubblicazione {
         }
 
         private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e) {
-            TheprogressBar.Value = e.ProgressPercentage;
+ 			TheprogressBar.Value = e.ProgressPercentage;
         }
 
         private void bw_DoWork(object sender, DoWorkEventArgs e) {
@@ -202,8 +202,10 @@ namespace Pubblicazione {
                     break;
 
                 case "btnAll":
-
-                    totaleprogress = 1 + (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count) * 2;
+                    totaleprogress = 1 + (
+                        (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count )*2
+                        + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count
+                        + this.clbLibrary.CheckedItems.Count + this.clbLibraryOrchard.CheckedItems.Count) ;
 
                     action = () => btnAll.Enabled = false;
                     btnAll.Invoke(action);
