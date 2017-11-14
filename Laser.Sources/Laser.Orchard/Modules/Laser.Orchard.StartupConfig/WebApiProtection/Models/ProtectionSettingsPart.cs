@@ -33,6 +33,7 @@ namespace Laser.Orchard.StartupConfig.WebApiProtection.Models {
             get { return this.Retrieve(x => x.ProtectedEntries); }
             set { this.Store(x => x.ProtectedEntries, value); }
         }
+
     }
 
     public class ExternalApplicationList {

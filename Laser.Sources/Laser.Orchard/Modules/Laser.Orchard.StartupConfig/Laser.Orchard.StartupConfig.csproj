@@ -277,6 +277,7 @@
     <Compile Include="Projections\OwnerNameFilter.cs" />
     <Compile Include="Projections\OwnerStringForm.cs" />
     <Compile Include="RazorBase\Services\IRazorBaseService.cs" />
+    <Compile Include="Services\IApiKeySettingService.cs" />
     <Compile Include="Settings\DisplayTextPartSettingsHooks.cs" />
     <Compile Include="Settings\IdentityPartOnEveryTypeDefinitionHooks.cs" />
     <Compile Include="TaxonomiesExtensions\Drivers\TaxonomyExtensionPartDriver.cs" />
