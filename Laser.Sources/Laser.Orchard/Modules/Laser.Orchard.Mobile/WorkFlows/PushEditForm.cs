@@ -33,14 +33,14 @@ namespace Laser.Orchard.Mobile.WorkFlows {
                                 Id: "allDevice",
                                 Name: "allDevice",
                                 Title: T("Device"),
-                                Size: 8,
+                                Size: 10,
                                 Multiple: false
                             ),
-                            _UserId: Shape.Textbox(
+                            _UsersList: Shape.Textbox(
                                 Id: "userId",
                                 Name: "userId",
-                                Title: T("User ID list"),
-                                Description: T("Comma separated list of User ID (eg. 12,45,239). Tokenized."),
+                                Title: T("Users list (ID / e-mail / username)"),
+                                Description: T("Comma separated list of User IDs or e-mails or usernames (eg. 12,45,239). Tokenized."),
                                 Classes: new[] { "large", "text", "tokenized" }
                             ),
                             _ddlLanguage: Shape.SelectList(
@@ -87,6 +87,8 @@ namespace Laser.Orchard.Mobile.WorkFlows {
                     f._Type._ddlDevice.Add(new SelectListItem { Value = "ContentCreator", Text = "Content's Creator" });
                     f._Type._ddlDevice.Add(new SelectListItem { Value = "ContentLastModifier", Text = "Content's LastModifier" });
                     f._Type._ddlDevice.Add(new SelectListItem { Value = "UserId", Text = "User specified by ID" });
+                    f._Type._ddlDevice.Add(new SelectListItem { Value = "UserEmail", Text = "User specified by e-mail" });
+                    f._Type._ddlDevice.Add(new SelectListItem { Value = "UserName", Text = "User specified by username" });
                     f._Type._ddlLanguage.Add(new SelectListItem { Value = "All", Text = "All Languages" });
                     foreach (string up in _cultureManager.ListCultures()) {
                         f._Type._ddlLanguage.Add(new SelectListItem { Value = up.ToString(), Text = up.ToString() });
