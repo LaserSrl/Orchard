@@ -68,7 +68,7 @@ namespace Laser.Orchard.Mobile.WorkFlows {
             var device = activityContext.GetState<string>("allDevice");
             var PushMessage = activityContext.GetState<string>("PushMessage");
             bool produzione = activityContext.GetState<string>("Produzione") == "Produzione";
-            var usersList = activityContext.GetState<string>("usersList") ?? "";
+            var usersList = activityContext.GetState<string>("userId") ?? "";
             int iUser = 0;
 
             string users = "";
