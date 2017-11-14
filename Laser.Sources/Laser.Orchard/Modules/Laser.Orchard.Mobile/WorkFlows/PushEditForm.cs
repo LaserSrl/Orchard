@@ -33,30 +33,16 @@ namespace Laser.Orchard.Mobile.WorkFlows {
                                 Id: "allDevice",
                                 Name: "allDevice",
                                 Title: T("Device"),
-                                Size: 9,
+                                Size: 10,
                                 Multiple: false
                             ),
                             _UsersList: Shape.Textbox(
-                                Id: "usersList",
-                                Name: "usersList",
+                                Id: "userId",
+                                Name: "userId",
                                 Title: T("Users list (ID / e-mail / username)"),
                                 Description: T("Comma separated list of User IDs or e-mails or usernames (eg. 12,45,239). Tokenized."),
                                 Classes: new[] { "large", "text", "tokenized" }
                             ),
-                            //_UserEmail: Shape.Textbox(
-                            //    Id: "userEmail",
-                            //    Name: "userEmail",
-                            //    Title: T("User Email list"),
-                            //    Description: T("Comma separated list of User Email (eg. mariorossi@gmail.com,ginalucagialli@gmail.com). Tokenized."),
-                            //    Classes: new[] { "large", "text", "tokenized" }
-                            //),
-                            //_UserName: Shape.Textbox(
-                            //    Id: "userName",
-                            //    Name: "userName",
-                            //    Title: T("User Name list"),
-                            //    Description: T("Comma separated list of User Name (eg. MarioRossi,GianlucaGialli). Tokenized."),
-                            //    Classes: new[] { "large", "text", "tokenized" }
-                            //),
                             _ddlLanguage: Shape.SelectList(
                                 Id: "allLanguage",
                                 Name: "allLanguage",
