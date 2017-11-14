@@ -26,6 +26,9 @@ namespace Laser.Orchard.Questionnaires.ViewModels {
         public int Position { get; set; }
         public QuestionType QuestionType { get; set; }
         public List<AnswerStatsViewModel> Answers { get; set; }
+        public QuestionnaireStatsViewModel() {
+            Answers = new List<AnswerStatsViewModel>();
+        }
     }
 
     public class QuestionnaireStatsDetailViewModel {
