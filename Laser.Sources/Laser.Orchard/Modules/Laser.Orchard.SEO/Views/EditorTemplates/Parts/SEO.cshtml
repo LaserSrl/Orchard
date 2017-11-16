@@ -1,7 +1,4 @@
-﻿
-@using Orchard.Localization.Services;
-
-@model Laser.Orchard.SEO.ViewModels.SeoPartViewModel
+﻿@model Laser.Orchard.SEO.ViewModels.SeoPartViewModel
 @{
     var emptySeo = String.IsNullOrWhiteSpace(Model.Keywords) && String.IsNullOrWhiteSpace(Model.Description) && String.IsNullOrWhiteSpace(Model.TitleOverride);
     Style.Require("FontAwesome430").AtHead();
@@ -94,5 +91,22 @@
 
             @CbAndLabelFor(m => m.GoogleNoTranslate, @T("Prevents Google from providing a translation link for the page in its search results").ToString())
         </div>
-    </div>
-</fieldset>
+
+        @if (Model.HasDetailMicrodata || Model.HasAggregatedMicrodata) {
+            <div class="editor-label">
+                <label>@T("Microdata").ToString()</label>
+            </div>
+            <div class="editor-field">
+                @if (Model.HasDetailMicrodata) {
+                    @Html.CheckBoxFor(m => m.HideDetailMicrodata)
+                    <label for="@Html.FieldIdFor(m => m.HideDetailMicrodata)" class="forcheckbox" style="font-weight: normal;">@T("Don't show microdata for this content").ToString()</label>
+                    <br />
+                }
+                @if (Model.HasAggregatedMicrodata) {
+                    @Html.CheckBoxFor(m => m.HideAggregatedMicrodata)
+                    <label for="@Html.FieldIdFor(m => m.HideAggregatedMicrodata)" class="forcheckbox" style="font-weight: normal;">@T("Don't show aggregated microdata for nested content").ToString()</label>
+                }
+            </div>
+        }
+        </div>
+    </fieldset>

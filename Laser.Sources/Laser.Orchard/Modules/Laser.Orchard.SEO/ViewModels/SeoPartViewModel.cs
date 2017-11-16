@@ -18,10 +18,8 @@ namespace Laser.Orchard.SEO.ViewModels {
         public bool RobotsNoArchive { get; set; }
         public bool RobotsUnavailableAfter { get; set; }
         private DateTime? _robotsUnavailableAfterDate;
-        public DateTimeEditor RobotsUnavailableAfterDateEditor
-        {
-            get
-            {
+        public DateTimeEditor RobotsUnavailableAfterDateEditor {
+            get {
                 return new DateTimeEditor {
                     Date = _robotsUnavailableAfterDate == null
                         ? _seoServices.DateToString(DateTime.MinValue)
@@ -31,14 +29,17 @@ namespace Laser.Orchard.SEO.ViewModels {
                     ShowTime = false
                 };
             }
-            set
-            {
+            set {
                 _robotsUnavailableAfterDate = _seoServices.LocalDateFromString(value.Date);
             }
         }
         public bool RobotsNoImageIndex { get; set; }
         public bool GoogleNoSiteLinkSearchBox { get; set; }
         public bool GoogleNoTranslate { get; set; }
+        public bool HasDetailMicrodata { get; set; }
+        public bool HasAggregatedMicrodata { get; set; }
+        public bool HideDetailMicrodata { get; set; }
+        public bool HideAggregatedMicrodata { get; set; }
 
         //injected services
         private readonly ISEOServices _seoServices;
@@ -71,6 +72,10 @@ namespace Laser.Orchard.SEO.ViewModels {
             this.RobotsNoImageIndex = part.RobotsNoImageIndex;
             this.GoogleNoSiteLinkSearchBox = part.GoogleNoSiteLinkSearchBox;
             this.GoogleNoTranslate = part.GoogleNoTranslate;
+            this.HideDetailMicrodata = part.HideDetailMicrodata;
+            this.HideAggregatedMicrodata = part.HideAggregatedMicrodata;
+            this.HasDetailMicrodata = !string.IsNullOrWhiteSpace(part.Settings.GetModel<SeoPartSettings>().JsonLd);
+            this.HasAggregatedMicrodata = part.Settings.GetModel<SeoPartSettings>().ShowAggregatedMicrodata;
         }
 
         /// <summary>
@@ -93,6 +98,8 @@ namespace Laser.Orchard.SEO.ViewModels {
             part.RobotsNoImageIndex = this.RobotsNoImageIndex;
             part.GoogleNoSiteLinkSearchBox = this.GoogleNoSiteLinkSearchBox;
             part.GoogleNoTranslate = this.GoogleNoTranslate;
+            part.HideDetailMicrodata = this.HideDetailMicrodata;
+            part.HideAggregatedMicrodata = this.HideAggregatedMicrodata;
         }
     }
 }

@@ -54,26 +54,27 @@ namespace Laser.Orchard.SEO.Handlers {
                     var layout = (dynamic)context.Layout;
 
                     //eval text box area
-                    if (!string.IsNullOrEmpty(settings.JsonLd)) {
+                    if (!string.IsNullOrEmpty(settings.JsonLd) && !part.HideDetailMicrodata) {
                         string script = scriptEval(settings, part);
                         layout.Head.Add(context.New.SeoMicrodataScript(ScriptMicrodata: script));
                     }
 
                     //carousel microdata - attualmente funzionante per projection e taxonomy term
-                    if (layout.SummaryMicrodata != null && settings.ShowAggregatedMicrodata) {
+                    if (layout.SummaryMicrodata != null && settings.ShowAggregatedMicrodata && !part.HideAggregatedMicrodata) {
                         string script = buildCarouselMicrodata(layout.SummaryMicrodata);
                         layout.Head.Add(context.New.SeoMicrodataScript(ScriptMicrodata: script));
                     }
-                }
-                else if (context.DisplayType == "Summary") {
-                    var layout = (dynamic)context.Layout;
+                } else if (context.DisplayType == "Summary") {
+                    if (!part.HideDetailMicrodata) {
+                        var layout = (dynamic)context.Layout;
 
-                    if (layout.SummaryMicrodata == null)
-                        layout.SummaryMicrodata = new List<string>();
+                        if (layout.SummaryMicrodata == null)
+                            layout.SummaryMicrodata = new List<string>();
 
-                    var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+                        var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
 
-                    layout.SummaryMicrodata.Add(urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(part)));
+                        layout.SummaryMicrodata.Add(urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(part)));
+                    }
                 }
             });
 
