@@ -70,6 +70,13 @@ namespace Laser.Orchard.SEO.Models {
             get { return this.Retrieve(x => x.GoogleNoTranslate); }
             set { this.Store(x => x.GoogleNoTranslate, value); }
         }
-
+        public bool HideDetailMicrodata {
+            get { return this.Retrieve(x => x.HideDetailMicrodata, false); }
+            set { this.Store(x => x.HideDetailMicrodata, value); }
+        }
+        public bool HideAggregatedMicrodata {
+            get { return this.Retrieve(x => x.HideAggregatedMicrodata, false); }
+            set { this.Store(x => x.HideAggregatedMicrodata, value); }
+        }
     }
 }
