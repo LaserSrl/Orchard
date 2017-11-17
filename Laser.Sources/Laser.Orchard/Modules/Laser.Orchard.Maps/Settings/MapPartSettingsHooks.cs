@@ -31,6 +31,10 @@ namespace Laser.Orchard.Maps.Settings {
             updateModel.TryUpdateModel(model, "MapPartSettings", null, null);
             builder.WithSetting("MapPartSettings.Required",
             ((bool)model.Required).ToString());
+            builder.WithSetting("MapPartSettings.HideMapSource",
+            ((bool)model.HideMapSource).ToString());
+            builder.WithSetting("MapPartSettings.HintText",
+            model.HintText); 
             yield return DefinitionTemplate(model);
         }
     }
