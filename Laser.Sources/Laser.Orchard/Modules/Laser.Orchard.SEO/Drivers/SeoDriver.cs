@@ -124,7 +124,10 @@ namespace Laser.Orchard.SEO.Drivers {
             clonePart.RobotsNoImageIndex = originalPart.RobotsNoImageIndex;
             clonePart.GoogleNoSiteLinkSearchBox = originalPart.GoogleNoSiteLinkSearchBox;
             clonePart.GoogleNoTranslate = originalPart.GoogleNoTranslate;
+            clonePart.HideDetailMicrodata = originalPart.HideDetailMicrodata;
+            clonePart.HideAggregatedMicrodata = originalPart.HideAggregatedMicrodata;
         }
+
         protected override void Importing(SeoPart part, ImportContentContext context) {
             var importedTitleOverride = context.Attribute(part.PartDefinition.Name, "TitleOverride");
             if (importedTitleOverride != null) {
@@ -191,6 +194,15 @@ namespace Laser.Orchard.SEO.Drivers {
                 part.GoogleNoTranslate = Convert.ToBoolean(importedGoogleNoTranslate);
             }
 
+            var importedHideDetailMicrodata = context.Attribute(part.PartDefinition.Name, "HideDetailMicrodata");
+            if (importedHideDetailMicrodata != null) {
+                part.HideDetailMicrodata = Convert.ToBoolean(importedHideDetailMicrodata);
+            }
+
+            var importedHideAggregatedMicrodata = context.Attribute(part.PartDefinition.Name, "HideAggregatedMicrodata");
+            if (importedHideDetailMicrodata != null) {
+                part.HideAggregatedMicrodata = Convert.ToBoolean(importedHideAggregatedMicrodata);
+            }
         }
 
         protected override void Exporting(SeoPart part, ExportContentContext context) {
@@ -207,6 +219,8 @@ namespace Laser.Orchard.SEO.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("RobotsNoImageIndex", part.RobotsNoImageIndex);
             context.Element(part.PartDefinition.Name).SetAttributeValue("GoogleNoSiteLinkSearchBox", part.GoogleNoSiteLinkSearchBox);
             context.Element(part.PartDefinition.Name).SetAttributeValue("GoogleNoTranslate", part.GoogleNoTranslate);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("HideDetailMicrodata", part.HideDetailMicrodata);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("HideAggregatedMicrodata", part.HideAggregatedMicrodata);
         }
 
 

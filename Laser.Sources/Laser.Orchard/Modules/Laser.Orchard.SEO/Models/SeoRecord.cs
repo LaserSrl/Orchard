@@ -26,6 +26,8 @@ namespace Laser.Orchard.SEO.Models {
         public virtual bool RobotsNoImageIndex { get; set; }
         public virtual bool GoogleNoSiteLinkSearchBox { get; set; }
         public virtual bool GoogleNoTranslate { get; set; }
+        public virtual bool HideDetailMicrodata { get; set; }
+        public virtual bool HideAggregatedMicrodata { get; set; }
     }
 
 }
