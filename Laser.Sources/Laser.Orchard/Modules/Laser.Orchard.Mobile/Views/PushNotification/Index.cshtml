@@ -5,13 +5,13 @@
     Layout.Title = T("Devices");
 }
 
-@using (Html.BeginForm("Index", "PushNotification", FormMethod.Post)) {
+@using (Html.BeginForm("Index", "PushNotification", FormMethod.Get)) {
     @Html.AntiForgeryToken()  
       <fieldset class="bulk-actions">
             <label for="search">@T("Search:")</label>
-            @Html.TextBoxFor(m=>m.Search.Expression)
-            @T("Show All")
-            @Html.CheckBoxFor(m=>m.Search.ShowAll)
+            @Html.TextBoxFor(m => m.Search.Expression)
+            @*@T("Show All")
+            @Html.CheckBoxFor(m => m.Search.ShowAll)*@
             <button type="submit">@T("Search")</button>
             <a href="@Url.Action("Index")">@T("Clear")</a>
         </fieldset>
@@ -71,6 +71,4 @@
     }
 </table>
     </div>
-@using (Html.BeginForm("Index", "Routes", FormMethod.Post)) {
-    @Display(Model.Pager)
-}
+@Display(Model.Pager)
