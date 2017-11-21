@@ -42,28 +42,13 @@ namespace Laser.Orchard.Mobile.Controllers {
         [HttpPost]
         [Admin]
         public ActionResult Index(PagerParameters pagerParameters, PushSearch search) {
-            var AllRecord = _pushNotificationService.SearchPushNotification(search.Expression);
-            var totRecord = AllRecord.Count();
             Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, pagerParameters);
+            var tuple = _pushNotificationService.SearchPushNotification(search.Expression, pager.GetStartIndex(), pager.PageSize);
+            var AllRecord = tuple.Item1;
+            var totRecord = tuple.Item2;
             dynamic pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(totRecord);
-
-            // Generate a list of shapes, restricting by pager parameters
-            var list = _orchardServices.New.List();
-            list.AddRange(AllRecord.Skip(pager.GetStartIndex())
-                                .Take(pager.PageSize)
-                // .Select(r => _orchardService.ContentManager.BuildDisplay(r, "ciao"))
-                                );
-            //   (object) new model {Orders: list, Pager: pagerShape, Admn: hasPermission};
-
-            //var model = Shape.Orders(Orders: list, Pager: pagerShape, Admn: hasPermission, OrderPayedCount: countOrdersNew, Search: search);
-            var model = new PushIndex(list, search, pagerShape);
-          
-            return View((object)model);
-            //return View((object)new {
-            //    Orders = list,
-            //    Pager = pagerShape,
-            //    Admn = hasPermission
-            //});
+            var model = new PushIndex(AllRecord, search, pagerShape);
+            return View(model);
         }
 
         public void Crea() {
