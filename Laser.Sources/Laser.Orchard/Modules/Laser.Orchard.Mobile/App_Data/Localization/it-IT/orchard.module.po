@@ -873,8 +873,20 @@ msgid "Apple"
 msgstr "Apple"
 
 msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
+msgid "Comma separated list of User Email (eg. mariorossi@gmail.com,ginalucagialli@gmail.com). Tokenized."
+msgstr "Elenco separato da virgola di e-mail degli utenti (es. mariorossi@gmail.com,ginalucagialli@gmail.com). Tokenizzato."
+
+msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
 msgid "Comma separated list of User ID (eg. 12,45,239). Tokenized."
 msgstr "Elenco separato da virgola degli ID degli utenti (es. 12,45,239). Tokenizzato."
+
+msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
+msgid "Comma separated list of User IDs or e-mails or usernames (eg. 12,45,239). Tokenized."
+msgstr "Elenco separato da virgola di ID Utenti o e-mail o Username (es. 12,45,239). Tokenizzato."
+
+msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
+msgid "Comma separated list of User Name (eg. MarioRossi,GianlucaGialli). Tokenized."
+msgstr "Elenco separato da virgola di Username (es. MarioRossi,GianlucaGialli). Tokenizzato."
 
 msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
 msgid "Content ID. Tokenized. Example: the current content item is {Content.Id}."
@@ -945,6 +957,10 @@ msgid "Template"
 msgstr "Template"
 
 msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
+msgid "User Email list"
+msgstr "Elenco Email Utente"
+
+msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
 msgid "User ID"
 msgstr "ID User"
 
@@ -955,6 +971,14 @@ msgstr "Lista di ID degli utenti"
 msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
 msgid "User ID Tokenized."
 msgstr "ID User Tokenized"
+
+msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
+msgid "User Name list"
+msgstr "Elenco User Name"
+
+msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
+msgid "Users list (ID / e-mail / username)"
+msgstr "Elenco utenti (ID / e-mail / username)"
 
 msgctxt "Laser.Orchard.Mobile.WorkFlows.PushEditForm"
 msgid "Windows Mobile"

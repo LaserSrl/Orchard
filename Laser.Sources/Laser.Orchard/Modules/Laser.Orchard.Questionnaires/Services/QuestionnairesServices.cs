@@ -838,8 +838,6 @@ namespace Laser.Orchard.Questionnaires.Services {
                 QuestionnaireStatsViewModel empty = new QuestionnaireStatsViewModel();
                 empty.QuestionnairePart_Id = questionnaireData.Id;
                 empty.QuestionnaireTitle = questionnaireData.As<TitlePart>().Title;
-                empty.Answers = null;
-
                 return new List<QuestionnaireStatsViewModel>() { empty };
             }
             else {
