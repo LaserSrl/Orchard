@@ -153,7 +153,7 @@
 
         var dipe= _contentManager.Query().ForType("Dipendente").List().Where(x => ((dynamic)x).Dipendente.Email.Value.Trim().Equals(email) && x.Id!=item.Id).FirstOrDefault();
         if (dipe!=null){
-             Model.Tokens["Workflow"].SetState("ErrorMessage", @"Dipendende con questa email già presente in archivio");
+             Model.Tokens["Workflow"].SetState("ErrorMessage", @"Dipendende con questa email presente in archivio");
      //      _updateModel.AddModelError("userExists", T("User with that username and/or email already exists."));
 
         }
