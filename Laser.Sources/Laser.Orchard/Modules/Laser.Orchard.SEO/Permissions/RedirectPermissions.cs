@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Laser.Orchard.SEO {
     [OrchardFeature("Laser.Orchard.Redirects")]
     public class RedirectPermissions : IPermissionProvider {
-        public Feature Feature { get; }
+        public virtual Feature Feature { get; set; }
 
         public static readonly Permission ConfigureRedirects =
             new Permission { Description = "Configure Redirects", Name = "ConfigureRedirects" };
