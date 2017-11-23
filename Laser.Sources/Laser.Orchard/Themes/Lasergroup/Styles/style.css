@@ -277,6 +277,9 @@ body.navbar-fixed .navbar-default{ background:#fff; border:0; border-radius:0;  
 /*.navbar-nav .dropdown-menu > li:last-child > a{ border:0; }*/
 .navbar-nav .dropdown-menu > li > a:hover,.navbar-nav .dropdown-menu > li > a:focus{ background:none; }
 
+@media(min-width:768px) {
+    body:not(.home) .navbar-nav {margin-top: 20px;}
+}
 @media(max-width:767px){
     .navbar-default .navbar-toggle{ border:0; }
     .navbar-default .navbar-toggle:hover,.navbar-default .navbar-toggle:focus{ background:none; }
@@ -935,4 +938,5 @@ body.home.navbar-fixed .navbar-lang.navbar-lang-home-intro{ position:fixed; bott
   .navbar-lang.navbar-nav > li{ display:inline-block; padding:0; }
   .navbar-lang.navbar-nav > li > a{ border:0; border-left:1px solid #eee; padding: 10px 15px; }
   .navbar-lang.navbar-nav > li:first-child > a{ border:0; }
+  .navbar-lang.navbar-nav li.active a {color: #ff0903!important;}
 }
