@@ -87,7 +87,7 @@ namespace Laser.Orchard.DevTools.Controllers {
                 }
             }
             //  return RedirectToAction("Index", "Admin", new { testo = csrfToken });
-            Segnalazione se = new Segnalazione { Testo = csrfToken };
+            Segnalazione se = new Segnalazione { Testo = "X-XSRF-TOKEN:" + csrfToken };
             return View("Index", se);
         }
 
