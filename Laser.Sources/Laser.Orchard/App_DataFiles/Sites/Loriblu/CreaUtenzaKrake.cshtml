@@ -1,4 +1,5 @@
 @using Orchard;
+@using Orchard.Localization;
 @using Orchard.ContentManagement;
 @using Orchard.Data;
 @using Orchard.Projections.Services;
@@ -26,6 +27,7 @@
     string eMsg = String.Empty;
 
     //services
+  
     IUserService _userService;
     IMembershipService _membershipService;
     IContentManager _contentManager;
@@ -123,7 +125,9 @@
 }
 @{
     try {
+
         //Resolve services.
+      
         _userService = Model.OrchardServices.WorkContext.Resolve<IUserService>();
         _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
         _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
@@ -138,53 +142,75 @@
         string givenName = item.Dipendente.Nome.Value.Trim();
         int userId = Convert.ToInt32(item.Dipendente.UserID.Value);
 
-        // check if the user already exists
-        dynamic user = _contentManager.Get(userId);
-        if(user == null) {
-            // create user
-            //Generate valid Username
-            string uName = GenerateUsername(familyName, givenName);
-            //Generate valid password
-            string password = GeneratePassword(); //We are going to use the password in the email we send to the employee.
-            if (ValidateRegistration(uName, email, password)) {
-                var kUser = _membershipService.CreateUser(new CreateUserParams(uName, password, email, null, null, true));
-                // save encrypted password in a hidden field
-                string encryptedPwd = Encrypt(password);
-                user = kUser.ContentItem;
-                user.User.OriginalPassword.Value = encryptedPwd;
-            } else {
-                if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
-                    eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
-                }
-                eMsg += string.Format("Non è stato possibile creare l'utente Krake {0} con indirizzo email {1}.", uName, email);
-                Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
-                throw new Exception();
+        if (userId==0){
+            var user= _contentManager.Query().ForType("User").List().Where(x => ((dynamic)x).UserPart.Email.Trim().Equals(email)).FirstOrDefault();
+            if (user!=null){
+                item.Dipendente.UserID.Value=user.Id.ToString();
+                userId=user.Id;
             }
         }
-        // update user
-        user.ProfilePart.Nome.Value = givenName;
-        user.ProfilePart.Cognome.Value = familyName;
 
-		_taxonomyService.UpdateTerms(user, item.Dipendente.PuntoVendita.Terms, "PuntoVendita");
-        if(user.ProfilePart.DatadiNascita.DateTime == DateTime.MinValue) {
-            user.ProfilePart.DatadiNascita.DateTime = new DateTime(1970, 1, 1);
+
+        var dipe= _contentManager.Query().ForType("Dipendente").List().Where(x => ((dynamic)x).Dipendente.Email.Value.Trim().Equals(email) && x.Id!=item.Id).FirstOrDefault();
+        if (dipe!=null){
+             Model.Tokens["Workflow"].SetState("ErrorMessage", @"Dipendende con questa email presente in archivio");
+     //      _updateModel.AddModelError("userExists", T("User with that username and/or email already exists."));
+
         }
-        user.VersionRecord.Published = false;
-        _contentManager.Publish(user);
-        _communicationService.UserToContact((IUser)user.UserPart);
-        // update dipendente
-        item.Dipendente.Email.Value = email;
-        item.Dipendente.Nome.Value = givenName;
-        item.Dipendente.Cognome.Value = familyName;
-        item.Dipendente.UserID.Value = Convert.ToString(user.Id);
-        // force publish to update fieldIndexes
-        item.VersionRecord.Published = false;
-        _contentManager.Publish(item);
 
-        // assign roles to this user
-        AssignRole(user.Id, "Shopper");
+        else {
+            // check if the user already exists
+            dynamic user = _contentManager.Get(userId);
+            if(user == null) {
+                // create user
+                //Generate valid Username
 
-        retString = "Ok";
+
+
+                string uName = GenerateUsername(familyName, givenName);
+                //Generate valid password
+                string password = GeneratePassword(); //We are going to use the password in the email we send to the employee.
+                if (ValidateRegistration(uName, email, password)) {
+                    var kUser = _membershipService.CreateUser(new CreateUserParams(uName, password, email, null, null, true));
+                    // save encrypted password in a hidden field
+                    string encryptedPwd = Encrypt(password);
+                    user = kUser.ContentItem;
+                    user.User.OriginalPassword.Value = encryptedPwd;
+                } else {
+                    if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
+                        eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
+                    }
+                    eMsg += string.Format("Non è stato possibile creare l'utente Krake {0} con indirizzo email {1}.", uName, email);
+                    Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+
+                    throw new Exception();
+                }
+            }
+            // update user
+            user.ProfilePart.Nome.Value = givenName;
+            user.ProfilePart.Cognome.Value = familyName;
+
+            _taxonomyService.UpdateTerms(user, item.Dipendente.PuntoVendita.Terms, "PuntoVendita");
+            if(user.ProfilePart.DatadiNascita.DateTime == DateTime.MinValue) {
+                user.ProfilePart.DatadiNascita.DateTime = new DateTime(1970, 1, 1);
+            }
+            user.VersionRecord.Published = false;
+            _contentManager.Publish(user);
+            _communicationService.UserToContact((IUser)user.UserPart);
+            // update dipendente
+            item.Dipendente.Email.Value = email;
+            item.Dipendente.Nome.Value = givenName;
+            item.Dipendente.Cognome.Value = familyName;
+            item.Dipendente.UserID.Value = Convert.ToString(user.Id);
+            // force publish to update fieldIndexes
+            item.VersionRecord.Published = false;
+            _contentManager.Publish(item);
+
+            // assign roles to this user
+            AssignRole(user.Id, "Shopper");
+
+            retString = "Ok";
+        }
     } catch (Exception ex) {
         eMsg += string.Format("\r\n{0}", ex.Message);
         Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
