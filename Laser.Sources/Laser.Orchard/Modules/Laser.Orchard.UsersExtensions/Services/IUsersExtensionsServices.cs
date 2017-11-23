@@ -136,15 +136,19 @@ namespace Laser.Orchard.UsersExtensions.Services {
                             favCulture.Culture_Id = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture()).Id;
                         }
                     }
-                    if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy") && UserRegistrationExtensionsSettings.IncludePendingPolicy == Policy.IncludePendingPolicyOptions.Yes) {
-                        _policySerivces.PolicyForUserMassiveUpdate(policyAnswers, createdUser);
-                    }
                     if ((RegistrationSettings.UsersAreModerated == false) && (RegistrationSettings.UsersMustValidateEmail == false)) {
                         _authenticationService.SignIn(createdUser, true);
 
                         // solleva l'evento LoggedIn sull'utente
                         _userEventHandler.LoggedIn(createdUser);
                     }
+                    
+                    // [HS] BEGIN: Whe have to save the PoliciesAnswers cookie and persist answers on the DB after Login/SignIn events because during Login/Signin events database is not updated yet and those events override cookie in an unconsistent way.
+                    if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy") && UserRegistrationExtensionsSettings.IncludePendingPolicy == Policy.IncludePendingPolicyOptions.Yes) {
+                        _policySerivces.PolicyForUserMassiveUpdate(policyAnswers, createdUser);
+                    }
+                    // [HS] END
+
                     if (RegistrationSettings.UsersMustValidateEmail) {
                         // send challenge e-mail
                         var siteUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl;
