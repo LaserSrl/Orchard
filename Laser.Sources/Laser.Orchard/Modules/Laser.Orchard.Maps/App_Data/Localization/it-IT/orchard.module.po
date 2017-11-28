@@ -25,6 +25,14 @@ msgid "Tot POIs"
 msgstr "Tot POI"
 
 msgctxt "~/Modules/Laser.Orchard.Maps/Views/DefinitionTemplates/MapPartSettings.cshtml"
+msgid "An optional help text describing what \"Location Info\" and \"Location Address\" mean in the context."
+msgstr "Un testo opzionale di supporto che descrive il significato di \"Informazioni\" e \"Informazioni sull'indirizzo\"."
+
+msgctxt "~/Modules/Laser.Orchard.Maps/Views/DefinitionTemplates/MapPartSettings.cshtml"
+msgid "Hide Map Source File"
+msgstr "Nascondi il campo Map Source File"
+
+msgctxt "~/Modules/Laser.Orchard.Maps/Views/DefinitionTemplates/MapPartSettings.cshtml"
 msgid "Required latitutde and longitude"
 msgstr "Latitudine e longitudine sono obbligatorie"
 
