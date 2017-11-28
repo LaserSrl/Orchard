@@ -25,6 +25,10 @@ msgid "Cascade Publish Action"
 msgstr "Pubblica a Cascata"
 
 msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/DefinitionTemplates/ContentPickerFieldExtensionSettings.cshtml"
+msgid "Custom View to use on Preview of selected content pickerfield items"
+msgstr "Vista (cshtml) personalizzata da utilizzare nella preview degli elementi selezionati dal Content Picker Field"
+
+msgctxt "~/Modules/Laser.Orchard.StartupConfig/Views/DefinitionTemplates/ContentPickerFieldExtensionSettings.cshtml"
 msgid "If checked, when the ContentItem is published also other ContentItems connected to it through the Content Picker Field will be published."
 msgstr "Se selezionato, quando il ContentItem verrà pubblicato anche gli altri ContentItem collegati ad esso tramite il Content Picker Field verranno pubblicati."
 
@@ -487,6 +491,26 @@ msgstr "Impostazioni aggiornate."
 msgctxt "Laser.Orchard.StartupConfig.Controllers.UsersGroupsSettingsController"
 msgid "You don't have permission \"Manage settings\" to define and manage User Groups!"
 msgstr "Non si dispone dell'autorizzazione \"Gestione Impostazioni\" per definire e gestire i gruppi di utenti!"
+
+msgctxt "Laser.Orchard.StartupConfig.CultureCommands.CultureCommandsExtension"
+msgid "Cannot remove current culture {0} from site. Change current culture first."
+msgstr "Impossibile rimuovere la cultura principale {0} dal sito. Prima è necessario cambiare la cultura principale."
+
+msgctxt "Laser.Orchard.StartupConfig.CultureCommands.CultureCommandsExtension"
+msgid "Culture {0} is not activated on this site."
+msgstr "La cultura del sito {0} non è attivata."
+
+msgctxt "Laser.Orchard.StartupConfig.CultureCommands.CultureCommandsExtension"
+msgid "Removing site culture {0}"
+msgstr "Rimozione della cultura {0} dal sito"
+
+msgctxt "Laser.Orchard.StartupConfig.CultureCommands.CultureCommandsExtension"
+msgid "Site culture {0} removed successfully"
+msgstr "Cultura {0} del sito rimossa correttamente"
+
+msgctxt "Laser.Orchard.StartupConfig.CultureCommands.CultureCommandsExtension"
+msgid "Supplied culture name {0} is not valid."
+msgstr "La cultura {0} specificata non è valida."
 
 msgctxt "Laser.Orchard.StartupConfig.Drivers.MaintenancePartDriver"
 msgid "Error on update google analytics"
@@ -992,6 +1016,14 @@ msgctxt "Laser.Orchard.StartupConfig.Tokens.OwnerEmailToken"
 msgid "The email of user creator."
 msgstr "L'email dell'utente creatore."
 
+msgctxt "Laser.Orchard.StartupConfig.Tokens.ParameterToken"
+msgid "Parameter:<PartName-PropertyName>"
+msgstr "Parametro:<NomeDellaParte-Proprietà>"
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.ParameterToken"
+msgid "Return the property value of a part specified"
+msgstr "Restituisce la proprietà della parte specificata"
+
 msgctxt "Laser.Orchard.StartupConfig.Tokens.RazorCodeExecutionToken"
 msgid "Executes the razor code in the specified file."
 msgstr "Esegue il codice razor presente nel file specificato."
@@ -999,6 +1031,22 @@ msgstr "Esegue il codice razor presente nel file specificato."
 msgctxt "Laser.Orchard.StartupConfig.Tokens.RazorCodeExecutionToken"
 msgid "RazorExecute:<file name>"
 msgstr "RazorExecute:<file name>"
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.StripHtmlToken"
+msgid "Strip an HTML string."
+msgstr "Rimuove tutti i tag html da una stringa."
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.StripHtmlToken"
+msgid "Strip Html Text"
+msgstr "Tosto Html da rendere testo"
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.StripHtmlToken"
+msgid "Text"
+msgstr "Testo"
+
+msgctxt "Laser.Orchard.StartupConfig.Tokens.StripHtmlToken"
+msgid "Tokens for text strings"
+msgstr "Tokens per stringhe di testo"
 
 msgctxt "Laser.Orchard.StartupConfig.Tokens.TaxonomyTokens"
 msgid "Taxonomy Field"
@@ -1059,4 +1107,12 @@ msgstr "Il campo Nome è obbligatorio."
 msgctxt "Laser.Orchard.StartupConfig.WebApiProtection.Models.ValidateExternalApplicationAttribute"
 msgid "Validity should be more than 0 minutes."
 msgstr "Validità deve essere maggiore di 0 minuti"
+
+msgctxt "Orchard.Tokens.Providers.ReplaceToken"
+msgid "Replace the specified old characters with the new characters."
+msgstr "Rimpiazza i caratteri specificati con nuovi caratteri."
+
+msgctxt "Orchard.Tokens.Providers.ReplaceToken"
+msgid "Replace:<(oldcharacters|newcharacters)>"
+msgstr "Rimpiazza:<(VecchiCaratteri|NuoviCaratteri)>"
 
