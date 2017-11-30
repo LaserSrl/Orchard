@@ -3,12 +3,17 @@
 @using Laser.Orchard.Events.Models;
 @{
     IContentManager _contentManager;
+    IOrchardServices _orchardServices;
+
     //Resolve services.
     _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
-
-    dynamic lastEdizione = _contentManager.Query().ForType("Edizione").OrderByDescending<ActivityPartRecord>(x => x.DateTimeStart).Slice(0, 1).FirstOrDefault();
-    var retValue = lastEdizione.ActivityPart.DateTimeStart.ToString("yyyy-MM-dd") + "T23:59:00";
-    if (DateTime.Today >= lastEdizione.ActivityPart.DateTimeStart && DateTime.Today <= lastEdizione.ActivityPart.DateTimeEnd) {
-        retValue = DateTime.Today.ToString("yyyy-MM-dd");
+    _orchardServices = Model.OrchardServices;
+    var retValue = _orchardServices.WorkContext.HttpContext.Request.QueryString["datainizio"];
+    if (String.IsNullOrWhiteSpace(retValue)) {
+        dynamic lastEdizione = _contentManager.Query().ForType("Edizione").OrderByDescending<ActivityPartRecord>(x => x.DateTimeStart).Slice(0, 1).FirstOrDefault();
+        retValue = lastEdizione.ActivityPart.DateTimeStart.ToString("yyyy-MM-dd") + "T23:59:00";
+        if (DateTime.Today >= lastEdizione.ActivityPart.DateTimeStart && DateTime.Today <= lastEdizione.ActivityPart.DateTimeEnd) {
+            retValue = DateTime.Today.ToString("yyyy-MM-dd");
+        }
     }
 }@retValue
