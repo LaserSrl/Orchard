@@ -59,6 +59,9 @@
     <None Include="Sites\ExpertMallardo\Mobile\prodExpert.p12" />
     <None Include="Sites\expoincitta\Mobile\EXPO_dev.p12" />
     <None Include="Sites\expoincitta\Mobile\EXPO_prod.p12" />
+    <None Include="Sites\FestivalDev\Code\CalcolaDataFinale.cshtml" />
+    <None Include="Sites\FestivalDev\Code\CalcolaDataIniziale.cshtml" />
+    <None Include="Sites\FestivalDev\Code\CalcolaEdizione.cshtml" />
     <None Include="Sites\FestivalTV\Xslt\instagram.cshtml" />
     <None Include="Sites\FestivalTV\Xslt\ospiti.cshtml" />
     <None Include="Sites\FondationGP\Code\AssignPublishExtensionStatus.cshtml" />
