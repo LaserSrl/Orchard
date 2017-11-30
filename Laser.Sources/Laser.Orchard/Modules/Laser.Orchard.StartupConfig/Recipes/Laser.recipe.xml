@@ -10,6 +10,7 @@
   </Recipe>
 
   <Feature enable="Orchard.Blogs,
+		   Orchard.Blogs.LocalizationExtensions,
            Orchard.Comments,
            Orchard.Tags,
            Orchard.Alias,

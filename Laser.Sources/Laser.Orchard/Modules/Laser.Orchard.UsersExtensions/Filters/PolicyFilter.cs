@@ -46,7 +46,9 @@ namespace Laser.Orchard.UsersExtensions.Filters {
                 "Laser.Orchard.UsersExtensions.Controllers.UserActionsController",
                 "Laser.Orchard.Policy.Controllers.PoliciesController",
                 "Orchard.Users.Controllers.AccountController",
-                "Laser.Orchard.OpenAuthentication.Controllers.AccountController" };
+                "Laser.Orchard.OpenAuthentication.Controllers.AccountController",
+                "Orchard.Taxonomies.Controllers.LocalizedTaxonomyController"
+            };
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {

@@ -1,0 +1,14 @@
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Laser.Orchard.Events.Models;
+@{
+    IContentManager _contentManager;
+    //Resolve services.
+    _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+
+    dynamic lastEdizione = _contentManager.Query().ForType("Edizione").OrderByDescending<ActivityPartRecord>(x => x.DateTimeStart).Slice(0, 1).FirstOrDefault();
+    var retValue = lastEdizione.ActivityPart.DateTimeStart.ToString("yyyy-MM-dd") + "T23:59:00";
+    if (DateTime.Today >= lastEdizione.ActivityPart.DateTimeStart && DateTime.Today <= lastEdizione.ActivityPart.DateTimeEnd) {
+        retValue = DateTime.Today.ToString("yyyy-MM-dd");
+    }
+}@retValue
