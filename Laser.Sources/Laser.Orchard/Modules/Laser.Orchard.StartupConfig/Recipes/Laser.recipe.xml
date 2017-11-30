@@ -30,6 +30,7 @@
            Orchard.Fields,
            Orchard.OutputCache,
            Orchard.Taxonomies,
+		   Orchard.Taxonomies.LocalizationExtensions,
            Orchard.Workflows,
            Orchard.ContentPicker.LocalizationExtensions,
  				   Laser.Orchard.StartupConfig,
