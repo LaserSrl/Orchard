@@ -62,6 +62,7 @@
     <None Include="Sites\FestivalDev\Code\CalcolaDataFinale.cshtml" />
     <None Include="Sites\FestivalDev\Code\CalcolaDataIniziale.cshtml" />
     <None Include="Sites\FestivalDev\Code\CalcolaEdizione.cshtml" />
+    <None Include="Sites\FestivalDev\Code\PubblicaEdizione.cshtml" />
     <None Include="Sites\FestivalDev\Code\PropagaEdizione.cshtml" />
     <None Include="Sites\FestivalTV\Xslt\instagram.cshtml" />
     <None Include="Sites\FestivalTV\Xslt\ospiti.cshtml" />
