@@ -96,8 +96,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             if (_openAuthMembershipServices.CanRegister()) {
                 if (result.ExtraData.ContainsKey("accesstoken")) {
                     result = _openAuthClientProvider.GetUserData(result.Provider, result, result.ExtraData["accesstoken"]);
-                }
-                else {
+                } else {
                     result = _openAuthClientProvider.GetUserData(result.Provider, result, "");
                 }
                 var createUserParams = new OpenAuthCreateUserParams(result.UserName,
@@ -143,7 +142,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
         [OutputCache(NoStore = true, Duration = 0)]
         public JsonResult ExternalTokenLogOnLogic(string __provider__, string token, string secret = "") {
-           // TempDataDictionary registeredServicesData = new TempDataDictionary();
+            // TempDataDictionary registeredServicesData = new TempDataDictionary();
             var result = new Response();
 
             try {
@@ -160,21 +159,19 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 if (!authResult.IsSuccessful) {
                     result = _utilsServices.GetResponse(ResponseType.InvalidUser, "Token authentication failed.");
                     return Json(result, JsonRequestBehavior.AllowGet);
-                }
-                else {
+                } else {
 
                     if (_orchardOpenAuthWebSecurity.Login(authResult.Provider, authResult.ProviderUserId)) {
                         if (HttpContext.Response.Cookies.Count == 0) {
                             result = _utilsServices.GetResponse(ResponseType.None, "Unable to send back a cookie.");
                             return Json(result, JsonRequestBehavior.AllowGet);
-                        }                   
-                        else {
+                        } else {
                             authenticatedUser = _authenticationService.GetAuthenticatedUser();
-                            _userEventHandler.LoggedIn(authenticatedUser);                          
+                            _userEventHandler.LoggedIn(authenticatedUser);
                             return Json(GetUserResult(""), JsonRequestBehavior.AllowGet);
                         }
                     } else {
-                        authenticatedUser = _authenticationService.GetAuthenticatedUser(); 
+                        authenticatedUser = _authenticationService.GetAuthenticatedUser();
                     }
 
                     if (authenticatedUser != null) {
@@ -185,8 +182,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         if (HttpContext.Response.Cookies.Count == 0) {
                             result = _utilsServices.GetResponse(ResponseType.None, "Unable to send back a cookie.");
                             return Json(result, JsonRequestBehavior.AllowGet);
-                        }              
-                        else {
+                        } else {
                             // Handle LoggedIn Event
                             _userEventHandler.LoggedIn(authenticatedUser);
                             return Json(GetUserResult(T("Your {0} account has been attached to your local account.", authResult.Provider).Text), JsonRequestBehavior.AllowGet);
@@ -210,8 +206,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                             result = _utilsServices.GetResponse(ResponseType.None, "Unable to send back a cookie.");
                             return Json(result, JsonRequestBehavior.AllowGet);
 
-                        }
-                        else {
+                        } else {
                             // Handle LoggedIn Event
                             _userEventHandler.LoggedIn(newUser);
 
@@ -221,8 +216,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                     result = _utilsServices.GetResponse(ResponseType.None, "Login failed.");
                     return Json(result, JsonRequestBehavior.AllowGet);
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 result = _utilsServices.GetResponse(ResponseType.None, e.Message);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
@@ -230,12 +224,17 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
         public Response GetUserResult(String message) {
             List<string> roles = new List<string>();
+            int userId = 0;
+
             if (_orchardServices.WorkContext.CurrentUser != null) {
                 roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
+                userId = _orchardServices.WorkContext.CurrentUser.Id;
+
             }
             var registeredServicesData = new {
                 RegisteredServices = _controllerContextAccessor.Context.Controller.TempData,
-                Roles = roles
+                Roles = roles,
+                UserId = userId
             };
             return _utilsServices.GetResponse(ResponseType.Success, message, registeredServicesData);
         }
