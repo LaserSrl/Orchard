@@ -16,7 +16,6 @@
         var pesoTerm = item.Sponsor.Categoria.Terms[0].TermPart.Weight;
         var pesoFinale = (pesoTerm + 1) * 10000000 + peso;
         item.Sponsor.PesoFinale.Value = pesoFinale.ToString().PadLeft(15, '0');
-        _contentManager.Publish((ContentItem)item);
         retString = "OK";
     } catch (Exception ex) {
         eMsg += string.Format("\r\n{0}", ex.Message);
