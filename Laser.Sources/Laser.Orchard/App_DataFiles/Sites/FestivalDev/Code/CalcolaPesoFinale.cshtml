@@ -2,16 +2,24 @@
 @using Orchard.ContentManagement;
 @using Laser.Orchard.Events.Models;
 @{
-    IContentManager _contentManager;
-    IOrchardServices _orchardServices;
+    string retString = "Error"; //possile outcomes: Ok,Error
+    string eMsg = String.Empty;
+    try {
+        IContentManager _contentManager;
+        IOrchardServices _orchardServices;
+        //Resolve services.
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _orchardServices = Model.OrchardServices;
 
-    //Resolve services.
-    _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
-    _orchardServices = Model.OrchardServices;
-
-    dynamic item = Model.ContentItem;
-    var peso = item.Sponsor.Peso.Value;
-    var pesoTerm = item.Sponsor.Categoria.Terms.FirstOrDefault().TermPart.Weight;
-    var pesoFinale = pesoTerm * 10000000 + peso;
-    retValue = pesoFinale;
-}@retValue
+        dynamic item = Model.ContentItem;
+        var peso = item.Sponsor.Peso.Value;
+        var pesoTerm = item.Sponsor.Categoria.Terms[0].TermPart.Weight;
+        var pesoFinale = (pesoTerm + 1) * 10000000 + peso;
+        item.Sponsor.PesoFinale.Value = pesoFinale.ToString().PadLeft(15, '0');
+        _contentManager.Publish((ContentItem)item);
+        retString = "OK";
+    } catch (Exception ex) {
+        eMsg += string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    }
+}@retString
