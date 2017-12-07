@@ -1,0 +1,17 @@
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Laser.Orchard.Events.Models;
+@{
+    IContentManager _contentManager;
+    IOrchardServices _orchardServices;
+
+    //Resolve services.
+    _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+    _orchardServices = Model.OrchardServices;
+
+    dynamic item = Model.ContentItem;
+    var peso = item.Sponsor.Peso.Value;
+    var pesoTerm = item.Sponsor.Categoria.Terms.FirstOrDefault().TermPart.Weight;
+    var pesoFinale = pesoTerm * 10000000 + peso;
+    retValue = pesoFinale;
+}@retValue
