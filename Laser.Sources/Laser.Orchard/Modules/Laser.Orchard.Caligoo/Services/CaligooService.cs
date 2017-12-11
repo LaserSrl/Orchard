@@ -15,8 +15,8 @@ using Orchard.Security;
 
 namespace Laser.Orchard.Caligoo.Services {
     public interface ICaligooService : IDependency {
-        int GetContactId(string caligooUserId);
-        int CreateContact(string caligooUserId, string name, string surname, string email, string phone);
+        ContentItem GetContactId(string caligooUserId);
+        ContentItem CreateContact(string caligooUserId, string name, string surname, string email, string phone);
     }
     public class CaligooService : ICaligooService {
         private readonly IOrchardServices _orchardServices;
@@ -25,17 +25,16 @@ namespace Laser.Orchard.Caligoo.Services {
             _orchardServices = orchardServices;
             _communicationService = communicationService;
         }
-        public int GetContactId(string caligooUserId) {
-            var result = 0;
+        public ContentItem GetContactId(string caligooUserId) {
+            ContentItem result = null;
             var query =_orchardServices.ContentManager.Query().ForType("CommunicationContact").Where<TitlePartRecord>(x => x.Title == caligooUserId);
             var contacts = query.List();
             if(contacts.Any()) {
-                result = contacts.First().Id;
+                result = contacts.First();
             }
             return result;
         }
-        public int CreateContact(string caligooUserId, string name, string surname, string email, string phone) {
-            var contactId = 0;
+        public ContentItem CreateContact(string caligooUserId, string name, string surname, string email, string phone) {
             var contact = _orchardServices.ContentManager.New("CommunicationContact");
             contact.As<TitlePart>().Title = caligooUserId;
             var commonPart = contact.As<CommonPart>();
@@ -43,14 +42,13 @@ namespace Laser.Orchard.Caligoo.Services {
                 commonPart.Owner = GetAdministrator();
             }
             _orchardServices.ContentManager.Create(contact);
-            contactId = contact.Id;
             if (string.IsNullOrWhiteSpace(email) == false) {
                 _communicationService.AddEmailToContact(email, contact);
             }
             if (string.IsNullOrWhiteSpace(phone) == false) {
                 _communicationService.AddSmsToContact("", phone, contact, false);
             }
-            return contactId;
+            return contact;
         }
         private IUser GetAdministrator() {
             IUser result = null;
