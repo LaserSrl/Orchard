@@ -1,15 +1,12 @@
 ﻿using Laser.Orchard.Caligoo.Models;
 using Laser.Orchard.Caligoo.Services;
 using Newtonsoft.Json.Linq;
-using Orchard;
 using Orchard.Workflows.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Web;
 using System.Web.Http;
 
 namespace Laser.Orchard.Caligoo.Controllers {

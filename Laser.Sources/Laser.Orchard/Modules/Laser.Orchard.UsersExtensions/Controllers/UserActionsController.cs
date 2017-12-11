@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.Commons.Services;
 using Laser.Orchard.Mobile.ViewModels;
+using Laser.Orchard.StartupConfig.IdentityProvider;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Laser.Orchard.UsersExtensions.Models;
@@ -16,6 +17,7 @@ using Orchard.Users.Services;
 using Orchard.Utility.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -32,16 +34,18 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IUserService _userService;
         private readonly IUtilsServices _utilsServices;
+        private readonly IEnumerable<IIdentityProvider> _identityProviders;
 
         public ILogger Log { get; set; }
 
         public UserActionsController(IOrchardServices orchardServices, ICsrfTokenHelper csrfTokenHelper, IUsersExtensionsServices usersExtensionsServices, IUserService userService,
-            IControllerContextAccessor controllerContextAccessor, IUtilsServices utilsServices) {
+            IControllerContextAccessor controllerContextAccessor, IUtilsServices utilsServices, IEnumerable<IIdentityProvider> identityProviders) {
             _csrfTokenHelper = csrfTokenHelper;
             _usersExtensionsServices = usersExtensionsServices;
             _controllerContextAccessor = controllerContextAccessor;
             _orchardServices = orchardServices;
             _userService = userService;
+            _identityProviders = identityProviders;
             T = NullLocalizer.Instance;
             Log = NullLogger.Instance;
             _utilsServices = utilsServices;
@@ -166,7 +170,6 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
 
         private JsonResult RegisterLogic(UserRegistration userRegistrationParams) {
             Response result;
-            int userId = 0;
             // ensure users can request lost password
             var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
             if (!registrationSettings.UsersCanRegister) {
@@ -177,19 +180,23 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                 _usersExtensionsServices.Register(userRegistrationParams);
                 List<string> roles = new List<string>();
                 var message = "";
+                var registeredServicesData = new ExpandoObject() as IDictionary<string, object>;
+                registeredServicesData.Add("RegisteredServices", _controllerContextAccessor.Context.Controller.TempData);
                 if (_orchardServices.WorkContext.CurrentUser != null) {
                     roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
-                    userId = _orchardServices.WorkContext.CurrentUser.Id;
+                    registeredServicesData.Add("Roles", roles);
+                    var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
+                    foreach (var provider in _identityProviders) {
+                        var val = provider.GetRelatedId(context);
+                        if (string.IsNullOrWhiteSpace(val.Key) == false) {
+                            registeredServicesData.Add(val.Key, val.Value);
+                        }
+                    }
                 } else {
                     if (registrationSettings.UsersMustValidateEmail) {
                         message = T("Thank you for registering. We sent you an e-mail with instructions to enable your account.").ToString();
                     }
                 }
-                var registeredServicesData = new {
-                    RegisteredServices = _controllerContextAccessor.Context.Controller.TempData,
-                    Roles = roles,
-                    UserId = userId
-                };
                 result = _utilsServices.GetResponse(ResponseType.Success, message, registeredServicesData);
             } catch (Exception ex) {
                 result = _utilsServices.GetResponse(ResponseType.None, ex.Message);
@@ -200,19 +207,22 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
 
         private JsonResult SignInLogic(UserLogin login) {
             Response result;
-            int userId = 0;
             try {
                 _usersExtensionsServices.SignIn(login);
                 List<string> roles = new List<string>();
+                var registeredServicesData = new ExpandoObject() as IDictionary<string, object>;
+                registeredServicesData.Add("RegisteredServices", _controllerContextAccessor.Context.Controller.TempData);
                 if (_orchardServices.WorkContext.CurrentUser != null) {
                     roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
-                    userId = _orchardServices.WorkContext.CurrentUser.Id;
+                    registeredServicesData.Add("Roles", roles);
+                    var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
+                    foreach (var provider in _identityProviders) {
+                        var val = provider.GetRelatedId(context);
+                        if (string.IsNullOrWhiteSpace(val.Key) == false) {
+                            registeredServicesData.Add(val.Key, val.Value);
+                        }
+                    }
                 }
-                var registeredServicesData = new {
-                    RegisteredServices = _controllerContextAccessor.Context.Controller.TempData,
-                    Roles = roles,
-                    UserId = userId
-                };
                 result = _utilsServices.GetResponse(ResponseType.Success, "", registeredServicesData);
             } catch (Exception ex) {
                 result = _utilsServices.GetResponse(ResponseType.InvalidUser, ex.Message);
