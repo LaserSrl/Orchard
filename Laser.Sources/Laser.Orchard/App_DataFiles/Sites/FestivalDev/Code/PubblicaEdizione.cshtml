@@ -1,0 +1,38 @@
+@using System;
+@using System.Linq;
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Laser.Orchard.Events.Models;
+@{
+    string retString = "Error"; //possile outcomes: Ok,Error
+    string eMsg = String.Empty;
+    try {
+        IContentManager _contentManager;
+        IOrchardServices _orchardServices;
+
+        //Resolve services.
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _orchardServices = Model.OrchardServices;
+        // Objects
+        ContentItem item = Model.ContentItem; // Edizione
+        dynamic itemDyn = Model.ContentItem;  // Edizione
+        var edizioneId = item.Id;
+        var publishedCalendarEvents = 0;
+        var startDate = ((DateTime)itemDyn.ActivityPart.DateTimeStart).Date;
+        var endDate = ((DateTime)itemDyn.ActivityPart.DateTimeEnd).Date.AddDays(1).AddSeconds(-1);
+        var eventiNelRangeDiDate = _contentManager.Query().ForType("CalendarEvent").ForVersion(VersionOptions.Latest).Where<ActivityPartRecord>(x => x.DateTimeStart <= endDate && x.DateTimeEnd >= startDate).List();
+        foreach (dynamic itemEvento in eventiNelRangeDiDate) {
+            var edizioneIds = itemEvento.CalendarEvent.Edizione.Ids as int[];
+            if (edizioneIds.Contains(edizioneId) && !((ContentItem)itemEvento).IsPublished()) {
+                _contentManager.Publish((ContentItem)itemEvento);
+                publishedCalendarEvents++;
+            }
+        }
+        Model.Tokens["Workflow"].SetState("InformationMessage", string.Format("Sono stati pubblicati {0} eventi.", publishedCalendarEvents));
+
+        retString = "OK";
+    } catch (Exception ex) {
+        eMsg += string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    }
+}@retString
