@@ -81,6 +81,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.20622.1351, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -129,9 +130,13 @@
     <Compile Include="Activities\CaligooLoginLogoutEvent.cs" />
     <Compile Include="Controllers\UserApiController.cs" />
     <Compile Include="Drivers\CaligooSiteSettingsDriver.cs" />
+    <Compile Include="Drivers\CaligooUserPartDriver.cs" />
     <Compile Include="Handlers\CaligooSiteSettingsHandler.cs" />
+    <Compile Include="Handlers\CaligooUserPartHandler.cs" />
+    <Compile Include="Migrations.cs" />
     <Compile Include="Models\CaligooSiteSettingsPart.cs" />
     <Compile Include="Models\CaligooTempData.cs" />
+    <Compile Include="Models\CaligooUserPart.cs" />
     <Compile Include="Models\CaligooUsersFilterValue.cs" />
     <Compile Include="Models\LoginLogoutEventMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -160,6 +165,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\CaligooSiteSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\CaligooUser.cshtml" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\Parts\CaligooUser.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

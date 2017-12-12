@@ -15,7 +15,7 @@ using System.Collections.Generic;
 namespace Laser.Orchard.Caligoo.Services {
     public interface ICaligooService : IDependency {
         ContentItem GetContactId(string caligooUserId);
-        ContentItem CreateContact(string caligooUserId, string name, string surname, string email, string phone);
+        ContentItem CreateContact(LoginLogoutEventMessage caligooUserEvent);
         void CaligooLogin(string usr, string pwd);
         void JwtTokenRenew();
         JObject GetUserDetails(string caligooUserId);
@@ -40,20 +40,21 @@ namespace Laser.Orchard.Caligoo.Services {
             }
             return result;
         }
-        public ContentItem CreateContact(string caligooUserId, string name, string surname, string email, string phone) {
+        public ContentItem CreateContact(LoginLogoutEventMessage caligooUserEvent) {
             var contact = _orchardServices.ContentManager.New("CommunicationContact");
-            contact.As<TitlePart>().Title = caligooUserId;
+            contact.As<TitlePart>().Title = caligooUserEvent.CaligooUserId;
+            contact.As<CaligooUserPart>().CaligooUserId = caligooUserEvent.CaligooUserId;
             var commonPart = contact.As<CommonPart>();
             if(commonPart != null) {
                 commonPart.Owner = GetAdministrator();
             }
             _orchardServices.ContentManager.Create(contact);
-            if (string.IsNullOrWhiteSpace(email) == false) {
-                _communicationService.AddEmailToContact(email, contact);
-            }
-            if (string.IsNullOrWhiteSpace(phone) == false) {
-                _communicationService.AddSmsToContact("", phone, contact, false);
-            }
+            //if (string.IsNullOrWhiteSpace(email) == false) {
+            //    _communicationService.AddEmailToContact(email, contact);
+            //}
+            //if (string.IsNullOrWhiteSpace(phone) == false) {
+            //    _communicationService.AddSmsToContact("", phone, contact, false);
+            //}
             return contact;
         }
         private IUser GetAdministrator() {

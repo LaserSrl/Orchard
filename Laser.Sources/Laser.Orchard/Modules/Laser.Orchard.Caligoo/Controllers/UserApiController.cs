@@ -23,7 +23,7 @@ namespace Laser.Orchard.Caligoo.Controllers {
             var msgObj = message.ToObject<LoginLogoutEventMessage>();
             var contact = _caligooService.GetContactId(msgObj.CaligooUserId);
             if (contact == null) {
-                contact = _caligooService.CreateContact(msgObj.CaligooUserId, null, null, null, null);
+                contact = _caligooService.CreateContact(msgObj);
             }
             // trigger workflow event
             var eventType = "";
