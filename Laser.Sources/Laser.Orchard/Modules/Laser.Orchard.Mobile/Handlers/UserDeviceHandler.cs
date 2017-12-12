@@ -68,6 +68,9 @@ namespace Laser.Orchard.Mobile.Handlers {
         }
 
         public void LoggedIn(IUser user) {
+            // crea o aggiorna il contatto
+            _contactEventHandler.Synchronize(user);
+            // imposta UUID per il device
             var UUIdentifier = _httpContextAccessor.Current().Request.QueryString["UUID"];
             if (!string.IsNullOrWhiteSpace(UUIdentifier)) {
                 var record = _userDeviceRecord.Fetch(x => x.UUIdentifier == UUIdentifier).FirstOrDefault();
@@ -85,9 +88,6 @@ namespace Laser.Orchard.Mobile.Handlers {
                         _userDeviceRecord.Flush();
                     }
                 }
-
-                // crea o aggiorna il contatto
-                _contactEventHandler.Synchronize(user);
 
                 // aggiorna il collegamento del device con il contact, se il device è registrato
                 _pushNotificationService.UpdateDevice(UUIdentifier);
