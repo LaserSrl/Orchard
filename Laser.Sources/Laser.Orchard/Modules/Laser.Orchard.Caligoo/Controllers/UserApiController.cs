@@ -50,5 +50,12 @@ namespace Laser.Orchard.Caligoo.Controllers {
 
             return new HttpResponseMessage(HttpStatusCode.OK);
         }
+        public HttpResponseMessage Put(JObject message) {
+            //var msgObj = message.ToObject<CaligooUserMessage>();
+            //var aux = msgObj.CaligooUserName;
+            var msgObj = message.ToObject<LocationMessage>();
+            var aux = msgObj.Address;
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        }
     }
 }

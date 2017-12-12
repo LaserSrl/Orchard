@@ -134,8 +134,11 @@
     <Compile Include="Handlers\CaligooSiteSettingsHandler.cs" />
     <Compile Include="Handlers\CaligooUserPartHandler.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Models\GeographicLocationMessage.cs" />
+    <Compile Include="Models\LocationMessage.cs" />
     <Compile Include="Models\CaligooSiteSettingsPart.cs" />
     <Compile Include="Models\CaligooTempData.cs" />
+    <Compile Include="Models\UserMessage.cs" />
     <Compile Include="Models\CaligooUserPart.cs" />
     <Compile Include="Models\CaligooUsersFilterValue.cs" />
     <Compile Include="Models\LoginLogoutEventMessage.cs" />
