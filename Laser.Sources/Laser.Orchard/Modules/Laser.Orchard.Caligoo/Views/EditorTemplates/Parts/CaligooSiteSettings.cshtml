@@ -1,0 +1,10 @@
+﻿@model Laser.Orchard.Caligoo.Models.CaligooSiteSettingsPart
+
+<fieldset>
+    <legend>@T("Caligoo Settings")</legend>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.LoginUrl)">@T("URL for login")</label>
+        @Html.TextBoxFor(m => m.LoginUrl, new { @class = "text large" })
+        <span class="hint">@T("The URL given by Caligoo to log in the application user.")</span>
+    </div>
+</fieldset>

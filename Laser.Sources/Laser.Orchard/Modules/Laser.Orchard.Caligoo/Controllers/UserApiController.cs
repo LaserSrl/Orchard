@@ -11,19 +11,19 @@ using System.Web.Http;
 
 namespace Laser.Orchard.Caligoo.Controllers {
     public class UserApiController : ApiController {
-        private readonly ICaligooService _caliggoService;
+        private readonly ICaligooService _caligooService;
         private readonly IWorkflowManager _workflowManager;
-        public UserApiController(ICaligooService caliggoService, IWorkflowManager workflowManager) {
-            _caliggoService = caliggoService;
+        public UserApiController(ICaligooService caligooService, IWorkflowManager workflowManager) {
+            _caligooService = caligooService;
             _workflowManager = workflowManager;
         }
         [HttpPost]
         public HttpResponseMessage Post(JObject message) {
             var esito = "";
             var msgObj = message.ToObject<LoginLogoutEventMessage>();
-            var contact = _caliggoService.GetContactId(msgObj.CaligooUserId);
+            var contact = _caligooService.GetContactId(msgObj.CaligooUserId);
             if (contact == null) {
-                contact = _caliggoService.CreateContact(msgObj.CaligooUserId, null, null, null, null);
+                contact = _caligooService.CreateContact(msgObj.CaligooUserId, null, null, null, null);
             }
             // trigger workflow event
             var eventType = "";
@@ -38,6 +38,17 @@ namespace Laser.Orchard.Caligoo.Controllers {
             var result = new HttpResponseMessage(HttpStatusCode.OK);
             result.Content = new System.Net.Http.StringContent(esito, Encoding.UTF8, "text/plain");
             return result;
+        }
+        /// <summary>
+        /// Metodo utile solo per test vari
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage Get() {
+            _caligooService.CaligooLogin("", "");
+            _caligooService.CaligooLogin("", "");
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
     }
 }

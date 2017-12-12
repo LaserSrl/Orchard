@@ -7,18 +7,29 @@ using Orchard.Core.Common.Models;
 using Orchard.Users.Services;
 using Orchard.Users.Models;
 using Orchard.Security;
+using System.IdentityModel.Tokens;
+using Laser.Orchard.Caligoo.Models;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace Laser.Orchard.Caligoo.Services {
     public interface ICaligooService : IDependency {
         ContentItem GetContactId(string caligooUserId);
         ContentItem CreateContact(string caligooUserId, string name, string surname, string email, string phone);
+        void CaligooLogin(string usr, string pwd);
+        void JwtTokenRenew();
+        JObject GetUserDetails(string caligooUserId);
+        List<int> GetFilteredContacts(CaligooUsersFilterValue filters);
+        JObject GetLocations();
     }
     public class CaligooService : ICaligooService {
         private readonly IOrchardServices _orchardServices;
         private readonly ICommunicationService _communicationService;
-        public CaligooService(IOrchardServices orchardServices, ICommunicationService communicationService, IUserService userService) {
+        private readonly CaligooTempData _caligooTempData;
+        public CaligooService(IOrchardServices orchardServices, ICommunicationService communicationService, IUserService userService, CaligooTempData caligooTempData) {
             _orchardServices = orchardServices;
             _communicationService = communicationService;
+            _caligooTempData = caligooTempData;
         }
         public ContentItem GetContactId(string caligooUserId) {
             ContentItem result = null;
@@ -54,6 +65,26 @@ namespace Laser.Orchard.Caligoo.Services {
                 result = users.First().As<UserPart>();
             }
             return result;
+        }
+        public void CaligooLogin(string usr, string pwd) {
+            // TODO
+            //_caligooTempData.CurrentJwtToken = new JwtSecurityToken("prova");
+            _caligooTempData.Test = "prova";
+        }
+        public void JwtTokenRenew() {
+            // TODO
+        }
+        public JObject GetUserDetails(string caligooUserId) {
+            // TODO
+            return new JObject();
+        }
+        public List<int> GetFilteredContacts(CaligooUsersFilterValue filters) {
+            // TODO
+            return new List<int>();
+        }
+        public JObject GetLocations() {
+            // TODO
+            return new JObject();
         }
     }
 }
