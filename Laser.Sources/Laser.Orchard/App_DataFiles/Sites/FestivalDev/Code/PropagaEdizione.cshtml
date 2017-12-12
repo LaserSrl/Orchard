@@ -1,0 +1,45 @@
+@using System;
+@using System.Linq;
+@using Orchard;
+@using Orchard.ContentManagement;
+@{
+    string retString = "Error"; //possile outcomes: Ok,Error
+    string eMsg = String.Empty;
+    try {
+        IContentManager _contentManager;
+        IOrchardServices _orchardServices;
+
+        //Resolve services.
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _orchardServices = Model.OrchardServices;
+
+        // Objects
+        ContentItem item = Model.ContentItem; // CalendarEvent
+        dynamic itemDyn = Model.ContentItem;  // CalendarEvent
+        var edizioneId = itemDyn.CalendarEvent.Edizione.Ids[0];
+        var luogoId = itemDyn.CalendarEvent.Location.Ids[0];
+        var protagonistiIds = itemDyn.CalendarEvent.Protagonisti.Ids;
+
+        //Assegno al luogo l'edizione
+        dynamic itemLuogoDyn = _contentManager.Get(luogoId);
+        string edizioniLuogoIds = string.Join(",", itemLuogoDyn.Luogo.Edizioni.Ids) + ","+ edizioneId;
+        itemLuogoDyn.Luogo.Edizioni.Ids = edizioniLuogoIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).Distinct().ToArray();
+        if (((ContentItem)itemLuogoDyn).HasPublished()) {
+            _contentManager.Publish((ContentItem)itemLuogoDyn);
+        }
+        //Assegno ai protagonisti
+        foreach (var protagonistaId in protagonistiIds) {
+            dynamic itemProtagonistaDyn = _contentManager.Get(protagonistaId);
+            string edizioniProtagonistaIds = string.Join(",", itemProtagonistaDyn.Protagonista.Edizioni.Ids) + "," + edizioneId;
+            itemProtagonistaDyn.Protagonista.Edizioni.Ids = edizioniProtagonistaIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).Distinct().ToArray();
+            if (((ContentItem)itemProtagonistaDyn).HasPublished()) {
+                _contentManager.Publish((ContentItem)itemProtagonistaDyn);
+            }
+        }
+        // Logic
+        retString = "OK";
+    } catch (Exception ex) {
+        eMsg += string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    }
+}@retString
