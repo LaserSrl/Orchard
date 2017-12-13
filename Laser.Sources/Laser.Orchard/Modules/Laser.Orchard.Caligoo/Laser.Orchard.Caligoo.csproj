@@ -69,6 +69,10 @@
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Layouts, Version=1.10.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Layouts\bin\Orchard.Layouts.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Users, Version=1.10.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
@@ -129,11 +133,14 @@
   <ItemGroup>
     <Compile Include="Activities\CaligooLoginLogoutEvent.cs" />
     <Compile Include="Controllers\UserApiController.cs" />
+    <Compile Include="Drivers\CaligooLocationPartDriver.cs" />
     <Compile Include="Drivers\CaligooSiteSettingsDriver.cs" />
     <Compile Include="Drivers\CaligooUserPartDriver.cs" />
+    <Compile Include="Handlers\CaligooLocationPartHandler.cs" />
     <Compile Include="Handlers\CaligooSiteSettingsHandler.cs" />
     <Compile Include="Handlers\CaligooUserPartHandler.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Models\CaligooLocationPart.cs" />
     <Compile Include="Models\GeographicLocationMessage.cs" />
     <Compile Include="Models\LocationMessage.cs" />
     <Compile Include="Models\CaligooSiteSettingsPart.cs" />
@@ -165,6 +172,10 @@
       <Project>{bb12e69f-0976-407d-a716-542b7d22ee5f}</Project>
       <Name>Laser.Orchard.CommunicationGateway</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
+      <Project>{17DB396A-E8CE-4317-B558-8A5C17206518}</Project>
+      <Name>Laser.Orchard.StartupConfig</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\CaligooSiteSettings.cshtml" />
@@ -172,9 +183,14 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\CaligooUser.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\CaligooLocation.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts\CaligooUser.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\CaligooLocation.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,5 +1,7 @@
 ﻿using Laser.Orchard.Caligoo.Models;
 using Laser.Orchard.Caligoo.Services;
+using Laser.Orchard.StartupConfig.Services;
+using Laser.Orchard.StartupConfig.ViewModels;
 using Newtonsoft.Json.Linq;
 using Orchard.Workflows.Services;
 using System;
@@ -13,15 +15,15 @@ namespace Laser.Orchard.Caligoo.Controllers {
     public class UserApiController : ApiController {
         private readonly ICaligooService _caligooService;
         private readonly IWorkflowManager _workflowManager;
-        public UserApiController(ICaligooService caligooService, IWorkflowManager workflowManager) {
+        private readonly IUtilsServices _utilsServices;
+        public UserApiController(ICaligooService caligooService, IWorkflowManager workflowManager, IUtilsServices utilsServices) {
             _caligooService = caligooService;
             _workflowManager = workflowManager;
+            _utilsServices = utilsServices;
         }
-        [HttpPost]
-        public HttpResponseMessage Post(JObject message) {
-            var esito = "";
+        public Response Post(JObject message) {
             var msgObj = message.ToObject<LoginLogoutEventMessage>();
-            var contact = _caligooService.GetContactId(msgObj.CaligooUserId);
+            var contact = _caligooService.GetContact(msgObj.CaligooUserId);
             if (contact == null) {
                 contact = _caligooService.CreateContact(msgObj);
             }
@@ -33,26 +35,19 @@ namespace Laser.Orchard.Caligoo.Controllers {
                 eventType = "logout";
             }
             _workflowManager.TriggerEvent("CaligooLoginLogoutEvent", contact, () => new Dictionary<string, object> { { "Event", eventType}, { "Content", contact } });
-            // create response and return
-            esito = string.Format("{{ \"contact_id\":{0} }}", contact.Id);
-            var result = new HttpResponseMessage(HttpStatusCode.OK);
-            result.Content = new System.Net.Http.StringContent(esito, Encoding.UTF8, "text/plain");
-            return result;
+            return _utilsServices.GetResponse(StartupConfig.ViewModels.ResponseType.Success, "", new { contact_id = contact.Id });
         }
         /// <summary>
         /// Metodo utile solo per test vari
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public HttpResponseMessage Get() {
-            _caligooService.CaligooLogin("", "");
-            _caligooService.CaligooLogin("", "");
-
-            return new HttpResponseMessage(HttpStatusCode.OK);
-        }
         public HttpResponseMessage Put(JObject message) {
+            //_caligooService.CaligooLogin("", "");
+            //_caligooService.CaligooLogin("", "");
+
             //var msgObj = message.ToObject<CaligooUserMessage>();
             //var aux = msgObj.CaligooUserName;
+
             var msgObj = message.ToObject<LocationMessage>();
             var aux = msgObj.Address;
             return new HttpResponseMessage(HttpStatusCode.OK);

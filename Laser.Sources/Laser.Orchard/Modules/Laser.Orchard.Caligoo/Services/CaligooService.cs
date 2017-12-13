@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace Laser.Orchard.Caligoo.Services {
     public interface ICaligooService : IDependency {
-        ContentItem GetContactId(string caligooUserId);
+        ContentItem GetContact(string caligooUserId);
         ContentItem CreateContact(LoginLogoutEventMessage caligooUserEvent);
         void CaligooLogin(string usr, string pwd);
         void JwtTokenRenew();
@@ -31,13 +31,9 @@ namespace Laser.Orchard.Caligoo.Services {
             _communicationService = communicationService;
             _caligooTempData = caligooTempData;
         }
-        public ContentItem GetContactId(string caligooUserId) {
-            ContentItem result = null;
-            var query =_orchardServices.ContentManager.Query().ForType("CommunicationContact").Where<TitlePartRecord>(x => x.Title == caligooUserId);
-            var contacts = query.List();
-            if(contacts.Any()) {
-                result = contacts.First();
-            }
+        public ContentItem GetContact(string caligooUserId) {
+            var query =_orchardServices.ContentManager.Query().ForType("CommunicationContact").Where<CaligooUserPartRecord>(x => x.CaligooUserId == caligooUserId);
+            var result = query.List().FirstOrDefault();
             return result;
         }
         public ContentItem CreateContact(LoginLogoutEventMessage caligooUserEvent) {
@@ -61,9 +57,9 @@ namespace Laser.Orchard.Caligoo.Services {
             IUser result = null;
             var superUser = _orchardServices.WorkContext.CurrentSite.SuperUser;
             var query = _orchardServices.ContentManager.Query().ForType("User").Where<UserPartRecord>(x => x.UserName == superUser);
-            var users = query.List();
-            if (users.Any()) {
-                result = users.First().As<UserPart>();
+            var user = query.List().FirstOrDefault();
+            if (user != null) {
+                result = user.As<UserPart>();
             }
             return result;
         }
