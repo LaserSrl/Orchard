@@ -3,7 +3,7 @@ using Orchard.ContentManagement.Records;
 
 namespace Laser.Orchard.Caligoo.Models {
     public class CaligooLocationPart : ContentPart<CaligooLocationPartRecord> {
-        public int CaligooLocationId {
+        public string CaligooLocationId {
             get { return Retrieve(r => r.CaligooLocationId); }
             set { Store(r => r.CaligooLocationId , value); }
         }
@@ -38,7 +38,7 @@ namespace Laser.Orchard.Caligoo.Models {
     }
 
     public class CaligooLocationPartRecord: ContentPartRecord {
-        public virtual int CaligooLocationId { get; set; }
+        public virtual string CaligooLocationId { get; set; }
         public virtual string DisplayName { get; set; }
         public virtual string Address { get; set; }
         public virtual string PostalCode { get; set; }

@@ -151,6 +151,7 @@
     <Compile Include="Models\LoginLogoutEventMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CaligooService.cs" />
+    <Compile Include="Tasks\LocationSynchronizeScheduledTaskHandler.cs" />
     <Compile Include="Utils\CaligooUtils.cs" />
   </ItemGroup>
   <ItemGroup>

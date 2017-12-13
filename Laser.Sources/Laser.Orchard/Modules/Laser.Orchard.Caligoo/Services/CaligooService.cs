@@ -11,6 +11,10 @@ using System.IdentityModel.Tokens;
 using Laser.Orchard.Caligoo.Models;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System;
+using System.Net.Http;
+using Orchard.Localization;
+using Orchard.Logging;
 
 namespace Laser.Orchard.Caligoo.Services {
     public interface ICaligooService : IDependency {
@@ -20,16 +24,23 @@ namespace Laser.Orchard.Caligoo.Services {
         void JwtTokenRenew();
         JObject GetUserDetails(string caligooUserId);
         List<int> GetFilteredContacts(CaligooUsersFilterValue filters);
-        JObject GetLocations();
+        JArray GetLocations();
+        void CreateOrUpdateLocation(LocationMessage messsage);
     }
     public class CaligooService : ICaligooService {
         private readonly IOrchardServices _orchardServices;
         private readonly ICommunicationService _communicationService;
         private readonly CaligooTempData _caligooTempData;
+        private CaligooSiteSettingsPart _caligooSettings;
+        public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
         public CaligooService(IOrchardServices orchardServices, ICommunicationService communicationService, IUserService userService, CaligooTempData caligooTempData) {
             _orchardServices = orchardServices;
             _communicationService = communicationService;
             _caligooTempData = caligooTempData;
+            T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
+            _caligooSettings = _orchardServices.WorkContext.CurrentSite.As<CaligooSiteSettingsPart>();
         }
         public ContentItem GetContact(string caligooUserId) {
             var query =_orchardServices.ContentManager.Query().ForType("CommunicationContact").Where<CaligooUserPartRecord>(x => x.CaligooUserId == caligooUserId);
@@ -65,7 +76,7 @@ namespace Laser.Orchard.Caligoo.Services {
         }
         public void CaligooLogin(string usr, string pwd) {
             // TODO
-            //_caligooTempData.CurrentJwtToken = new JwtSecurityToken("prova");
+            _caligooTempData.CurrentJwtToken = new JwtSecurityToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"); // token valido di esempio
             _caligooTempData.Test = "prova";
         }
         public void JwtTokenRenew() {
@@ -79,9 +90,63 @@ namespace Laser.Orchard.Caligoo.Services {
             // TODO
             return new List<int>();
         }
-        public JObject GetLocations() {
+        public JArray GetLocations() {
             // TODO
-            return new JObject();
+            var json = ResultFromCaligooApiGet("locations");
+            return JArray.Parse(json);
+        }
+        private void EnsureJwtToken() {
+            var now = DateTime.UtcNow;
+            if(_caligooTempData.CurrentJwtToken == null) {
+                CaligooLogin("", "");
+            } else if ((_caligooTempData.CurrentJwtToken.ValidTo - now) <= new TimeSpan(0, 10, 0)) { // if there are less than 10 minutes left
+                JwtTokenRenew();
+            } else if(now > _caligooTempData.CurrentJwtToken.ValidTo) {
+                CaligooLogin("", "");
+            }
+        }
+        private string ResultFromCaligooApiGet(string resource) {
+            string result = null;
+            EnsureJwtToken();
+            var url = string.Format("http://localhost/Laser.Orchard/Modules/Orchard.Blogs/Styles/menu.blog-admin.css", resource);
+            _caligooTempData.WebApiClient.DefaultRequestHeaders.Clear();
+            //_caligooTempData.WebApiClient.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", _caligooTempData.CurrentJwtToken.ToString()));
+            var t = _caligooTempData.WebApiClient.GetAsync(url);
+            t.Wait(_caligooSettings.RequestTimeoutMillis);
+            if (t.Status == System.Threading.Tasks.TaskStatus.RanToCompletion) {
+                var aux = t.Result.Content.ReadAsStringAsync();
+                aux.Wait();
+                result = aux.Result;
+            } else {
+                Logger.Error("ResultFromCaligooApiGet: Timeout on request {0}.", url);
+            }
+            return result;
+        }
+        private string ResultFromCaligooApiPost(string resource, string content) {
+            string result = null;
+            EnsureJwtToken();
+            var url = string.Format("http://localhost/Laser.Orchard/Modules/Orchard.Blogs/Styles/menu.blog-admin.css", resource);
+            _caligooTempData.WebApiClient.DefaultRequestHeaders.Clear();
+            //_caligooTempData.WebApiClient.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", _caligooTempData.CurrentJwtToken.ToString()));
+            var t = _caligooTempData.WebApiClient.PostAsync(url, new StringContent(content));
+            var timeout = _caligooSettings.RequestTimeoutMillis == 0 ? 10000 : _caligooSettings.RequestTimeoutMillis; // 10000 = default timeout
+            t.Wait(timeout);
+            if (t.Status == System.Threading.Tasks.TaskStatus.RanToCompletion) {
+                if (t.Result.IsSuccessStatusCode) {
+                    var aux = t.Result.Content.ReadAsStringAsync();
+                    aux.Wait();
+                    result = aux.Result;
+                } else {
+                    Logger.Error("ResultFromCaligooApiPost: Error {1} - {2} on request {0}.", url, (int)(t.Result.StatusCode), t.Result.ReasonPhrase);
+                }
+            } else {
+                Logger.Error("ResultFromCaligooApiPost: Timeout ({1:#.##0} millis) on request {0}.", url, timeout);
+            }
+            return result;
+        }
+        public void CreateOrUpdateLocation(LocationMessage messsage) {
+            // TODO: verificare performance della query seguente, inoltre non può fare create perché non sa qual è il content type giusto!!!
+            var query = _orchardServices.ContentManager.Query().Where<CaligooLocationPartRecord>(x => x.CaligooLocationId == messsage.CaligooLocationId);
         }
     }
 }

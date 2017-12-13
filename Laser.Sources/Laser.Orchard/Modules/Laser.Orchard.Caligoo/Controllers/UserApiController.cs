@@ -48,8 +48,18 @@ namespace Laser.Orchard.Caligoo.Controllers {
             //var msgObj = message.ToObject<CaligooUserMessage>();
             //var aux = msgObj.CaligooUserName;
 
-            var msgObj = message.ToObject<LocationMessage>();
-            var aux = msgObj.Address;
+            //var msgObj = message.ToObject<LocationMessage>();
+            //var aux = msgObj.Address;
+
+            //_caligooService.GetLocations();
+
+            var json = "[{\"location_id\": \"AA0001\",\"display_name\": \"Test Location\",\"address\": \"Lambeth Road\",\"postal_code\": \"6HZ\",\"city\": \"London\",\"country\": \"United Kingdom\",\"geographic_location\": {\"lat\": 51.495568,\"lng\": 23.01291}}]";
+            var b = JArray.Parse(json);
+            foreach(var a in b) {
+                var c = a.ToObject<LocationMessage>();
+                var q = c.Address;
+            }
+
             return new HttpResponseMessage(HttpStatusCode.OK);
         }
     }
