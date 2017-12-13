@@ -4,24 +4,37 @@
     dynamic item = Model.ContentItem;
     string tipoContenuto = item.HtmlWidget.Specializzazione.Value;
 }
-
 @switch (tipoContenuto) {
     case "Footer Logo":
         @Display(New.HtmlQuad_First(ContentItem: item));
-            break;
+        break;
     case "Footer Social":
         @Display(New.HtmlQuad_Fourth(ContentItem: item));
-            break;
+        break;
     case "Footer Testo":
-            @Display(New.HtmlFooter(ContentItem: item));
-            break;
+        @Display(New.HtmlFooter(ContentItem: item));
+        break;
     default: {
             Model.Metadata.Wrappers.Clear();
-            var title = ((IContent)Model.ContentItem).As<WidgetPart>().Title;
-            <div class="box box_small">
-                <h3>@title</h3>
-                @Display(Model.Content)
-            </div>
+            var widgetPart = ((IContent)Model.ContentItem).As<WidgetPart>();
+            Model.Classes.Add(tipoContenuto.ToLower().Trim(new char[] { '(', ')' }).Replace(" ", "-"));
+            var tag = Tag(Model, "article");
+            @tag.StartElement
+            if ((widgetPart.RenderTitle && HasText(widgetPart.Title)) || Model.Header != null) {
+                <header>
+                    @if ((widgetPart.RenderTitle && HasText(widgetPart.Title))) {
+                        <h3>@widgetPart.Title</h3>
+                    }
+                    @Display(Model.Header)
+                </header>
+            }
+            @Display(Model.Content)
+            if (Model.Footer != null) {
+                <footer>
+                    @Display(Model.Footer)
+                </footer>
+            }
+            @tag.EndElement
             break;
         }
 }
