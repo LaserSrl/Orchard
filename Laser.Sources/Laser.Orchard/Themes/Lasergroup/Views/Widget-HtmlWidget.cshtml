@@ -1,4 +1,6 @@
-﻿@{
+﻿@using Orchard.ContentManagement
+@using Orchard.Widgets.Models
+@{
     dynamic item = Model.ContentItem;
     string tipoContenuto = item.HtmlWidget.Specializzazione.Value;
 }
@@ -13,7 +15,13 @@
     case "Footer Testo":
             @Display(New.HtmlFooter(ContentItem: item));
             break;
-    default:
-        @Display(Model.Content)
+    default: {
+            Model.Metadata.Wrappers.Clear();
+            var title = ((IContent)Model.ContentItem).As<WidgetPart>().Title;
+            <div class="box box_small">
+                <h3>@title</h3>
+                @Display(Model.Content)
+            </div>
             break;
+        }
 }
