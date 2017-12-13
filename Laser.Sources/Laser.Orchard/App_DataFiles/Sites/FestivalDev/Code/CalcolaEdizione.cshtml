@@ -1,0 +1,11 @@
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Laser.Orchard.Events.Models;
+@{ 
+    IContentManager _contentManager;
+    //Resolve services.
+    _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+
+    dynamic lastEdizione = _contentManager.Query().ForType("Edizione").OrderByDescending<ActivityPartRecord>(x => x.DateTimeStart).Slice(0,1).FirstOrDefault();
+    var retValue = lastEdizione.Id;
+}@retValue
