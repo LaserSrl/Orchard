@@ -11,15 +11,15 @@ namespace Laser.Orchard.Caligoo {
                 .ContentPartRecord()
                 .Column<string>("CaligooUserId", c => c.NotNull())
             );
+            ContentDefinitionManager.AlterPartDefinition("CaligooUserPart", p => p
+                .Placeable(true)
+            );
             ContentDefinitionManager.AlterTypeDefinition("CommunicationContact", t => t
                 .WithPart("CaligooUserPart")
             );
-            return 2;
-        }
-        public int UpdateFrom2() {
             SchemaBuilder.CreateTable("CaligooLocationPartRecord", t => t
                 .ContentPartRecord()
-                .Column<string>("CaligooLocationId", c => c.NotNull())
+                .Column<string>("CaligooLocationId", c => c.Nullable())
                 .Column<string>("DisplayName", c => c.Nullable())
                 .Column<string>("Address", c => c.Nullable())
                 .Column<string>("PostalCode", c => c.Nullable())
@@ -28,14 +28,11 @@ namespace Laser.Orchard.Caligoo {
                 .Column<decimal>("Latitude", c => c.Nullable().WithPrecision(12).WithScale(9))
                 .Column<decimal>("Longitude", c => c.Nullable().WithPrecision(12).WithScale(9))
             );
-            ContentDefinitionManager.AlterPartDefinition("CaligooUserPart", p => p
-                .Placeable(true)
-            );
             ContentDefinitionManager.AlterPartDefinition("CaligooLocationPart", p => p
                 .Attachable(true)
                 .Placeable(true)
             );
-            return 3;
+            return 1;
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Laser.Orchard.Caligoo.Tasks {
                 var jObj = _caligooService.GetLocations();
                 foreach(var jLoc in jObj) {
                     var location = jLoc.ToObject<LocationMessage>();
-                    _caligooService.CreateOrUpdateLocation(location);
+                    _caligooService.UpdateLocation(location);
                 }
             } catch(Exception ex) {
                 Logger.Error(ex, "LocationSynchronize");

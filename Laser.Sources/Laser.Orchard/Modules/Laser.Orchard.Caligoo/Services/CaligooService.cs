@@ -25,7 +25,7 @@ namespace Laser.Orchard.Caligoo.Services {
         JObject GetUserDetails(string caligooUserId);
         List<int> GetFilteredContacts(CaligooUsersFilterValue filters);
         JArray GetLocations();
-        void CreateOrUpdateLocation(LocationMessage messsage);
+        void UpdateLocation(LocationMessage messsage);
     }
     public class CaligooService : ICaligooService {
         private readonly IOrchardServices _orchardServices;
@@ -144,9 +144,26 @@ namespace Laser.Orchard.Caligoo.Services {
             }
             return result;
         }
-        public void CreateOrUpdateLocation(LocationMessage messsage) {
+        public void UpdateLocation(LocationMessage message) {
+            if(message == null) {
+                return;
+            }
             // TODO: verificare performance della query seguente, inoltre non può fare create perché non sa qual è il content type giusto!!!
-            var query = _orchardServices.ContentManager.Query().Where<CaligooLocationPartRecord>(x => x.CaligooLocationId == messsage.CaligooLocationId);
+            var query = _orchardServices.ContentManager.Query().Where<CaligooLocationPartRecord>(x => x.CaligooLocationId == message.CaligooLocationId);
+            var location = query.List<CaligooLocationPart>().FirstOrDefault();
+            if(location != null) {
+                location.Address = message.Address;
+                location.City = message.City;
+                location.Country = message.Country;
+                location.DisplayName = message.DisplayName;
+                location.PostalCode = message.PostalCode;
+                if (message.GeographicLocation != null) {
+                    location.Latitude = message.GeographicLocation.Latitude;
+                    location.Longitude = message.GeographicLocation.Longitude;
+                }
+            } else {
+                Logger.Error("UpdateLocation: CaligooLocationId '{0}' not found. Maybe it is a new location and you need to create it in Orchard with the proper Content Type.", message.CaligooLocationId);
+            }
         }
     }
 }

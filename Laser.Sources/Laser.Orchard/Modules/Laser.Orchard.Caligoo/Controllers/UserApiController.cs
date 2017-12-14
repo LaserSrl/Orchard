@@ -2,6 +2,7 @@
 using Laser.Orchard.Caligoo.Services;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Newtonsoft.Json.Linq;
 using Orchard.Workflows.Services;
 using System;
@@ -12,6 +13,7 @@ using System.Text;
 using System.Web.Http;
 
 namespace Laser.Orchard.Caligoo.Controllers {
+    [WebApiKeyFilter(true)]
     public class UserApiController : ApiController {
         private readonly ICaligooService _caligooService;
         private readonly IWorkflowManager _workflowManager;
@@ -57,7 +59,7 @@ namespace Laser.Orchard.Caligoo.Controllers {
             var b = JArray.Parse(json);
             foreach(var a in b) {
                 var c = a.ToObject<LocationMessage>();
-                var q = c.Address;
+                _caligooService.UpdateLocation(c);
             }
 
             return new HttpResponseMessage(HttpStatusCode.OK);
