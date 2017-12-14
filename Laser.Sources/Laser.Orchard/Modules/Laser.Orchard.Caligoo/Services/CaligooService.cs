@@ -148,7 +148,6 @@ namespace Laser.Orchard.Caligoo.Services {
             if(message == null) {
                 return;
             }
-            // TODO: verificare performance della query seguente, inoltre non può fare create perché non sa qual è il content type giusto!!!
             var query = _orchardServices.ContentManager.Query().Where<CaligooLocationPartRecord>(x => x.CaligooLocationId == message.CaligooLocationId);
             var location = query.List<CaligooLocationPart>().FirstOrDefault();
             if(location != null) {

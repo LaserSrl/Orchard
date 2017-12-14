@@ -66,12 +66,20 @@
     <Reference Include="Orchard.Core">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Forms, Version=1.10.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Forms\bin\Orchard.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Layouts, Version=1.10.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Layouts\bin\Orchard.Layouts.dll</HintPath>
+    </Reference>
+    <Reference Include="Orchard.Projections, Version=1.10.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Projections\bin\Orchard.Projections.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Users, Version=1.10.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -149,6 +157,8 @@
     <Compile Include="Models\CaligooUserPart.cs" />
     <Compile Include="Models\CaligooUsersFilterValue.cs" />
     <Compile Include="Models\LoginLogoutEventMessage.cs" />
+    <Compile Include="Projections\CaligooUserQueryFilter.cs" />
+    <Compile Include="Projections\CaligooUserQueryFilterForm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CaligooService.cs" />
     <Compile Include="Tasks\LocationSynchronizeScheduledTaskHandler.cs" />
