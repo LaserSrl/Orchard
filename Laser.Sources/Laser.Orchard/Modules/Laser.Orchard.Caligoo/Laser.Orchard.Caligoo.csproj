@@ -153,6 +153,7 @@
     <Compile Include="Models\LocationMessage.cs" />
     <Compile Include="Models\CaligooSiteSettingsPart.cs" />
     <Compile Include="Models\CaligooTempData.cs" />
+    <Compile Include="Models\UserListMessage.cs" />
     <Compile Include="Models\UserMessage.cs" />
     <Compile Include="Models\CaligooUserPart.cs" />
     <Compile Include="Models\CaligooUsersFilterValue.cs" />

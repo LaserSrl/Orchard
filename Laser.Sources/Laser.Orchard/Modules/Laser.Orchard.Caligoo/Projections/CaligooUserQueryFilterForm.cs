@@ -33,7 +33,7 @@ namespace Laser.Orchard.Caligoo.Projections {
                         _OnlineBoth: _shapeFactory.Radio(
                             Name: "IsOnline",
                             Title: T("Both online and not online users"),
-                            Value: true),
+                            Value: null),
                         _OnlineYes: _shapeFactory.Radio(
                             Name: "IsOnline",
                             Title: T("Online users only"),
@@ -90,6 +90,7 @@ namespace Laser.Orchard.Caligoo.Projections {
                         )
                     )
                 );
+                f._UserType._Value.Add(new SelectListItem { Value = "", Text = T("All").Text, Selected = true });
                 f._UserType._Value.Add(new SelectListItem { Value = "new", Text = T("New").Text });
                 f._UserType._Value.Add(new SelectListItem { Value = "returning", Text = T("Returning").Text });
                 return f;

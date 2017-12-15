@@ -23,7 +23,7 @@ namespace Laser.Orchard.Caligoo.Services {
         void CaligooLogin(string usr, string pwd);
         void JwtTokenRenew();
         JObject GetUserDetails(string caligooUserId);
-        List<int> GetFilteredContacts(CaligooUsersFilterValue filters);
+        List<string> GetFilteredCaligooUsers(CaligooUsersFilterValue filters);
         JArray GetLocations();
         void UpdateLocation(LocationMessage messsage);
     }
@@ -86,9 +86,15 @@ namespace Laser.Orchard.Caligoo.Services {
             // TODO
             return new JObject();
         }
-        public List<int> GetFilteredContacts(CaligooUsersFilterValue filters) {
-            // TODO
-            return new List<int>();
+        public List<string> GetFilteredCaligooUsers(CaligooUsersFilterValue filters) {
+            var result = new List<string>();
+            var json = ResultFromCaligooApiGet("users", filters.GetQueryString());
+            var jUsers = JObject.Parse(json);
+            var userList = jUsers.ToObject<UserListMessage>();
+            foreach(var usr in userList.Data) {
+                result.Add(usr.CaligooUserId);
+            }
+            return result;
         }
         public JArray GetLocations() {
             // TODO
@@ -105,29 +111,34 @@ namespace Laser.Orchard.Caligoo.Services {
                 CaligooLogin("", "");
             }
         }
-        private string ResultFromCaligooApiGet(string resource) {
+        private string ResultFromCaligooApiGet(string resource, string parameters = null) {
             string result = null;
             EnsureJwtToken();
-            var url = string.Format("http://localhost/Laser.Orchard/Modules/Orchard.Blogs/Styles/menu.blog-admin.css", resource);
+            var url = ComposeUrl(resource, parameters);
             _caligooTempData.WebApiClient.DefaultRequestHeaders.Clear();
-            //_caligooTempData.WebApiClient.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", _caligooTempData.CurrentJwtToken.ToString()));
+            _caligooTempData.WebApiClient.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", _caligooTempData.CurrentJwtToken.RawData));
             var t = _caligooTempData.WebApiClient.GetAsync(url);
-            t.Wait(_caligooSettings.RequestTimeoutMillis);
+            var timeout = _caligooSettings.RequestTimeoutMillis == 0 ? 10000 : _caligooSettings.RequestTimeoutMillis; // 10000 = default timeout
+            t.Wait(timeout);
             if (t.Status == System.Threading.Tasks.TaskStatus.RanToCompletion) {
-                var aux = t.Result.Content.ReadAsStringAsync();
-                aux.Wait();
-                result = aux.Result;
+                if (t.Result.IsSuccessStatusCode) {
+                    var aux = t.Result.Content.ReadAsStringAsync();
+                    aux.Wait();
+                    result = aux.Result;
+                } else {
+                    Logger.Error("ResultFromCaligooApiGet: Error {1} - {2} on request {0}.", url, (int)(t.Result.StatusCode), t.Result.ReasonPhrase);
+                }
             } else {
                 Logger.Error("ResultFromCaligooApiGet: Timeout on request {0}.", url);
             }
             return result;
         }
-        private string ResultFromCaligooApiPost(string resource, string content) {
+        private string ResultFromCaligooApiPost(string resource, string content, string parameters = null) {
             string result = null;
             EnsureJwtToken();
-            var url = string.Format("http://localhost/Laser.Orchard/Modules/Orchard.Blogs/Styles/menu.blog-admin.css", resource);
+            var url = ComposeUrl(resource, parameters);
             _caligooTempData.WebApiClient.DefaultRequestHeaders.Clear();
-            //_caligooTempData.WebApiClient.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", _caligooTempData.CurrentJwtToken.ToString()));
+            _caligooTempData.WebApiClient.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", _caligooTempData.CurrentJwtToken.ToString()));
             var t = _caligooTempData.WebApiClient.PostAsync(url, new StringContent(content));
             var timeout = _caligooSettings.RequestTimeoutMillis == 0 ? 10000 : _caligooSettings.RequestTimeoutMillis; // 10000 = default timeout
             t.Wait(timeout);
@@ -143,6 +154,13 @@ namespace Laser.Orchard.Caligoo.Services {
                 Logger.Error("ResultFromCaligooApiPost: Timeout ({1:#.##0} millis) on request {0}.", url, timeout);
             }
             return result;
+        }
+        private string ComposeUrl(string resource, string parameters = null) {
+            var url = string.Format("http://localhost/Laser.Orchard/Modules/Orchard.Blogs/Styles/menu.blog-admin.css", resource);
+            if (parameters != null) {
+                url += string.Format("?{0}", parameters);
+            }
+            return url;
         }
         public void UpdateLocation(LocationMessage message) {
             if(message == null) {
