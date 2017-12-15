@@ -1,10 +1,6 @@
 ﻿using Laser.Orchard.Caligoo.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Laser.Orchard.Caligoo.Drivers {
     public class CaligooUserPartDriver : ContentPartDriver<CaligooUserPart> {

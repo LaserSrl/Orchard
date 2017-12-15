@@ -1,20 +1,21 @@
-﻿using Orchard;
-using Orchard.ContentManagement;
-using Orchard.Core.Title.Models;
-using System.Linq;
-using Laser.Orchard.CommunicationGateway.Services;
-using Orchard.Core.Common.Models;
-using Orchard.Users.Services;
-using Orchard.Users.Models;
-using Orchard.Security;
-using System.IdentityModel.Tokens;
+﻿using Laser.Orchard.Caligoo.DataContracts;
 using Laser.Orchard.Caligoo.Models;
+using Laser.Orchard.CommunicationGateway.Services;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using System;
-using System.Net.Http;
+using Orchard;
+using Orchard.ContentManagement;
+using Orchard.Core.Common.Models;
+using Orchard.Core.Title.Models;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Security;
+using Orchard.Users.Models;
+using Orchard.Users.Services;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens;
+using System.Linq;
+using System.Net.Http;
 
 namespace Laser.Orchard.Caligoo.Services {
     public interface ICaligooService : IDependency {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Laser.Orchard.Caligoo.Models {
+namespace Laser.Orchard.Caligoo.DataContracts {
     [DataContract]
     public class UserMessage {
         [DataMember(Name = "user_id")]

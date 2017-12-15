@@ -1,8 +1,7 @@
 ﻿using Orchard.ContentManagement.MetaData;
-using Orchard.Data.Migration;
 using Orchard.Core.Contents.Extensions;
+using Orchard.Data.Migration;
 using Orchard.Layouts.Helpers;
-using System.Data;
 
 namespace Laser.Orchard.Caligoo {
     public class Migrations : DataMigrationImpl {

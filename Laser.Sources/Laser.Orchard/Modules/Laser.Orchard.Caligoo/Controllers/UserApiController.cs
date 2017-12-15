@@ -1,4 +1,4 @@
-﻿using Laser.Orchard.Caligoo.Models;
+﻿using Laser.Orchard.Caligoo.DataContracts;
 using Laser.Orchard.Caligoo.Services;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Web.Http;
 
 namespace Laser.Orchard.Caligoo.Controllers {

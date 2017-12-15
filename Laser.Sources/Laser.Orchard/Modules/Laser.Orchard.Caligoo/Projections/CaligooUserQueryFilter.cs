@@ -1,17 +1,15 @@
-﻿using Orchard.Projections.Services;
+﻿using Laser.Orchard.Caligoo.Models;
+using Laser.Orchard.Caligoo.Services;
+using Laser.Orchard.Caligoo.Utils;
 using Orchard.ContentManagement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Orchard.Projections.Descriptors.Filter;
 using Orchard.Localization;
 using Orchard.Logging;
-using Laser.Orchard.Caligoo.Services;
-using Laser.Orchard.Caligoo.Models;
+using Orchard.Projections.Descriptors.Filter;
+using Orchard.Projections.Services;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
-using Laser.Orchard.Caligoo.Utils;
-using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Laser.Orchard.Caligoo.Projections {
     public class CaligooUserQueryFilter : IFilterProvider {
@@ -70,20 +68,29 @@ namespace Laser.Orchard.Caligoo.Projections {
             // cycle on result pages
             filter.Page = 1;
             bool loop = true;
-            //List<string> caligooUserIds = null;
+            var util = new CaligooUtils();
+            // list of functions: usefull to avoid infinite loops when writing: expr = function1(expr)
+            // where expr is a function (Action<IHqlExpressionFactory>).
+            var exprList = new List<Action<IHqlExpressionFactory>>();
             while (loop) {
                 var caligooUserIds = _caligooService.GetFilteredCaligooUsers(filter);
                 if (caligooUserIds.Count == 0 && filter.Page == 1) {
                     // this condition is always false because there isn't any Caligoo user who match the criteria
-                    context.Query = context.Query.Where(x => x.ContentPartRecord<CaligooUserPartRecord>(), x => x.Eq("Id", 0));
+                    exprList.Add(x => x.Eq("Id", 0));
                     loop = false;
                 } else if(caligooUserIds.Count == 0) {
                     loop = false;
                 } else {
-                    context.Query = context.Query.Where(x => x.ContentPartRecord<CaligooUserPartRecord>(), x => x.In("CaligooUserId", caligooUserIds));
+                    if(exprList.Count == 0) {
+                        exprList.Add(x => x.In("CaligooUserId", caligooUserIds)); //util.GetFilterInList("CaligooUserId", caligooUserIds); //x => x.In("CaligooUserId", caligooUserIds);
+                    } else {
+                        var expr = exprList.Last();
+                        exprList.Add(y => y.Or(expr, x => x.In("CaligooUserId", caligooUserIds)));
+                    }
                     filter.Page++;
                 }
             }
+            context.Query = context.Query.Where(x => x.ContentPartRecord<CaligooUserPartRecord>(), exprList.Last());
         }
     }
 }

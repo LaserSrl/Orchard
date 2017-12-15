@@ -1,8 +1,8 @@
-﻿using Orchard.Workflows.Services;
+﻿using Orchard.Localization;
+using Orchard.Workflows.Models;
+using Orchard.Workflows.Services;
 using System;
 using System.Collections.Generic;
-using Orchard.Localization;
-using Orchard.Workflows.Models;
 
 namespace Laser.Orchard.Caligoo.Activities {
     public class CaligooLoginLogoutEvent : Event {

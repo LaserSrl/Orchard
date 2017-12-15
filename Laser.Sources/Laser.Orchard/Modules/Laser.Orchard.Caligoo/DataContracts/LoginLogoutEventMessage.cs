@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Laser.Orchard.Caligoo.Models {
+namespace Laser.Orchard.Caligoo.DataContracts {
     [DataContract]
     public class LoginLogoutEventMessage {
         [DataMember(Name = "event_type")]

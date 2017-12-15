@@ -1,7 +1,6 @@
 ﻿using Laser.Orchard.Caligoo.Utils;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Laser.Orchard.Caligoo.Models {
     public class CaligooUsersFilterValue {
@@ -47,7 +46,24 @@ namespace Laser.Orchard.Caligoo.Models {
             if (UntilTimestamp.HasValue) {
                 pars.Add(string.Format("until={0}", UntilTimestamp.Value));
             }
-
+            if (WifiSessionDurationMin.HasValue) {
+                pars.Add(string.Format("wifi_session_duration_min={0}", WifiSessionDurationMin));
+            }
+            if (WifiSessionDurationMax.HasValue) {
+                pars.Add(string.Format("wifi_session_duration_max={0}", WifiSessionDurationMax));
+            }
+            if (VisitDurationMin.HasValue) {
+                pars.Add(string.Format("visit_duration_min={0}", VisitDurationMin));
+            }
+            if (VisitDurationMax.HasValue) {
+                pars.Add(string.Format("visit_duration_max={0}", VisitDurationMax));
+            }
+            if (string.IsNullOrWhiteSpace(LocationList) == false) {
+                pars.Add(string.Format("location_list={0}", LocationList.Trim()));
+            }
+            if(Page > 0) {
+                pars.Add(string.Format("page={0}", Page));
+            }
             return string.Join("&", pars);
         }
     }

@@ -1,10 +1,6 @@
 ﻿using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.Caligoo.Projections {

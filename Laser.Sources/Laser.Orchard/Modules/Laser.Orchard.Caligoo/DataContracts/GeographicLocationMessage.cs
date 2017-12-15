@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Laser.Orchard.Caligoo.Models {
+namespace Laser.Orchard.Caligoo.DataContracts {
     [DataContract]
     public class GeographicLocationMessage {
         [DataMember(Name = "lat")]
