@@ -21,7 +21,7 @@ namespace Laser.Orchard.Caligoo.Services {
     public interface ICaligooService : IDependency {
         ContentItem GetContact(string caligooUserId);
         ContentItem CreateContact(LoginLogoutEventMessage caligooUserEvent);
-        void CaligooLogin(string usr, string pwd);
+        void CaligooLogin();
         void JwtTokenRenew();
         JObject GetUserDetails(string caligooUserId);
         List<string> GetFilteredCaligooUsers(CaligooUsersFilterValue filters);
@@ -75,16 +75,23 @@ namespace Laser.Orchard.Caligoo.Services {
             }
             return result;
         }
-        public void CaligooLogin(string usr, string pwd) {
+        public void CaligooLogin() {
             // TODO
-            _caligooTempData.CurrentJwtToken = new JwtSecurityToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"); // token valido di esempio
-            _caligooTempData.Test = "prova";
+            var usr = _caligooSettings.LoginUrl;
+            var pwd = _caligooSettings.LoginUrl;
+            var content = string.Format("usr={0}&pwd={1}", usr, pwd);
+            var encodedToken = ResultFromCaligooApiPost("login", content);
+            // token valido di esempio
+            encodedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ";
+            _caligooTempData.CurrentJwtToken = new JwtSecurityToken(encodedToken);
         }
         public void JwtTokenRenew() {
             // TODO
+            var newToken = ResultFromCaligooApiGet("renew");
+            _caligooTempData.CurrentJwtToken = new JwtSecurityToken(newToken);
         }
         public JObject GetUserDetails(string caligooUserId) {
-            // TODO
+            // TODO: vedere se questo metodo serve o no
             return new JObject();
         }
         public List<string> GetFilteredCaligooUsers(CaligooUsersFilterValue filters) {
@@ -98,18 +105,17 @@ namespace Laser.Orchard.Caligoo.Services {
             return result;
         }
         public JArray GetLocations() {
-            // TODO
             var json = ResultFromCaligooApiGet("locations");
             return JArray.Parse(json);
         }
         private void EnsureJwtToken() {
             var now = DateTime.UtcNow;
             if(_caligooTempData.CurrentJwtToken == null) {
-                CaligooLogin("", "");
+                CaligooLogin();
             } else if ((_caligooTempData.CurrentJwtToken.ValidTo - now) <= new TimeSpan(0, 10, 0)) { // if there are less than 10 minutes left
                 JwtTokenRenew();
             } else if(now > _caligooTempData.CurrentJwtToken.ValidTo) {
-                CaligooLogin("", "");
+                CaligooLogin();
             }
         }
         private string ResultFromCaligooApiGet(string resource, string parameters = null) {
@@ -157,6 +163,7 @@ namespace Laser.Orchard.Caligoo.Services {
             return result;
         }
         private string ComposeUrl(string resource, string parameters = null) {
+            // TODO
             var url = string.Format("http://localhost/Laser.Orchard/Modules/Orchard.Blogs/Styles/menu.blog-admin.css", resource);
             if (parameters != null) {
                 url += string.Format("?{0}", parameters);

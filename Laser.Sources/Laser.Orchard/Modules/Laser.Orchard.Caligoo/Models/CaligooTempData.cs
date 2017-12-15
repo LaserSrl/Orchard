@@ -18,7 +18,6 @@ namespace Laser.Orchard.Caligoo.Models {
             WebApiClient.Dispose();
         }
         public JwtSecurityToken CurrentJwtToken { get; set; }
-        public string Test { get; set; }
         public HttpClient WebApiClient { get; set; }
     }
 }
