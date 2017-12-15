@@ -69,28 +69,27 @@ namespace Laser.Orchard.Caligoo.Projections {
             filter.Page = 1;
             bool loop = true;
             var util = new CaligooUtils();
-            // list of functions: usefull to avoid infinite loops when writing: expr = function1(expr)
-            // where expr is a function (Action<IHqlExpressionFactory>).
-            var exprList = new List<Action<IHqlExpressionFactory>>();
+            Action<IHqlExpressionFactory> expr = null;
             while (loop) {
                 var caligooUserIds = _caligooService.GetFilteredCaligooUsers(filter);
                 if (caligooUserIds.Count == 0 && filter.Page == 1) {
                     // this condition is always false because there isn't any Caligoo user who match the criteria
-                    exprList.Add(x => x.Eq("Id", 0));
+                    expr = x => x.Eq("Id", 0);
                     loop = false;
                 } else if(caligooUserIds.Count == 0) {
                     loop = false;
                 } else {
-                    if(exprList.Count == 0) {
-                        exprList.Add(x => x.In("CaligooUserId", caligooUserIds)); //util.GetFilterInList("CaligooUserId", caligooUserIds); //x => x.In("CaligooUserId", caligooUserIds);
+                    if(expr == null) {
+                        expr = x => x.In("CaligooUserId", caligooUserIds);
                     } else {
-                        var expr = exprList.Last();
-                        exprList.Add(y => y.Or(expr, x => x.In("CaligooUserId", caligooUserIds)));
+                        // auxiliary variable to avoid infinite loops when writing: expr = function1(expr)
+                        var exprOld = expr;
+                        expr = y => y.Or(exprOld, x => x.In("CaligooUserId", caligooUserIds));
                     }
                     filter.Page++;
                 }
             }
-            context.Query = context.Query.Where(x => x.ContentPartRecord<CaligooUserPartRecord>(), exprList.Last());
+            context.Query = context.Query.Where(x => x.ContentPartRecord<CaligooUserPartRecord>(), expr);
         }
     }
 }
