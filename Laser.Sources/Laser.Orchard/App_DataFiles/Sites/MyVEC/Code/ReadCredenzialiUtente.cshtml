@@ -18,7 +18,7 @@
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
         _encryptionService = Model.OrchardServices.WorkContext.Resolve<IEncryptionService>();
         _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
-    
+
         Orchard.ContentManagement.ContentItem ciUsr = _contentManager.Get((int)(@Model.ContentItem.CommonPart.Creator.Value));
         dynamic usr = (dynamic)ciUsr;
         string userName = usr.UserPart.UserName;
@@ -35,6 +35,12 @@
         // save informations in workflow State
         wfContext.SetState("UserName", userName);
         wfContext.SetState("Password", pwd);
+        var customTemplateId = "";
+        if (usr.FavoriteCulturePart.Culture == "en-US") {
+            // english template
+            customTemplateId = "4304";
+        }
+        wfContext.SetState("CustomTemplateId", customTemplateId);
         retString = "OK";
     }
     catch (Exception ex) {

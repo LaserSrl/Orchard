@@ -101,12 +101,19 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                         ),
                         _Parts: Shape.SelectList(
                             Id: "email-template", Name: "EmailTemplate",
-                            Title: T("Template"),
-                            Description: T("A template to format your email message."),
+                            Title: T("Default template"),
+                            Description: T("A default template to format your email message."),
                                 Size: 1,
                                 Multiple: false
-                                )
-                        );
+                        ),
+                        _Template: Shape.Textbox(
+                                Id: "custom-template-id",
+                                Name: "CustomTemplateId",
+                                Title: T("Custom template ID"),
+                                Description: T("Specify a template ID to format your email message. Leave blank to use the default template."),
+                                Classes: new[] { "large", "text", "tokenized" }
+                        )
+                    );
 
                     var allTemplates = _templateServices.GetTemplates().Where(w => !w.IsLayout);
 
