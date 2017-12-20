@@ -147,7 +147,9 @@
                 user.ProfilePart.Name.Value = givenName;
                 user.ProfilePart.Surname.Value = familyName;
                 user.ProfilePart.Company.Value = item.SchedaInvito.Azienda.Value;
-                if(relatedVisita != null) {
+                user.ProfilePart.DatadiNascita.DateTime = item.SchedaInvito.DatadiNascita.DateTime;
+                user.ProfilePart.Sesso.Value = item.SchedaInvito.Sesso.Value;
+                if (relatedVisita != null) {
                     user.FavoriteCulturePart.Culture_Id = relatedVisita.LocalizationPart.Culture.Id;
                 }
                 _contentManager.Publish(user);
@@ -182,6 +184,6 @@
         retString = "OK";
     } catch (Exception ex) {
         eMsg += string.Format("\r\n{0}", ex.Message);
-    Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
     }
 }@retString

@@ -112,6 +112,7 @@
       <SubType>Code</SubType>
     </None>
     <None Include="Sites\MyVEC\Code\SyncDataVisitaToInvito.cshtml" />
+    <None Include="Sites\MyVEC\Code\TokenFasciaEtaUser.cshtml" />
     <None Include="Sites\MyVEC\Code\UpdateQuestionnaireContext.cshtml" />
     <None Include="Sites\MyVEC\Code\UscitaDaStore.cshtml" />
     <None Include="Sites\MyVEC\Code\ValidazioneSalesAssistantsPerNegozio.cshtml" />
