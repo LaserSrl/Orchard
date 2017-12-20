@@ -304,7 +304,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                         fip.StringFieldIndexRecords
                             .Any(sfi =>
                                 sfi.PropertyName.Contains(fieldName)
-                                && sfi.Value.Contains("{" + model.AdvancedOptions.CPFIdToSearch.ToString() + "}")
+                                && sfi.LatestValue.Contains("{" + model.AdvancedOptions.CPFIdToSearch.ToString() + "}")
                             )
                     );
                 lQuery = lQuery.Join<FieldIndexPartRecord>()
@@ -312,7 +312,7 @@ namespace Laser.Orchard.AdvancedSearch.Controllers {
                         fip.StringFieldIndexRecords
                             .Any(sfi =>
                                 sfi.PropertyName.Contains(fieldName)
-                                && sfi.Value.Contains("{" + model.AdvancedOptions.CPFIdToSearch.ToString() + "}")
+                                && sfi.LatestValue.Contains("{" + model.AdvancedOptions.CPFIdToSearch.ToString() + "}")
                             )
                     );
             }
