@@ -8,7 +8,7 @@ namespace Laser.Orchard.Caligoo {
         public int Create() {
             SchemaBuilder.CreateTable("CaligooUserPartRecord", t => t
                 .ContentPartRecord()
-                .Column<string>("CaligooUserId", c => c.NotNull())
+                .Column<string>("CaligooUserId", c => c.Nullable())
             );
             ContentDefinitionManager.AlterPartDefinition("CaligooUserPart", p => p
                 .Placeable(true)
