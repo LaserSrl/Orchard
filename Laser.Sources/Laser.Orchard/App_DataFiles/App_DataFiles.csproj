@@ -91,6 +91,7 @@
     <None Include="Sites\MyVEC\Code\CheckEmailCreator.cshtml" />
     <None Include="Sites\MyVEC\Code\CheckPrenotazioneParcheggio.cshtml" />
     <None Include="Sites\MyVEC\Code\CheckTarga.cshtml" />
+    <None Include="Sites\MyVEC\Code\GenerazioneCarta.cshtml" />
     <None Include="Sites\MyVEC\Code\GestioneRichiestaCamerino.cshtml" />
     <None Include="Sites\MyVEC\Code\InserimentoRichiestaCamerino.cshtml" />
     <None Include="Sites\MyVEC\Code\NotificaInviata.cshtml" />
@@ -108,10 +109,12 @@
     <None Include="Sites\MyVEC\Code\DailyUpdatesTask.cshtml" />
     <None Include="Sites\MyVEC\Code\InvitoFixUserIdToCreatorid.cshtml" />
     <None Include="Sites\MyVEC\Code\ReadInvitoAndTarga.cshtml" />
+    <None Include="Sites\MyVEC\Code\SalvataggioCarta.cshtml" />
     <None Include="Sites\MyVEC\Code\SyncDataInvitoByVisita.cshtml">
       <SubType>Code</SubType>
     </None>
     <None Include="Sites\MyVEC\Code\SyncDataVisitaToInvito.cshtml" />
+    <None Include="Sites\MyVEC\Code\TokenFasciaEtaUser.cshtml" />
     <None Include="Sites\MyVEC\Code\UpdateQuestionnaireContext.cshtml" />
     <None Include="Sites\MyVEC\Code\UscitaDaStore.cshtml" />
     <None Include="Sites\MyVEC\Code\ValidazioneSalesAssistantsPerNegozio.cshtml" />

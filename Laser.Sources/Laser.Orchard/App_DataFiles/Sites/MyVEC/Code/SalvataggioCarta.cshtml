@@ -1,0 +1,65 @@
+@using System.Web;
+@using Orchard.Security;
+@using Orchard.ContentManagement;
+@using Orchard.Users.Models;
+@using Orchard.Workflows.Models;
+@using Laser.Orchard.CommunicationGateway.Models;
+@using Laser.Orchard.CommunicationGateway.Services;
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","Ok"
+    WorkflowContext wfContext = null;
+    IContentManager _contentManager;
+    ICommunicationService _communicationService;
+}
+@{
+    try {
+        wfContext = Model.Tokens["Workflow"];
+        // resolve services
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
+        // error messages
+        var messages = new Dictionary<string, Dictionary<string, string>>();
+        var aux = new Dictionary<string, string>();
+        aux.Add("en-US", "Invalid card number.");
+        aux.Add("it-IT", "Carta non valida.");
+        messages.Add("InvalidCard", aux);
+        aux = new Dictionary<string, string>();
+        aux.Add("en-US", "Invalid customer.");
+        aux.Add("it-IT", "Cliente non trovato.");
+        messages.Add("InvalidCustomer", aux);
+        // input data
+        var contact = Model.ContentItem; // CommunicationContact
+        string codiceEan = HttpContext.Current.Request.Form["CodiceEan"];
+        // contact validation
+        if(contact.ContentType == "CommunicationContact") {
+            var contactCulture = contact.FavoriteCulturePart.Culture;
+            // card validation
+            if (codiceEan.StartsWith("LC-")) {
+                var userId = contact.CommunicationContactPart.UserIdentifier ?? 0;
+                dynamic user = null;
+                if (userId > 0) {
+                    user = _contentManager.Get(userId);
+                }
+                if (user != null) {
+                    user.ProfilePart.FidelityCardNumber.Value = codiceEan;
+                    user.VersionRecord.Published = false;
+                    _contentManager.Publish(user);
+                    _communicationService.UserToContact((IUser)user.UserPart);
+                } else {
+                    contact.ProfilePart.FidelityCardNumber.Value = codiceEan;
+                    contact.VersionRecord.Published = false;
+                    _contentManager.Publish(contact);
+                }
+                retString = "Ok";
+            } else {
+                wfContext.SetState("ErrorMessage", messages["InvalidCard"][contactCulture]);
+            }
+        } else {
+            // culture hard coded because of missing contact
+            wfContext.SetState("ErrorMessage", messages["InvalidCustomer"]["it-IT"]);
+        }
+    } catch (Exception ex) {
+        Model.OrchardServices.TransactionManager.Logger.Log(Orchard.Logging.LogLevel.Error, ex, "Error in SalvatagioCarta.cshtml", null);
+        wfContext.SetState("ErrorMessage", ex.Message);
+    }
+}@retString

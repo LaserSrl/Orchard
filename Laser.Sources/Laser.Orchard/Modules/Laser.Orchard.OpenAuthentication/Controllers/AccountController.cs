@@ -3,6 +3,7 @@ using Laser.Orchard.OpenAuthentication.Extensions;
 using Laser.Orchard.OpenAuthentication.Security;
 using Laser.Orchard.OpenAuthentication.Services;
 using Laser.Orchard.OpenAuthentication.Services.Clients;
+using Laser.Orchard.StartupConfig.IdentityProvider;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
 using Orchard;
@@ -15,6 +16,7 @@ using Orchard.UI.Notify;
 using Orchard.Users.Events;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Transactions;
 using System.Web;
 using System.Web.Mvc;
@@ -33,6 +35,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
         private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IUtilsServices _utilsServices;
         private readonly IOrchardServices _orchardServices;
+        private readonly IEnumerable<IIdentityProvider> _identityProviders;
 
         public AccountController(
             INotifier notifier,
@@ -41,7 +44,10 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             IOpenAuthMembershipServices openAuthMembershipServices,
             IOrchardOpenAuthClientProvider openAuthClientProvider,
             IControllerContextAccessor controllerContextAccessor,
-            IUserEventHandler userEventHandler, IUtilsServices utilsServices, IOrchardServices orchardServices) {
+            IUserEventHandler userEventHandler, 
+            IUtilsServices utilsServices, 
+            IOrchardServices orchardServices, 
+            IEnumerable<IIdentityProvider> identityProviders) {
             _notifier = notifier;
             _orchardOpenAuthWebSecurity = orchardOpenAuthWebSecurity;
             _authenticationService = authenticationService;
@@ -51,7 +57,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             _userEventHandler = userEventHandler;
             _utilsServices = utilsServices;
             _orchardServices = orchardServices;
-
+            _identityProviders = identityProviders;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -224,18 +230,19 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
         public Response GetUserResult(String message) {
             List<string> roles = new List<string>();
-            int userId = 0;
-
+            var registeredServicesData = new ExpandoObject() as IDictionary<string, object>;
+            registeredServicesData.Add("RegisteredServices", _controllerContextAccessor.Context.Controller.TempData);
             if (_orchardServices.WorkContext.CurrentUser != null) {
                 roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
-                userId = _orchardServices.WorkContext.CurrentUser.Id;
-
+                registeredServicesData.Add("Roles", roles);
+                var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
+                foreach (var provider in _identityProviders) {
+                    var val = provider.GetRelatedId(context);
+                    if (string.IsNullOrWhiteSpace(val.Key) == false) {
+                        registeredServicesData.Add(val.Key, val.Value);
+                    }
+                }
             }
-            var registeredServicesData = new {
-                RegisteredServices = _controllerContextAccessor.Context.Controller.TempData,
-                Roles = roles,
-                UserId = userId
-            };
             return _utilsServices.GetResponse(ResponseType.Success, message, registeredServicesData);
         }
     }

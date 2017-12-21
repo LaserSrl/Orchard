@@ -1,0 +1,44 @@
+﻿@model Laser.Orchard.Caligoo.Models.CaligooLocationPart
+<fieldset>
+    <legend>@T("Caligoo Location")</legend>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.CaligooLocationId)">@T("Caligoo Location ID")</label>
+        @Html.TextBoxFor(m => m.CaligooLocationId, new { @class = "text medium" })
+        <span class="hint">@T("The value of the corresponding location_id in Caligoo.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.DisplayName)">@T("Display Name")</label>
+        @Html.TextBoxFor(m => m.DisplayName, new { @class = "text large" })
+        <span class="hint">@T("The name of the location.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Address)">@T("Address")</label>
+        @Html.TextBoxFor(m => m.Address, new { @class = "text large" })
+        <span class="hint">@T("The address of the location.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.PostalCode)">@T("Postal Code")</label>
+        @Html.TextBoxFor(m => m.PostalCode, new { @class = "text medium" })
+        <span class="hint">@T("The postal code of the location.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.City)">@T("City")</label>
+        @Html.TextBoxFor(m => m.City, new { @class = "text medium" })
+        <span class="hint">@T("The city of the location.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Country)">@T("Country")</label>
+        @Html.TextBoxFor(m => m.Country, new { @class = "text medium" })
+        <span class="hint">@T("The country of the location.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Latitude)">@T("Latitude")</label>
+        @Html.TextBoxFor(m => m.Latitude, new { @class = "text medium" })
+        <span class="hint">@T("The latidude of the location.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Longitude)">@T("Longitude")</label>
+        @Html.TextBoxFor(m => m.Longitude, new { @class = "text medium" })
+        <span class="hint">@T("The longitude of the location.")</span>
+    </div>
+</fieldset>

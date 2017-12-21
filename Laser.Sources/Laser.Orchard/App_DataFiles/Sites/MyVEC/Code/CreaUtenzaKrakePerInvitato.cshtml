@@ -20,9 +20,7 @@
     IUserService _userService;
     IMembershipService _membershipService;
     IContentManager _contentManager;
-//    IFieldIndexService _fieldIndexService;
     IEncryptionService _encryptionService;
- //   IContactRelatedEventHandler _contactEventHandler;
     ICommunicationService _communicationService;
 
     int MinPasswordLength {
@@ -53,19 +51,17 @@
 
         if (validate) {
             if (!_userService.VerifyUserUnicity(userName, email)) {
-                //ModelState.AddModelError("userExists", T("User with that username and/or email already exists."));
                 validate = false;
             }
-            if (password == null || password.Length < MinPasswordLength) {
-                //ModelState.AddModelError("password", T("You must specify a password of {0} or more characters.", MinPasswordLength));
-                validate = false;
-            }
+            //if (password == null || password.Length < MinPasswordLength) {
+            //    //ModelState.AddModelError("password", T("You must specify a password of {0} or more characters.", MinPasswordLength));
+            //    validate = false;
+            //}
         }
 
         return validate;
     }
 
-    //TODO: this needs more validation and checks
     private string GenerateUsername(string familyName, string givenName) {
         string fName = RemoveDiacritics(familyName.Split(null)[0].Trim().ToLowerInvariant());
         string gName = RemoveDiacritics(givenName.Split(null)[0].Trim().ToLowerInvariant());
@@ -84,8 +80,15 @@
         return tmpName;
     }
 
-    private string GeneratePassword() {
-        return Membership.GeneratePassword(MinPasswordLength, 0);
+    private string GeneratePassword(string email) {
+        var result = "";
+        var arr = email.Split(new char[] { '@' }, 2);
+        if(arr.Length == 2) {
+            result = string.Format("{1}@{0}", arr[0], arr[1]);
+        } else {
+            result = email;
+        }
+        return result;
     }
     private string Encrypt(string text) {
         return Convert.ToBase64String(_encryptionService.Encode(System.Text.Encoding.Unicode.GetBytes(text)));
@@ -133,7 +136,7 @@
             //Generate valid Username
             string uName = GenerateUsername(familyName, givenName);
             //Generate valid password
-            string password = GeneratePassword(); //We are going to use the password in the email we send to the guest.
+            string password = GeneratePassword(email); //We are going to use the password in the email we send to the guest.
             //Create user
             if (ValidateRegistration(uName, email, password)) {
                 kUser = _membershipService.CreateUser(new CreateUserParams(uName, password, email, null, null, false));
@@ -144,10 +147,11 @@
                 user.ProfilePart.Name.Value = givenName;
                 user.ProfilePart.Surname.Value = familyName;
                 user.ProfilePart.Company.Value = item.SchedaInvito.Azienda.Value;
-                if(relatedVisita != null) {
+                user.ProfilePart.DatadiNascita.DateTime = item.SchedaInvito.DatadiNascita.DateTime;
+                user.ProfilePart.Sesso.Value = item.SchedaInvito.Sesso.Value;
+                if (relatedVisita != null) {
                     user.FavoriteCulturePart.Culture_Id = relatedVisita.LocalizationPart.Culture.Id;
                 }
-                //_contentManager.Create(user, VersionOptions.DraftRequired);
                 _contentManager.Publish(user);
                 _communicationService.UserToContact((IUser)user.UserPart);
             }
@@ -167,8 +171,6 @@
             user.ProfilePart.Name.Value = givenName;
             user.ProfilePart.Surname.Value = familyName;
             user.ProfilePart.Company.Value = item.SchedaInvito.Azienda.Value;
-            // _contentManager.Create(user, VersionOptions.DraftRequired);
-            //  _contentManager.Publish(user);
             user.VersionRecord.Published = false;
             _contentManager.Publish(user);
             _communicationService.UserToContact((IUser)user.UserPart);
