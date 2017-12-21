@@ -65,10 +65,10 @@
       <HintPath>..\..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Framework.Tests">
-      <HintPath>..\..\..\..\..\Orchard.Sources\src\Orchard.Tests\bin\Debug\Orchard.Framework.Tests.dll</HintPath>
+      <HintPath>..\..\..\..\..\Orchard.Sources\src\Orchard.Tests\bin\Release\Orchard.Framework.Tests.dll</HintPath>
     </Reference>
     <Reference Include="Orchard.Tests.Modules">
-      <HintPath>..\..\..\..\..\Orchard.Sources\src\Orchard.Tests.Modules\bin\Debug\Orchard.Tests.Modules.dll</HintPath>
+      <HintPath>..\..\..\..\..\Orchard.Sources\src\Orchard.Tests.Modules\bin\Release\Orchard.Tests.Modules.dll</HintPath>
     </Reference>
     <Reference Include="pnunit.framework, Version=1.0.4109.34242, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>

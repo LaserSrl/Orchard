@@ -1,0 +1,15 @@
+﻿@model Laser.Orchard.Caligoo.Models.CaligooSiteSettingsPart
+
+<fieldset>
+    <legend>@T("Caligoo Settings")</legend>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.LoginUrl)">@T("URL for login")</label>
+        @Html.TextBoxFor(m => m.LoginUrl, new { @class = "text large" })
+        <span class="hint">@T("The URL given by Caligoo to log in the application user.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.RequestTimeoutMillis)">@T("Timeout (milliseconds) for Caligoo Web API requests.")</label>
+        @Html.TextBoxFor(m => m.RequestTimeoutMillis, new { @class = "text medium" })
+        <span class="hint">@T("Timeout (milliseconds) for Caligoo Web API. Leave 0 to use default value (10000).")</span>
+    </div>
+</fieldset>
