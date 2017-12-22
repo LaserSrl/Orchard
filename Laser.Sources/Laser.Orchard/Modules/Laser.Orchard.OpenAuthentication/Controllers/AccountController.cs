@@ -6,6 +6,7 @@ using Laser.Orchard.OpenAuthentication.Services.Clients;
 using Laser.Orchard.StartupConfig.IdentityProvider;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
+using Newtonsoft.Json.Linq;
 using Orchard;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -137,24 +138,24 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             return new RedirectResult(Url.LogOn(returnUrl, result.UserName, loginData));
         }
         [OutputCache(NoStore = true, Duration = 0)]
-        public JsonResult ExternalTokenLogOn(string __provider__, string token, string secret = "") {
+        public ContentResult ExternalTokenLogOn(string __provider__, string token, string secret = "") {
             return ExternalTokenLogOnLogic(__provider__, token, secret);
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
-        public JsonResult ExternalTokenLogOnSsl(string __provider__, string token, string secret = "") {
+        public ContentResult ExternalTokenLogOnSsl(string __provider__, string token, string secret = "") {
             return ExternalTokenLogOnLogic(__provider__, token, secret);
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
-        public JsonResult ExternalTokenLogOnLogic(string __provider__, string token, string secret = "") {
+        public ContentResult ExternalTokenLogOnLogic(string __provider__, string token, string secret = "") {
             // TempDataDictionary registeredServicesData = new TempDataDictionary();
             var result = new Response();
 
             try {
                 if (String.IsNullOrWhiteSpace(__provider__) || String.IsNullOrWhiteSpace(token)) {
                     result = _utilsServices.GetResponse(ResponseType.None, "One or more of the required parameters was not provided or was an empty string.");
-                    return Json(result, JsonRequestBehavior.AllowGet);
+                    return _utilsServices.ConvertToJsonResult(result);
                 }
 
                 // ricava il return URL così come registrato nella configurazione del provider di OAuth (es. Google)
@@ -164,17 +165,17 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 IUser authenticatedUser;
                 if (!authResult.IsSuccessful) {
                     result = _utilsServices.GetResponse(ResponseType.InvalidUser, "Token authentication failed.");
-                    return Json(result, JsonRequestBehavior.AllowGet);
+                    return _utilsServices.ConvertToJsonResult(result);
                 } else {
 
                     if (_orchardOpenAuthWebSecurity.Login(authResult.Provider, authResult.ProviderUserId)) {
                         if (HttpContext.Response.Cookies.Count == 0) {
                             result = _utilsServices.GetResponse(ResponseType.None, "Unable to send back a cookie.");
-                            return Json(result, JsonRequestBehavior.AllowGet);
+                            return _utilsServices.ConvertToJsonResult(result);
                         } else {
                             authenticatedUser = _authenticationService.GetAuthenticatedUser();
                             _userEventHandler.LoggedIn(authenticatedUser);
-                            return Json(GetUserResult(""), JsonRequestBehavior.AllowGet);
+                            return _utilsServices.ConvertToJsonResult(GetUserResult(""));
                         }
                     } else {
                         authenticatedUser = _authenticationService.GetAuthenticatedUser();
@@ -187,11 +188,11 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
                         if (HttpContext.Response.Cookies.Count == 0) {
                             result = _utilsServices.GetResponse(ResponseType.None, "Unable to send back a cookie.");
-                            return Json(result, JsonRequestBehavior.AllowGet);
+                            return _utilsServices.ConvertToJsonResult(result);
                         } else {
                             // Handle LoggedIn Event
                             _userEventHandler.LoggedIn(authenticatedUser);
-                            return Json(GetUserResult(T("Your {0} account has been attached to your local account.", authResult.Provider).Text), JsonRequestBehavior.AllowGet);
+                            return _utilsServices.ConvertToJsonResult(GetUserResult(T("Your {0} account has been attached to your local account.", authResult.Provider).Text));
                         }
                     }
 
@@ -210,40 +211,39 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
                         if (HttpContext.Response.Cookies.Count == 0) {
                             result = _utilsServices.GetResponse(ResponseType.None, "Unable to send back a cookie.");
-                            return Json(result, JsonRequestBehavior.AllowGet);
-
+                            return _utilsServices.ConvertToJsonResult(result);
                         } else {
                             // Handle LoggedIn Event
                             _userEventHandler.LoggedIn(newUser);
-
-                            return Json(GetUserResult(T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", authResult.Provider, newUser.UserName).Text), JsonRequestBehavior.AllowGet);
+                            return _utilsServices.ConvertToJsonResult(GetUserResult(T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", authResult.Provider, newUser.UserName).Text));
                         }
                     }
                     result = _utilsServices.GetResponse(ResponseType.None, "Login failed.");
-                    return Json(result, JsonRequestBehavior.AllowGet);
+                    return _utilsServices.ConvertToJsonResult(result);
                 }
             } catch (Exception e) {
                 result = _utilsServices.GetResponse(ResponseType.None, e.Message);
-                return Json(result, JsonRequestBehavior.AllowGet);
+                return _utilsServices.ConvertToJsonResult(result);
             }
         }
 
         public Response GetUserResult(String message) {
             List<string> roles = new List<string>();
-            var registeredServicesData = new ExpandoObject() as IDictionary<string, object>;
-            registeredServicesData.Add("RegisteredServices", _controllerContextAccessor.Context.Controller.TempData);
+            var registeredServicesData = new JObject();
+            registeredServicesData.Add("RegisteredServices", new JArray(_controllerContextAccessor.Context.Controller.TempData));
             if (_orchardServices.WorkContext.CurrentUser != null) {
                 roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
-                registeredServicesData.Add("Roles", roles);
+                registeredServicesData.Add("Roles", new JArray(roles));
                 var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
                 foreach (var provider in _identityProviders) {
                     var val = provider.GetRelatedId(context);
                     if (string.IsNullOrWhiteSpace(val.Key) == false) {
-                        registeredServicesData.Add(val.Key, val.Value);
+                        registeredServicesData.Add(val.Key, new JValue(val.Value));
                     }
                 }
             }
-            return _utilsServices.GetResponse(ResponseType.Success, message, registeredServicesData);
+            var json = registeredServicesData.ToString();
+            return _utilsServices.GetResponse(ResponseType.Success, message, json);
         }
     }
 

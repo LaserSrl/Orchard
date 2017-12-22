@@ -19,6 +19,9 @@ using Orchard.Fields.Fields;
 using Orchard.Taxonomies.Models;
 using Orchard.Localization.Models;
 using Orchard.Taxonomies.Services;
+using System.Web.Mvc;
+using System.Globalization;
+using System.Text;
 
 namespace Laser.Orchard.StartupConfig.Services {
 
@@ -48,6 +51,15 @@ namespace Laser.Orchard.StartupConfig.Services {
         void UpdateStereotypesPermissions(IEnumerable<PermissionStereotype> stereotypes);
 
         Response GetResponse(ResponseType rsptype, string message = "", dynamic data = null);
+        /// <summary>
+        /// Convert a Response object to a ContentResult in json format.
+        /// This is useful when you want to pass a json string in the Data property of the response 
+        /// and you want it to be considered as a json object, not a string as method "Json(object)" does.
+        /// So you can use this method when you want to gain full control on the json object set in Data property.
+        /// </summary>
+        /// <param name="resp"></param>
+        /// <returns></returns>
+        ContentResult ConvertToJsonResult(Response resp);
         /// <summary>
         /// Set values on a field in a content part.
         /// </summary>
@@ -178,6 +190,22 @@ namespace Laser.Orchard.StartupConfig.Services {
                     break;
             }
             return rsp;
+        }
+        public ContentResult ConvertToJsonResult(Response resp) {
+            var data = "";
+            if (resp.Data == null) {
+                data = "null";
+            } else if (resp.Data.GetType().Name == typeof(string).Name) {
+                data = resp.Data;
+            } else {
+                data = Newtonsoft.Json.JsonConvert.SerializeObject(resp.Data);
+            }
+            var content = string.Format("{{ \"Success\": {0},\"Message\":\"{1}\",\"Data\":{4},\"ErrorCode\":{2},\"ResolutionAction\":{3}}}", resp.Success.ToString(CultureInfo.InvariantCulture).ToLowerInvariant(), resp.Message.Replace("\"", "\\\""), (int)resp.ErrorCode, (int)resp.ResolutionAction, data);
+            return new ContentResult {
+                Content = content,
+                ContentEncoding = Encoding.UTF8,
+                ContentType = "application/json"
+            };
         }
 
 
