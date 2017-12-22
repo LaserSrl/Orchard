@@ -109,7 +109,6 @@
     <None Include="Sites\MyVEC\Code\DailyUpdatesTask.cshtml" />
     <None Include="Sites\MyVEC\Code\InvitoFixUserIdToCreatorid.cshtml" />
     <None Include="Sites\MyVEC\Code\ReadInvitoAndTarga.cshtml" />
-    <None Include="Sites\MyVEC\Code\SalvataggioCarta.cshtml" />
     <None Include="Sites\MyVEC\Code\SyncDataInvitoByVisita.cshtml">
       <SubType>Code</SubType>
     </None>
