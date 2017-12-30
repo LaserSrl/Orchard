@@ -41,8 +41,13 @@ namespace Laser.Orchard.StartupConfig.Services {
                 var lines = filecontent.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string line in lines) {
                     var keyval = line.Split(':');
-                    if (keyval.Length > 1 && (!string.IsNullOrEmpty(line.Substring(keyval[0].Length + 1).Trim())))
-                        _encryptionKeys.Add(keyval[0], line.Substring(keyval[0].Length + 1).Trim());
+                    if (keyval.Length > 1)
+                        if (!string.IsNullOrEmpty(line.Substring(keyval[0].Length + 1).Trim())) {
+                            _encryptionKeys.Add(keyval[0], line.Substring(keyval[0].Length + 1).Trim());
+                        }
+                        else {
+                            _encryptionKeys.Add(keyval[0], "");
+                        }
                 }
                 content = filecontent;
             }
