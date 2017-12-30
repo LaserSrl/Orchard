@@ -2,6 +2,7 @@
 @using System.Linq;
 @using Orchard;
 @using Orchard.ContentManagement;
+@using Orchard.Projections.Models;
 @using Laser.Orchard.Events.Models;
 @{
     string retString = "Error"; //possile outcomes: Ok,Error
@@ -18,10 +19,17 @@
         dynamic itemDyn = Model.ContentItem;  // Edizione
         var edizioneId = item.Id;
         var publishedCalendarEvents = 0;
-        var startDate = ((DateTime)itemDyn.ActivityPart.DateTimeStart).Date;
-        var endDate = ((DateTime)itemDyn.ActivityPart.DateTimeEnd).Date.AddDays(1).AddSeconds(-1);
-        var eventiNelRangeDiDate = _contentManager.Query().ForType("CalendarEvent").ForVersion(VersionOptions.Latest).Where<ActivityPartRecord>(x => x.DateTimeStart <= endDate && x.DateTimeEnd >= startDate).List();
-        foreach (dynamic itemEvento in eventiNelRangeDiDate) {
+        var publishingEvents= _contentManager.Query().ForType("CalendarEvent").ForVersion(VersionOptions.Latest)
+            .Join<FieldIndexPartRecord>()
+                    .Where(fip =>
+                        fip.StringFieldIndexRecords
+                            .Any(sfi =>
+                                sfi.PropertyName.Equals("CalendarEvent.Edizione.")
+                                && sfi.LatestValue.Contains("{" + edizioneId + "}")
+                            )
+                    ).List();
+
+        foreach (dynamic itemEvento in publishingEvents) {
             var edizioneIds = itemEvento.CalendarEvent.Edizione.Ids as int[];
             if (edizioneIds.Contains(edizioneId) && !((ContentItem)itemEvento).IsPublished()) {
                 _contentManager.Publish((ContentItem)itemEvento);
