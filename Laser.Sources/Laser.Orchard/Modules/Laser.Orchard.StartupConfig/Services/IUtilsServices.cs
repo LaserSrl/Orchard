@@ -22,6 +22,7 @@ using Orchard.Taxonomies.Services;
 using System.Web.Mvc;
 using System.Globalization;
 using System.Text;
+using Newtonsoft.Json.Linq;
 
 namespace Laser.Orchard.StartupConfig.Services {
 
@@ -200,14 +201,25 @@ namespace Laser.Orchard.StartupConfig.Services {
             } else {
                 data = Newtonsoft.Json.JsonConvert.SerializeObject(resp.Data);
             }
-            var content = string.Format("{{ \"Success\": {0},\"Message\":\"{1}\",\"Data\":{4},\"ErrorCode\":{2},\"ResolutionAction\":{3}}}", resp.Success.ToString(CultureInfo.InvariantCulture).ToLowerInvariant(), resp.Message.Replace("\"", "\\\""), (int)resp.ErrorCode, (int)resp.ResolutionAction, data);
+            var jstring = new JValue(resp.Message).ToString();
+            var content = string.Format("{{ \"Success\": {0},\"Message\":\"{1}\",\"Data\":{4},\"ErrorCode\":{2},\"ResolutionAction\":{3}}}", resp.Success.ToString(CultureInfo.InvariantCulture).ToLowerInvariant(), EscapeForJson(resp.Message), (int)resp.ErrorCode, (int)resp.ResolutionAction, data);
             return new ContentResult {
                 Content = content,
                 ContentEncoding = Encoding.UTF8,
                 ContentType = "application/json"
             };
         }
-
+        private string EscapeForJson(string text) {
+            var result = text;
+            result = result.Replace("\\", "\\\\");
+            result = result.Replace("\"", "\\\"");
+            result = result.Replace("\t", "\\t");
+            result = result.Replace("\r", "\\r");
+            result = result.Replace("\n", "\\n");
+            result = result.Replace("\f", "\\f");
+            result = result.Replace("\b", "\\b");
+            return result;
+        }
 
         /// <summary>
         /// Returns the tenant path

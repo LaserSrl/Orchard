@@ -1,0 +1,25 @@
+@using Orchard.Data;
+@using Orchard.Projections.Models;
+@using Orchard.Workflows.Models;
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","Ok"
+    WorkflowContext wfContext = null;
+    IRepository<StringFieldIndexRecord> _repositoryStringIndex;
+}
+@{
+    try {
+        wfContext = Model.Tokens["Workflow"];
+        // resolve services
+        _repositoryStringIndex = Model.OrchardServices.WorkContext.Resolve<IRepository<StringFieldIndexRecord>>();
+
+        var records = _repositoryStringIndex.Table.Where(r => r.PropertyName == "ProfilePart.InStore." && r.Value != null && r.Value.Trim().Length > 0);
+        foreach (var r in records) {
+            r.Value = null;
+            _repositoryStringIndex.Update(r);
+        }
+        retString = "Ok";
+    } catch (Exception ex) {
+        Model.OrchardServices.TransactionManager.Logger.Log(Orchard.Logging.LogLevel.Error, ex, "Error in SvuotaUserInStore.cshtml", null);
+        wfContext.SetState("ErrorMessage", ex.Message);
+    }
+}@retString

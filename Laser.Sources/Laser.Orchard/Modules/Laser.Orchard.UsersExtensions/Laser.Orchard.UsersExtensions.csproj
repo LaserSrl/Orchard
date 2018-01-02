@@ -65,6 +65,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Email">
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Email\bin\Orchard.Email.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Framework, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
@@ -88,6 +91,7 @@
       <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -161,14 +165,19 @@
     <Compile Include="Controllers\UserActionsAPIController.cs" />
     <Compile Include="Controllers\UserActionsController.cs" />
     <Compile Include="Controllers\UserUtilityController.cs" />
+    <Compile Include="Controllers\NonceLoginController.cs" />
+    <Compile Include="DataContracts\NonceLoginMessage.cs" />
+    <Compile Include="Drivers\NonceLoginSettingsDriver.cs" />
     <Compile Include="Drivers\UserRegistrationPolicyPartDriver.cs" />
     <Compile Include="Enumerators.cs" />
     <Compile Include="Filters\PolicyApiFilterAttribute.cs" />
     <Compile Include="Filters\PolicyFilter.cs" />
     <Compile Include="Handlers\FavoriteCulturePartHandler.cs" />
+    <Compile Include="Handlers\NonceLoginSettingsHandler.cs" />
     <Compile Include="Handlers\UserRegistrationPolicyPartHandler.cs" />
     <Compile Include="Handlers\UserRegistrationSettingsPartHandler.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Models\NonceLoginSettingsPart.cs" />
     <Compile Include="Models\UserRegistrationLogin.cs" />
     <Compile Include="Models\UserRegistrationPolicyPart.cs" />
     <Compile Include="Models\UserRegistrationSettingsPart.cs" />
@@ -195,6 +204,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\NonceLoginSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
