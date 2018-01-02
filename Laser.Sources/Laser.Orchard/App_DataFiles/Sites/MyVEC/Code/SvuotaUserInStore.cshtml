@@ -6,26 +6,20 @@
     string retString = "Error"; //possible outcomes: "Error","Ok"
     WorkflowContext wfContext = null;
     IContentManager _contentManager;
-    IRepository<FieldIndexPartRecord> _repositoryFieldIndex;
 }
 @{
     try {
         wfContext = Model.Tokens["Workflow"];
         // resolve services
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
-        _repositoryFieldIndex = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         // update fields
-        dynamic ci = null;
-        var records = _repositoryFieldIndex.Table
-            .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "ProfilePart.InStore." && r.Value != null && r.Value.Trim().Length > 0))
-            .Select(x => x.ContentItemRecord.Id);
-        foreach (var r in records) {
-            ci = _contentManager.Get(r);
-            if(ci != null) {
-                ci.ProfilePart.InStore.Value = null;
-                ci.VersionRecord.Published = false;
-                _contentManager.Publish(ci);
-            }
+        var qry = _contentManager.Query(new string[] { "User", "CommunicationContact" })
+            .Where<FieldIndexPartRecord>(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "ProfilePart.InStore." && r.Value != null));
+        var records = qry.List();
+        foreach (dynamic ci in records) {
+            ci.ProfilePart.InStore.Value = null;
+            ci.VersionRecord.Published = false;
+            _contentManager.Publish(ci);
         }
         retString = "Ok";
     } catch (Exception ex) {
