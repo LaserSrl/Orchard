@@ -113,6 +113,11 @@ namespace Laser.Orchard.HID.Models {
                 return this;
             }
 
+            if (!LocationIsValid()) {
+                Error = UserErrors.DoesNotExist;
+                return this;
+            }
+
             HttpWebRequest wr = HttpWebRequest.CreateHttp(Location);
             wr.Method = WebRequestMethods.Http.Get;
             wr.ContentType = Constants.DefaultContentType;
@@ -250,7 +255,12 @@ namespace Laser.Orchard.HID.Models {
                 Error = UserErrors.AuthorizationFailed;
                 return "";
             }
-            
+
+            if (!LocationIsValid()) {
+                Error = UserErrors.DoesNotExist;
+                return "";
+            }
+
             string invitationCode = "";
 
             HttpWebRequest wr = HttpWebRequest.CreateHttp(Location + "/invitation");
@@ -462,6 +472,10 @@ namespace Laser.Orchard.HID.Models {
                 }
             }
             return this;
+        }
+
+        private bool LocationIsValid() {
+            return Location.StartsWith(_HIDService.UsersEndpoint,StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }
