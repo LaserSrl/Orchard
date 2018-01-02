@@ -108,15 +108,14 @@ namespace Laser.Orchard.HID.Models {
         }
 
         public HIDUser GetUser() {
-            if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
-                if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
-                    Error = UserErrors.AuthorizationFailed;
-                    return this;
-                }
+            if (!_HIDService.VerifyAuthentication()) {
+                Error = UserErrors.AuthorizationFailed;
+                return this;
             }
+
             HttpWebRequest wr = HttpWebRequest.CreateHttp(Location);
             wr.Method = WebRequestMethods.Http.Get;
-            wr.ContentType = Constants.DefaultContentType; // "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.ContentType = Constants.DefaultContentType;
             wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
@@ -194,15 +193,14 @@ namespace Laser.Orchard.HID.Models {
         /// </summary>
         /// <returns>This very user.</returns>
         public HIDUser CreateUser() {
-            if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
-                if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
-                    Error = UserErrors.AuthorizationFailed;
-                    return this;
-                }
+            if (!_HIDService.VerifyAuthentication()) {
+                Error = UserErrors.AuthorizationFailed;
+                return this;
             }
+
             HttpWebRequest wr = HttpWebRequest.CreateHttp(_HIDService.UsersEndpoint);
             wr.Method = WebRequestMethods.Http.Post;
-            wr.ContentType = Constants.DefaultContentType; // "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.ContentType = Constants.DefaultContentType;
             wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
             byte[] bodyData = Encoding.UTF8.GetBytes(CreateUserBody);
             using (Stream reqStream = wr.GetRequestStream()) {
@@ -248,18 +246,16 @@ namespace Laser.Orchard.HID.Models {
         }
 
         public string CreateInvitation() {
-            if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
-                if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
-                    Error = UserErrors.AuthorizationFailed;
-                    return "";
-                }
+            if (!_HIDService.VerifyAuthentication()) {
+                Error = UserErrors.AuthorizationFailed;
+                return "";
             }
-
+            
             string invitationCode = "";
 
             HttpWebRequest wr = HttpWebRequest.CreateHttp(Location + "/invitation");
             wr.Method = WebRequestMethods.Http.Post;
-            wr.ContentType = Constants.DefaultContentType; // "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.ContentType = Constants.DefaultContentType;
             wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
             byte[] bodyData = Encoding.UTF8.GetBytes(CreateInvitationBody);
             using (Stream reqStream = wr.GetRequestStream()) {
@@ -324,12 +320,11 @@ namespace Laser.Orchard.HID.Models {
         /// container for each of the user's devices.</param>
         /// <returns></returns>
         public HIDUser IssueCredential(string partNumber, bool onlyLatestContainer = true) {
-            if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
-                if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
-                    Error = UserErrors.AuthorizationFailed;
-                    return this;
-                }
+            if (!_HIDService.VerifyAuthentication()) {
+                Error = UserErrors.AuthorizationFailed;
+                return this;
             }
+
             if (CredentialContainers.Count == 0) {
                 Error = UserErrors.DoesNotHaveDevices;
             }
@@ -380,18 +375,17 @@ namespace Laser.Orchard.HID.Models {
         }
 
         public HIDUser RevokeCredential(string partNumber = "") {
-            if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
-                if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
-                    Error = UserErrors.AuthorizationFailed;
-                    return this;
-                }
+            if (!_HIDService.VerifyAuthentication()) {
+                Error = UserErrors.AuthorizationFailed;
+                return this;
             }
+
             foreach (var credentialContainer in CredentialContainers) {
                 //TODO: move this functionality to a method of HIDCredentialContainer, such as credentialContainer.RevokeCredential(partNumber),
                 // like we did for IssueCredential
                 HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(GetCredentialContainerEndpointFormat, credentialContainer.Id));
                 wr.Method = WebRequestMethods.Http.Get;
-                wr.ContentType = Constants.DefaultContentType; // "application/vnd.assaabloy.ma.credential-management-1.0+json";
+                wr.ContentType = Constants.DefaultContentType;
                 wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
                 //get this container
                 try {

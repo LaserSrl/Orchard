@@ -15,6 +15,12 @@ namespace Laser.Orchard.HID.Services {
         /// <returns>A value identifying possible errors, or NoError in case of success.</returns>
         AuthenticationErrors Authenticate();
         /// <summary>
+        /// This method verifies whether we are authenticated with HID's systems. If not, it attempts to
+        /// authenticate once.
+        /// </summary>
+        /// <returns>True if auutentication is successful, false otherwise.</returns>
+        bool VerifyAuthentication();
+        /// <summary>
         /// Searches the HIDUser corresponding to the IUser passed as parameter.
         /// </summary>
         /// <param name="user">The IUser whose corresponding HIDUser we are looking for.</param>

@@ -50,7 +50,7 @@ namespace Laser.Orchard.HID.Services {
         private string CreateInvitationEndpointFormat {
             get { return string.Format(HIDAPIEndpoints.CreateInvitationEndpointFormat, UsersEndpoint, @"{0}"); }
         }
-        
+
         #region Token is in the cache
         private string CacheTokenTypeKey {
             get { return string.Format(Constants.CacheTokenTypeKeyFormat, _shellSetting.Name); }
@@ -101,6 +101,15 @@ namespace Laser.Orchard.HID.Services {
             return token.Error;
         }
 
+        public bool VerifyAuthentication() {
+            if (string.IsNullOrWhiteSpace(AuthorizationToken)) {
+                if (Authenticate() != AuthenticationErrors.NoError) {
+                    return false;
+                }
+            }
+            return true; // authentication ok
+        }
+
         private const string BaseSearchFormat = @"{{ 'schemas':[ 'urn:ietf:params:scim:api:messages:2.0:SearchRequest' ], 'filter':'externalId eq ""{0}"" and status eq ""ACTIVE""', 'sortBy':'name.familyName', 'sortOrder':'descending', 'startIndex':1, 'count':{1} }}";
 
         /// <summary>
@@ -132,15 +141,14 @@ namespace Laser.Orchard.HID.Services {
         }
         public HIDUserSearchResult SearchHIDUserByExternalID(string externalId) {
             HIDUserSearchResult result = new HIDUserSearchResult();
-            if (string.IsNullOrWhiteSpace(AuthorizationToken)) {
-                if (Authenticate() != AuthenticationErrors.NoError) {
-                    result.Error = SearchErrors.AuthorizationFailed;
-                    return result;
-                }
+            if (!VerifyAuthentication()) {
+                result.Error = SearchErrors.AuthorizationFailed;
+                return result;
             }
+
             HttpWebRequest wr = HttpWebRequest.CreateHttp(UsersSearchEndpoint);
             wr.Method = WebRequestMethods.Http.Post;
-            wr.ContentType = Constants.DefaultContentType; // "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.ContentType = Constants.DefaultContentType;
             wr.Headers.Add(HttpRequestHeader.Authorization, AuthorizationToken);
             string bodyText = CreateSearchFormat(externalId);
             byte[] bodyData = Encoding.UTF8.GetBytes(bodyText);
@@ -201,15 +209,14 @@ namespace Laser.Orchard.HID.Services {
 
         public HIDUserSearchResult SearchHIDUser(string email) {
             HIDUserSearchResult result = new HIDUserSearchResult();
-            if (string.IsNullOrWhiteSpace(AuthorizationToken)) {
-                if (Authenticate() != AuthenticationErrors.NoError) {
-                    result.Error = SearchErrors.AuthorizationFailed;
-                    return result;
-                }
+            if (!VerifyAuthentication()) {
+                result.Error = SearchErrors.AuthorizationFailed;
+                return result;
             }
+
             HttpWebRequest wr = HttpWebRequest.CreateHttp(UsersSearchEndpoint);
             wr.Method = WebRequestMethods.Http.Post;
-            wr.ContentType = Constants.DefaultContentType; // "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.ContentType = Constants.DefaultContentType;
             wr.Headers.Add(HttpRequestHeader.Authorization, AuthorizationToken);
             string bodyText = CreateSearchFormatByMail(email);
             byte[] bodyData = Encoding.UTF8.GetBytes(bodyText);

@@ -107,17 +107,16 @@ namespace Laser.Orchard.HID.Models {
         }
 
         public HIDCredentialContainer IssueCredential(string partNumber, HIDUser user, IHIDAPIService _HIDService) {
-            if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
-                if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
-                    Error = CredentialErrors.AuthorizationFailed;
-                    return this;
-                }
+            if (!_HIDService.VerifyAuthentication()) {
+                Error = CredentialErrors.AuthorizationFailed;
+                return this;
             }
+
             // Configure call
             HttpWebRequest wr = HttpWebRequest.CreateHttp(
                 string.Format(IssueCredentialEndpointFormat(_HIDService), Id));
             wr.Method = WebRequestMethods.Http.Post;
-            wr.ContentType = Constants.DefaultContentType; // "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.ContentType = Constants.DefaultContentType;
             wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
             byte[] bodyData = Encoding.UTF8.GetBytes(IssueCredentialBody(partNumber));
             using (Stream reqStream = wr.GetRequestStream()) {
