@@ -106,7 +106,7 @@ namespace Laser.Orchard.HID.Models {
             return JObject.Parse(string.Format(IssueCredentialBodyFormat, pn)).ToString();
         }
 
-        public HIDCredentialContainer IssueCredential(string partNumber, HIDUser user, IHIDAPIService _HIDService) {
+        public HIDCredentialContainer IssueCredential(string partNumber, IHIDAPIService _HIDService) {
             if (!_HIDService.VerifyAuthentication()) {
                 Error = CredentialErrors.AuthorizationFailed;
                 return this;
@@ -161,51 +161,71 @@ namespace Laser.Orchard.HID.Models {
             return this;
         }
 
-        public HIDCredentialContainer RevokeCredentials(string partNumber = "") {
+        private string GetCredentialContainerEndpointFormat(IHIDAPIService _HIDService) {
+            return String.Format(HIDAPIEndpoints.GetCredentialContainerEndpointFormat, _HIDService.BaseEndpoint, @"{0}");
+        }
 
+        public HIDCredentialContainer RevokeCredentials(string partNumber, IHIDAPIService _HIDService) {
+            if (!_HIDService.VerifyAuthentication()) {
+                Error = CredentialErrors.AuthorizationFailed;
+                return this;
+            }
 
+            // Update this container to ensure all its information is accurate
+            HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(GetCredentialContainerEndpointFormat(_HIDService), Id));
+            wr.Method = WebRequestMethods.Http.Get;
+            wr.ContentType = Constants.DefaultContentType;
+            wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
+
+            try {
+                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    if (resp.StatusCode == HttpStatusCode.OK) {
+                        using (var reader = new StreamReader(resp.GetResponseStream())) {
+                            string respJson = reader.ReadToEnd();
+                            JObject json = JObject.Parse(respJson);
+                            // Update this container to ensure all its information is accurate
+                            UpdateContainer(json["urn:hid:scim:api:ma:1.0:CredentialContainer"]
+                                .Children().First(), _HIDService);
+                            // Select the credentials we should actually revoke
+                            var credentialsToRevoke = Credentials
+                                .Where(cred => 
+                                    cred.Status.ToUpperInvariant() != "REVOKING" 
+                                    && cred.Status.ToUpperInvariant() != "REVOKE_INITIATED");
+                            if (!string.IsNullOrWhiteSpace(partNumber)) {
+                                credentialsToRevoke = Credentials.Where(cred => cred.PartNumber == partNumber);
+                            }
+                            Error = CredentialErrors.NoError;
+                            foreach (var credential in credentialsToRevoke) {
+                                var cerror = credential.Revoke(_HIDService);
+                                if (cerror != CredentialErrors.NoError) {
+                                    Error = cerror;
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (WebException ex) {
+                HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
+                Error = CredentialErrors.UnknownError;
+                if (resp != null) {
+                    if (resp.StatusCode == HttpStatusCode.Unauthorized) {
+                        // Authentication could have expired while this method was running
+                        if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
+                            return RevokeCredentials(partNumber, _HIDService);
+                        }
+                        Error = CredentialErrors.AuthorizationFailed;
+                    } else {
+                        throw ex; // This should be handled, e.g. in the HIDUser, by analysing the status code
+                    }
+                }
+            } catch (Exception ex) {
+                Error = CredentialErrors.UnknownError;
+                Logger.Error(ex, "Fallback error management.");
+            }
 
             return this;
         }
 
     }
-    
-    //public class HIDCredentialContainerEqualityComparer : IEqualityComparer<HIDCredentialContainer> {
-    //    public bool Equals(HIDCredentialContainer cc1, HIDCredentialContainer cc2) {
-    //        if (Object.ReferenceEquals(cc1, cc2)) return true;
-    //        if (Object.ReferenceEquals(cc1, null) || Object.ReferenceEquals(cc2, null))
-    //            return false;
 
-    //        return (cc1.Manufacturer == cc2.Manufacturer && cc1.Model == cc2.Model);
-    //    }
-    //    // If Equals() returns true for a pair of objects 
-    //    // then GetHashCode() must return the same value for these objects.
-    //    public int GetHashCode(HIDCredentialContainer cc) {
-    //        if (Object.ReferenceEquals(cc, null)) return 0;
-            
-    //        int manufacturerCode = cc.Manufacturer == null ? 0 : cc.Manufacturer.GetHashCode();
-    //        int modelCode = cc.Model == null ? 0 : cc.Model.GetHashCode();
-
-    //        return manufacturerCode ^ modelCode;
-    //    }
-    //}
-
-    //public class HIDCredentialContainerModelEqualityComparer : IEqualityComparer<HIDCredentialContainer> {
-    //    public bool Equals(HIDCredentialContainer cc1, HIDCredentialContainer cc2) {
-    //        if (Object.ReferenceEquals(cc1, cc2)) return true;
-    //        if (Object.ReferenceEquals(cc1, null) || Object.ReferenceEquals(cc2, null))
-    //            return false;
-
-    //        return cc1.Model == cc2.Model;
-    //    }
-    //    // If Equals() returns true for a pair of objects 
-    //    // then GetHashCode() must return the same value for these objects.
-    //    public int GetHashCode(HIDCredentialContainer cc) {
-    //        if (Object.ReferenceEquals(cc, null)) return 0;
-
-    //        int modelCode = cc.Model == null ? 0 : cc.Model.GetHashCode();
-
-    //        return modelCode;
-    //    }
-    //}
 }
