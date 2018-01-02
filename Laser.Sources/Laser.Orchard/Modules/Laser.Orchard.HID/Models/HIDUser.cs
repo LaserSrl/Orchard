@@ -116,7 +116,7 @@ namespace Laser.Orchard.HID.Models {
             }
             HttpWebRequest wr = HttpWebRequest.CreateHttp(Location);
             wr.Method = WebRequestMethods.Http.Get;
-            wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.ContentType = Constants.DefaultContentType; // "application/vnd.assaabloy.ma.credential-management-1.0+json";
             wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
@@ -202,7 +202,7 @@ namespace Laser.Orchard.HID.Models {
             }
             HttpWebRequest wr = HttpWebRequest.CreateHttp(_HIDService.UsersEndpoint);
             wr.Method = WebRequestMethods.Http.Post;
-            wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.ContentType = Constants.DefaultContentType; // "application/vnd.assaabloy.ma.credential-management-1.0+json";
             wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
             byte[] bodyData = Encoding.UTF8.GetBytes(CreateUserBody);
             using (Stream reqStream = wr.GetRequestStream()) {
@@ -259,7 +259,7 @@ namespace Laser.Orchard.HID.Models {
 
             HttpWebRequest wr = HttpWebRequest.CreateHttp(Location + "/invitation");
             wr.Method = WebRequestMethods.Http.Post;
-            wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.ContentType = Constants.DefaultContentType; // "application/vnd.assaabloy.ma.credential-management-1.0+json";
             wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
             byte[] bodyData = Encoding.UTF8.GetBytes(CreateInvitationBody);
             using (Stream reqStream = wr.GetRequestStream()) {
@@ -391,7 +391,7 @@ namespace Laser.Orchard.HID.Models {
                 // like we did for IssueCredential
                 HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(GetCredentialContainerEndpointFormat, credentialContainer.Id));
                 wr.Method = WebRequestMethods.Http.Get;
-                wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
+                wr.ContentType = Constants.DefaultContentType; // "application/vnd.assaabloy.ma.credential-management-1.0+json";
                 wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
                 //get this container
                 try {

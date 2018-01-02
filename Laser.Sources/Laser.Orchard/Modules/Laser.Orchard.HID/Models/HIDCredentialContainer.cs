@@ -117,7 +117,7 @@ namespace Laser.Orchard.HID.Models {
             HttpWebRequest wr = HttpWebRequest.CreateHttp(
                 string.Format(IssueCredentialEndpointFormat(_HIDService), Id));
             wr.Method = WebRequestMethods.Http.Post;
-            wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.ContentType = Constants.DefaultContentType; // "application/vnd.assaabloy.ma.credential-management-1.0+json";
             wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
             byte[] bodyData = Encoding.UTF8.GetBytes(IssueCredentialBody(partNumber));
             using (Stream reqStream = wr.GetRequestStream()) {

@@ -140,7 +140,7 @@ namespace Laser.Orchard.HID.Services {
             }
             HttpWebRequest wr = HttpWebRequest.CreateHttp(UsersSearchEndpoint);
             wr.Method = WebRequestMethods.Http.Post;
-            wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.ContentType = Constants.DefaultContentType; // "application/vnd.assaabloy.ma.credential-management-1.0+json";
             wr.Headers.Add(HttpRequestHeader.Authorization, AuthorizationToken);
             string bodyText = CreateSearchFormat(externalId);
             byte[] bodyData = Encoding.UTF8.GetBytes(bodyText);
@@ -209,7 +209,7 @@ namespace Laser.Orchard.HID.Services {
             }
             HttpWebRequest wr = HttpWebRequest.CreateHttp(UsersSearchEndpoint);
             wr.Method = WebRequestMethods.Http.Post;
-            wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.ContentType = Constants.DefaultContentType; // "application/vnd.assaabloy.ma.credential-management-1.0+json";
             wr.Headers.Add(HttpRequestHeader.Authorization, AuthorizationToken);
             string bodyText = CreateSearchFormatByMail(email);
             byte[] bodyData = Encoding.UTF8.GetBytes(bodyText);
