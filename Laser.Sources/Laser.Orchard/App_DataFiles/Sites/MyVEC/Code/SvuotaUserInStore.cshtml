@@ -1,21 +1,31 @@
 @using Orchard.Data;
+@using Orchard.ContentManagement;
 @using Orchard.Projections.Models;
 @using Orchard.Workflows.Models;
 @functions{
     string retString = "Error"; //possible outcomes: "Error","Ok"
     WorkflowContext wfContext = null;
-    IRepository<StringFieldIndexRecord> _repositoryStringIndex;
+    IContentManager _contentManager;
+    IRepository<FieldIndexPartRecord> _repositoryFieldIndex;
 }
 @{
     try {
         wfContext = Model.Tokens["Workflow"];
         // resolve services
-        _repositoryStringIndex = Model.OrchardServices.WorkContext.Resolve<IRepository<StringFieldIndexRecord>>();
-
-        var records = _repositoryStringIndex.Table.Where(r => r.PropertyName == "ProfilePart.InStore." && r.Value != null && r.Value.Trim().Length > 0);
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _repositoryFieldIndex = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
+        // update fields
+        dynamic ci = null;
+        var records = _repositoryFieldIndex.Table
+            .Where(f => f.StringFieldIndexRecords.Any(r => r.PropertyName == "ProfilePart.InStore." && r.Value != null && r.Value.Trim().Length > 0))
+            .Select(x => x.ContentItemRecord.Id);
         foreach (var r in records) {
-            r.Value = null;
-            _repositoryStringIndex.Update(r);
+            ci = _contentManager.Get(r);
+            if(ci != null) {
+                ci.ProfilePart.InStore.Value = null;
+                ci.VersionRecord.Published = false;
+                _contentManager.Publish(ci);
+            }
         }
         retString = "Ok";
     } catch (Exception ex) {
