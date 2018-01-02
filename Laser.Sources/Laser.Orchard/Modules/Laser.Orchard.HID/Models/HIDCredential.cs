@@ -12,7 +12,7 @@ namespace Laser.Orchard.HID.Models {
 
         public HIDCredential(JToken credential)
             : this() {
-            Id = int.Parse(credential["id"].ToString());
+            Id = int.Parse(credential["id"].ToString()); // No null-checks for required properties
             PartNumber = credential["partNumber"].ToString();
             PartNumberFriendlyName = credential["partnumberFriendlyName"] != null ? credential["partnumberFriendlyName"].ToString() : "";
             CardNumber = credential["cardNumber"] != null ? credential["cardNumber"].ToString() : ""; 

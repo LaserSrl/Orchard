@@ -36,7 +36,8 @@ namespace Laser.Orchard.HID.Models {
         }
         public HIDAuthToken Authenticate(string userName, string password) {
             var settings = _HIDService.GetSiteSettings();
-            var LoginEndpoint = String.Format(HIDAPIEndpoints.LoginEndpointFormat, settings.UseTestEnvironment ? HIDAPIEndpoints.IdentityProviderTest : HIDAPIEndpoints.IdentityProviderProd);
+            var LoginEndpoint = String.Format(HIDAPIEndpoints.LoginEndpointFormat,
+                settings.UseTestEnvironment ? HIDAPIEndpoints.IdentityProviderTest : HIDAPIEndpoints.IdentityProviderProd);
             HttpWebRequest wr = HttpWebRequest.CreateHttp(LoginEndpoint);
             wr.Method = WebRequestMethods.Http.Post;
             string bodyText = string.Format(AuthBodyFormat, userName, password);

@@ -34,7 +34,7 @@ namespace Laser.Orchard.HID.Models {
 
         public HIDCredentialContainer(JToken container, IHIDAPIService _HIDService)
             : this() {
-            Id = int.Parse(container["id"].ToString());
+            Id = int.Parse(container["id"].ToString()); //no null-check for required properties
             Status = container["status"].ToString().ToUpperInvariant();
             OsVersion = container["osVersion"]  != null ? container["osVersion"].ToString() : "";
             Manufacturer = container["manufacturer"].ToString();
@@ -43,7 +43,7 @@ namespace Laser.Orchard.HID.Models {
             SimOperator = container["simOperator"] != null ? container["simOperator"].ToString() : "";
             BluetoothCapability = container["bluetoothCapability"] != null ? container["bluetoothCapability"].ToString() : "";
             NfcCapability = container["nfcCapability"] != null ? container["nfcCapability"].ToString() : "";
-            if (container["urn:hid:scim:api:ma:1.0:Credential"] != null) {
+            if (container["urn:hid:scim:api:ma:1.0:Credential"] != null) { //The Container contains credentials
                 var pNums = _HIDService.GetSiteSettings().PartNumbers;
                 Credentials.AddRange(
                     container["urn:hid:scim:api:ma:1.0:Credential"]
@@ -55,7 +55,7 @@ namespace Laser.Orchard.HID.Models {
         }
 
         public void UpdateContainer(JToken container, IHIDAPIService _HIDService) {
-            Id = int.Parse(container["id"].ToString());
+            Id = int.Parse(container["id"].ToString()); //no null-check for required properties
             Status = container["status"].ToString();
             OsVersion = container["osVersion"] != null ? container["osVersion"].ToString() : "";
             Manufacturer = container["manufacturer"].ToString();
@@ -76,18 +76,32 @@ namespace Laser.Orchard.HID.Models {
             }
         }
 
+        /// <summary>
+        /// Adds the serialized credential to the Container
+        /// </summary>
+        /// <param name="credential">A JTOken representing the serialized Credential.</param>
         public void Add(JToken credential) {
             this.Add(new HIDCredential(credential));
         }
+        /// <summary>
+        /// Adds the credential to the Container
+        /// </summary>
+        /// <param name="credential">The credential to add.</param>
         public void Add(HIDCredential credential) {
             Credentials.Add(credential);
         }
 
-
+        /// <summary>
+        /// Get the format string for the Endpoint to use when issuing credentials.
+        /// </summary>
+        /// <param name="_HIDService">IHIDAPIService implementation to be used to get the base endpoints.</param>
+        /// <returns>A string to use as format, where the only missing parameter is the Container's Id</returns>
         public string IssueCredentialEndpointFormat(IHIDAPIService _HIDService) {
-            return string.Format(HIDAPIEndpoints.IssueCredentialEndpointFormat, _HIDService.BaseEndpoint, @"{0}");
+            return string.Format(HIDAPIEndpoints.IssueCredentialEndpointFormat, 
+                _HIDService.BaseEndpoint, @"{0}");
         }
-        private const string IssueCredentialBodyFormat = @"{{ 'schemas':[ 'urn:hid:scim:api:ma:1.0:UserAction' ], 'urn:hid:scim:api:ma:1.0:UserAction':{{ 'assignCredential':'Y', 'partNumber':'{0}', 'credential':'' }} }}";
+        private const string IssueCredentialBodyFormat = 
+            @"{{ 'schemas':[ 'urn:hid:scim:api:ma:1.0:UserAction' ], 'urn:hid:scim:api:ma:1.0:UserAction':{{ 'assignCredential':'Y', 'partNumber':'{0}', 'credential':'' }} }}";
         private string IssueCredentialBody(string pn) {
             return JObject.Parse(string.Format(IssueCredentialBodyFormat, pn)).ToString();
         }
@@ -113,6 +127,7 @@ namespace Laser.Orchard.HID.Models {
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                     if (resp.StatusCode == HttpStatusCode.OK) {
+                        // We trust that the HID API responds as documented
                         using (var reader = new StreamReader(resp.GetResponseStream())) {
                             string respJson = reader.ReadToEnd();
                             JObject json = JObject.Parse(respJson);
@@ -129,7 +144,7 @@ namespace Laser.Orchard.HID.Models {
                     } else if (resp.StatusCode == HttpStatusCode.PreconditionFailed) {
                         var rBody = (new StreamReader(resp.GetResponseStream())).ReadToEnd();
                         if (JObject.Parse(rBody)["detail"].ToString().Trim().ToUpperInvariant() == "THIS CREDENTIAL IS ALREADY DELIVERED TO THIS CREDENTIALCONTAINER.") {
-                            Error = CredentialErrors.CredentialDeliveredAlready;
+                            Error = CredentialErrors.CredentialDeliveredAlready; // This is barely an error
                         } else {
                             Error = CredentialErrors.UnknownError;
                         }

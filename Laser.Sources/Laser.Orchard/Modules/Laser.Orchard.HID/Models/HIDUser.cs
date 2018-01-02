@@ -22,7 +22,6 @@ namespace Laser.Orchard.HID.Models {
         public List<string> Emails { get; set; }
         public string Status { get; set; }
         public List<int> InvitationIds { get; set; }
-        //public List<int> CredentialContainerIds { get; set; }
         public List<HIDCredentialContainer> CredentialContainers { get; set; }
         public UserErrors Error { get; set; }
 
@@ -33,7 +32,6 @@ namespace Laser.Orchard.HID.Models {
         public HIDUser() {
             Emails = new List<string>();
             InvitationIds = new List<int>();
-            //CredentialContainerIds = new List<int>();
             CredentialContainers = new List<HIDCredentialContainer>();
             Error = UserErrors.UnknownError;
             Logger = NullLogger.Instance;
@@ -49,7 +47,7 @@ namespace Laser.Orchard.HID.Models {
         }
 
         private void PopulateFromJson(JObject json, bool onlyActiveContainers = true) {
-            Id = int.Parse(json["id"].ToString());
+            Id = int.Parse(json["id"].ToString()); //no null-checks for required properties
             ExternalId = json["externalId"].ToString();
             FamilyName = json["name"]["familyName"].ToString();
             GivenName = json["name"]["givenName"].ToString();
@@ -62,20 +60,20 @@ namespace Laser.Orchard.HID.Models {
                 InvitationIds = InvitationIds.Distinct().ToList();
             }
             if (json["urn:hid:scim:api:ma:1.0:CredentialContainer"] != null) {
-                //CredentialContainerIds.AddRange(json["urn:hid:scim:api:ma:1.0:CredentialContainer"].Children().Select(jt => int.Parse(jt["id"].ToString())));
-                //CredentialContainerIds = CredentialContainerIds.Distinct().ToList();
                 CredentialContainers.Clear();
-                var avStrings = _HIDService.GetSiteSettings().AppVersionStrings;
+                var avStrings = _HIDService.GetSiteSettings().AppVersionStrings; // used to validate our apps
                 CredentialContainers.AddRange(
                     json["urn:hid:scim:api:ma:1.0:CredentialContainer"]
                     .Children()
                     .Select(jt => new HIDCredentialContainer(jt, _HIDService))
-                    .Where(cc => onlyActiveContainers ? cc.Status == "ACTIVE" : true)
-                    .Where(cc => avStrings.Any(avs => cc.ApplicationVersion.Contains(avs)))
+                    // we can avoid trying to maange conatiners that have been deleted, or that have not yet been initialized
+                    .Where(cc => onlyActiveContainers ? cc.Status == "ACTIVE" : true) 
+                    .Where(cc => avStrings.Any(avs => cc.ApplicationVersion.Contains(avs))) //validate apps
                     );
             }
             Error = UserErrors.NoError;
         }
+
         private void ErrorFromStatusCode(HttpStatusCode sc) {
             switch (sc) {
                 case HttpStatusCode.BadRequest:
@@ -99,9 +97,16 @@ namespace Laser.Orchard.HID.Models {
             }
         }
 
+        /// <summary>
+        /// Get a specific user from HID's systems.
+        /// </summary>
+        /// <param name="hidService">The IHIDAPIService implementation to use.</param>
+        /// <param name="location">This is the complete endpoint corresponding to the user in HID's systems.</param>
+        /// <returns>The HIDUser gotten from HID's systems.</returns>
         public static HIDUser GetUser(IHIDAPIService hidService, string location) {
             return new HIDUser(hidService) { Location = location }.GetUser();
         }
+
         public HIDUser GetUser() {
             if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
                 if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
@@ -127,6 +132,7 @@ namespace Laser.Orchard.HID.Models {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null) {
                     if (resp.StatusCode == HttpStatusCode.Unauthorized) {
+                        // Authentication could have expired while this method was running
                         if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
                             return GetUser();
                         }

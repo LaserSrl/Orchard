@@ -7,14 +7,22 @@ using System.Text.RegularExpressions;
 
 namespace Laser.Orchard.HID.Models {
     public class HIDSiteSettingsPart : ContentPart {
+        /// <summary>
+        /// Numeric identifier of the company in HID's systems
+        /// </summary>
         public int CustomerID {
             get { return this.Retrieve(x => x.CustomerID); }
             set { this.Store(x => x.CustomerID, value); }
         }
+
         public bool UseTestEnvironment {
             get { return this.Retrieve(x => x.UseTestEnvironment); }
             set { this.Store(x => x.UseTestEnvironment, value); }
         }
+
+        /// <summary>
+        /// Username of the account responsible to manage credentials.
+        /// </summary>
         public string ClientID {
             get { return this.Retrieve(x => x.ClientID); }
             set { this.Store(x => x.ClientID, value); }
@@ -24,12 +32,18 @@ namespace Laser.Orchard.HID.Models {
         public ComputedField<string> ClientSecretField {
             get { return _clientSecret; }
         }
+        /// <summary>
+        /// Password for the account responsible to manage credentials.
+        /// </summary>
         public string ClientSecret {
             get { return _clientSecret.Value; }
             set { _clientSecret.Value = value; }
         }
 
         public string _partNumbers { get; set; }
+        /// <summary>
+        /// Part numbers managed by the system.
+        /// </summary>
         public string[] PartNumbers {
             get { return NumbersStringToArray(this.Retrieve(x => x._partNumbers)); }
             set { this.Store(x => x._partNumbers, NumbersArrayToString(value)); }
@@ -40,6 +54,10 @@ namespace Laser.Orchard.HID.Models {
         }
 
         public string _appVersionStrings { get; set; }
+        /// <summary>
+        /// These strings identify the apps connected to the system, and are used in order to avoid doing something
+        /// to credential containers that may belong to a user we are managing for our application
+        /// </summary>
         public string[] AppVersionStrings {
             get { return NumbersStringToArray(this.Retrieve(x => x._appVersionStrings)); }
             set { this.Store(x => x._appVersionStrings, NumbersArrayToString(value)); }
