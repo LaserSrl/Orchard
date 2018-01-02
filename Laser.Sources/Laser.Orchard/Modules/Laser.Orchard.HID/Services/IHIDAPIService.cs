@@ -17,14 +17,16 @@ namespace Laser.Orchard.HID.Services {
         /// <summary>
         /// Searches the HIDUser corresponding to the IUser passed as parameter.
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="user">The IUser whose corresponding HIDUser we are looking for.</param>
         /// <returns>An object describing the results of the search, that contains the HIDUser if found.</returns>
         HIDUserSearchResult SearchHIDUser(IUser user);
         /// <summary>
         /// Searches the HIDUser corresponding to the email passed as parameter.
         /// </summary>
-        /// <param name="user"></param>
-        /// <returns>An object describing the results of the search, that contains the HIDUser if found.</returns>
+        /// <param name="email">The email we will use as key to find the user in HID's systems.</param>
+        /// <returns>An object describing the results of the search, that contains the HIDUser if found.
+        /// This method fails to return the user if it was not found, or if more than one user matches the
+        /// email for the search.</returns>
         HIDUserSearchResult SearchHIDUser(string email);
         /// <summary>
         /// Creates a new HIDUser on the HID servers using the information provided as parameters.

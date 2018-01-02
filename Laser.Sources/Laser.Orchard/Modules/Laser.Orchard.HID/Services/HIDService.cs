@@ -31,20 +31,26 @@ namespace Laser.Orchard.HID.Services {
         }
 
         private string BaseURI {
-            get { return String.Format(HIDAPIEndpoints.BaseURIFormat, GetSiteSettings().UseTestEnvironment ? HIDAPIEndpoints.BaseURITest : HIDAPIEndpoints.BaseURIProd); }
+            get { return String.Format(HIDAPIEndpoints.BaseURIFormat,
+                GetSiteSettings().UseTestEnvironment ? HIDAPIEndpoints.BaseURITest : HIDAPIEndpoints.BaseURIProd); }
         }
+
         public string BaseEndpoint {
             get { return String.Format(HIDAPIEndpoints.CustomerURIFormat, BaseURI, GetSiteSettings().CustomerID.ToString()); }
         }
+
         public string UsersEndpoint {
             get { return String.Format(HIDAPIEndpoints.UsersEndpointFormat, BaseEndpoint); }
         }
+
         private string UsersSearchEndpoint {
             get { return String.Format(HIDAPIEndpoints.UserSearchEndpointFormat, UsersEndpoint); }
         }
+
         private string CreateInvitationEndpointFormat {
             get { return string.Format(HIDAPIEndpoints.CreateInvitationEndpointFormat, UsersEndpoint, @"{0}"); }
         }
+        
         #region Token is in the cache
         private string CacheTokenTypeKey {
             get { return string.Format(Constants.CacheTokenTypeKeyFormat, _shellSetting.Name); }
@@ -58,6 +64,10 @@ namespace Laser.Orchard.HID.Services {
             _cacheStorageProvider.Put(CacheAccessTokenKey, token.AccessToken, validity);
         }
         #endregion
+
+        /// <summary>
+        /// Get the full authorization token from cache.
+        /// </summary>
         public string AuthorizationToken {
             get {
                 string tokenType = (string)_cacheStorageProvider.Get<string>(CacheTokenTypeKey);
@@ -77,7 +87,7 @@ namespace Laser.Orchard.HID.Services {
             var token = HIDAuthToken.Authenticate(this);
             switch (token.Error) {
                 case AuthenticationErrors.NoError:
-                    AuthTokenToCache(token);
+                    AuthTokenToCache(token); // store token
                     break;
                 case AuthenticationErrors.NotAuthenticated:
                     break;
@@ -92,11 +102,26 @@ namespace Laser.Orchard.HID.Services {
         }
 
         private const string BaseSearchFormat = @"{{ 'schemas':[ 'urn:ietf:params:scim:api:messages:2.0:SearchRequest' ], 'filter':'externalId eq ""{0}"" and status eq ""ACTIVE""', 'sortBy':'name.familyName', 'sortOrder':'descending', 'startIndex':1, 'count':{1} }}";
+
+        /// <summary>
+        /// Creates a user's search string by externalId.
+        /// </summary>
+        /// <param name="eId">The externalId to search for.</param>
+        /// <param name="count">The number of users to return from the search.</param>
+        /// <returns>A string that may be used as body in search requests to HID's systems.</returns>
         private string CreateSearchFormat(string eId, int count = 20) {
             JObject format = JObject.Parse(string.Format(BaseSearchFormat, eId, count.ToString()));
             return format.ToString();
         }
+
         private const string BaseSearchByMailFormat = @"{{ 'schemas':[ 'urn:ietf:params:scim:api:messages:2.0:SearchRequest' ], 'filter':'emails eq ""{0}"" and status eq ""ACTIVE""', 'sortBy':'name.familyName', 'sortOrder':'descending', 'startIndex':1, 'count':{1} }}";
+
+        /// <summary>
+        /// Creates a user's search string by email.
+        /// </summary>
+        /// <param name="email">The email to search for.</param>
+        /// <param name="count">The number of users to return from the search.</param>
+        /// <returns>A string that may be used as body in search requests to HID's systems.</returns>
         private string CreateSearchFormatByMail(string email, int count = 20) {
             JObject format = JObject.Parse(string.Format(BaseSearchByMailFormat, email.ToLowerInvariant(), count.ToString()));
             return format.ToString();
@@ -117,7 +142,7 @@ namespace Laser.Orchard.HID.Services {
             wr.Method = WebRequestMethods.Http.Post;
             wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
             wr.Headers.Add(HttpRequestHeader.Authorization, AuthorizationToken);
-            string bodyText = CreateSearchFormat(externalId); // ("Laser.Orchard.HID1331"); //("m.piovanelli"); //
+            string bodyText = CreateSearchFormat(externalId);
             byte[] bodyData = Encoding.UTF8.GetBytes(bodyText);
             using (Stream reqStream = wr.GetRequestStream()) {
                 reqStream.Write(bodyData, 0, bodyData.Length);
@@ -149,6 +174,7 @@ namespace Laser.Orchard.HID.Services {
                             result.Error = SearchErrors.InvalidParameters;
                             break;
                         case HttpStatusCode.Unauthorized:
+                            // Authentication could have expired while this method was running
                             if (Authenticate() == AuthenticationErrors.NoError) {
                                 result = SearchHIDUserByExternalID(externalId);
                             } else {
@@ -172,6 +198,7 @@ namespace Laser.Orchard.HID.Services {
 
             return result;
         }
+
         public HIDUserSearchResult SearchHIDUser(string email) {
             HIDUserSearchResult result = new HIDUserSearchResult();
             if (string.IsNullOrWhiteSpace(AuthorizationToken)) {
@@ -216,6 +243,7 @@ namespace Laser.Orchard.HID.Services {
                             result.Error = SearchErrors.InvalidParameters;
                             break;
                         case HttpStatusCode.Unauthorized:
+                            // Authentication could have expired while this method was running
                             if (Authenticate() == AuthenticationErrors.NoError) {
                                 result = SearchHIDUser(email);
                             } else {
@@ -250,9 +278,11 @@ namespace Laser.Orchard.HID.Services {
         public HIDUser IssueCredentials(IUser user) {
             return IssueCredentials(user, GetSiteSettings().PartNumbers);
         }
+
         public HIDUser IssueCredentials(HIDUser hidUser) {
             return IssueCredentials(hidUser, GetSiteSettings().PartNumbers);
         }
+
         public HIDUser IssueCredentials(IUser user, string[] partNumbers) {
             var searchResult = SearchHIDUser(user.Email);
             if (searchResult.Error == SearchErrors.NoError) {
@@ -261,6 +291,7 @@ namespace Laser.Orchard.HID.Services {
                 return new HIDUser();
             }
         }
+
         public HIDUser IssueCredentials(HIDUser hidUser, string[] partNumbers) {
             if (partNumbers.Length == 0) {
                 hidUser = hidUser.IssueCredential(""); //this assigns the default part number for the customer
@@ -275,15 +306,15 @@ namespace Laser.Orchard.HID.Services {
             }
             return hidUser;
         }
-
-
-
+        
         public HIDUser RevokeCredentials(IUser user) {
             return RevokeCredentials(user, GetSiteSettings().PartNumbers);
         }
+
         public HIDUser RevokeCredentials(HIDUser hidUser) {
             return RevokeCredentials(hidUser, GetSiteSettings().PartNumbers);
         }
+
         public HIDUser RevokeCredentials(IUser user, string[] partNumbers) {
             var searchResult = SearchHIDUser(user.Email);
             if (searchResult.Error == SearchErrors.NoError) {
@@ -292,6 +323,7 @@ namespace Laser.Orchard.HID.Services {
                 return new HIDUser();
             }
         }
+
         public HIDUser RevokeCredentials(HIDUser hidUser, string[] partNumbers) {
             if (partNumbers.Length == 0) {
                 hidUser = hidUser.RevokeCredential();

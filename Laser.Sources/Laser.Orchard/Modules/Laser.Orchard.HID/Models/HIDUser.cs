@@ -151,28 +151,48 @@ namespace Laser.Orchard.HID.Models {
         }
 
         private const string UserNameFormat = @"'name':{{ 'familyName': '{0}', 'givenName': '{1}'}}";
+
         private string UserNameBlock {
-            get { return string.Format(UserNameFormat, string.IsNullOrWhiteSpace(FamilyName) ? "FamilyName" : FamilyName, string.IsNullOrWhiteSpace(GivenName) ? "GivenName" : GivenName); }
+            get { return string.Format(UserNameFormat, 
+                string.IsNullOrWhiteSpace(FamilyName) ? "FamilyName" : FamilyName, 
+                string.IsNullOrWhiteSpace(GivenName) ? "GivenName" : GivenName); }
         }
+
         private const string UserCreateFormat = @"{{ 'schemas':[ 'urn:hid:scim:api:ma:1.0:UserAction', 'urn:ietf:params:scim:schemas:core:2.0:User' ], 'externalId': '{0}', {1}, 'emails':[ {{ {2} }} ], 'urn:hid:scim:api:ma:1.0:UserAction':{{ 'createInvitationCode':'N', 'sendInvitationEmail':'N', 'assignCredential':'N', 'partNumber':'', 'credential':'' }}, 'meta':{{ 'resourceType':'PACSUser' }} }}";
+
         private string CreateUserBody {
-            get { return JObject.Parse(string.Format(UserCreateFormat, ExternalId, UserNameBlock, string.Join(", ", Emails.Select(em => string.Format(@"'value':'{0}'", em.ToLowerInvariant()))))).ToString(); }
+            get {
+                return JObject.Parse(
+                    string.Format(UserCreateFormat, 
+                        ExternalId, 
+                        UserNameBlock, 
+                        string.Join(", ", Emails.Select(em => string.Format(@"'value':'{0}'", em.ToLowerInvariant())))))
+                    .ToString();
+            }
         }
 
         public static HIDUser CreateUser(IHIDAPIService hidService, IUser oUser, string familyName, string givenName) {
             return CreateUser(hidService, oUser.Id, familyName, givenName, oUser.Email);
         }
+
         public static HIDUser CreateUser(IHIDAPIService hidService, IUser oUser, string familyName, string givenName, string email) {
             return CreateUser(hidService, oUser.Id, familyName, givenName, email);
         }
+
         public static HIDUser CreateUser(IHIDAPIService hidService, int id, string familyName, string givenName, string email) {
             return CreateUser(hidService, GenerateExternalId(id), familyName, givenName, email);
         }
+
         public static HIDUser CreateUser(IHIDAPIService hidService, string extId, string familyName, string givenName, string email) {
             HIDUser user = new HIDUser(hidService) { ExternalId = extId, FamilyName = familyName, GivenName = givenName };
             user.Emails.Add(email);
             return user.CreateUser();
         }
+
+        /// <summary>
+        /// This method goes and creates the user information in HID's systems.
+        /// </summary>
+        /// <returns>This very user.</returns>
         public HIDUser CreateUser() {
             if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
                 if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
@@ -193,7 +213,9 @@ namespace Laser.Orchard.HID.Models {
                     if (resp.StatusCode == HttpStatusCode.Created) {
                         using (var reader = new StreamReader(resp.GetResponseStream())) {
                             string respJson = reader.ReadToEnd();
-                            PopulateFromJson(JObject.Parse(respJson));
+                            // populate the properties of the current HIDUser object with the values coming in the
+                            // response from HID's systems.
+                            PopulateFromJson(JObject.Parse(respJson)); 
                         }
                     }
                 }
@@ -201,6 +223,7 @@ namespace Laser.Orchard.HID.Models {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null) {
                     if (resp.StatusCode == HttpStatusCode.Unauthorized) {
+                        // Authentication could have expired while this method was running
                         if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
                             return CreateUser();
                         }
@@ -219,18 +242,21 @@ namespace Laser.Orchard.HID.Models {
         }
 
         private const string InvitationCreateFormat = @"{ 'schemas':[ 'urn:hid:scim:api:ma:1.0:UserAction' ], 'urn:hid:scim:api:ma:1.0:UserAction':{ 'createInvitationCode':'Y', 'sendInvitationEmail':'N', 'assignCredential':'N', 'partNumber':'', 'credential':'' }, 'meta':{ 'resourceType':'PACSUser' } }";
+
         private string CreateInvitationBody {
             get { return JObject.Parse(InvitationCreateFormat).ToString(); }
         }
 
         public string CreateInvitation() {
-            string invitationCode = "";
             if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
                 if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
                     Error = UserErrors.AuthorizationFailed;
                     return "";
                 }
             }
+
+            string invitationCode = "";
+
             HttpWebRequest wr = HttpWebRequest.CreateHttp(Location + "/invitation");
             wr.Method = WebRequestMethods.Http.Post;
             wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
@@ -256,6 +282,7 @@ namespace Laser.Orchard.HID.Models {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null) {
                     if (resp.StatusCode == HttpStatusCode.Unauthorized) {
+                        // Authentication could have expired while this method was running
                         if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
                             return CreateInvitation();
                         }
@@ -283,11 +310,19 @@ namespace Laser.Orchard.HID.Models {
         private string IssueCredentialEndpointFormat {
             get { return string.Format(HIDAPIEndpoints.IssueCredentialEndpointFormat, _HIDService.BaseEndpoint, @"{0}"); }
         }
+
         private const string IssueCredentialBodyFormat = @"{{ 'schemas':[ 'urn:hid:scim:api:ma:1.0:UserAction' ], 'urn:hid:scim:api:ma:1.0:UserAction':{{ 'assignCredential':'Y', 'partNumber':'{0}', 'credential':'' }} }}";
         private string IssueCredentialBody(string pn) {
             return JObject.Parse(string.Format(IssueCredentialBodyFormat, pn)).ToString();
         }
 
+        /// <summary>
+        /// Task HID's systems with issueing a credential for the given part number
+        /// </summary>
+        /// <param name="partNumber">The Part Number for which we are going to issue the credential.</param>
+        /// <param name="onlyLatestContainer">Tells wether to attept issueing credentials only for the most recent 
+        /// container for each of the user's devices.</param>
+        /// <returns></returns>
         public HIDUser IssueCredential(string partNumber, bool onlyLatestContainer = true) {
             if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
                 if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
@@ -322,6 +357,7 @@ namespace Laser.Orchard.HID.Models {
                         Error = UserErrors.NoError;
                         break;
                     case CredentialErrors.AuthorizationFailed:
+                        // Authentication could have expired while this method was running
                         if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
                             return IssueCredential(partNumber);
                         }
@@ -338,9 +374,11 @@ namespace Laser.Orchard.HID.Models {
         private string GetCredentialContainerEndpointFormat {
             get { return String.Format(HIDAPIEndpoints.GetCredentialContainerEndpointFormat, _HIDService.BaseEndpoint, @"{0}"); }
         }
+
         private string RevokeCredentialEndpointFormat {
             get { return string.Format(HIDAPIEndpoints.RevokeCredentialEndpointFormat, _HIDService.BaseEndpoint, @"{0}"); }
         }
+
         public HIDUser RevokeCredential(string partNumber = "") {
             if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
                 if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
@@ -349,7 +387,8 @@ namespace Laser.Orchard.HID.Models {
                 }
             }
             foreach (var credentialContainer in CredentialContainers) {
-                //TODO: move this functionality to a method of HIDCredentialContainer, like credentialContainer.RevokeCredential(partNumber)
+                //TODO: move this functionality to a method of HIDCredentialContainer, such as credentialContainer.RevokeCredential(partNumber),
+                // like we did for IssueCredential
                 HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(GetCredentialContainerEndpointFormat, credentialContainer.Id));
                 wr.Method = WebRequestMethods.Http.Get;
                 wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
@@ -384,6 +423,7 @@ namespace Laser.Orchard.HID.Models {
                                         HttpWebResponse respRevoke = (System.Net.HttpWebResponse)(ex.Response);
                                         if (respRevoke != null) {
                                             if (respRevoke.StatusCode == HttpStatusCode.Unauthorized) {
+                                                // Authentication could have expired while this method was running
                                                 if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
                                                     return RevokeCredential(partNumber);
                                                 }
@@ -425,7 +465,6 @@ namespace Laser.Orchard.HID.Models {
                 }
                 if (Error != UserErrors.NoError && Error != UserErrors.PreconditionFailed) {
                     credentialContainer.Error = CredentialErrors.UnknownError;
-                    //break; //break early on error
                 }
             }
             return this;
