@@ -14,7 +14,14 @@ using System.Web;
 
 namespace Laser.Orchard.HID.Models {
     public class HIDUser {
-        public string Location { get; set; }
+        private string _location;
+        public string Location { get {
+                if (!LocationIsValid()) {
+                    _location = _HIDService.UsersEndpoint + "/" + Id.ToString();
+                }
+                return _location;
+            }
+            set { _location = value; } }
         public int Id { get; set; } //id of user in HID systems
         public string ExternalId { get; set; }
         public string FamilyName { get; set; }
@@ -112,12 +119,7 @@ namespace Laser.Orchard.HID.Models {
                 Error = UserErrors.AuthorizationFailed;
                 return this;
             }
-
-            if (!LocationIsValid()) {
-                Error = UserErrors.DoesNotExist;
-                return this;
-            }
-
+            
             HttpWebRequest wr = HttpWebRequest.CreateHttp(Location);
             wr.Method = WebRequestMethods.Http.Get;
             wr.ContentType = Constants.DefaultContentType;
@@ -255,12 +257,7 @@ namespace Laser.Orchard.HID.Models {
                 Error = UserErrors.AuthorizationFailed;
                 return "";
             }
-
-            if (!LocationIsValid()) {
-                Error = UserErrors.DoesNotExist;
-                return "";
-            }
-
+            
             string invitationCode = "";
 
             HttpWebRequest wr = HttpWebRequest.CreateHttp(Location + "/invitation");
@@ -312,16 +309,7 @@ namespace Laser.Orchard.HID.Models {
             Error = UserErrors.UnknownError;
             return "";
         }
-
-        private string IssueCredentialEndpointFormat {
-            get { return string.Format(HIDAPIEndpoints.IssueCredentialEndpointFormat, _HIDService.BaseEndpoint, @"{0}"); }
-        }
-
-        private const string IssueCredentialBodyFormat = @"{{ 'schemas':[ 'urn:hid:scim:api:ma:1.0:UserAction' ], 'urn:hid:scim:api:ma:1.0:UserAction':{{ 'assignCredential':'Y', 'partNumber':'{0}', 'credential':'' }} }}";
-        private string IssueCredentialBody(string pn) {
-            return JObject.Parse(string.Format(IssueCredentialBodyFormat, pn)).ToString();
-        }
-
+        
         /// <summary>
         /// Task HID's systems with issueing a credential for the given part number
         /// </summary>
@@ -475,7 +463,11 @@ namespace Laser.Orchard.HID.Models {
         }
 
         private bool LocationIsValid() {
-            return Location.StartsWith(_HIDService.UsersEndpoint,StringComparison.InvariantCultureIgnoreCase);
+            int id;
+            return !string.IsNullOrWhiteSpace(_location)
+                && _location.StartsWith(_HIDService.UsersEndpoint, StringComparison.InvariantCultureIgnoreCase)
+                && int.TryParse(_location.Substring(_HIDService.UsersEndpoint.Length + 1), out id)
+                && id == Id;
         }
     }
 }

@@ -160,8 +160,16 @@ namespace Laser.Orchard.HID.Models {
 
             return this;
         }
-    }
 
+        public HIDCredentialContainer RevokeCredentials(string partNumber = "") {
+
+
+
+            return this;
+        }
+
+    }
+    
     //public class HIDCredentialContainerEqualityComparer : IEqualityComparer<HIDCredentialContainer> {
     //    public bool Equals(HIDCredentialContainer cc1, HIDCredentialContainer cc2) {
     //        if (Object.ReferenceEquals(cc1, cc2)) return true;
