@@ -78,7 +78,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                             user.RegistrationStatus = UserStatus.Approved;
                             _authenticationService.SignIn(user, true);
                             _userEventHandler.LoggedIn(user);
-                            return _utilsServices.GetResponse(ResponseType.Success);
+                            return _utilsServices.GetUserResult("");
                         }
                     }
                 }

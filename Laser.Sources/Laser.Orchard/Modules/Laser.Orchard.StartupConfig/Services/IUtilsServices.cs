@@ -23,6 +23,7 @@ using System.Web.Mvc;
 using System.Globalization;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using Laser.Orchard.StartupConfig.IdentityProvider;
 
 namespace Laser.Orchard.StartupConfig.Services {
 
@@ -62,6 +63,12 @@ namespace Laser.Orchard.StartupConfig.Services {
         /// <returns></returns>
         ContentResult ConvertToJsonResult(Response resp);
         /// <summary>
+        /// Get a successfull response to a login request with registration data.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Response GetUserResult(String message);
+        /// <summary>
         /// Set values on a field in a content part.
         /// </summary>
         /// <param name="listpart"></param>
@@ -80,12 +87,17 @@ namespace Laser.Orchard.StartupConfig.Services {
         private readonly string _publicMediaPath; // /Orchard/Media/Default/
         private readonly IRoleService _roleService;
         private readonly ITaxonomyService _taxonomyService;
+        private readonly IOrchardServices _orchardServices;
+        private readonly IEnumerable<IIdentityProvider> _identityProviders;
+        private readonly IControllerContextAccessor _controllerContextAccessor;
 
-        public UtilsServices(IModuleService moduleService, ShellSettings settings, IRoleService roleService, ITaxonomyService taxonomyService) {
+        public UtilsServices(IModuleService moduleService, ShellSettings settings, IRoleService roleService, ITaxonomyService taxonomyService, IOrchardServices orchardServices, IEnumerable<IIdentityProvider> identityProviders, IControllerContextAccessor controllerContextAccessor) {
             _moduleService = moduleService;
             _roleService = roleService;
             _taxonomyService = taxonomyService;
-
+            _orchardServices = orchardServices;
+            _identityProviders = identityProviders;
+            _controllerContextAccessor = controllerContextAccessor;
             var mediaPath = HostingEnvironment.IsHosted
                                 ? HostingEnvironment.MapPath("~/Media/") ?? ""
                                 : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
@@ -220,7 +232,24 @@ namespace Laser.Orchard.StartupConfig.Services {
             result = result.Replace("\b", "\\b");
             return result;
         }
-
+        public Response GetUserResult(String message) {
+            List<string> roles = new List<string>();
+            var registeredServicesData = new JObject();
+            registeredServicesData.Add("RegisteredServices", new JArray(_controllerContextAccessor.Context.Controller.TempData));
+            if (_orchardServices.WorkContext.CurrentUser != null) {
+                roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
+                registeredServicesData.Add("Roles", new JArray(roles));
+                var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
+                foreach (var provider in _identityProviders) {
+                    var val = provider.GetRelatedId(context);
+                    if (string.IsNullOrWhiteSpace(val.Key) == false) {
+                        registeredServicesData.Add(val.Key, new JValue(val.Value));
+                    }
+                }
+            }
+            var json = registeredServicesData.ToString();
+            return GetResponse(ResponseType.Success, message, json);
+        }
         /// <summary>
         /// Returns the tenant path
         /// </summary>

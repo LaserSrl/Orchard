@@ -66,12 +66,20 @@ namespace Laser.Orchard.Mobile.Handlers {
         public void Creating(UserContext context) {
             //   throw new NotImplementedException();
         }
-
+        private string GetRequestKey(string name) {
+            var result = "";
+            var req = _httpContextAccessor.Current().Request;
+            result = req.Headers["x-" + name];
+            if (string.IsNullOrWhiteSpace(result)) {
+                result = req.QueryString[name];
+            }
+            return result;
+        }
         public void LoggedIn(IUser user) {
             // crea o aggiorna il contatto
             _contactEventHandler.Synchronize(user);
             // imposta UUID per il device
-            var UUIdentifier = _httpContextAccessor.Current().Request.QueryString["UUID"];
+            var UUIdentifier = GetRequestKey("UUID");
             if (!string.IsNullOrWhiteSpace(UUIdentifier)) {
                 var record = _userDeviceRecord.Fetch(x => x.UUIdentifier == UUIdentifier).FirstOrDefault();
                 if (record == null) {
