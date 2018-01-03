@@ -7,8 +7,6 @@ using Orchard.Users.Services;
 using Orchard.Users.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Http;
 using Orchard.Messaging.Services;
 using Orchard.Email.Services;
@@ -20,7 +18,6 @@ using Orchard.Security;
 using Orchard.Users.Events;
 using Newtonsoft.Json.Linq;
 using Laser.Orchard.UsersExtensions.DataContracts;
-using Laser.Orchard.StartupConfig.WebApiProtection.Models;
 using Laser.Orchard.StartupConfig.IdentityProvider;
 
 namespace Laser.Orchard.UsersExtensions.Controllers {
@@ -77,12 +74,10 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                 if (iuser != null) {
                     var user = iuser as UserPart;
                     if (user.RegistrationStatus == UserStatus.Pending) {
-                        if(string.Equals(user.Email, msgObj.Mail, StringComparison.InvariantCultureIgnoreCase)) {
-                            user.RegistrationStatus = UserStatus.Approved;
-                            _authenticationService.SignIn(user, true);
-                            _userEventHandler.LoggedIn(user);
-                            return _utilsServices.GetUserResponse("", _identityProviders, null);
-                        }
+                        user.RegistrationStatus = UserStatus.Approved;
+                        _authenticationService.SignIn(user, true);
+                        _userEventHandler.LoggedIn(user);
+                        return _utilsServices.GetUserResponse("", _identityProviders, null);
                     }
                 }
             }
