@@ -21,6 +21,7 @@ using Orchard.Users.Events;
 using Newtonsoft.Json.Linq;
 using Laser.Orchard.UsersExtensions.DataContracts;
 using Laser.Orchard.StartupConfig.WebApiProtection.Models;
+using Laser.Orchard.StartupConfig.IdentityProvider;
 
 namespace Laser.Orchard.UsersExtensions.Controllers {
     [WebApiKeyFilter(true)]
@@ -32,9 +33,10 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserEventHandler _userEventHandler;
+        private readonly IEnumerable<IIdentityProvider> _identityProviders;
         public Localizer T { get; set; }
         public ILogger Log { get; set; }
-        public NonceLoginController(IUtilsServices utilsServices, IUserService userService, IUsersExtensionsServices usersExtensionsServices, IMessageService messageService, IOrchardServices orchardServices, IAuthenticationService authenticationService, IUserEventHandler userEventHandler) {
+        public NonceLoginController(IUtilsServices utilsServices, IUserService userService, IUsersExtensionsServices usersExtensionsServices, IMessageService messageService, IOrchardServices orchardServices, IAuthenticationService authenticationService, IUserEventHandler userEventHandler, IEnumerable<IIdentityProvider> identityProviders) {
             _utilsServices = utilsServices;
             _userService = userService;
             _usersExtensionsServices = usersExtensionsServices;
@@ -42,6 +44,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
             _orchardServices = orchardServices;
             _authenticationService = authenticationService;
             _userEventHandler = userEventHandler;
+            _identityProviders = identityProviders;
             T = NullLocalizer.Instance;
             Log = NullLogger.Instance;
         }
@@ -78,7 +81,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                             user.RegistrationStatus = UserStatus.Approved;
                             _authenticationService.SignIn(user, true);
                             _userEventHandler.LoggedIn(user);
-                            return _utilsServices.GetUserResult("");
+                            return _utilsServices.GetUserResponse("", _identityProviders, null);
                         }
                     }
                 }

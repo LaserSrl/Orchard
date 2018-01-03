@@ -175,7 +175,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         } else {
                             authenticatedUser = _authenticationService.GetAuthenticatedUser();
                             _userEventHandler.LoggedIn(authenticatedUser);
-                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResult(""));
+                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse("", _identityProviders, _controllerContextAccessor.Context.Controller.TempData));
                         }
                     } else {
                         authenticatedUser = _authenticationService.GetAuthenticatedUser();
@@ -192,7 +192,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         } else {
                             // Handle LoggedIn Event
                             _userEventHandler.LoggedIn(authenticatedUser);
-                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResult(T("Your {0} account has been attached to your local account.", authResult.Provider).Text));
+                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse(T("Your {0} account has been attached to your local account.", authResult.Provider).Text, _identityProviders, _controllerContextAccessor.Context.Controller.TempData));
                         }
                     }
 
@@ -215,7 +215,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         } else {
                             // Handle LoggedIn Event
                             _userEventHandler.LoggedIn(newUser);
-                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResult(T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", authResult.Provider, newUser.UserName).Text));
+                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse(T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", authResult.Provider, newUser.UserName).Text, _identityProviders, _controllerContextAccessor.Context.Controller.TempData));
                         }
                     }
                     result = _utilsServices.GetResponse(ResponseType.None, "Login failed.");

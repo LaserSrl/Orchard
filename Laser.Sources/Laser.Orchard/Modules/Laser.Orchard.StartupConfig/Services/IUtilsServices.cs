@@ -67,7 +67,7 @@ namespace Laser.Orchard.StartupConfig.Services {
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        Response GetUserResult(String message);
+        Response GetUserResponse(String message, IEnumerable<IIdentityProvider> identityProviders, TempDataDictionary controllerTempData);
         /// <summary>
         /// Set values on a field in a content part.
         /// </summary>
@@ -88,16 +88,12 @@ namespace Laser.Orchard.StartupConfig.Services {
         private readonly IRoleService _roleService;
         private readonly ITaxonomyService _taxonomyService;
         private readonly IOrchardServices _orchardServices;
-        private readonly IEnumerable<IIdentityProvider> _identityProviders;
-        private readonly IControllerContextAccessor _controllerContextAccessor;
 
-        public UtilsServices(IModuleService moduleService, ShellSettings settings, IRoleService roleService, ITaxonomyService taxonomyService, IOrchardServices orchardServices, IEnumerable<IIdentityProvider> identityProviders, IControllerContextAccessor controllerContextAccessor) {
+        public UtilsServices(IModuleService moduleService, ShellSettings settings, IRoleService roleService, ITaxonomyService taxonomyService, IOrchardServices orchardServices) {
             _moduleService = moduleService;
             _roleService = roleService;
             _taxonomyService = taxonomyService;
             _orchardServices = orchardServices;
-            _identityProviders = identityProviders;
-            _controllerContextAccessor = controllerContextAccessor;
             var mediaPath = HostingEnvironment.IsHosted
                                 ? HostingEnvironment.MapPath("~/Media/") ?? ""
                                 : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
@@ -232,15 +228,19 @@ namespace Laser.Orchard.StartupConfig.Services {
             result = result.Replace("\b", "\\b");
             return result;
         }
-        public Response GetUserResult(String message) {
+        public Response GetUserResponse(String message, IEnumerable<IIdentityProvider> identityProviders, TempDataDictionary controllerTempData) {
             List<string> roles = new List<string>();
             var registeredServicesData = new JObject();
-            registeredServicesData.Add("RegisteredServices", new JArray(_controllerContextAccessor.Context.Controller.TempData));
+            if(controllerTempData != null) {
+                registeredServicesData.Add("RegisteredServices", new JArray(controllerTempData));
+            } else {
+                registeredServicesData.Add("RegisteredServices", new JArray(new TempDataDictionary()));
+            }
             if (_orchardServices.WorkContext.CurrentUser != null) {
                 roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
                 registeredServicesData.Add("Roles", new JArray(roles));
                 var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
-                foreach (var provider in _identityProviders) {
+                foreach (var provider in identityProviders) {
                     var val = provider.GetRelatedId(context);
                     if (string.IsNullOrWhiteSpace(val.Key) == false) {
                         registeredServicesData.Add(val.Key, new JValue(val.Value));
