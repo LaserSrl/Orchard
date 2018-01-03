@@ -175,7 +175,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         } else {
                             authenticatedUser = _authenticationService.GetAuthenticatedUser();
                             _userEventHandler.LoggedIn(authenticatedUser);
-                            return _utilsServices.ConvertToJsonResult(GetUserResult(""));
+                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse("", _identityProviders, _controllerContextAccessor.Context.Controller.TempData));
                         }
                     } else {
                         authenticatedUser = _authenticationService.GetAuthenticatedUser();
@@ -192,7 +192,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         } else {
                             // Handle LoggedIn Event
                             _userEventHandler.LoggedIn(authenticatedUser);
-                            return _utilsServices.ConvertToJsonResult(GetUserResult(T("Your {0} account has been attached to your local account.", authResult.Provider).Text));
+                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse(T("Your {0} account has been attached to your local account.", authResult.Provider).Text, _identityProviders, _controllerContextAccessor.Context.Controller.TempData));
                         }
                     }
 
@@ -215,7 +215,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         } else {
                             // Handle LoggedIn Event
                             _userEventHandler.LoggedIn(newUser);
-                            return _utilsServices.ConvertToJsonResult(GetUserResult(T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", authResult.Provider, newUser.UserName).Text));
+                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse(T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", authResult.Provider, newUser.UserName).Text, _identityProviders, _controllerContextAccessor.Context.Controller.TempData));
                         }
                     }
                     result = _utilsServices.GetResponse(ResponseType.None, "Login failed.");
@@ -225,25 +225,6 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 result = _utilsServices.GetResponse(ResponseType.None, e.Message);
                 return _utilsServices.ConvertToJsonResult(result);
             }
-        }
-
-        public Response GetUserResult(String message) {
-            List<string> roles = new List<string>();
-            var registeredServicesData = new JObject();
-            registeredServicesData.Add("RegisteredServices", new JArray(_controllerContextAccessor.Context.Controller.TempData));
-            if (_orchardServices.WorkContext.CurrentUser != null) {
-                roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
-                registeredServicesData.Add("Roles", new JArray(roles));
-                var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
-                foreach (var provider in _identityProviders) {
-                    var val = provider.GetRelatedId(context);
-                    if (string.IsNullOrWhiteSpace(val.Key) == false) {
-                        registeredServicesData.Add(val.Key, new JValue(val.Value));
-                    }
-                }
-            }
-            var json = registeredServicesData.ToString();
-            return _utilsServices.GetResponse(ResponseType.Success, message, json);
         }
     }
 

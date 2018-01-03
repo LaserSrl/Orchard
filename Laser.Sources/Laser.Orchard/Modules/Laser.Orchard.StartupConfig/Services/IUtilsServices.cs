@@ -23,6 +23,7 @@ using System.Web.Mvc;
 using System.Globalization;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using Laser.Orchard.StartupConfig.IdentityProvider;
 
 namespace Laser.Orchard.StartupConfig.Services {
 
@@ -62,6 +63,12 @@ namespace Laser.Orchard.StartupConfig.Services {
         /// <returns></returns>
         ContentResult ConvertToJsonResult(Response resp);
         /// <summary>
+        /// Get a successfull response to a login request with registration data.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Response GetUserResponse(String message, IEnumerable<IIdentityProvider> identityProviders, TempDataDictionary controllerTempData);
+        /// <summary>
         /// Set values on a field in a content part.
         /// </summary>
         /// <param name="listpart"></param>
@@ -80,12 +87,13 @@ namespace Laser.Orchard.StartupConfig.Services {
         private readonly string _publicMediaPath; // /Orchard/Media/Default/
         private readonly IRoleService _roleService;
         private readonly ITaxonomyService _taxonomyService;
+        private readonly IOrchardServices _orchardServices;
 
-        public UtilsServices(IModuleService moduleService, ShellSettings settings, IRoleService roleService, ITaxonomyService taxonomyService) {
+        public UtilsServices(IModuleService moduleService, ShellSettings settings, IRoleService roleService, ITaxonomyService taxonomyService, IOrchardServices orchardServices) {
             _moduleService = moduleService;
             _roleService = roleService;
             _taxonomyService = taxonomyService;
-
+            _orchardServices = orchardServices;
             var mediaPath = HostingEnvironment.IsHosted
                                 ? HostingEnvironment.MapPath("~/Media/") ?? ""
                                 : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
@@ -220,7 +228,28 @@ namespace Laser.Orchard.StartupConfig.Services {
             result = result.Replace("\b", "\\b");
             return result;
         }
-
+        public Response GetUserResponse(String message, IEnumerable<IIdentityProvider> identityProviders, TempDataDictionary controllerTempData) {
+            List<string> roles = new List<string>();
+            var registeredServicesData = new JObject();
+            if(controllerTempData != null) {
+                registeredServicesData.Add("RegisteredServices", new JArray(controllerTempData));
+            } else {
+                registeredServicesData.Add("RegisteredServices", new JArray(new TempDataDictionary()));
+            }
+            if (_orchardServices.WorkContext.CurrentUser != null) {
+                roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
+                registeredServicesData.Add("Roles", new JArray(roles));
+                var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
+                foreach (var provider in identityProviders) {
+                    var val = provider.GetRelatedId(context);
+                    if (string.IsNullOrWhiteSpace(val.Key) == false) {
+                        registeredServicesData.Add(val.Key, new JValue(val.Value));
+                    }
+                }
+            }
+            var json = registeredServicesData.ToString();
+            return GetResponse(ResponseType.Success, message, json);
+        }
         /// <summary>
         /// Returns the tenant path
         /// </summary>

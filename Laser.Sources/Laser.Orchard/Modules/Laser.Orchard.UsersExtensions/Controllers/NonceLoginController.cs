@@ -7,8 +7,6 @@ using Orchard.Users.Services;
 using Orchard.Users.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Http;
 using Orchard.Messaging.Services;
 using Orchard.Email.Services;
@@ -20,7 +18,7 @@ using Orchard.Security;
 using Orchard.Users.Events;
 using Newtonsoft.Json.Linq;
 using Laser.Orchard.UsersExtensions.DataContracts;
-using Laser.Orchard.StartupConfig.WebApiProtection.Models;
+using Laser.Orchard.StartupConfig.IdentityProvider;
 
 namespace Laser.Orchard.UsersExtensions.Controllers {
     [WebApiKeyFilter(true)]
@@ -32,9 +30,10 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserEventHandler _userEventHandler;
+        private readonly IEnumerable<IIdentityProvider> _identityProviders;
         public Localizer T { get; set; }
         public ILogger Log { get; set; }
-        public NonceLoginController(IUtilsServices utilsServices, IUserService userService, IUsersExtensionsServices usersExtensionsServices, IMessageService messageService, IOrchardServices orchardServices, IAuthenticationService authenticationService, IUserEventHandler userEventHandler) {
+        public NonceLoginController(IUtilsServices utilsServices, IUserService userService, IUsersExtensionsServices usersExtensionsServices, IMessageService messageService, IOrchardServices orchardServices, IAuthenticationService authenticationService, IUserEventHandler userEventHandler, IEnumerable<IIdentityProvider> identityProviders) {
             _utilsServices = utilsServices;
             _userService = userService;
             _usersExtensionsServices = usersExtensionsServices;
@@ -42,6 +41,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
             _orchardServices = orchardServices;
             _authenticationService = authenticationService;
             _userEventHandler = userEventHandler;
+            _identityProviders = identityProviders;
             T = NullLocalizer.Instance;
             Log = NullLogger.Instance;
         }
@@ -58,7 +58,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                     data.Add("Subject", T("{0} - Login", currentSite.SiteName).Text);
                     //var protectionSettings = currentSite.As<ProtectionSettingsPart>();
                     var link = string.Format(settings.LoginLinkFormat ?? "", nonce);
-                    data.Add("Body", T("To login on \"{0}\", please open the following link: {1}", currentSite.SiteName, link).Text);
+                    data.Add("Body", T("<html><body>To login on \"{0}\", please open the following link: <a href=\"{1}\">Login</a></body></html>", currentSite.SiteName, link).Text);
                     data.Add("Recipients", user.Email);
                     //data.Add("Bcc", smtp.Address);
                     _messageService.Send(SmtpMessageChannel.MessageType, data);
@@ -74,12 +74,10 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                 if (iuser != null) {
                     var user = iuser as UserPart;
                     if (user.RegistrationStatus == UserStatus.Pending) {
-                        if(string.Equals(user.Email, msgObj.Mail, StringComparison.InvariantCultureIgnoreCase)) {
-                            user.RegistrationStatus = UserStatus.Approved;
-                            _authenticationService.SignIn(user, true);
-                            _userEventHandler.LoggedIn(user);
-                            return _utilsServices.GetResponse(ResponseType.Success);
-                        }
+                        user.RegistrationStatus = UserStatus.Approved;
+                        _authenticationService.SignIn(user, true);
+                        _userEventHandler.LoggedIn(user);
+                        return _utilsServices.GetUserResponse("", _identityProviders, null);
                     }
                 }
             }
