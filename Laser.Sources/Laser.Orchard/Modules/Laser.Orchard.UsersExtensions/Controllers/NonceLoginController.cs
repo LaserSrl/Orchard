@@ -61,7 +61,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                     data.Add("Subject", T("{0} - Login", currentSite.SiteName).Text);
                     //var protectionSettings = currentSite.As<ProtectionSettingsPart>();
                     var link = string.Format(settings.LoginLinkFormat ?? "", nonce);
-                    data.Add("Body", T("To login on \"{0}\", please open the following link: {1}", currentSite.SiteName, link).Text);
+                    data.Add("Body", T("<html><body>To login on \"{0}\", please open the following link: <a href=\"{1}\">Login</a></body></html>", currentSite.SiteName, link).Text);
                     data.Add("Recipients", user.Email);
                     //data.Add("Bcc", smtp.Address);
                     _messageService.Send(SmtpMessageChannel.MessageType, data);
