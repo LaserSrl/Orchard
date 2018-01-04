@@ -15,17 +15,19 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Laser.Orchard.Caligoo.Services {
     public interface ICaligooService : IDependency {
         ContentItem GetContact(string caligooUserId);
         ContentItem CreateContact(LoginLogoutEventMessage caligooUserEvent);
-        void CaligooLogin();
-        void JwtTokenRenew();
         JObject GetUserDetails(string caligooUserId);
         List<string> GetFilteredCaligooUsers(CaligooUsersFilterValue filters);
-        JArray GetLocations();
+        List<LocationMessage> GetLocations();
         void UpdateLocation(LocationMessage messsage);
     }
     public class CaligooService : ICaligooService {
@@ -66,29 +68,44 @@ namespace Laser.Orchard.Caligoo.Services {
             return contact;
         }
         private IUser GetAdministrator() {
-            IUser result = null;
-            var superUser = _orchardServices.WorkContext.CurrentSite.SuperUser;
-            var query = _orchardServices.ContentManager.Query().ForType("User").Where<UserPartRecord>(x => x.UserName == superUser);
-            var user = query.List().FirstOrDefault();
-            if (user != null) {
-                result = user.As<UserPart>();
+            if(_caligooTempData.KrakeAdmin == null) {
+                var superUser = _orchardServices.WorkContext.CurrentSite.SuperUser;
+                var query = _orchardServices.ContentManager.Query().ForType("User").Where<UserPartRecord>(x => x.UserName == superUser);
+                var user = query.List().FirstOrDefault();
+                if (user != null) {
+                    _caligooTempData.KrakeAdmin = user.As<UserPart>();
+                }
             }
-            return result;
+            return _caligooTempData.KrakeAdmin;
         }
-        public void CaligooLogin() {
-            // TODO
-            var usr = _caligooSettings.LoginUrl;
-            var pwd = _caligooSettings.LoginUrl;
-            var content = string.Format("usr={0}&pwd={1}", usr, pwd);
-            var encodedToken = ResultFromCaligooApiPost("login", content);
-            // token valido di esempio
-            encodedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ";
-            _caligooTempData.CurrentJwtToken = new JwtSecurityToken(encodedToken);
+        private void CaligooLogin() {
+            var url = ComposeUrl(_caligooSettings.LoginPath, null);
+            // basic authentication header
+            var byteArr = Encoding.ASCII.GetBytes(string.Format("{0}:{1}", _caligooSettings.Username, _caligooSettings.Password));
+            var authHeader = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArr));
+            // call web api
+            var response = CallWebApi(url, authHeader, HttpMethod.Get);
+            var json = JObject.Parse(response.Body);
+            var auth = json.ToObject<AuthenticationMessage>();
+            if (response.Success) {
+                if (auth.Status == true) {
+                    _caligooTempData.CurrentJwtToken = new JwtSecurityToken(auth.Token);
+                } else {
+                    Logger.Error("CaligooLogin: authentication response error on request {0}: {1}.", url, auth.Message);
+                }
+            }
         }
-        public void JwtTokenRenew() {
-            // TODO
-            var newToken = ResultFromCaligooApiGet("renew");
-            _caligooTempData.CurrentJwtToken = new JwtSecurityToken(newToken);
+        private void JwtTokenRenew() {
+            var response = ResultFromCaligooApiGet(_caligooSettings.RefreshPath);
+            if (response.Success) {
+                var json = JObject.Parse(response.Body);
+                var auth = json.ToObject<AuthenticationMessage>();
+                if (auth.Status == true) {
+                    _caligooTempData.CurrentJwtToken = new JwtSecurityToken(auth.Token);
+                } else {
+                    Logger.Error("JwtTokenRenew: token refresh error. Message: {0}", auth.Message);
+                }
+            }
         }
         public JObject GetUserDetails(string caligooUserId) {
             // TODO: vedere se questo metodo serve o no
@@ -96,79 +113,103 @@ namespace Laser.Orchard.Caligoo.Services {
         }
         public List<string> GetFilteredCaligooUsers(CaligooUsersFilterValue filters) {
             var result = new List<string>();
-            var json = ResultFromCaligooApiGet("users", filters.GetQueryString());
-            var jUsers = JObject.Parse(json);
-            var userList = jUsers.ToObject<UserListMessage>();
-            foreach(var usr in userList.Data) {
-                result.Add(usr.CaligooUserId);
+            var response = ResultFromCaligooApiGet(_caligooSettings.UsersPath, filters.GetQueryString());
+            if (response.Success) {
+                var jUsers = JObject.Parse(response.Body);
+                var userList = jUsers.ToObject<UserListMessage>();
+                foreach (var usr in userList.Data) {
+                    result.Add(usr.CaligooUserId);
+                }
             }
             return result;
         }
-        public JArray GetLocations() {
-            var json = ResultFromCaligooApiGet("locations");
-            return JArray.Parse(json);
+        public List<LocationMessage> GetLocations() {
+            var result = new List<LocationMessage>();
+            LocationMessage location = null;
+            var response = ResultFromCaligooApiGet(_caligooSettings.LocationsPath);
+            if (response.Success) {
+                var jArr = JArray.Parse(response.Body);
+                foreach (var jLoc in jArr) {
+                    location = jLoc.ToObject<LocationMessage>();
+                    result.Add(location);
+                }
+            }
+            return result;
         }
         private void EnsureJwtToken() {
             var now = DateTime.UtcNow;
             if(_caligooTempData.CurrentJwtToken == null) {
                 CaligooLogin();
-            } else if ((_caligooTempData.CurrentJwtToken.ValidTo - now) <= new TimeSpan(0, 10, 0)) { // if there are less than 10 minutes left
+            } else if ((_caligooTempData.CurrentJwtToken.ValidTo - now) <= new TimeSpan(0, 10, 0)) { // if there are less than 10 minutes left // TODO: verificare se renderlo parametrico
                 JwtTokenRenew();
             } else if(now > _caligooTempData.CurrentJwtToken.ValidTo) {
                 CaligooLogin();
             }
         }
-        private string ResultFromCaligooApiGet(string resource, string parameters = null) {
-            string result = null;
+        private CallResult ResultFromCaligooApiGet(string resource, string parameters = null) {
+            var result = CallResult.Failure;
             EnsureJwtToken();
             var url = ComposeUrl(resource, parameters);
-            _caligooTempData.WebApiClient.DefaultRequestHeaders.Clear();
-            _caligooTempData.WebApiClient.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", _caligooTempData.CurrentJwtToken.RawData));
-            var t = _caligooTempData.WebApiClient.GetAsync(url);
-            var timeout = _caligooSettings.RequestTimeoutMillis == 0 ? 10000 : _caligooSettings.RequestTimeoutMillis; // 10000 = default timeout
-            t.Wait(timeout);
-            if (t.Status == System.Threading.Tasks.TaskStatus.RanToCompletion) {
-                if (t.Result.IsSuccessStatusCode) {
-                    var aux = t.Result.Content.ReadAsStringAsync();
-                    aux.Wait();
-                    result = aux.Result;
-                } else {
-                    Logger.Error("ResultFromCaligooApiGet: Error {1} - {2} on request {0}.", url, (int)(t.Result.StatusCode), t.Result.ReasonPhrase);
-                }
-            } else {
-                Logger.Error("ResultFromCaligooApiGet: Timeout on request {0}.", url);
+            if(_caligooTempData.CurrentJwtToken != null) {
+                var authHeader = new AuthenticationHeaderValue("Bearer", _caligooTempData.CurrentJwtToken.RawData);
+                result = CallWebApi(url, authHeader, HttpMethod.Get);
             }
             return result;
         }
-        private string ResultFromCaligooApiPost(string resource, string content, string parameters = null) {
-            string result = null;
+        private CallResult ResultFromCaligooApiPost(string resource, string content, string parameters = null) {
+            var result = CallResult.Failure;
             EnsureJwtToken();
             var url = ComposeUrl(resource, parameters);
-            _caligooTempData.WebApiClient.DefaultRequestHeaders.Clear();
-            _caligooTempData.WebApiClient.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", _caligooTempData.CurrentJwtToken.ToString()));
-            var t = _caligooTempData.WebApiClient.PostAsync(url, new StringContent(content));
-            var timeout = _caligooSettings.RequestTimeoutMillis == 0 ? 10000 : _caligooSettings.RequestTimeoutMillis; // 10000 = default timeout
-            t.Wait(timeout);
-            if (t.Status == System.Threading.Tasks.TaskStatus.RanToCompletion) {
-                if (t.Result.IsSuccessStatusCode) {
-                    var aux = t.Result.Content.ReadAsStringAsync();
-                    aux.Wait();
-                    result = aux.Result;
-                } else {
-                    Logger.Error("ResultFromCaligooApiPost: Error {1} - {2} on request {0}.", url, (int)(t.Result.StatusCode), t.Result.ReasonPhrase);
-                }
-            } else {
-                Logger.Error("ResultFromCaligooApiPost: Timeout ({1:#.##0} millis) on request {0}.", url, timeout);
+            if (_caligooTempData.CurrentJwtToken != null) {
+                var authHeader = new AuthenticationHeaderValue("Bearer", _caligooTempData.CurrentJwtToken.RawData);
+                result = CallWebApi(url, authHeader, HttpMethod.Post, content);
             }
             return result;
         }
         private string ComposeUrl(string resource, string parameters = null) {
-            // TODO
-            var url = string.Format("http://localhost/Laser.Orchard/Modules/Orchard.Blogs/Styles/menu.blog-admin.css", resource);
+            var url = string.Format("{0}/{1}", _caligooSettings.BaseUrl.TrimEnd('/'), resource);
             if (parameters != null) {
                 url += string.Format("?{0}", parameters);
             }
             return url;
+        }
+        private CallResult CallWebApi(string url, AuthenticationHeaderValue auth, HttpMethod method, string content = null) {
+            var result = CallResult.Failure;
+            try {
+                _caligooTempData.WebApiClient.DefaultRequestHeaders.Clear();
+                if (auth != null) {
+                    _caligooTempData.WebApiClient.DefaultRequestHeaders.Authorization = auth;
+                }
+                // specify to use TLS 1.2 as default connection if needed
+                if (url.ToLowerInvariant().StartsWith("https:")) {
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                }
+                // call web api
+                Task<HttpResponseMessage> t = null;
+                if (method == HttpMethod.Get) {
+                    t = _caligooTempData.WebApiClient.GetAsync(url);
+                } else if (method == HttpMethod.Post) {
+                    t = _caligooTempData.WebApiClient.PostAsync(url, new StringContent(content));
+                }
+                if (t != null) {
+                    t.Wait(_caligooSettings.RequestTimeoutMillis);
+                    if (t.Status == System.Threading.Tasks.TaskStatus.RanToCompletion) {
+                        var aux = t.Result.Content.ReadAsStringAsync();
+                        aux.Wait();
+                        result.Body = aux.Result;
+                        if (t.Result.IsSuccessStatusCode) {
+                            result.Success = true;
+                        } else {
+                            Logger.Error("CallWebApi: Error {1} - {2} on request {0}.", url, (int)(t.Result.StatusCode), t.Result.ReasonPhrase);
+                        }
+                    } else {
+                        Logger.Error("CallWebApi: Timeout on request {0}.", url);
+                    }
+                }
+            } catch (Exception ex) {
+                Logger.Error(ex, "CallWebApi error.");
+            }
+            return result;
         }
         public void UpdateLocation(LocationMessage message) {
             if(message == null) {
@@ -188,6 +229,15 @@ namespace Laser.Orchard.Caligoo.Services {
                 }
             } else {
                 Logger.Error("UpdateLocation: CaligooLocationId '{0}' not found. Maybe it is a new location and you need to create it in Orchard with the proper Content Type.", message.CaligooLocationId);
+            }
+        }
+        private class CallResult {
+            public bool Success { get; set; }
+            public string Body { get; set; }
+            public static CallResult Failure {
+                get {
+                    return new CallResult() { Success = false, Body = "" };
+                }
             }
         }
     }

@@ -141,6 +141,7 @@
   <ItemGroup>
     <Compile Include="Activities\CaligooLoginLogoutEvent.cs" />
     <Compile Include="Controllers\UserApiController.cs" />
+    <Compile Include="DataContracts\AuthenticationMessage.cs" />
     <Compile Include="Drivers\CaligooLocationPartDriver.cs" />
     <Compile Include="Drivers\CaligooSiteSettingsDriver.cs" />
     <Compile Include="Drivers\CaligooUserPartDriver.cs" />
