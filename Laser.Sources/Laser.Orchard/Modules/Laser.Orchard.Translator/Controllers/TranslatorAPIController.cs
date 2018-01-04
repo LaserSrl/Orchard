@@ -2,6 +2,7 @@
 using Laser.Orchard.Translator.Models;
 using Laser.Orchard.Translator.Services;
 using Orchard.Data;
+using Orchard.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,13 @@ namespace Laser.Orchard.Translator.Controllers
     {
         private readonly ITransactionManager _transactionManager;
         private readonly ITranslatorServices _translatorServices;
+        public ILogger Log { get; set; }
 
         public TranslatorAPIController(ITransactionManager transactionManager, ITranslatorServices translatorServices)
         {
             _transactionManager = transactionManager;
             _translatorServices = translatorServices;
+            Log = NullLogger.Instance;
         }
 
         [System.Web.Mvc.HttpPost]
@@ -65,9 +68,10 @@ namespace Laser.Orchard.Translator.Controllers
 
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 _transactionManager.Cancel();
+                Log.Error(ex, "TranslatorAPIController.AddRecords error.");
                 return false;
             }
         }
