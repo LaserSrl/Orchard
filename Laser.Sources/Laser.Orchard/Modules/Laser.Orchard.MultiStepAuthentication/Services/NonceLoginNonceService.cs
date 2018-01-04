@@ -18,14 +18,14 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IUserService _userService;
         private readonly IEnumerable<IOTPDeliveryService> _deliveryServices;
-        private readonly IOTPRecordRepositoryService _otpRepositoryService;
+        private readonly IOTPRepositoryService _otpRepositoryService;
         private readonly IMembershipService _membershipService;
 
         public NonceLoginNonceService(
             IWorkContextAccessor workContextAccessor,
             IUserService userService,
             IEnumerable<IOTPDeliveryService> deliveryServices,
-            IOTPRecordRepositoryService otpRepositoryService,
+            IOTPRepositoryService otpRepositoryService,
             IMembershipService membershipService) {
 
             _workContextAccessor = workContextAccessor;

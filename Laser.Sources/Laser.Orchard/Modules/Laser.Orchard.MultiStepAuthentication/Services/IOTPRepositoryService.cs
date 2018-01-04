@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Laser.Orchard.MultiStepAuthentication.Services {
-    public interface IOTPRecordRepositoryService : IDependency {
+    public interface IOTPRepositoryService : IDependency {
         /// <summary>
         /// Get all OTPs for a given user.
         /// </summary>
