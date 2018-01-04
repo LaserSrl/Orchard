@@ -93,18 +93,22 @@ namespace Laser.Orchard.Caligoo.Services {
                 } else {
                     Logger.Error("CaligooLogin: authentication response error on request {0}: {1}.", url, auth.Message);
                 }
+            } else {
+                Logger.Error("CaligooLogin: authentication response error on request {0}: {1}.", url, auth.Message);
             }
         }
         private void JwtTokenRenew() {
             var response = ResultFromCaligooApiGet(_caligooSettings.RefreshPath);
+            var json = JObject.Parse(response.Body);
+            var auth = json.ToObject<AuthenticationMessage>();
             if (response.Success) {
-                var json = JObject.Parse(response.Body);
-                var auth = json.ToObject<AuthenticationMessage>();
                 if (auth.Status == true) {
                     _caligooTempData.CurrentJwtToken = new JwtSecurityToken(auth.Token);
                 } else {
                     Logger.Error("JwtTokenRenew: token refresh error. Message: {0}", auth.Message);
                 }
+            } else {
+                Logger.Error("JwtTokenRenew: token refresh error. Message: {0}", auth.Message);
             }
         }
         public JObject GetUserDetails(string caligooUserId) {
