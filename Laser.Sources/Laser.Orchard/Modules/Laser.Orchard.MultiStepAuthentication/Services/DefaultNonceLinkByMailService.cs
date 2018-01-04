@@ -8,8 +8,10 @@ using Orchard;
 using Orchard.Localization;
 using Orchard.Messaging.Services;
 using Orchard.Email.Services;
+using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.MultiStepAuthentication.Services {
+    [OrchardFeature("Laser.Orchard.NonceLogin")]
     public class DefaultNonceLinkByMailService : IOTPDeliveryService {
 
         private readonly IWorkContextAccessor _workContextAccessor;

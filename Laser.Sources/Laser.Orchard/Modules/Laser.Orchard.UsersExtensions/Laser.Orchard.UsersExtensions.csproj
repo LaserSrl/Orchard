@@ -164,19 +164,14 @@
     <Compile Include="Controllers\PoliciesController.cs" />
     <Compile Include="Controllers\UserActionsAPIController.cs" />
     <Compile Include="Controllers\UserActionsController.cs" />
-    <Compile Include="Controllers\NonceLoginController.cs" />
-    <Compile Include="DataContracts\NonceLoginMessage.cs" />
-    <Compile Include="Drivers\NonceLoginSettingsDriver.cs" />
     <Compile Include="Drivers\UserRegistrationPolicyPartDriver.cs" />
     <Compile Include="Enumerators.cs" />
     <Compile Include="Filters\PolicyApiFilterAttribute.cs" />
     <Compile Include="Filters\PolicyFilter.cs" />
     <Compile Include="Handlers\FavoriteCulturePartHandler.cs" />
-    <Compile Include="Handlers\NonceLoginSettingsHandler.cs" />
     <Compile Include="Handlers\UserRegistrationPolicyPartHandler.cs" />
     <Compile Include="Handlers\UserRegistrationSettingsPartHandler.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Models\NonceLoginSettingsPart.cs" />
     <Compile Include="Models\UserRegistrationLogin.cs" />
     <Compile Include="Models\UserRegistrationPolicyPart.cs" />
     <Compile Include="Models\UserRegistrationSettingsPart.cs" />
@@ -202,9 +197,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\EditorTemplates\Parts\NonceLoginSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,0 +1,10 @@
+﻿@model Laser.Orchard.MultiStepAuthentication.ViewModels.NonceLoginAdminViewModel
+@{
+    Layout.Title = T("Settings").ToString();
+}
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+
+    @Display(Model.Model.Content)
+}
