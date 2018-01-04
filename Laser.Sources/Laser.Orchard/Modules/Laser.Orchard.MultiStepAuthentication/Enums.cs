@@ -9,4 +9,8 @@ namespace Laser.Orchard.MultiStepAuthentication {
     /// </summary>
     public enum DeliveryChannelType { Email, Sms, Push }
     
+    /// <summary>
+    /// Types of password for OTPRecord
+    /// </summary>
+    public enum PasswordType { Password, Nonce }
 }

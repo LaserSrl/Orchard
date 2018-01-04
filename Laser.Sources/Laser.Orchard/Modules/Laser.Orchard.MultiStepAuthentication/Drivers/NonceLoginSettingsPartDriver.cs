@@ -27,7 +27,7 @@ namespace Laser.Orchard.MultiStepAuthentication.Drivers {
                     updater.TryUpdateModel(part, Prefix, null, null);
                 }
                 return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix);
-            }).OnGroup("Laser.Orchard.NonceLogin.Settings");
+            }).OnGroup("NonceLoginSettings");
         }
     }
 }

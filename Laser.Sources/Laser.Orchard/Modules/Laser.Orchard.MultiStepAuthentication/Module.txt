@@ -11,6 +11,7 @@ Features:
 		Category: Security
 		Dependencies: Laser.Orchard.StartupConfig
 	Laser.Orchard.NonceLogin:
+        Name: Nonce Login
 		Description: Allows authentication by using a nonce sent in an email to the user.
 		Category: Security
 		Dependencies: Laser.Orchard.MultiStepAuthentication

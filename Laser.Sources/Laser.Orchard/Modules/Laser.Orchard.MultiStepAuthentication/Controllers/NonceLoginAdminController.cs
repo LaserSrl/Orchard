@@ -17,7 +17,7 @@ using System.Web.Mvc;
 namespace Laser.Orchard.MultiStepAuthentication.Controllers {
     [OrchardFeature("Laser.Orchard.NonceLogin")]
     [ValidateInput(false), Admin]
-    public class NonceLoginAdminController : Controller, IUpdateModel {
+    public class NonceLoginAdminController : BaseMultiStepAdminController {
 
         private readonly IAuthorizer _authorizer;
         private readonly ISiteService _siteService;
@@ -25,7 +25,7 @@ namespace Laser.Orchard.MultiStepAuthentication.Controllers {
         private readonly ITransactionManager _transactionManager;
         private readonly INotifier _notifier;
         
-        private const string groupInfoId = "Laser.Orchard.NonceLogin.Settings";
+        private const string groupInfoId = "NonceLoginSettings";
 
         public NonceLoginAdminController(
             IAuthorizer authorizer,
@@ -44,6 +44,10 @@ namespace Laser.Orchard.MultiStepAuthentication.Controllers {
         }
 
         public Localizer T { get; set; }
+
+        public override LocalizedString Caption {
+            get { return T("Nonce Login"); }
+        }
 
         public ActionResult Index() {
             if (!_authorizer.Authorize(MultiStepAuthenticationPermissions.ConfigureAuthentication, 
@@ -85,12 +89,5 @@ namespace Laser.Orchard.MultiStepAuthentication.Controllers {
             return RedirectToAction("Index");
         }
 
-        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
-            return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
-        }
-
-        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
-            ModelState.AddModelError(key, errorMessage.ToString());
-        }
     }
 }

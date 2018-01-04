@@ -12,13 +12,13 @@ using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.MultiStepAuthentication.Services {
     [OrchardFeature("Laser.Orchard.NonceLogin")]
-    public class DefaultNonceLinkByMailService : IOTPDeliveryService {
+    public class DefaultNonceLinkDeliveryByMailService : IOTPDeliveryService {
 
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly INonceLinkProvider _nonceLinkProvider;
         private readonly IMessageService _messageService;
 
-        public DefaultNonceLinkByMailService(
+        public DefaultNonceLinkDeliveryByMailService(
             IWorkContextAccessor workContextAccessor,
             INonceLinkProvider nonceLinkProvider,
             IMessageService messageService) {

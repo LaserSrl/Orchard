@@ -26,32 +26,12 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
         bool ValidatePassword(OTPContext context);
 
         /// <summary>
-        /// Generate a new one-time password.
-        /// </summary>
-        /// <returns>The generated password.</returns>
-        /// <remarks>This method may not create a record corresponding to the password generated.</remarks>
-        string GenerateOTP();
-
-        /// <summary>
-        /// Generate a one-time password using information provided.
-        /// </summary>
-        /// <param name="additionalInformation">Additional information that may be used to generate
-        /// the password.</param>
-        /// <returns>The generated password.</returns>
-        /// <exception cref="ArgumentNullException">Implementations may throw an ArgumentNullException if 
-        /// the additionalInformation is null.</exception>
-        /// <exception cref="ArgumentException">Implmentations may throw an ArgumentException if validation
-        /// of additionalInformation fails.</exception>
-        /// <remarks>This method may not create a record corresponding to the password generated.</remarks>
-        string GenerateOTP(Dictionary<string, string> additionalInformation);
-
-        /// <summary>
         /// Generate a new one-time password for the user.
         /// </summary>
         /// <param name="user">The user for whom the new password will be generated.</param>
         /// <returns>The generated password.</returns>
         /// <exception cref="ArgumentNullException">Throws an ArgumentNullException if the user is null.</exception>
-        /// <exception cref="ArgumentException">Throws an ArgumentException the user is not valid.</exception>
+        /// <exception cref="ArgumentException">Throws an ArgumentException if the user is not valid.</exception>
         string GenerateOTP(IUser user);
 
         /// <summary>
@@ -77,7 +57,7 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
         /// to send the password through all channel types.</param>
         /// <returns>True if the password was sent succesfully, false otherwise.</returns>
         /// <exception cref="ArgumentNullException">Throws an ArgumentNullException if the record is null.</exception>
-        bool SendOTP(OTPRecord otp, DeliveryChannelType channel);
+        bool SendOTP(OTPRecord otp, DeliveryChannelType? channel);
 
         /// <summary>
         /// Attempts to send a new one-time password to the user provided.
@@ -88,7 +68,7 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
         /// <returns>True if the password was generated and sent succesfully, false otherwise.</returns>
         /// <exception cref="ArgumentNullException">Throws an ArgumentNullException if the user is null.</exception>
         /// <exception cref="ArgumentException">Throws an ArgumentException the user is not valid.</exception>
-        bool SendNewOTP(IUser user, DeliveryChannelType channel);
+        bool SendNewOTP(IUser user, DeliveryChannelType? channel);
 
         /// <summary>
         /// Attempts to send a new one-time password to the user provided.
@@ -105,7 +85,7 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
         /// the additionalInformation is null.</exception>
         /// <exception cref="ArgumentException">Implmentations may throw an ArgumentException if validation
         /// of additionalInformation fails.</exception>
-        bool SendNewOTP(IUser user, Dictionary<string, string> additionalInformation, DeliveryChannelType channel);
+        bool SendNewOTP(IUser user, Dictionary<string, string> additionalInformation, DeliveryChannelType? channel);
         
     }
 }
