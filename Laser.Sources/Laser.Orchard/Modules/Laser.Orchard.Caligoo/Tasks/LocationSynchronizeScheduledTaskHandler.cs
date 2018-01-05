@@ -21,9 +21,8 @@ namespace Laser.Orchard.Caligoo.Tasks {
                 return;
             }
             try {
-                var jObj = _caligooService.GetLocations();
-                foreach(var jLoc in jObj) {
-                    var location = jLoc.ToObject<LocationMessage>();
+                var locationList = _caligooService.GetLocations();
+                foreach(var location in locationList) {
                     _caligooService.UpdateLocation(location);
                 }
             } catch(Exception ex) {
