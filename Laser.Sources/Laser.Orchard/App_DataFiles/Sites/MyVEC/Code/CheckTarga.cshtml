@@ -16,7 +16,10 @@
         string newTarga = Convert.ToString(wfContext.GetState("Targa"));
         if(invito.SchedaInvito.Prenotazioneparcheggio.Ids.Length > 0) {
             prenotazione = Model.OrchardServices.ContentManager.Get(invito.SchedaInvito.Prenotazioneparcheggio.Ids[0]);
-            oldTarga = prenotazione.Prenotazioneparcheggio.Targa.Value??"";
+            if(prenotazione != null) {
+                // la prenotazione non è stata eliminata
+                oldTarga = prenotazione.Prenotazioneparcheggio.Targa.Value ?? "";
+            }
         }
         if (oldTarga.CompareTo(newTarga) == 0) {
             retString = "Identical";
@@ -32,7 +35,7 @@
             wfContext.SetState("NewTarga", newTarga);
         }
     }
-    catch (Exception ex) { 
+    catch (Exception ex) {
         wfContext.SetState("ErrorMessage", ex.Message);
     }
 }

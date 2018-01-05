@@ -19,6 +19,11 @@ using Orchard.Fields.Fields;
 using Orchard.Taxonomies.Models;
 using Orchard.Localization.Models;
 using Orchard.Taxonomies.Services;
+using System.Web.Mvc;
+using System.Globalization;
+using System.Text;
+using Newtonsoft.Json.Linq;
+using Laser.Orchard.StartupConfig.IdentityProvider;
 
 namespace Laser.Orchard.StartupConfig.Services {
 
@@ -49,6 +54,21 @@ namespace Laser.Orchard.StartupConfig.Services {
 
         Response GetResponse(ResponseType rsptype, string message = "", dynamic data = null);
         /// <summary>
+        /// Convert a Response object to a ContentResult in json format.
+        /// This is useful when you want to pass a json string in the Data property of the response 
+        /// and you want it to be considered as a json object, not a string as method "Json(object)" does.
+        /// So you can use this method when you want to gain full control on the json object set in Data property.
+        /// </summary>
+        /// <param name="resp"></param>
+        /// <returns></returns>
+        ContentResult ConvertToJsonResult(Response resp);
+        /// <summary>
+        /// Get a successfull response to a login request with registration data.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Response GetUserResponse(String message, IEnumerable<IIdentityProvider> identityProviders, TempDataDictionary controllerTempData);
+        /// <summary>
         /// Set values on a field in a content part.
         /// </summary>
         /// <param name="listpart"></param>
@@ -67,12 +87,13 @@ namespace Laser.Orchard.StartupConfig.Services {
         private readonly string _publicMediaPath; // /Orchard/Media/Default/
         private readonly IRoleService _roleService;
         private readonly ITaxonomyService _taxonomyService;
+        private readonly IOrchardServices _orchardServices;
 
-        public UtilsServices(IModuleService moduleService, ShellSettings settings, IRoleService roleService, ITaxonomyService taxonomyService) {
+        public UtilsServices(IModuleService moduleService, ShellSettings settings, IRoleService roleService, ITaxonomyService taxonomyService, IOrchardServices orchardServices) {
             _moduleService = moduleService;
             _roleService = roleService;
             _taxonomyService = taxonomyService;
-
+            _orchardServices = orchardServices;
             var mediaPath = HostingEnvironment.IsHosted
                                 ? HostingEnvironment.MapPath("~/Media/") ?? ""
                                 : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
@@ -179,8 +200,56 @@ namespace Laser.Orchard.StartupConfig.Services {
             }
             return rsp;
         }
-
-
+        public ContentResult ConvertToJsonResult(Response resp) {
+            var data = "";
+            if (resp.Data == null) {
+                data = "null";
+            } else if (resp.Data.GetType().Name == typeof(string).Name) {
+                data = resp.Data;
+            } else {
+                data = Newtonsoft.Json.JsonConvert.SerializeObject(resp.Data);
+            }
+            var jstring = new JValue(resp.Message).ToString();
+            var content = string.Format("{{ \"Success\": {0},\"Message\":\"{1}\",\"Data\":{4},\"ErrorCode\":{2},\"ResolutionAction\":{3}}}", resp.Success.ToString(CultureInfo.InvariantCulture).ToLowerInvariant(), EscapeForJson(resp.Message), (int)resp.ErrorCode, (int)resp.ResolutionAction, data);
+            return new ContentResult {
+                Content = content,
+                ContentEncoding = Encoding.UTF8,
+                ContentType = "application/json"
+            };
+        }
+        private string EscapeForJson(string text) {
+            var result = text;
+            result = result.Replace("\\", "\\\\");
+            result = result.Replace("\"", "\\\"");
+            result = result.Replace("\t", "\\t");
+            result = result.Replace("\r", "\\r");
+            result = result.Replace("\n", "\\n");
+            result = result.Replace("\f", "\\f");
+            result = result.Replace("\b", "\\b");
+            return result;
+        }
+        public Response GetUserResponse(String message, IEnumerable<IIdentityProvider> identityProviders, TempDataDictionary controllerTempData) {
+            List<string> roles = new List<string>();
+            var registeredServicesData = new JObject();
+            if(controllerTempData != null) {
+                registeredServicesData.Add("RegisteredServices", new JArray(controllerTempData));
+            } else {
+                registeredServicesData.Add("RegisteredServices", new JArray(new TempDataDictionary()));
+            }
+            if (_orchardServices.WorkContext.CurrentUser != null) {
+                roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
+                registeredServicesData.Add("Roles", new JArray(roles));
+                var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
+                foreach (var provider in identityProviders) {
+                    var val = provider.GetRelatedId(context);
+                    if (string.IsNullOrWhiteSpace(val.Key) == false) {
+                        registeredServicesData.Add(val.Key, new JValue(val.Value));
+                    }
+                }
+            }
+            var json = registeredServicesData.ToString();
+            return GetResponse(ResponseType.Success, message, json);
+        }
         /// <summary>
         /// Returns the tenant path
         /// </summary>

@@ -18,6 +18,9 @@ using Orchard.Users.Services;
 using System.Text;
 using System.Web.Mvc;
 using System.Xml.Linq;
+using System.Dynamic;
+using Laser.Orchard.StartupConfig.IdentityProvider;
+using Newtonsoft.Json.Linq;
 
 namespace Laser.Orchard.UsersExtensions.Services {
     public interface IUserActionMethods : IDependency {
@@ -43,18 +46,18 @@ namespace Laser.Orchard.UsersExtensions.Services {
         private readonly IOrchardServices _orchardServices;
         private readonly IUserService _userService;
         private readonly IUtilsServices _utilsServices;
+        private readonly IEnumerable<IIdentityProvider> _identityProviders;
         public Localizer T { get; set; }
         public ILogger Log { get; set; }
 
         public UserActionMethods(IOrchardServices orchardServices, ICsrfTokenHelper csrfTokenHelper, IUsersExtensionsServices usersExtensionsServices, IUserService userService,
-            IControllerContextAccessor controllerContextAccessor,
-
-            IUtilsServices utilsServices) {
+            IControllerContextAccessor controllerContextAccessor, IUtilsServices utilsServices, IEnumerable<IIdentityProvider> identityProviders) {
             _csrfTokenHelper = csrfTokenHelper;
             _usersExtensionsServices = usersExtensionsServices;
             _controllerContextAccessor = controllerContextAccessor;
             _orchardServices = orchardServices;
             _userService = userService;
+            _identityProviders = identityProviders;
             T = NullLocalizer.Instance;
             Log = NullLogger.Instance;
             _utilsServices = utilsServices;
@@ -63,7 +66,6 @@ namespace Laser.Orchard.UsersExtensions.Services {
 
         public Response RegisterLogic(UserRegistration userRegistrationParams) {
             Response result;
-            int userId = 0;
             // ensure users can request lost password
             var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
             if (!registrationSettings.UsersCanRegister) {
@@ -73,48 +75,51 @@ namespace Laser.Orchard.UsersExtensions.Services {
             try {
                 _usersExtensionsServices.Register(userRegistrationParams);
 
+                var registeredServicesData = new JObject();
+                registeredServicesData.Add("RegisteredServices", new JArray(_controllerContextAccessor.Context.Controller.TempData));
                 List<string> roles = new List<string>();
                 if (_orchardServices.WorkContext.CurrentUser != null) {
                     roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
-                    userId = _orchardServices.WorkContext.CurrentUser.Id;
+                    registeredServicesData.Add("Roles", new JArray(roles));
+                    var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
+                    foreach (var provider in _identityProviders) {
+                        var val = provider.GetRelatedId(context);
+                        if (string.IsNullOrWhiteSpace(val.Key) == false) {
+                            registeredServicesData.Add(val.Key, new JValue(val.Value));
+                        }
+                    }
                 }
-
-                var registeredServicesData = new {
-                    RegisteredServices = _controllerContextAccessor.Context.Controller.TempData,
-                    Roles = roles,
-                    UserId = userId
-                };
-
-
-
-                result = _utilsServices.GetResponse(ResponseType.Success, data: registeredServicesData);
+                var json = registeredServicesData.ToString();
+                result = _utilsServices.GetResponse(ResponseType.Success, data: json);
             } catch (Exception ex) {
                 result = _utilsServices.GetResponse(ResponseType.None, ex.Message);
             }
-
             return result;
         }
 
         public Response SignInLogic(UserLogin login) {
             Response result;
-            int userId = 0;
             try {
                 _usersExtensionsServices.SignIn(login);
+                var registeredServicesData = new JObject();
                 List<string> roles = new List<string>();
                 if (_orchardServices.WorkContext.CurrentUser != null) {
                     roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
-                    userId = _orchardServices.WorkContext.CurrentUser.Id;
+                    registeredServicesData.Add("Roles", new JArray(roles));
+                    var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
+                    foreach (var provider in _identityProviders) {
+                        var val = provider.GetRelatedId(context);
+                        if (string.IsNullOrWhiteSpace(val.Key) == false) {
+                            registeredServicesData.Add(val.Key, new JValue(val.Value));
+                        }
+                    }
                 }
-
-                dynamic registeredServicesData = new {
-                    Roles = roles,
-                    UserId = userId
-                };
-                result = _utilsServices.GetResponse(ResponseType.Success, "", registeredServicesData);
+                var json = registeredServicesData.ToString();
+                result = _utilsServices.GetResponse(ResponseType.Success, "", json);
             } catch (Exception ex) {
                 result = _utilsServices.GetResponse(ResponseType.InvalidUser, ex.Message);
             }
-            return (result);
+            return result;
         }
 
         public Response SignOutLogic() {

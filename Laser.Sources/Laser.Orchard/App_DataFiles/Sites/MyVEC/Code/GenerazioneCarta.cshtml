@@ -1,0 +1,57 @@
+@using System.Web;
+@using Orchard.Security;
+@using Orchard.ContentManagement;
+@using Orchard.Users.Models;
+@using Orchard.Workflows.Models;
+@using Laser.Orchard.CommunicationGateway.Models;
+@using Laser.Orchard.CommunicationGateway.Services;
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","Ok"
+    WorkflowContext wfContext = null;
+    IContentManager _contentManager;
+    ICommunicationService _communicationService;
+}
+@{
+    try {
+        wfContext = Model.Tokens["Workflow"];
+        // resolve services
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
+        // input data
+        var contact = Model.ContentItem; // CommunicationContact
+        // contact validation
+        if(contact.ContentType == "CommunicationContact") {
+            var contactCulture = contact.FavoriteCulturePart.Culture;
+            // card generation
+            var codiceEan = string.Format("LC-{0:0000000}", contact.Id + 1000000);
+            var userId = contact.CommunicationContactPart.UserIdentifier ?? 0;
+            dynamic user = null;
+            if (userId > 0) {
+                user = _contentManager.Get(userId);
+            }
+            if (user != null) {
+                user.ProfilePart.FidelityCardNumber.Value = codiceEan;
+                user.VersionRecord.Published = false;
+                _contentManager.Publish(user);
+                _communicationService.UserToContact((IUser)user.UserPart);
+            } else {
+                contact.ProfilePart.FidelityCardNumber.Value = codiceEan;
+                contact.VersionRecord.Published = false;
+                _contentManager.Publish(contact);
+            }
+            var pushMessage = string.Format("Gentile Cliente, ecco il codice della tua nuova Carta Fedeltà: {0}. Buon shopping!", codiceEan);
+            if(contactCulture == "en-US") {
+                pushMessage = string.Format("Dear Customer, here is the code of your new Fidelity Card: {0}. Happy shopping!", codiceEan);
+            }
+            wfContext.SetState("PushMessage", pushMessage);
+            wfContext.SetState("UserIdToPush", userId);
+            retString = "Ok";
+        } else {
+            // culture hard coded because of missing contact
+            wfContext.SetState("ErrorMessage", "Cliente non trovato.");
+        }
+    } catch (Exception ex) {
+        Model.OrchardServices.TransactionManager.Logger.Log(Orchard.Logging.LogLevel.Error, ex, "Error in SalvatagioCarta.cshtml", null);
+        wfContext.SetState("ErrorMessage", ex.Message);
+    }
+}@retString

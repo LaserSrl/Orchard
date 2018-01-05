@@ -239,6 +239,7 @@
     <Compile Include="Projections\ExcludeMasterContact.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Security\AdvertisingEventHandler.cs" />
+    <Compile Include="Services\ContactIdentityProvider.cs" />
     <Compile Include="Services\ExportContactService.cs" />
     <Compile Include="Services\ICommunicationService.cs" />
     <Compile Include="Tokens\UserContactToken.cs" />
