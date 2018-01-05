@@ -4,6 +4,7 @@ using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Localization.Services;
+using Orchard.Logging;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -29,6 +30,7 @@ namespace Laser.Orchard.Translator.Services {
         private readonly IRepository<TranslationFolderSettingsRecord> _translationFoldersSettingsRecordRepository;
 
         public Localizer T { get; set; }
+        public ILogger Log { get; set; }
 
         public TranslatorServices(ICultureManager cultureManager, IOrchardServices orchardServices, IRepository<TranslationRecord> translationRecordRepository, IRepository<TranslationFolderSettingsRecord> translationFoldersSettingsRecordRepository) {
             _cultureManager = cultureManager;
@@ -36,6 +38,7 @@ namespace Laser.Orchard.Translator.Services {
             _translationRecordRepository = translationRecordRepository;
             _translationFoldersSettingsRecordRepository = translationFoldersSettingsRecordRepository;
             T = NullLocalizer.Instance;
+            Log = NullLogger.Instance;
         }
 
         public IEnumerable<string> GetCultureList() {
@@ -58,7 +61,8 @@ namespace Laser.Orchard.Translator.Services {
             try {
                 AddOrUpdateTranslation(translation);
                 return true;
-            } catch (Exception) {
+            } catch (Exception ex) {
+                Log.Error(ex, "TranslatorServices.TryAddOrUpdateTranslation error.");
                 return false;
             }
         }
@@ -149,6 +153,9 @@ namespace Laser.Orchard.Translator.Services {
         public void EnableFolderTranslation(string folderName, ElementToTranslate folderType)
         {
             var translatorSettings = _orchardServices.WorkContext.CurrentSite.As<TranslatorSettingsPart>();
+            // missing settings
+            translatorSettings.ModulesToTranslate = translatorSettings.ModulesToTranslate ?? "";
+            translatorSettings.ThemesToTranslate = translatorSettings.ThemesToTranslate ?? "";
 
             List<string> enabledFolders = new List<string>();
             if (folderType == ElementToTranslate.Module)

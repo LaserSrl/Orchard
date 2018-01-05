@@ -180,9 +180,9 @@ namespace Laser.Orchard.TranslationChecker {
             foreach (var containerString in this.chkTranslations.CheckedItems) {
                 var collection = _translationMessages.Where(x => x.ContainerName.Equals(containerString.ToString())).Distinct();
                 //TODO: chiamata al ws di traduzione
-                AskForTranslations(collection);
-                this.txtLogOperations.AppendText(String.Concat("Translations sent for: ", containerString.ToString(), "\r\n"));
-
+                if (AskForTranslations(collection)) {
+                    this.txtLogOperations.AppendText(String.Concat("Translations sent for: ", containerString.ToString(), "\r\n"));
+                }
             }
         }
 
@@ -200,7 +200,8 @@ namespace Laser.Orchard.TranslationChecker {
             Clipboard.SetText(String.Concat(toCopy.Select(x => String.Join("\r\n", x))));
         }
 
-        private void AskForTranslations(IEnumerable<TranslationMessage> messages) {
+        private bool AskForTranslations(IEnumerable<TranslationMessage> messages) {
+            var result = true;
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             var URI = String.Concat(ConfigurationManager.AppSettings["RemoteTranslationBaseUrl"], "/TranslatorAPI/AddRecords");
             var listRecords = messages.Select(x => new TranslationRecord {
@@ -219,22 +220,21 @@ namespace Laser.Orchard.TranslationChecker {
                     httpResult.Wait();
                     if (!httpResult.Result.IsSuccessStatusCode) {
                         this.txtLogOperations.AppendText(String.Concat("Error: ", httpResult.Result.ReasonPhrase, "\r\n"));
+                        result = false;
                     }
                     var t = httpResult.Result.Content.ReadAsStringAsync();
                     t.Wait();
                     if (t.Result.ToLowerInvariant() != "true") {
                         this.txtLogOperations.AppendText(String.Concat("An error occurred on Traslation server: please see log file.\r\n"));
+                        result = false;
                     }
-                    //return responseBody;
                 }
-
             } catch (HttpRequestException e) {
                 Console.WriteLine("\nException Caught!");
                 Console.WriteLine("Message :{0} ", e.Message);
-                //return null;
+                result = false;
             }
-
-
+            return result;
         }
 
 
