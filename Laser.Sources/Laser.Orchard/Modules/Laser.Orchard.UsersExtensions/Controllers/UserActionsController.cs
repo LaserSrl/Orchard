@@ -185,8 +185,6 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                 var registeredServicesData = new JObject();
                 registeredServicesData.Add("RegisteredServices", new JArray(_controllerContextAccessor.Context.Controller.TempData));
                 if (_orchardServices.WorkContext.CurrentUser != null) {
-                    roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
-                    registeredServicesData.Add("Roles", new JArray(roles));
                     var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
                     foreach (var provider in _identityProviders) {
                         var val = provider.GetRelatedId(context);
@@ -214,8 +212,6 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                 var registeredServicesData = new JObject();
                 registeredServicesData.Add("RegisteredServices", new JArray(_controllerContextAccessor.Context.Controller.TempData));
                 if (_orchardServices.WorkContext.CurrentUser != null) {
-                    roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
-                    registeredServicesData.Add("Roles", new JArray(roles));
                     var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
                     foreach (var provider in _identityProviders) {
                         var val = provider.GetRelatedId(context);

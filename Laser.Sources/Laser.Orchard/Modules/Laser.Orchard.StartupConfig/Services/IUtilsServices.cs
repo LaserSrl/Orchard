@@ -237,8 +237,6 @@ namespace Laser.Orchard.StartupConfig.Services {
                 registeredServicesData.Add("RegisteredServices", new JArray(new TempDataDictionary()));
             }
             if (_orchardServices.WorkContext.CurrentUser != null) {
-                roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
-                registeredServicesData.Add("Roles", new JArray(roles));
                 var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
                 foreach (var provider in identityProviders) {
                     var val = provider.GetRelatedId(context);
