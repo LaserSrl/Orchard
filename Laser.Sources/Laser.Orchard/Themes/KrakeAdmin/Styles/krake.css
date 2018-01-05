@@ -714,7 +714,7 @@ input[type="number"]:focus {
 }
 
 #media-library-main-navigation {
-    height: 100%;
+    min-height: 100%;
 }
 
 #media-library-main-selection-actions button {

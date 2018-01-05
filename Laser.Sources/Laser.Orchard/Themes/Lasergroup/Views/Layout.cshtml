@@ -63,7 +63,7 @@
 <div id="page" class="hfeed site">
     <header id="header" class="site-header" role="banner">
 
-        @if (Model.Navigation != null) { 
+        @if (Model.Navigation != null) {
             @Zone(Model.Navigation)
         }
 
@@ -116,23 +116,34 @@
             }
 
             @if (Model.QuadFourth != null) {
-                @Zone(Model.QuadFourth)
+                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 text-center">
+                    <div class="space-40  visible-xs"></div>
+                    @Zone(Model.QuadFourth)
+                </div>
             }
         </div>
-        <div class="space-20"></div>
-        <div class="container footer-bottom"></div>
+        @if (Model.QuadBottom != null) {
+            <div class="row">
+                <div class="col">
+                    @Zone(Model.QuadBottom)
+                </div>
+            </div>
+        }
+        <div class="row">
+            <div class="space-20"></div>
+            <div class="container footer-bottom"></div>
+        </div>
+        @if (Model.Footer != null) {
+            @Zone(Model.Footer)
+        }
     </div>
-    @if (Model.Footer != null) {
-        @Zone(Model.Footer)
-    }
-</div>
 
-<script type='text/javascript'>
-    /* <![CDATA[ */
-    var _wpcf7 = { "loaderUrl": "@subthemePath/styles/images/ajax-loader.gif", "recaptcha": { "messages": { "empty": "@T("Please show me you are not a robot.")" } }, "sending": "@T("Send...")" };
-    /* ]]> */
-</script>
+    <script type='text/javascript'>
+        /* <![CDATA[ */
+        var _wpcf7 = { "loaderUrl": "@subthemePath/styles/images/ajax-loader.gif", "recaptcha": { "messages": { "empty": "@T("Please show me you are not a robot.")" } }, "sending": "@T("Send...")" };
+        /* ]]> */
+    </script>
 
-<!-- Start of HubSpot Embed Code -->
-<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/2170079.js"></script>
-<!-- End of HubSpot Embed Code -->
+    <!-- Start of HubSpot Embed Code -->
+    <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/2170079.js"></script>
+    <!-- End of HubSpot Embed Code -->

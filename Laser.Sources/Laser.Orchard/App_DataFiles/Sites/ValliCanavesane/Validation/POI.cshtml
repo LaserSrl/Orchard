@@ -1,0 +1,20 @@
+﻿@using Laser.Orchard.CommunicationGateway.Models;
+@using Laser.Orchard.StartupConfig.Models;
+@using Orchard.Data;
+@*@using Orchard.Localization.Records;
+@using Orchard.Localization.Services;
+@using Orchard.Projections.Models;
+@using Orchard.Projections.Services;*@
+@using Orchard.ContentManagement;
+@using System;
+@using System.Linq;
+@{
+    string retstring = "";
+    IContentManager _contentManager;
+    IOrchardServices _orchardServices;
+
+    //Resolve services.
+    _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+    _orchardServices = Model.OrchardServices;
+    _contentManager.Publish((ContentItem)Model.ContentItem);
+}@retstring
