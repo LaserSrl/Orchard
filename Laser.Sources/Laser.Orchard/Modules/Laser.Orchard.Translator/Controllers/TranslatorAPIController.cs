@@ -29,12 +29,17 @@ namespace Laser.Orchard.Translator.Controllers
         {
             try
             {
-                if (records == null) return false;
-
+                if (records == null) {
+                    Log.Error("TranslatorAPIController.AddRecords error - No data received in TranslationRecord list.");
+                    return false;
+                }
                 if (records.Where(r => String.IsNullOrWhiteSpace(r.Message)
                                     || String.IsNullOrWhiteSpace(r.Language)
                                     || String.IsNullOrWhiteSpace(r.ContainerName)
-                                    || String.IsNullOrWhiteSpace(r.ContainerType)).Any()) return false;
+                                    || String.IsNullOrWhiteSpace(r.ContainerType)).Any()) {
+                    Log.Error("TranslatorAPIController.AddRecords error - TranslationRecord not valid. At least one of these field is empty: Message, Language, ContainerName and ContainerType. Please verify if T(\"\") is present in your code because it causes an empty Message.");
+                    return false;
+                }
 
                 foreach (var record in records)
                 {
@@ -50,6 +55,7 @@ namespace Laser.Orchard.Translator.Controllers
                         if (!success)
                         {
                             _transactionManager.Cancel();
+                            Log.Error("TranslatorAPIController.AddRecords error - Id: {0}, Message: {1}", record.Id, record.Message);
                             return false;
                         }
                     }
