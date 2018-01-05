@@ -43,14 +43,6 @@ namespace Laser.Orchard.UsersExtensions.Routes {
                             {"area", "Laser.Orchard.UsersExtensions"}
                         },
                         new MvcRouteHandler())
-                },
-                new HttpRouteDescriptor {
-                    Priority = 5,
-                    RouteTemplate = "api/noncelogin",
-                    Defaults = new {
-                        area = "Laser.Orchard.UsersExtensions",
-                        controller = "NonceLogin"
-                    }
                 }
             };
         }

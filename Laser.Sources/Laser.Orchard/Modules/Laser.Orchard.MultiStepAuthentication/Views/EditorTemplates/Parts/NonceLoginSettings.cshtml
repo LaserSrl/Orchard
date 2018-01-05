@@ -1,11 +1,11 @@
-﻿@model Laser.Orchard.UsersExtensions.Models.NonceLoginSettingsPart
+﻿@model Laser.Orchard.MultiStepAuthentication.Models.NonceLoginSettingsPart
 
 <fieldset>
     <legend>@T("Nonce Login Settings")</legend>
     <div>
         <label for="@Html.FieldIdFor(m => m.NonceMinutesValidity)">@T("Nonce validity (minutes)")</label>
         @Html.TextBoxFor(m => m.NonceMinutesValidity, new { @class = "text normal" })
-        <span class="hint">@T("Nonce validity in minutes (1440 minutes = 1 day).")</span>
+        <span class="hint">@T("Nonce validity in minutes (60 minutes = 1 hour, 1440 minutes = 1 day).")</span>
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.LoginLinkFormat)">@T("Login link format")</label>
