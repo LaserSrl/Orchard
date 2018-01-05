@@ -141,6 +141,7 @@
   <ItemGroup>
     <Compile Include="Activities\CaligooLoginLogoutEvent.cs" />
     <Compile Include="Controllers\UserApiController.cs" />
+    <Compile Include="DataContracts\AuthenticationMessage.cs" />
     <Compile Include="Drivers\CaligooLocationPartDriver.cs" />
     <Compile Include="Drivers\CaligooSiteSettingsDriver.cs" />
     <Compile Include="Drivers\CaligooUserPartDriver.cs" />
@@ -203,6 +204,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts\CaligooLocation.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
