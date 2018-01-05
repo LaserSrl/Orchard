@@ -23,7 +23,7 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
         /// </summary>
         /// <param name="password">The password to search</param>
         /// <param name="OTPType">Optional: Limit the search to OTPs of the given type.</param>
-        /// <returns>The OTP found, or null if nont are found</returns>
+        /// <returns>The OTP found, or null if none are found</returns>
         OTPRecord Get(string password, string OTPType = null);
 
         /// <summary>

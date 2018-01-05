@@ -10,6 +10,7 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Users.Models;
+using Newtonsoft.Json;
 
 namespace Laser.Orchard.MultiStepAuthentication.Services {
     [OrchardFeature("Laser.Orchard.NonceLogin")]
@@ -43,7 +44,7 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
             return _workContextAccessor.GetContext().CurrentSite.As<NonceLoginSettingsPart>().NonceMinutesValidity;
         }
 
-        private OTPRecord NewOTP(UserPart user) {
+        private OTPRecord NewOTP(UserPart user, Dictionary<string, string> additionalInformation) {
             if (user == null) {
                 throw new ArgumentNullException("user");
             }
@@ -59,39 +60,51 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
                 UserRecord = user.As<UserPart>().Record,
                 Password = nonce,
                 PasswordType = PasswordType.Nonce.ToString(),
-                ExpirationUTCDate = expiration
+                ExpirationUTCDate = expiration,
+                AdditionalData = additionalInformation != null
+                    ? JsonConvert.SerializeObject(additionalInformation, Formatting.Indented)
+                    : string.Empty
             };
+            // delete all old nonces that match the one we are creating
+            var oldOtps = _otpRepositoryService.Get(user, PasswordType.Nonce.ToString());
+            foreach (var old in oldOtps
+                .Where(or => 
+                    CompareDictionaries(
+                        JsonConvert.DeserializeObject<Dictionary<string, string>>(or.AdditionalData), 
+                        additionalInformation))) {
+                _otpRepositoryService.Delete(old);
+            }
             // save the OTP
             return _otpRepositoryService.AddOTP(otp);
         }
 
         public string GenerateOTP(IUser user) {
+            return GenerateOTP(user, null);
+        }
+
+        public string GenerateOTP(IUser user, Dictionary<string, string> additionalInformation) {
             if (user == null) {
                 throw new ArgumentNullException("user");
             }
 
-            var otp = NewOTP(user.As<UserPart>());
+            var otp = NewOTP(user.As<UserPart>(), additionalInformation);
 
-            return otp.Password;
-        }
-
-        public string GenerateOTP(IUser user, Dictionary<string, string> additionalInformation) {
-            return GenerateOTP(user);
+            return otp.Password; 
         }
 
         public bool SendNewOTP(IUser user, DeliveryChannelType? channel) {
+            return SendNewOTP(user, null);
+        }
+
+        public bool SendNewOTP(IUser user, Dictionary<string, string> additionalInformation, DeliveryChannelType? channel) {
             if (user == null) {
                 throw new ArgumentNullException("user");
             }
 
             // create OTP
-            var otp = NewOTP(user.As<UserPart>());
+            var otp = NewOTP(user.As<UserPart>(), additionalInformation);
 
             return SendOTP(otp, user, channel);
-        }
-
-        public bool SendNewOTP(IUser user, Dictionary<string, string> additionalInformation, DeliveryChannelType? channel) {
-            return SendNewOTP(user, channel);
         }
 
         public bool SendOTP(OTPRecord otp, DeliveryChannelType? channel) {
@@ -127,19 +140,63 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
 
 
         public IUser UserFromNonce(string nonce) {
+            return UserFromNonce(nonce, null);
+        }
+
+        public IUser UserFromNonce(string nonce, Dictionary<string, string> additionalInformation) {
             var otp = _otpRepositoryService.Get(nonce, PasswordType.Nonce.ToString());
             IUser user = null;
             if (otp != null) {
-                if (otp.ExpirationUTCDate <= DateTime.UtcNow) {
-                    // otp still valid
-                    // get recipient
-                    user = _membershipService.GetUser(otp.UserRecord.UserName);
+                // otp still valid?
+                if (otp.ExpirationUTCDate >= DateTime.UtcNow) {
+                    // compare additional info
+                    var otpInfo = JsonConvert.DeserializeObject<Dictionary<string, string>>(otp.AdditionalData);
+                    if (CompareDictionaries(otpInfo, additionalInformation)) {
+                        // the information matches
+                        // get recipient
+                        user = _membershipService.GetUser(otp.UserRecord.UserName);
+                        // otp has been used up
+                        _otpRepositoryService.Delete(otp);
+                    }
+                } else {
+                    // otp expired
+                    _otpRepositoryService.Delete(otp);
                 }
-                // otp has been used, so delete it
-                _otpRepositoryService.Delete(otp);
             }
 
             return user;
+        }
+
+        private bool CompareDictionaries(Dictionary<string, string> first, Dictionary<string, string> second) {
+            if (NullOrEmpty(first) && NullOrEmpty(second)) {
+                // both null or empty, so they are the same
+                return true;
+            }
+            if ((NullOrEmpty(first) && !NullOrEmpty(second))
+                || (!NullOrEmpty(first) && NullOrEmpty(second))) {
+                // one is empty and the other is not
+                return false;
+            }
+            // here neither dictionary is null, nor empty
+            if (first.Count != second.Count) {
+                return false;
+            }
+            // here both dictionaries have the same number of elements
+            if (first.Keys.Except(second.Keys, StringComparer.InvariantCultureIgnoreCase).Any()) {
+                // different keys in the two dictionaries
+                return false;
+            }
+            // here keys are the same. Time to compare values.
+            if (first.Any(entry => second[entry.Key] != entry.Value)) {
+                // values are different
+                return false;
+            }
+            // finally
+            return true;
+        }
+
+        private bool NullOrEmpty(Dictionary<string, string> dictionary) {
+            return dictionary == null || !dictionary.Any();
         }
 
         public bool ValidatePassword(OTPContext context) {
@@ -154,17 +211,20 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
             var valid = false;
             var otp = _otpRepositoryService.Get(context.Password, PasswordType.Nonce.ToString());
             if (otp != null) {
-                if (otp.ExpirationUTCDate <= DateTime.UtcNow) {
+                if (otp.ExpirationUTCDate >= DateTime.UtcNow) {
                     // otp still valid
                     // get recipient
                     var user = _membershipService.GetUser(otp.UserRecord.UserName);
                     if (user.UserName == context.User.UserName) {
                         // same user
                         valid = true;
+                        // otp has been used, so delete it
+                        _otpRepositoryService.Delete(otp);
                     }
+                } else {
+                    // otp expired
+                    _otpRepositoryService.Delete(otp);
                 }
-                // otp has been used, so delete it
-                _otpRepositoryService.Delete(otp);
             }
 
             return valid;

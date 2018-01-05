@@ -43,35 +43,65 @@ namespace Laser.Orchard.MultiStepAuthentication.Controllers {
             _userEventHandler = userEventHandler;
             _identityProviders = identityProviders;
         }
-        
+
 
         public Response Get(string mail) {
+            var uuid = GetUUIDFromHeader();
+            if (string.IsNullOrWhiteSpace(uuid)) {
+                return _utilsServices.GetResponse(ResponseType.UnAuthorized);
+            }
+
             var user = _usersExtensionsServices.GetUserByMail(mail);
 
             if (user != null) {
-                _nonceService.SendNewOTP(user, DeliveryChannelType.Email);
+                var data = new Dictionary<string, string>();
+                data.Add("uuid", uuid);
+                // create and send an OTP (this may overwrite any previous OTP for the user)
+                _nonceService.SendNewOTP(user, data, DeliveryChannelType.Email);
+                return _utilsServices.GetResponse(ResponseType.Success);
             }
 
             return _utilsServices.GetResponse(ResponseType.UnAuthorized);
         }
 
         public Response Post(JObject message) {
-            var msgObj = message.ToObject<NonceLoginMessage>();
+            var uuid = GetUUIDFromHeader();
+            if (string.IsNullOrWhiteSpace(uuid)) {
+                return _utilsServices.GetResponse(ResponseType.UnAuthorized);
+            }
+            NonceLoginMessage msgObj;
+            try {
+                msgObj = message.ToObject<NonceLoginMessage>();
+            } catch (Exception) {
+                return _utilsServices.GetResponse(ResponseType.UnAuthorized);
+            }
 
             if (msgObj != null) {
-                var iuser = _nonceService.UserFromNonce(msgObj.Nonce);
+                var data = new Dictionary<string, string>();
+                data.Add("uuid", uuid);
+                var iuser = _nonceService.UserFromNonce(msgObj.Nonce, data);
                 if (iuser != null) {
+                    // log the user in
                     var user = iuser as UserPart;
-                    if (user.RegistrationStatus == UserStatus.Pending) {
-                        user.RegistrationStatus = UserStatus.Approved;
-                        _authenticationService.SignIn(user, true);
-                        _userEventHandler.LoggedIn(user);
-                        return _utilsServices.GetUserResponse("", _identityProviders, null);
-                    }
+                    _authenticationService.SignIn(user, true);
+                    _userEventHandler.LoggedIn(user);
+                    return _utilsServices.GetUserResponse("", _identityProviders, null);
                 }
             }
 
             return _utilsServices.GetResponse(ResponseType.UnAuthorized);
         }
+
+        private string GetUUIDFromHeader() {
+            if (!Request.Headers.Contains("x-UUID"))
+                return null;
+            // get the device's uuid
+            var uuid = string.Join("", Request.Headers
+                .FirstOrDefault(head =>
+                    head.Key.Equals("x-UUID", StringComparison.InvariantCultureIgnoreCase))
+                .Value);
+            return uuid;
+        }
+
     }
 }

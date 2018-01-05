@@ -120,11 +120,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes\NonceLoginRoutes.cs" />
     <Compile Include="Services\DefaultNonceLinkDeliveryByMailService.cs" />
+    <Compile Include="Services\DefaultOTPRepositoryService.cs" />
     <Compile Include="Services\INonceService.cs" />
     <Compile Include="Services\IOTPDeliveryService.cs" />
     <Compile Include="Services\IBaseOTPService.cs" />
     <Compile Include="Services\INonceLinkProvider.cs" />
-    <Compile Include="Services\IOTPRecordRepositoryService.cs" />
+    <Compile Include="Services\IOTPRepositoryService.cs" />
+    <Compile Include="Services\NonceLinkFromSettingsProvider.cs" />
     <Compile Include="Services\NonceLoginNonceService.cs" />
     <Compile Include="Services\OTPContext.cs" />
     <Compile Include="ViewModels\NonceLoginAdminViewModel.cs" />
