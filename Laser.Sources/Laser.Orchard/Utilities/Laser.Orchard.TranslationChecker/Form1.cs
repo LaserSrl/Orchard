@@ -216,8 +216,14 @@ namespace Laser.Orchard.TranslationChecker {
                     var serializedMessages = serializer.Serialize(listRecords);
                     var content = new StringContent(serializedMessages, Encoding.UTF8, "application/json");
                     var httpResult = client.PostAsync(URI, content);
+                    httpResult.Wait();
                     if (!httpResult.Result.IsSuccessStatusCode) {
                         this.txtLogOperations.AppendText(String.Concat("Error: ", httpResult.Result.ReasonPhrase, "\r\n"));
+                    }
+                    var t = httpResult.Result.Content.ReadAsStringAsync();
+                    t.Wait();
+                    if (t.Result.ToLowerInvariant() != "true") {
+                        this.txtLogOperations.AppendText(String.Concat("An error occurred on Traslation server: please see log file.\r\n"));
                     }
                     //return responseBody;
                 }
