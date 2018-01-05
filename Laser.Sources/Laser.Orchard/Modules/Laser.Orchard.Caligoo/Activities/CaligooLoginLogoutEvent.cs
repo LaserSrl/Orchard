@@ -26,7 +26,7 @@ namespace Laser.Orchard.Caligoo.Activities {
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            var result = T("");
+            var result = T("Unknown");
             var eventType = workflowContext.Tokens["Event"].ToString();
             switch (eventType) {
                 case "login":
@@ -35,14 +35,12 @@ namespace Laser.Orchard.Caligoo.Activities {
                 case "logout":
                     result = T("Logout");
                     break;
-                default:
-                    throw new Exception(string.Format("Unexpected Event token value: {0}", eventType));
             }
             yield return result;
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return new[] { T("Login"), T("Logout") };
+            return new[] { T("Login"), T("Logout"), T("Unknown") };
         }
     }
 }
