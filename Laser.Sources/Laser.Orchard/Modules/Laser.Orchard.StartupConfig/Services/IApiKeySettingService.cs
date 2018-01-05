@@ -72,12 +72,14 @@ namespace Laser.Orchard.StartupConfig.Services {
                 _appDataFolder.CreateFile(filePath, content);
         }
         public string EncryptionKeys(string key) {
-            if (!string.IsNullOrEmpty(key) && _encryptionKeys.Keys.Contains(key))
-                return _encryptionKeys[key];
-            if (_encryptionKeys.Keys.Contains("TheDefaultChannel"))
-                return _encryptionKeys["TheDefaultChannel"];
-            else
-                return _shellSettings.EncryptionKey;
+            var encryptionKeyValue = _shellSettings.EncryptionKey; //default value
+            if (!string.IsNullOrEmpty(key) && _encryptionKeys.Keys.Contains(key) && string.IsNullOrWhiteSpace(_encryptionKeys[key])) { //if exists the specific key value
+                encryptionKeyValue = _encryptionKeys[key];
+            }
+            else if (_encryptionKeys.Keys.Contains("TheDefaultChannel") && string.IsNullOrWhiteSpace(_encryptionKeys["TheDefaultChannel"])) { //fallback if the key is missing and exists a "TheDefaultChannel" key/value
+                encryptionKeyValue = _encryptionKeys["TheDefaultChannel"];
+            }
+            return encryptionKeyValue;
         }
     }
 
