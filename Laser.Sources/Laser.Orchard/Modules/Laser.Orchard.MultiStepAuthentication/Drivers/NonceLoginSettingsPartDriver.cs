@@ -1,15 +1,21 @@
-﻿using Laser.Orchard.UsersExtensions.Models;
+﻿using Laser.Orchard.MultiStepAuthentication.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 
-namespace Laser.Orchard.UsersExtensions.Drivers {
-    public class NonceLoginSettingsDriver : ContentPartDriver<NonceLoginSettingsPart> {
+namespace Laser.Orchard.MultiStepAuthentication.Drivers {
+    [OrchardFeature("Laser.Orchard.NonceLogin")]
+    public class NonceLoginSettingsPartDriver : ContentPartDriver<NonceLoginSettingsPart> {
         private const string TemplateName = "Parts/NonceLoginSettings";
         public Localizer T { get; set; }
         protected override string Prefix { get { return "NonceLoginSettings"; } }
 
-        public NonceLoginSettingsDriver() {
+        public NonceLoginSettingsPartDriver() {
             T = NullLocalizer.Instance;
         }
         protected override DriverResult Editor(NonceLoginSettingsPart part, dynamic shapeHelper) {
@@ -21,7 +27,7 @@ namespace Laser.Orchard.UsersExtensions.Drivers {
                     updater.TryUpdateModel(part, Prefix, null, null);
                 }
                 return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix);
-            }).OnGroup("NonceLogin");
+            }).OnGroup("NonceLoginSettings");
         }
     }
 }
