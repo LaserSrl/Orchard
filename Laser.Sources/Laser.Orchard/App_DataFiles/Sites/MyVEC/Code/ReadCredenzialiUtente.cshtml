@@ -19,7 +19,7 @@
         _encryptionService = Model.OrchardServices.WorkContext.Resolve<IEncryptionService>();
         _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
 
-        Orchard.ContentManagement.ContentItem ciUsr = _contentManager.Get((int)(@Model.ContentItem.CommonPart.Creator.Value));
+        ContentItem ciUsr = _contentManager.Get((int)(@Model.ContentItem.CommonPart.Creator.Value));
         dynamic usr = (dynamic)ciUsr;
         string userName = usr.UserPart.UserName;
         string pwd = "";
@@ -41,6 +41,7 @@
             customTemplateId = "4270";
         }
         wfContext.SetState("CustomTemplateId", customTemplateId);
+        wfContext.SetState("Email", usr.UserPart.Email);
         retString = "OK";
     }
     catch (Exception ex) {
