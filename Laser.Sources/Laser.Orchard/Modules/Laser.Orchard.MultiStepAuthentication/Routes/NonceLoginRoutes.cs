@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Laser.Orchard.MultiStepAuthentication.Routes {
     [OrchardFeature("Laser.Orchard.NonceLogin")]
@@ -25,6 +27,20 @@ namespace Laser.Orchard.MultiStepAuthentication.Routes {
                         area = "Laser.Orchard.MultiStepAuthentication",
                         controller = "NonceLoginApi"
                     }
+                },
+                new RouteDescriptor {
+                    Route = new Route(
+                        "Admin/NonceLoginSettings",
+                        new RouteValueDictionary {
+                            {"area", "Laser.Orchard.MultiStepAuthentication"},
+                            {"controller", "NonceLoginAdmin"},
+                            {"action", "Index"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Laser.Orchard.MultiStepAuthentication"}
+                        },
+                        new MvcRouteHandler())
                 }
             };
         }
