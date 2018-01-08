@@ -151,6 +151,7 @@
     <Compile Include="Models\HIDAuthToken.cs" />
     <Compile Include="Models\HIDCredential.cs" />
     <Compile Include="Models\HIDCredentialContainer.cs" />
+    <Compile Include="Models\HIDPartNumberSet.cs" />
     <Compile Include="Models\HIDSearchResult.cs" />
     <Compile Include="Models\HIDSiteSettingsPart.cs" />
     <Compile Include="Models\HIDUser.cs" />
@@ -170,6 +171,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\HIDPartNumberSet.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

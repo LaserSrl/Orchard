@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web.Script.Serialization;
 
 namespace Laser.Orchard.HID.Models {
     public class HIDSiteSettingsPart : ContentPart {
@@ -40,12 +41,41 @@ namespace Laser.Orchard.HID.Models {
             set { _clientSecret.Value = value; }
         }
 
+        private IList<HIDPartNumberSet> _partNumberSets;
+        public IList<HIDPartNumberSet> PartNumberSets {
+            get {
+                if (_partNumberSets == null) {
+                    var json = Retrieve<string>("PartNumberSetsString");
+                    if (json == null) {
+                        return new List<HIDPartNumberSet>() { new HIDPartNumberSet { Name = "Default" } };
+                    }
+                    _partNumberSets = new JavaScriptSerializer().Deserialize<IList<HIDPartNumberSet>>(json);
+                }
+                if (!_partNumberSets.Any()) {
+                    _partNumberSets.Add(new HIDPartNumberSet { Name = "Default" });
+                }
+                return _partNumberSets;
+            }
+            set {
+                var json = new JavaScriptSerializer().Serialize(value);
+                _partNumberSets = value;
+                this.Store("PartNumberSetsString", json);
+            }
+        }
+
+
         public string _partNumbers { get; set; }
         /// <summary>
         /// Part numbers managed by the system.
         /// </summary>
         public string[] PartNumbers {
-            get { return NumbersStringToArray(this.Retrieve(x => x._partNumbers)); }
+            get {
+                return PartNumberSets
+                    .Select(pns => pns.PartNumbers.ToList())
+                    .Aggregate((first, second) => { first.AddRange(second); return first; })
+                    .ToArray();
+            }
+            // get { return NumbersStringToArray(this.Retrieve(x => x._partNumbers)); }
             set { this.Store(x => x._partNumbers, NumbersArrayToString(value)); }
         }
         public string SerializedPartNumbers {
