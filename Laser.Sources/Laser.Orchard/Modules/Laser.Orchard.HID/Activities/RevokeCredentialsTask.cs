@@ -1,24 +1,24 @@
-﻿using Orchard.Workflows.Services;
+﻿using Laser.Orchard.HID.Extensions;
+using Laser.Orchard.HID.Services;
+using Orchard.ContentManagement;
+using Orchard.Core.Common.Models;
+using Orchard.Localization;
+using Orchard.Security;
+using Orchard.Users.Models;
+using Orchard.Workflows.Models;
+using Orchard.Workflows.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Orchard.Localization;
-using Orchard.Workflows.Models;
-using Laser.Orchard.HID.Services;
-using Orchard.ContentManagement;
-using Laser.Orchard.HID.Extensions;
-using Orchard.Security;
-using Orchard.Users.Models;
-using Orchard.Core.Common.Models;
 
 namespace Laser.Orchard.HID.Activities {
-    public class IssueCredentialsTask : Task {
+    public class RevokeCredentialsTask : Task {
 
         private readonly IHIDAPIService _HIDAPIService;
         private readonly IContentManager _contentManager;
 
-        public IssueCredentialsTask(
+        public RevokeCredentialsTask(
             IHIDAPIService hidAPIService,
             IContentManager contentManager) {
 
@@ -29,15 +29,15 @@ namespace Laser.Orchard.HID.Activities {
         public Localizer T { get; set; }
 
         public override string Form {
-            get { return Constants.ActivityIssueCredentialsFormName; }
+            get { return Constants.ActivityRevokeCredentialsFormName; }
         }
 
         public override string Name {
-            get { return "IssueCredentials"; }
+            get { return "RevokeCredentials"; }
         }
 
         public override LocalizedString Description {
-            get { return T("Issues credentials to the user."); }
+            get { return T("Revoke credentials from the user."); }
         }
 
         public override LocalizedString Category {
@@ -50,8 +50,7 @@ namespace Laser.Orchard.HID.Activities {
                 T("NoIUser"),
                 T("NoPartNumber"),
                 T("UnknownError"),
-                T("AuthorizationFailed"),
-                T("UserHasNoDevices")
+                T("AuthorizationFailed")
             };
         }
 
@@ -90,11 +89,28 @@ namespace Laser.Orchard.HID.Activities {
                 yield return T("NoPartNumber");
             }
 
-            // Issue and handle response
-            var hidUser = _HIDAPIService.IssueCredentials(user, partNumbers);
+            // Revoke and handle response
+            var hidUser = _HIDAPIService.RevokeCredentials(user, partNumbers);
             switch (hidUser.Error) {
                 case UserErrors.NoError:
-                    yield return T("OK");
+                    // In this case, we need to ensure that no CredentialContainer has errors
+                    var badContainer = hidUser
+                        .CredentialContainers
+                        .FirstOrDefault(cc => cc.Error != CredentialErrors.NoError);
+                    if (badContainer == null) { // no error on any container
+                        yield return T("OK");
+                    }
+                    switch (badContainer.Error) {
+                        case CredentialErrors.UnknownError:
+                            yield return T("UnknownError");
+                            break;
+                        case CredentialErrors.AuthorizationFailed:
+                            yield return T("AuthorizationFailed");
+                            break;
+                        default:
+                            yield return T("UnknownError");
+                            break;
+                    }
                     break;
                 case UserErrors.UnknownError:
                     yield return T("UnknownError");
@@ -102,15 +118,11 @@ namespace Laser.Orchard.HID.Activities {
                 case UserErrors.AuthorizationFailed:
                     yield return T("AuthorizationFailed");
                     break;
-                case UserErrors.DoesNotHaveDevices:
-                    yield return T("UserHasNoDevices");
-                    break;
                 default:
                     yield return T("UnknownError");
                     break;
             }
-            
-        }
 
+        }
     }
 }

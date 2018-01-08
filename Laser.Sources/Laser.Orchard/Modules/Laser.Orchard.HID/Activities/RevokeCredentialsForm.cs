@@ -8,12 +8,12 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.HID.Activities {
-    public class IssueCredentialsForm : IFormProvider {
+    public class RevokeCredentialsForm : IFormProvider {
 
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public IssueCredentialsForm(
+        public RevokeCredentialsForm(
             IShapeFactory shapeFactory) {
 
             Shape = shapeFactory;
@@ -23,29 +23,27 @@ namespace Laser.Orchard.HID.Activities {
         public void Describe(DescribeContext context) {
             Func<IShapeFactory, dynamic> form = shape => {
                 return Shape.Form(
-                    Id: "IssueCredentials",
+                    Id: "RevokeCredentials",
                     _Type: Shape.FieldSet(
-                        Title: T("Issue Credentials"),
+                        Title: T("Revoke Credentials"),
                         _User: Shape.Textbox(
-                            Id: "IssueCredentials-User",
+                            Id: "RevokeCredentials-User",
                             Name: "IUser",
                             Title: T("Krake User"),
                             Description: T("Specify the ID or the UserName of the Krake User to be used as origin. Leave blank to use the Creator of the Content Item that triggered the workflow."),
                             Classes: new[] { "large", "text", "tokenized" }
                             ),
                         _PartNumbers: Shape.Textarea(
-                            Id: "IssueCredentails-PartNumbers",
+                            Id: "RevokeCredentails-PartNumbers",
                             Name: "PartNumbers",
                             Title: T("Part Numbers"),
-                            Description: T("Specify the Part Numbers that credentials will be released for, one per line. Leave blank to issue credentials for all configured Part Numbers."),
+                            Description: T("Specify the Part Numbers that credentials will be revoked for, one per line. Leave blank to revoke all configured credentials."),
                             Classes: new[] { "large", "text", "tokenized" }
                             )
                         )
                     );
             };
-            context.Form(Constants.ActivityIssueCredentialsFormName, form);
+            context.Form(Constants.ActivityRevokeCredentialsFormName, form);
         }
     }
-
-
 }

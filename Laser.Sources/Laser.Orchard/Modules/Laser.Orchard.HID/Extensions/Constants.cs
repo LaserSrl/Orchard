@@ -7,6 +7,7 @@ namespace Laser.Orchard.HID.Extensions {
 
         public const string ActivityCreateHIDUserFormName = "ActivityCreateHIDUser";
         public const string ActivityIssueCredentialsFormName = "ActivityIssueCredentials";
+        public const string ActivityRevokeCredentialsFormName = "ActivityRevokeCredentials";
 
 
         public const string DefaultContentType = @"application/vnd.assaabloy.ma.credential-management-1.0+json";

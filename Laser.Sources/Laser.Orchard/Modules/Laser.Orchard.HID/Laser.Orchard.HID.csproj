@@ -140,6 +140,8 @@
     <Compile Include="Activities\CreateHIDUserTask.cs" />
     <Compile Include="Activities\IssueCredentialsForm.cs" />
     <Compile Include="Activities\IssueCredentialsTask.cs" />
+    <Compile Include="Activities\RevokeCredentialsForm.cs" />
+    <Compile Include="Activities\RevokeCredentialsTask.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HIDAPIController.cs" />
     <Compile Include="Enums.cs" />
