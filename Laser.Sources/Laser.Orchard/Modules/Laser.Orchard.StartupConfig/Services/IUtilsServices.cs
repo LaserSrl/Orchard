@@ -243,11 +243,7 @@ namespace Laser.Orchard.StartupConfig.Services {
                 foreach (var provider in identityProviders) {
                     var val = provider.GetRelatedId(context);
                     if (string.IsNullOrWhiteSpace(val.Key) == false) {
-                        if (val.Value is IEnumerable) {
-                            registeredServicesData.Add(val.Key, new JArray(val.Value));
-                        } else {
-                            registeredServicesData.Add(val.Key, new JValue(val.Value));
-                        }
+                        registeredServicesData.Add(val.Key, JToken.FromObject(val.Value));
                     }
                 }
             }
