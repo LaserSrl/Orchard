@@ -32,7 +32,7 @@ namespace Laser.Orchard.HID.Models {
         public List<HIDCredentialContainer> CredentialContainers { get; set; }
         public UserErrors Error { get; set; }
 
-        private readonly IHIDAPIService _HIDService;
+        private readonly IHIDAdminService _HIDService;
 
         public ILogger Logger { get; set; }
 
@@ -44,7 +44,7 @@ namespace Laser.Orchard.HID.Models {
             Logger = NullLogger.Instance;
         }
 
-        private HIDUser(IHIDAPIService hidService)
+        private HIDUser(IHIDAdminService hidService)
             : this() {
             _HIDService = hidService;
         }
@@ -107,10 +107,10 @@ namespace Laser.Orchard.HID.Models {
         /// <summary>
         /// Get a specific user from HID's systems.
         /// </summary>
-        /// <param name="hidService">The IHIDAPIService implementation to use.</param>
+        /// <param name="hidService">The IHIDAdminService implementation to use.</param>
         /// <param name="location">This is the complete endpoint corresponding to the user in HID's systems.</param>
         /// <returns>The HIDUser gotten from HID's systems.</returns>
-        public static HIDUser GetUser(IHIDAPIService hidService, string location) {
+        public static HIDUser GetUser(IHIDAdminService hidService, string location) {
             return new HIDUser(hidService) { Location = location }.GetUser();
         }
 
@@ -177,19 +177,19 @@ namespace Laser.Orchard.HID.Models {
             }
         }
 
-        public static HIDUser CreateUser(IHIDAPIService hidService, IUser oUser, string familyName, string givenName) {
+        public static HIDUser CreateUser(IHIDAdminService hidService, IUser oUser, string familyName, string givenName) {
             return CreateUser(hidService, oUser.Id, familyName, givenName, oUser.Email);
         }
 
-        public static HIDUser CreateUser(IHIDAPIService hidService, IUser oUser, string familyName, string givenName, string email) {
+        public static HIDUser CreateUser(IHIDAdminService hidService, IUser oUser, string familyName, string givenName, string email) {
             return CreateUser(hidService, oUser.Id, familyName, givenName, email);
         }
 
-        public static HIDUser CreateUser(IHIDAPIService hidService, int id, string familyName, string givenName, string email) {
+        public static HIDUser CreateUser(IHIDAdminService hidService, int id, string familyName, string givenName, string email) {
             return CreateUser(hidService, GenerateExternalId(id), familyName, givenName, email);
         }
 
-        public static HIDUser CreateUser(IHIDAPIService hidService, string extId, string familyName, string givenName, string email) {
+        public static HIDUser CreateUser(IHIDAdminService hidService, string extId, string familyName, string givenName, string email) {
             HIDUser user = new HIDUser(hidService) { ExternalId = extId, FamilyName = familyName, GivenName = givenName };
             user.Emails.Add(email);
             return user.CreateUser();

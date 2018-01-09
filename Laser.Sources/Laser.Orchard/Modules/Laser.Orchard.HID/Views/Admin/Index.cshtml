@@ -1,7 +1,7 @@
 ﻿@using Laser.Orchard.Commons.Helpers;
-@using Laser.Orchard.HID.Models;
+@using Laser.Orchard.HID.ViewModels;
 
-@model HIDSiteSettingsPart
+@model HIDSiteSettingsViewModel
 
 <style>
     div#building div:nth-child(odd) {
@@ -12,6 +12,8 @@
 @{ 
     Script.Require("jQuery_NestedModels").AtHead();
 }
+
+@Html.ValidationSummary()
 
 @using (Html.BeginFormAntiForgeryPost()) {
     <fieldset id="CustomerID">
@@ -35,12 +37,13 @@
     </fieldset>
     <fieldset id="PartNumbers">
         <legend>@T("Input your HID Part Numbers")</legend>
+        <span class="hint">@T("Updating part numbers may take a long time in case credentials must be issued/revoked as a consequence.")</span>
 
-        <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x => x.PartNumberSets, T("Add Building").Text, "#building", ".j_building")
         <div id="building">
             @Html.EditorFor(x => x.PartNumberSets)
         </div>
 
+        <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x => x.PartNumberSets, T("Add Building").Text, "#building", ".j_building")
         @*@Html.TextAreaFor(m => m.SerializedPartNumbers, new {@cols = "80"})
         <span class="hint">@T("Input the Part Numbers you want to be able to manage automatically, one per line.")</span>*@
     </fieldset>

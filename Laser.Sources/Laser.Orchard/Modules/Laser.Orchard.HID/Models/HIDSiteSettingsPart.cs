@@ -10,11 +10,7 @@ using System.Web.Script.Serialization;
 
 namespace Laser.Orchard.HID.Models {
     public class HIDSiteSettingsPart : ContentPart {
-
-        public HIDSiteSettingsPart() {
-            PartNumberSets = new List<HIDPartNumberSet>();
-        }
-
+        
         /// <summary>
         /// Numeric identifier of the company in HID's systems
         /// </summary>
@@ -50,22 +46,6 @@ namespace Laser.Orchard.HID.Models {
             set { _clientSecret.Value = value; }
         }
         
-        [PartNumberSetsValidation]
-        public IList<HIDPartNumberSet> PartNumberSets { get; set; }
-
-        /// <summary>
-        /// Part numbers managed by the system.
-        /// </summary>
-        public string[] PartNumbers {
-            get {
-                return PartNumberSets
-                    .Where(pns => !pns.Delete)
-                    .Select(pns => pns.PartNumbers.ToList())
-                    .Aggregate((first, second) => { first.AddRange(second); return first; })
-                    .ToArray();
-            }
-        }
-
         public string _appVersionStrings { get; set; }
         
         /// <summary>
@@ -81,6 +61,5 @@ namespace Laser.Orchard.HID.Models {
             get { return (AppVersionStrings != null && AppVersionStrings.Length > 0) ? String.Join(Environment.NewLine, AppVersionStrings) : ""; }
             set { AppVersionStrings = value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(avs => avs.Trim()).ToArray(); }
         }
-        
     }
 }

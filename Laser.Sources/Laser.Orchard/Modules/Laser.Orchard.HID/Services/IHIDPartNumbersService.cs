@@ -1,4 +1,5 @@
 ﻿using Laser.Orchard.HID.Models;
+using Laser.Orchard.HID.ViewModels;
 using Orchard;
 using Orchard.Security;
 using System;
@@ -15,7 +16,7 @@ namespace Laser.Orchard.HID.Services {
         /// </summary>
         /// <param name="oldNumbers">THe HIDPartNumberSets before the update.</param>
         /// <returns>A PartNumberError describing the result.</returns>
-        PartNumberValidationResult TryUpdatePartNumbers(HIDSiteSettingsPart settings);
+        PartNumberValidationResult TryUpdatePartNumbers(HIDSiteSettingsViewModel settings);
 
         /// <summary>
         /// Returns the Part Numbers associated with a given user

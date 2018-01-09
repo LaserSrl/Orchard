@@ -1,4 +1,7 @@
-﻿using Laser.Orchard.HID.Models;
+﻿
+using Laser.Orchard.HID.Models;
+using Laser.Orchard.HID.ViewModels;
+using Orchard.Localization;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,8 +16,14 @@ namespace Laser.Orchard.HID.Attributes {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class PartNumberSetsValidationAttribute : ValidationAttribute {
 
+
+        public PartNumberSetsValidationAttribute() {
+            T = NullLocalizer.Instance;
+        }
+        public Localizer T { get; set; }
+
         public override bool IsValid(object value) {
-            var set = value as IEnumerable<HIDPartNumberSet>;
+            var set = value as IEnumerable<HIDPartNumberSetViewModel>;
             if (set == null) {
                 return false;
             }
@@ -26,6 +35,10 @@ namespace Laser.Orchard.HID.Attributes {
                 .Distinct();
 
             return names.Count() == set.Count(pns => !pns.Delete);
+        }
+
+        public override string FormatErrorMessage(string name) {
+            return T("Set names must be unique and not null.").Text;
         }
     }
 }

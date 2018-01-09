@@ -14,11 +14,11 @@ namespace Laser.Orchard.HID.Models {
         public int ExpiresIn { get; private set; } //these are seconds
         public AuthenticationErrors Error { get; private set; }
 
-        private readonly IHIDAdminService _HIDService;
+        private readonly IHIDAdminService _HIDAdminService;
         public ILogger Logger { get; set; }
 
         private HIDAuthToken(IHIDAdminService hidService) {
-            _HIDService = hidService;
+            _HIDAdminService = hidService;
             TokenType = "";
             AccessToken = "";
             Error = AuthenticationErrors.NotAuthenticated;
@@ -31,11 +31,11 @@ namespace Laser.Orchard.HID.Models {
             return new HIDAuthToken(hidService).Authenticate();
         }
         public HIDAuthToken Authenticate() {
-            var settings = _HIDService.GetSiteSettings();
+            var settings = _HIDAdminService.GetSiteSettings();
             return Authenticate(settings.ClientID, settings.ClientSecret);
         }
         public HIDAuthToken Authenticate(string userName, string password) {
-            var settings = _HIDService.GetSiteSettings();
+            var settings = _HIDAdminService.GetSiteSettings();
             var LoginEndpoint = String.Format(HIDAPIEndpoints.LoginEndpointFormat,
                 settings.UseTestEnvironment ? HIDAPIEndpoints.IdentityProviderTest : HIDAPIEndpoints.IdentityProviderProd);
             HttpWebRequest wr = HttpWebRequest.CreateHttp(LoginEndpoint);

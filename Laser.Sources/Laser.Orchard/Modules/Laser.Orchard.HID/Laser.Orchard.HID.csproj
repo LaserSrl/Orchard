@@ -160,11 +160,14 @@
     <Compile Include="Models\HIDUser.cs" />
     <Compile Include="Models\PartNumberValidationResult.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
+    <Compile Include="Services\HIDAdminService.cs" />
     <Compile Include="Services\HIDPartNumbersService.cs" />
     <Compile Include="Services\HIDService.cs" />
     <Compile Include="Services\IHIDAdminService.cs" />
     <Compile Include="Services\IHIDAPIService.cs" />
     <Compile Include="Services\IHIDPartNumbersService.cs" />
+    <Compile Include="ViewModels\HIDPartNumberSetViewModel.cs" />
+    <Compile Include="ViewModels\HIDSiteSettingsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">

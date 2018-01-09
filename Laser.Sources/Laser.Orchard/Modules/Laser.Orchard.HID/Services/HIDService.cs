@@ -13,44 +13,45 @@ using Orchard.Environment.Configuration;
 using Orchard.Security;
 using Orchard.Logging;
 using Orchard.Data;
+using Laser.Orchard.HID.ViewModels;
+
 
 namespace Laser.Orchard.HID.Services {
-    public class HIDService : IHIDAdminService, IHIDAPIService {
+    public class HIDService : IHIDAPIService {
 
         private readonly IOrchardServices _orchardServices;
         private readonly ICacheStorageProvider _cacheStorageProvider;
         private readonly ShellSettings _shellSetting;
         private readonly IRepository<HIDPartNumberSet> _repository;
         private readonly IHIDPartNumbersService _HIDPartNumbersService;
+        private readonly IHIDAdminService _HIDAdminService;
 
         public ILogger Logger { get; set; }
 
-        public HIDService(IOrchardServices orchardServices,
+        public HIDService(
+            IOrchardServices orchardServices,
             ICacheStorageProvider cacheStorageProvider,
             ShellSettings shellSetting,
             IRepository<HIDPartNumberSet> repository,
-            IHIDPartNumbersService HIDPartNumbersService) {
+            IHIDPartNumbersService HIDPartNumbersService,
+            IHIDAdminService HIDAdminService) {
 
             _orchardServices = orchardServices;
             _cacheStorageProvider = cacheStorageProvider;
             _shellSetting = shellSetting;
             _repository = repository;
             _HIDPartNumbersService = HIDPartNumbersService;
+            _HIDAdminService = HIDAdminService;
 
             Logger = NullLogger.Instance;
         }
 
-        private string BaseURI {
-            get { return String.Format(HIDAPIEndpoints.BaseURIFormat,
-                GetSiteSettings().UseTestEnvironment ? HIDAPIEndpoints.BaseURITest : HIDAPIEndpoints.BaseURIProd); }
-        }
-
         public string BaseEndpoint {
-            get { return String.Format(HIDAPIEndpoints.CustomerURIFormat, BaseURI, GetSiteSettings().CustomerID.ToString()); }
+            get { return _HIDAdminService.BaseEndpoint; }
         }
 
         public string UsersEndpoint {
-            get { return String.Format(HIDAPIEndpoints.UsersEndpointFormat, BaseEndpoint); }
+            get { return _HIDAdminService.UsersEndpoint; }
         }
 
         private string UsersSearchEndpoint {
@@ -60,66 +61,21 @@ namespace Laser.Orchard.HID.Services {
         private string CreateInvitationEndpointFormat {
             get { return string.Format(HIDAPIEndpoints.CreateInvitationEndpointFormat, UsersEndpoint, @"{0}"); }
         }
-
-        #region Token is in the cache
-        private string CacheTokenTypeKey {
-            get { return string.Format(Constants.CacheTokenTypeKeyFormat, _shellSetting.Name); }
-        }
-        private string CacheAccessTokenKey {
-            get { return string.Format(Constants.CacheAccessTokenKeyFormat, _shellSetting.Name); }
-        }
-        private void AuthTokenToCache(HIDAuthToken token) {
-            TimeSpan validity = TimeSpan.FromSeconds(token.ExpiresIn * 0.8); //80% of what is given by the authentication, to have margin
-            _cacheStorageProvider.Put(CacheTokenTypeKey, token.TokenType, validity);
-            _cacheStorageProvider.Put(CacheAccessTokenKey, token.AccessToken, validity);
-        }
-        #endregion
-
-        /// <summary>
-        /// Get the full authorization token from cache.
-        /// </summary>
+        
         public string AuthorizationToken {
-            get {
-                string tokenType = (string)_cacheStorageProvider.Get<string>(CacheTokenTypeKey);
-                string accessToken = (string)_cacheStorageProvider.Get<string>(CacheAccessTokenKey);
-                if (!string.IsNullOrWhiteSpace(tokenType) && !string.IsNullOrWhiteSpace(accessToken)) {
-                    return tokenType + " " + accessToken;
-                }
-                return ""; //TODO: regenerate token here
-            }
+            get {return _HIDAdminService.AuthorizationToken; }
         }
 
-        public HIDSiteSettingsPart GetSiteSettings() {
-            var settings = _orchardServices.WorkContext.CurrentSite.As<HIDSiteSettingsPart>();
-            settings.PartNumberSets = _repository.Table.ToList(); ;
-            return settings;
+        public HIDSiteSettingsViewModel GetSiteSettings() {
+            return _HIDAdminService.GetSiteSettings();
         }
 
         public AuthenticationErrors Authenticate() {
-            var token = HIDAuthToken.Authenticate(this);
-            switch (token.Error) {
-                case AuthenticationErrors.NoError:
-                    AuthTokenToCache(token); // store token
-                    break;
-                case AuthenticationErrors.NotAuthenticated:
-                    break;
-                case AuthenticationErrors.ClientInfoInvalid:
-                    break;
-                case AuthenticationErrors.CommunicationError:
-                    break;
-                default:
-                    break;
-            }
-            return token.Error;
+            return _HIDAdminService.Authenticate();
         }
 
         public bool VerifyAuthentication() {
-            if (string.IsNullOrWhiteSpace(AuthorizationToken)) {
-                if (Authenticate() != AuthenticationErrors.NoError) {
-                    return false;
-                }
-            }
-            return true; // authentication ok
+            return _HIDAdminService.VerifyAuthentication();
         }
 
         private const string BaseSearchFormat = @"{{ 'schemas':[ 'urn:ietf:params:scim:api:messages:2.0:SearchRequest' ], 'filter':'externalId eq ""{0}"" and status eq ""ACTIVE""', 'sortBy':'name.familyName', 'sortOrder':'descending', 'startIndex':1, 'count':{1} }}";
@@ -176,7 +132,7 @@ namespace Laser.Orchard.HID.Services {
                             var jo = JObject.Parse(respJson);
                             result = new HIDUserSearchResult(jo);
                             if (result.TotalResults == 1) {
-                                result.User = HIDUser.GetUser(this, jo["Resources"].Children().First()["meta"]["location"].ToString());
+                                result.User = HIDUser.GetUser(_HIDAdminService, jo["Resources"].Children().First()["meta"]["location"].ToString());
                                 result.Error = SearchErrors.NoError;
                             } else if (result.TotalResults == 0) {
                                 result.Error = SearchErrors.NoResults;
@@ -244,7 +200,7 @@ namespace Laser.Orchard.HID.Services {
                             var jo = JObject.Parse(respJson);
                             result = new HIDUserSearchResult(jo);
                             if (result.TotalResults == 1) {
-                                result.User = HIDUser.GetUser(this, jo["Resources"].Children().First()["meta"]["location"].ToString());
+                                result.User = HIDUser.GetUser(_HIDAdminService, jo["Resources"].Children().First()["meta"]["location"].ToString());
                                 result.Error = SearchErrors.NoError;
                             } else if (result.TotalResults == 0) {
                                 result.Error = SearchErrors.NoResults;
@@ -291,7 +247,7 @@ namespace Laser.Orchard.HID.Services {
             if (string.IsNullOrWhiteSpace(email)) {
                 email = user.Email;
             }
-            return HIDUser.CreateUser(this, user, familyName, givenName, email);
+            return HIDUser.CreateUser(_HIDAdminService, user, familyName, givenName, email);
         }
 
         public HIDUser IssueCredentials(IUser user) {

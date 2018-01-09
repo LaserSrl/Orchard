@@ -32,7 +32,7 @@ namespace Laser.Orchard.HID.Models {
             Logger = NullLogger.Instance;
         }
 
-        public HIDCredentialContainer(JToken container, IHIDAPIService _HIDService)
+        public HIDCredentialContainer(JToken container, IHIDAdminService _HIDService)
             : this() {
             Id = int.Parse(container["id"].ToString()); //no null-check for required properties
             Status = container["status"].ToString().ToUpperInvariant();
@@ -54,7 +54,7 @@ namespace Laser.Orchard.HID.Models {
             }
         }
 
-        public void UpdateContainer(JToken container, IHIDAPIService _HIDService) {
+        public void UpdateContainer(JToken container, IHIDAdminService _HIDService) {
             Id = int.Parse(container["id"].ToString()); //no null-check for required properties
             Status = container["status"].ToString();
             OsVersion = container["osVersion"] != null ? container["osVersion"].ToString() : "";
@@ -96,7 +96,7 @@ namespace Laser.Orchard.HID.Models {
         /// </summary>
         /// <param name="_HIDService">IHIDAPIService implementation to be used to get the base endpoints.</param>
         /// <returns>A string to use as format, where the only missing parameter is the Container's Id</returns>
-        public string IssueCredentialEndpointFormat(IHIDAPIService _HIDService) {
+        public string IssueCredentialEndpointFormat(IHIDAdminService _HIDService) {
             return string.Format(HIDAPIEndpoints.IssueCredentialEndpointFormat, 
                 _HIDService.BaseEndpoint, @"{0}");
         }
@@ -106,7 +106,7 @@ namespace Laser.Orchard.HID.Models {
             return JObject.Parse(string.Format(IssueCredentialBodyFormat, pn)).ToString();
         }
 
-        public HIDCredentialContainer IssueCredential(string partNumber, IHIDAPIService _HIDService) {
+        public HIDCredentialContainer IssueCredential(string partNumber, IHIDAdminService _HIDService) {
             if (!_HIDService.VerifyAuthentication()) {
                 Error = CredentialErrors.AuthorizationFailed;
                 return this;
@@ -161,11 +161,11 @@ namespace Laser.Orchard.HID.Models {
             return this;
         }
 
-        private string GetCredentialContainerEndpointFormat(IHIDAPIService _HIDService) {
+        private string GetCredentialContainerEndpointFormat(IHIDAdminService _HIDService) {
             return String.Format(HIDAPIEndpoints.GetCredentialContainerEndpointFormat, _HIDService.BaseEndpoint, @"{0}");
         }
 
-        public HIDCredentialContainer RevokeCredentials(string partNumber, IHIDAPIService _HIDService) {
+        public HIDCredentialContainer RevokeCredentials(string partNumber, IHIDAdminService _HIDService) {
             if (!_HIDService.VerifyAuthentication()) {
                 Error = CredentialErrors.AuthorizationFailed;
                 return this;

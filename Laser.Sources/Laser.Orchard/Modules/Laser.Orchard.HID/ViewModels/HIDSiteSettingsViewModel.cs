@@ -1,4 +1,5 @@
 ﻿using Laser.Orchard.HID.Attributes;
+
 using Laser.Orchard.HID.Models;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace Laser.Orchard.HID.ViewModels {
     public class HIDSiteSettingsViewModel {
 
         public HIDSiteSettingsViewModel() {
-            PartNumberSets = new List<HIDPartNumberSet>();
+            PartNumberSets = new List<HIDPartNumberSetViewModel>();
         }
 
         public HIDSiteSettingsViewModel(HIDSiteSettingsPart settings)
@@ -20,7 +21,7 @@ namespace Laser.Orchard.HID.ViewModels {
         public HIDSiteSettingsPart SettingsPart { get; set; }
 
         [PartNumberSetsValidation]
-        public IList<HIDPartNumberSet> PartNumberSets { get; set; }
+        public IList<HIDPartNumberSetViewModel> PartNumberSets { get; set; }
 
         /// <summary>
         /// Part numbers managed by the system.

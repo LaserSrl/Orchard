@@ -14,6 +14,7 @@ namespace Laser.Orchard.HID {
     public enum PartNumberError {
         NoError = 0,
         NotAuthenticated = 1,
-        PartNumbersNotValid = 2
+        PartNumbersNotValid = 2,
+        UnknownError = 3
     }
 }

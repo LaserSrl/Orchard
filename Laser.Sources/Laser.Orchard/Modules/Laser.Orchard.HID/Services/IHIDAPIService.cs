@@ -8,18 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Laser.Orchard.HID.Services {
-    public interface IHIDAPIService : IHIDAdminService, IDependency {
-        /// <summary>
-        /// Attempts authentication to the HID services, using the login information from the settings.
-        /// </summary>
-        /// <returns>A value identifying possible errors, or NoError in case of success.</returns>
-        AuthenticationErrors Authenticate();
-        /// <summary>
-        /// This method verifies whether we are authenticated with HID's systems. If not, it attempts to
-        /// authenticate once.
-        /// </summary>
-        /// <returns>True if auutentication is successful, false otherwise.</returns>
-        bool VerifyAuthentication();
+    public interface IHIDAPIService : IDependency {
+
         /// <summary>
         /// Searches the HIDUser corresponding to the IUser passed as parameter.
         /// </summary>
@@ -96,8 +86,5 @@ namespace Laser.Orchard.HID.Services {
         /// <returns>This always returns an HIDUser object, but we should check its Error field before using it.</returns>
         HIDUser RevokeCredentials(HIDUser hidUser, string[] partNumbers);
 
-        string AuthorizationToken { get; }
-        string BaseEndpoint { get; }
-        string UsersEndpoint { get; }
     }
 }

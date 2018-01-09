@@ -1,6 +1,7 @@
 ﻿using Laser.Orchard.HID.Models;
 using Laser.Orchard.HID.Services;
 using Orchard;
+using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Admin;
@@ -46,12 +47,10 @@ namespace Laser.Orchard.HID.Controllers {
                 if (string.IsNullOrWhiteSpace(settings.ClientSecret)) {
                     settings.ClientSecret = oldpw;
                 }
-
-                _HIDPartNumbersService.TryUpdatePartNumbers(settings);
-
+                
                 _orchardServices.Notifier.Information(T("Settings saved successfully."));
-                //attempt authentication
-                switch (_HIDAPIService.Authenticate()) {
+                // attempt authentication
+                switch (_HIDAdminService.Authenticate()) {
                     case AuthenticationErrors.NoError:
                         _orchardServices.Notifier.Information(T("Authentication OK."));
                         break;
@@ -67,10 +66,19 @@ namespace Laser.Orchard.HID.Controllers {
                     default:
                         break;
                 }
+
+                // Part number validation must happen after authentication
+                if (_HIDAdminService.VerifyAuthentication()) {
+                    var pnValidation = _HIDPartNumbersService.TryUpdatePartNumbers(settings);
+                    if (!pnValidation.Success) {
+                        _orchardServices.Notifier.Error(T("Part number validation failed: {0}", pnValidation.Message));
+                    }
+                }
+
             } else {
                 _orchardServices.Notifier.Error(T("Could not save settings."));
             }
-            return RedirectToAction("Index");
+            return View(settings);
         }
     }
 }

@@ -23,11 +23,11 @@ namespace Laser.Orchard.HID.Models {
             Status = credential["status"].ToString().ToUpperInvariant();
         }
 
-        private string RevokeCredentialEndpointFormat(IHIDAPIService _HIDService) {
+        private string RevokeCredentialEndpointFormat(IHIDAdminService _HIDService) {
             return string.Format(HIDAPIEndpoints.RevokeCredentialEndpointFormat, _HIDService.BaseEndpoint, @"{0}");
         }
 
-        public CredentialErrors Revoke(IHIDAPIService _HIDService) {
+        public CredentialErrors Revoke(IHIDAdminService _HIDService) {
             if (!_HIDService.VerifyAuthentication()) {
                 return CredentialErrors.AuthorizationFailed;
             }
