@@ -1,4 +1,6 @@
-﻿@model Laser.Orchard.HID.Models.HIDPartNumberSet
+﻿@using Laser.Orchard.Commons.Helpers
+
+@model Laser.Orchard.HID.Models.HIDPartNumberSet
 
 @{ MvcHtmlString answerBlock = Html.UniqueClientId("HIDPartNumberSet"); }
 @{
@@ -6,5 +8,16 @@
 }
 
 <div id="@setId" class="j_building">
-    <h2>QWEQWE</h2>
+    <fieldset>
+        <legend>@T("Building details.")</legend>
+        @Html.HiddenFor(m => m.Delete, new { @class = "ph-mark-for-delete" })
+        @Html.HiddenFor(m => m.Id)
+        @Html.TextBoxFor(m => m.Name, new { placeholder = T("Name"), @class = "text medium" })
+        <span class="hint">@T("Insert the name given to this building.")</span>
+        @Html.TextAreaFor(m => m.SerializedPartNumbers, new { @class = "text medium" })
+        <span class="hint">@T("Input the Part Numbers you want to be able to manage automatically, one per line.")</span>
+        <br/>
+        <i class="fa fa-times" style="color: red"></i>
+        @Html.LinkToRemoveNestedForm(T("Remove").Text, ".j_building", "input.ph-mark-for-delete")
+    </fieldset>
 </div>

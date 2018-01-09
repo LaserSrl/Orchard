@@ -12,6 +12,7 @@ using Orchard.Caching.Services;
 using Orchard.Environment.Configuration;
 using Orchard.Security;
 using Orchard.Logging;
+using Orchard.Data;
 
 namespace Laser.Orchard.HID.Services {
     public class HIDService : IHIDAdminService, IHIDAPIService {
@@ -19,14 +20,23 @@ namespace Laser.Orchard.HID.Services {
         private readonly IOrchardServices _orchardServices;
         private readonly ICacheStorageProvider _cacheStorageProvider;
         private readonly ShellSettings _shellSetting;
+        private readonly IRepository<HIDPartNumberSet> _repository;
+        private readonly IHIDPartNumbersService _HIDPartNumbersService;
+
         public ILogger Logger { get; set; }
 
         public HIDService(IOrchardServices orchardServices,
             ICacheStorageProvider cacheStorageProvider,
-            ShellSettings shellSetting) {
+            ShellSettings shellSetting,
+            IRepository<HIDPartNumberSet> repository,
+            IHIDPartNumbersService HIDPartNumbersService) {
+
             _orchardServices = orchardServices;
             _cacheStorageProvider = cacheStorageProvider;
             _shellSetting = shellSetting;
+            _repository = repository;
+            _HIDPartNumbersService = HIDPartNumbersService;
+
             Logger = NullLogger.Instance;
         }
 
@@ -80,7 +90,9 @@ namespace Laser.Orchard.HID.Services {
         }
 
         public HIDSiteSettingsPart GetSiteSettings() {
-            return _orchardServices.WorkContext.CurrentSite.As<HIDSiteSettingsPart>();
+            var settings = _orchardServices.WorkContext.CurrentSite.As<HIDSiteSettingsPart>();
+            settings.PartNumberSets = _repository.Table.ToList(); ;
+            return settings;
         }
 
         public AuthenticationErrors Authenticate() {
@@ -283,11 +295,11 @@ namespace Laser.Orchard.HID.Services {
         }
 
         public HIDUser IssueCredentials(IUser user) {
-            return IssueCredentials(user, GetSiteSettings().PartNumbers);
+            return IssueCredentials(user, _HIDPartNumbersService.GetPartNumbersForUser(user));
         }
 
         public HIDUser IssueCredentials(HIDUser hidUser) {
-            return IssueCredentials(hidUser, GetSiteSettings().PartNumbers);
+            return IssueCredentials(hidUser, _HIDPartNumbersService.GetPartNumbersForUser(hidUser));
         }
 
         public HIDUser IssueCredentials(IUser user, string[] partNumbers) {
@@ -315,11 +327,11 @@ namespace Laser.Orchard.HID.Services {
         }
         
         public HIDUser RevokeCredentials(IUser user) {
-            return RevokeCredentials(user, GetSiteSettings().PartNumbers);
+            return RevokeCredentials(user, _HIDPartNumbersService.GetPartNumbersForUser(user));
         }
 
         public HIDUser RevokeCredentials(HIDUser hidUser) {
-            return RevokeCredentials(hidUser, GetSiteSettings().PartNumbers);
+            return RevokeCredentials(hidUser, _HIDPartNumbersService.GetPartNumbersForUser(hidUser));
         }
 
         public HIDUser RevokeCredentials(IUser user, string[] partNumbers) {

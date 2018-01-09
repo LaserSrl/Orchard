@@ -3,6 +3,12 @@
 
 @model HIDSiteSettingsPart
 
+<style>
+    div#building div:nth-child(odd) {
+        background-color: #f1efef;
+    }
+</style>
+
 @{ 
     Script.Require("jQuery_NestedModels").AtHead();
 }
@@ -35,8 +41,8 @@
             @Html.EditorFor(x => x.PartNumberSets)
         </div>
 
-        @Html.TextAreaFor(m => m.SerializedPartNumbers, new {@cols = "80"})
-        <span class="hint">@T("Input the Part Numbers you want to be able to manage automatically, one per line.")</span>
+        @*@Html.TextAreaFor(m => m.SerializedPartNumbers, new {@cols = "80"})
+        <span class="hint">@T("Input the Part Numbers you want to be able to manage automatically, one per line.")</span>*@
     </fieldset>
     <fieldset id="AppVersionStrings">
         <legend>@T("Input your HID App Version Strings")</legend>

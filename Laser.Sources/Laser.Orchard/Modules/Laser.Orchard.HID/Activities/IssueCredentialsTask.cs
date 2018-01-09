@@ -17,13 +17,16 @@ namespace Laser.Orchard.HID.Activities {
 
         private readonly IHIDAPIService _HIDAPIService;
         private readonly IContentManager _contentManager;
+        private readonly IHIDPartNumbersService _HIDPartNumbersService;
 
         public IssueCredentialsTask(
             IHIDAPIService hidAPIService,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            IHIDPartNumbersService HIDPartNumbersService) {
 
             _HIDAPIService = hidAPIService;
             _contentManager = contentManager;
+            _HIDPartNumbersService = HIDPartNumbersService;
         }
 
         public Localizer T { get; set; }
@@ -84,12 +87,15 @@ namespace Laser.Orchard.HID.Activities {
                 ? new string[] { }
                 : pnString.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
-            if ((partNumbers == null || partNumbers.Length == 0)
-                && (_HIDAPIService.GetSiteSettings().PartNumbers.Length == 0)) {
+            // Validataion for part numbers
+            if (partNumbers == null || partNumbers.Length == 0) {
+                partNumbers = _HIDPartNumbersService.GetPartNumbersForUser(user);
+            }
+            if (partNumbers.Length == 0) {
                 // No part number found configured, either in this activity's form or in the site settings
                 yield return T("NoPartNumber");
             }
-
+            
             // Issue and handle response
             var hidUser = _HIDAPIService.IssueCredentials(user, partNumbers);
             switch (hidUser.Error) {

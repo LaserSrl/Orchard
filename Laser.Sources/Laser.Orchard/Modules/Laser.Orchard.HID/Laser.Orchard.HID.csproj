@@ -142,12 +142,15 @@
     <Compile Include="Activities\IssueCredentialsTask.cs" />
     <Compile Include="Activities\RevokeCredentialsForm.cs" />
     <Compile Include="Activities\RevokeCredentialsTask.cs" />
+    <Compile Include="Attributes\PartNumberSetsValidationAttribute.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HIDAPIController.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\Constants.cs" />
+    <Compile Include="Extensions\Helpers.cs" />
     <Compile Include="Handlers\HIDSettingsPartHandler.cs" />
     <Compile Include="HIDRoutes.cs" />
+    <Compile Include="Migrations\HIDMigration.cs" />
     <Compile Include="Models\HIDAuthToken.cs" />
     <Compile Include="Models\HIDCredential.cs" />
     <Compile Include="Models\HIDCredentialContainer.cs" />
@@ -155,10 +158,13 @@
     <Compile Include="Models\HIDSearchResult.cs" />
     <Compile Include="Models\HIDSiteSettingsPart.cs" />
     <Compile Include="Models\HIDUser.cs" />
+    <Compile Include="Models\PartNumberValidationResult.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
+    <Compile Include="Services\HIDPartNumbersService.cs" />
     <Compile Include="Services\HIDService.cs" />
     <Compile Include="Services\IHIDAdminService.cs" />
     <Compile Include="Services\IHIDAPIService.cs" />
+    <Compile Include="Services\IHIDPartNumbersService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">

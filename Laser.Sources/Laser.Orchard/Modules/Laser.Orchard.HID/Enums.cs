@@ -10,4 +10,10 @@ namespace Laser.Orchard.HID {
     public enum CredentialErrors { NoError = 0, UnknownError = 1, CredentialDeliveredAlready = 2, AuthorizationFailed = 3 }
     public enum SearchErrors { NoError = 0, InvalidParameters = 1, AuthorizationFailed = 2, InternalServerError = 3, 
         UnknownError = 4, NoResults = 5, TooManyResults = 6 }
+
+    public enum PartNumberError {
+        NoError = 0,
+        NotAuthenticated = 1,
+        PartNumbersNotValid = 2
+    }
 }

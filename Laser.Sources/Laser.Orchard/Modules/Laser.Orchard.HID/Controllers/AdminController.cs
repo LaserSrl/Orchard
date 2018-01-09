@@ -1,4 +1,5 @@
-﻿using Laser.Orchard.HID.Services;
+﻿using Laser.Orchard.HID.Models;
+using Laser.Orchard.HID.Services;
 using Orchard;
 using Orchard.Localization;
 using Orchard.Security;
@@ -13,15 +14,19 @@ namespace Laser.Orchard.HID.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IHIDAdminService _HIDAdminService;
         private readonly IHIDAPIService _HIDAPIService;
+        private readonly IHIDPartNumbersService _HIDPartNumbersService;
 
         public Localizer T { get; set; }
 
         public AdminController(IOrchardServices orchardServices,
             IHIDAdminService HIDAdminService,
-            IHIDAPIService hIDAPISerivce) {
+            IHIDAPIService hIDAPISerivce,
+            IHIDPartNumbersService HIDPartNumbersService) {
+
             _orchardServices = orchardServices;
             _HIDAdminService = HIDAdminService;
             _HIDAPIService = hIDAPISerivce;
+            _HIDPartNumbersService = HIDPartNumbersService;
 
             T = NullLocalizer.Instance;
         }
@@ -41,6 +46,9 @@ namespace Laser.Orchard.HID.Controllers {
                 if (string.IsNullOrWhiteSpace(settings.ClientSecret)) {
                     settings.ClientSecret = oldpw;
                 }
+
+                _HIDPartNumbersService.TryUpdatePartNumbers(settings);
+
                 _orchardServices.Notifier.Information(T("Settings saved successfully."));
                 //attempt authentication
                 switch (_HIDAPIService.Authenticate()) {
