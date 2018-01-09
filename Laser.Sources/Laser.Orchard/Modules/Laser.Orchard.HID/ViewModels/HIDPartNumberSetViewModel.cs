@@ -20,6 +20,11 @@ namespace Laser.Orchard.HID.ViewModels {
 
         public string Name { get { return Set.Name; } }
 
+        public int Id {
+            get { return Set.Id; }
+            set { Set.Id = value; }
+        }
+
         /// <summary>
         /// The part numbers associated with this set
         /// </summary>
