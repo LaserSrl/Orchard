@@ -59,7 +59,10 @@ namespace Laser.Orchard.Caligoo.Models {
                 pars.Add(string.Format("visit_duration_max={0}", VisitDurationMax));
             }
             if (string.IsNullOrWhiteSpace(LocationList) == false) {
-                pars.Add(string.Format("location_list={0}", LocationList.Trim()));
+                var list = LocationList.Trim().Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                foreach(var id in list) {
+                    pars.Add(string.Format("location_list={0}", id.Trim()));
+                }
             }
             if(Page > 0) {
                 pars.Add(string.Format("page={0}", Page));

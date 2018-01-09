@@ -21,6 +21,7 @@ using System.Xml.Linq;
 using System.Dynamic;
 using Laser.Orchard.StartupConfig.IdentityProvider;
 using Newtonsoft.Json.Linq;
+using System.Collections;
 
 namespace Laser.Orchard.UsersExtensions.Services {
     public interface IUserActionMethods : IDependency {
@@ -75,20 +76,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
             try {
                 _usersExtensionsServices.Register(userRegistrationParams);
 
-                var registeredServicesData = new JObject();
-                registeredServicesData.Add("RegisteredServices", new JArray(_controllerContextAccessor.Context.Controller.TempData));
-                List<string> roles = new List<string>();
-                if (_orchardServices.WorkContext.CurrentUser != null) {
-                    roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
-                    registeredServicesData.Add("Roles", new JArray(roles));
-                    var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
-                    foreach (var provider in _identityProviders) {
-                        var val = provider.GetRelatedId(context);
-                        if (string.IsNullOrWhiteSpace(val.Key) == false) {
-                            registeredServicesData.Add(val.Key, new JValue(val.Value));
-                        }
-                    }
-                }
+                var registeredServicesData = _utilsServices.GetUserIdentityProviders(_identityProviders, _controllerContextAccessor.Context.Controller.TempData);
                 var json = registeredServicesData.ToString();
                 result = _utilsServices.GetResponse(ResponseType.Success, data: json);
             } catch (Exception ex) {
@@ -101,19 +89,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
             Response result;
             try {
                 _usersExtensionsServices.SignIn(login);
-                var registeredServicesData = new JObject();
-                List<string> roles = new List<string>();
-                if (_orchardServices.WorkContext.CurrentUser != null) {
-                    roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
-                    registeredServicesData.Add("Roles", new JArray(roles));
-                    var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
-                    foreach (var provider in _identityProviders) {
-                        var val = provider.GetRelatedId(context);
-                        if (string.IsNullOrWhiteSpace(val.Key) == false) {
-                            registeredServicesData.Add(val.Key, new JValue(val.Value));
-                        }
-                    }
-                }
+                var registeredServicesData = _utilsServices.GetUserIdentityProviders(_identityProviders, _controllerContextAccessor.Context.Controller.TempData);
                 var json = registeredServicesData.ToString();
                 result = _utilsServices.GetResponse(ResponseType.Success, "", json);
             } catch (Exception ex) {

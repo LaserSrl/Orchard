@@ -79,7 +79,7 @@ namespace Laser.Orchard.Caligoo.Services {
             return _caligooTempData.KrakeAdmin;
         }
         private void CaligooLogin() {
-            var url = ComposeUrl(_caligooSettings.LoginPath, null);
+            var url = _caligooSettings.LoginUrl;
             // basic authentication header
             var byteArr = Encoding.ASCII.GetBytes(string.Format("{0}:{1}", _caligooSettings.Username, _caligooSettings.Password));
             var authHeader = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArr));
@@ -98,7 +98,9 @@ namespace Laser.Orchard.Caligoo.Services {
             }
         }
         private void JwtTokenRenew() {
-            var response = ResultFromCaligooApiGet(_caligooSettings.RefreshPath);
+            var url = _caligooSettings.RefreshUrl;
+            var authHeader = new AuthenticationHeaderValue("Bearer", _caligooTempData.CurrentJwtToken.RawData);
+            var response = CallWebApi(url, authHeader, HttpMethod.Get);
             var json = JObject.Parse(response.Body);
             var auth = json.ToObject<AuthenticationMessage>();
             if (response.Success) {

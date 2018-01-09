@@ -6,25 +6,25 @@ namespace Laser.Orchard.Caligoo.Models {
             get { return this.Retrieve(x => x.BaseUrl); }
             set { this.Store(x => x.BaseUrl, value); }
         }
-        public string LoginPath {
+        public string LoginUrl {
             get {
-                var aux = this.Retrieve(x => x.LoginPath);
+                var aux = this.Retrieve(x => x.LoginUrl);
                 if (string.IsNullOrWhiteSpace(aux)) {
-                    aux = "jwt"; // default value
+                    aux = "https://login.caligoo.com/jwt"; // default value
                 }
                 return aux;
             }
-            set { this.Store(x => x.LoginPath, value); }
+            set { this.Store(x => x.LoginUrl, value); }
         }
-        public string RefreshPath {
+        public string RefreshUrl {
             get {
-                var aux = this.Retrieve(x => x.RefreshPath);
+                var aux = this.Retrieve(x => x.RefreshUrl);
                 if (string.IsNullOrWhiteSpace(aux)) {
-                    aux = "refresh"; // default value
+                    aux = "https://login.caligoo.com/refresh"; // default value
                 }
                 return aux;
             }
-            set { this.Store(x => x.RefreshPath, value); }
+            set { this.Store(x => x.RefreshUrl, value); }
         }
         public string LocationsPath {
             get {

@@ -24,6 +24,7 @@ using System.Globalization;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using Laser.Orchard.StartupConfig.IdentityProvider;
+using System.Collections;
 
 namespace Laser.Orchard.StartupConfig.Services {
 
@@ -62,6 +63,13 @@ namespace Laser.Orchard.StartupConfig.Services {
         /// <param name="resp"></param>
         /// <returns></returns>
         ContentResult ConvertToJsonResult(Response resp);
+        /// <summary>
+        /// Get a JObject which contains identity providers informations of the current user.
+        /// </summary>
+        /// <param name="identityProviders"></param>
+        /// <param name="controllerTempData"></param>
+        /// <returns></returns>
+        JObject GetUserIdentityProviders(IEnumerable<IIdentityProvider> identityProviders, TempDataDictionary controllerTempData);
         /// <summary>
         /// Get a successfull response to a login request with registration data.
         /// </summary>
@@ -228,25 +236,21 @@ namespace Laser.Orchard.StartupConfig.Services {
             result = result.Replace("\b", "\\b");
             return result;
         }
-        public Response GetUserResponse(String message, IEnumerable<IIdentityProvider> identityProviders, TempDataDictionary controllerTempData) {
-            List<string> roles = new List<string>();
+        public JObject GetUserIdentityProviders(IEnumerable<IIdentityProvider> identityProviders, TempDataDictionary controllerTempData) {
             var registeredServicesData = new JObject();
-            if(controllerTempData != null) {
-                registeredServicesData.Add("RegisteredServices", new JArray(controllerTempData));
-            } else {
-                registeredServicesData.Add("RegisteredServices", new JArray(new TempDataDictionary()));
-            }
             if (_orchardServices.WorkContext.CurrentUser != null) {
-                roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
-                registeredServicesData.Add("Roles", new JArray(roles));
                 var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
                 foreach (var provider in identityProviders) {
                     var val = provider.GetRelatedId(context);
                     if (string.IsNullOrWhiteSpace(val.Key) == false) {
-                        registeredServicesData.Add(val.Key, new JValue(val.Value));
+                        registeredServicesData.Add(val.Key, JToken.FromObject(val.Value));
                     }
                 }
             }
+            return registeredServicesData;
+        }
+        public Response GetUserResponse(String message, IEnumerable<IIdentityProvider> identityProviders, TempDataDictionary controllerTempData) {
+            var registeredServicesData = GetUserIdentityProviders(identityProviders, controllerTempData);
             var json = registeredServicesData.ToString();
             return GetResponse(ResponseType.Success, message, json);
         }
