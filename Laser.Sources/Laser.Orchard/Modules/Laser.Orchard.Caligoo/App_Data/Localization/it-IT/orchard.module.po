@@ -1,0 +1,294 @@
+# Orchard resource strings - it-IT
+# Copyright (c) 2018 Laser s.r.l.
+
+
+# > #: msgctxt { contesto del messaggio - Originale }
+# > #| msgid { identificativo del messaggio - Originale }
+# > msgctxt  "{ contesto del messaggio }"
+# > msgid "{ identificativo del messaggio }"
+# > msgstr "{ messaggio }"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "Address"
+msgstr "Indirizzo"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "Caligoo Location"
+msgstr "Location Caligoo"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "Caligoo Location ID"
+msgstr "ID della Location Caligoo"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "City"
+msgstr "Città"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "Country"
+msgstr "Nazione"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "Display Name"
+msgstr "Nome Visualizzato"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "Latitude"
+msgstr "Latitudine"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "Longitude"
+msgstr "Longitudine"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "Postal Code"
+msgstr "CAP"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "The address of the location."
+msgstr "L'indirizzo della location."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "The city of the location."
+msgstr "La città della location."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "The country of the location."
+msgstr "La nazione della location."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "The latidude of the location."
+msgstr "La latitudine della location."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "The longitude of the location."
+msgstr "La longitudine della location."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "The name of the location."
+msgstr "Il nome della location."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "The postal code of the location."
+msgstr "Il CAP della location."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooLocation.cshtml"
+msgid "The value of the corresponding location_id in Caligoo."
+msgstr "Il valore del corrispondente ID della location di Caligoo."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Base URL"
+msgstr "Base URL"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Base URL to call Caligoo Web API."
+msgstr "Base URL per le chiamate alle Web API di Caligoo."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Caligoo Settings"
+msgstr "Impostazioni Caligoo"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Password"
+msgstr "Password"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Password to log in to Caligoo."
+msgstr "Password per il login su Caligoo."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Path for locations request"
+msgstr "Percorso per la richiesta dell'elenco delle location"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Path for login request"
+msgstr "Percorso per la richiesta di login"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Path for refresh JWT token request"
+msgstr "Percorso per la richiesta di rinnovo del token JWT"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Path for users request"
+msgstr "Percorso per la richiesta dell'elenco utenti"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Path to get Caligoo locations."
+msgstr "Percorso per ottenere l'elenco delle location Caligoo."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Path to get Caligoo users."
+msgstr "Percorso per ottenere l'elenco degli utenti Caligoo."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Path to log in and get Caligoo JWT token."
+msgstr "Percorso per effettuare il login e ottenere il token JWT di Caligoo."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Path to refresh Caligoo JWT token."
+msgstr "Percorso per rinnovare il token JWT di Caligoo."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Timeout (milliseconds) for Caligoo Web API requests."
+msgstr "Timeout (millisecondi) per le richieste alle Web API di Caligoo."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Timeout (milliseconds) used when calling Caligoo Web API. Leave 0 to use default value (10000)."
+msgstr "Timeout (millisecondi) usato durante le richieste alle Web API di Caligoo. Lasciare 0 per usare il valore di default (10000)."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Username"
+msgstr "Nome utente"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooSiteSettings.cshtml"
+msgid "Username to log in to Caligoo."
+msgstr "Nome utente per effettuare il login su Caligoo."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooUser.cshtml"
+msgid "Caligoo User"
+msgstr "Utente Caligoo"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooUser.cshtml"
+msgid "Caligoo User ID"
+msgstr "ID dell'utente Caligoo"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/EditorTemplates/Parts/CaligooUser.cshtml"
+msgid "The value of the corresponding user_id in Caligoo."
+msgstr "Il valore del corrispondente ID dell'utente di Caligoo."
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/Parts/CaligooLocation.cshtml"
+msgid "Address"
+msgstr "Indirizzo"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/Parts/CaligooLocation.cshtml"
+msgid "Caligoo Location"
+msgstr "Location Caligoo"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/Parts/CaligooLocation.cshtml"
+msgid "Caligoo Location ID"
+msgstr "ID della Location Caligoo"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/Parts/CaligooLocation.cshtml"
+msgid "City"
+msgstr "Città"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/Parts/CaligooLocation.cshtml"
+msgid "Country"
+msgstr "Nazione"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/Parts/CaligooLocation.cshtml"
+msgid "Display Name"
+msgstr "Nome Visualizzato"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/Parts/CaligooLocation.cshtml"
+msgid "Latitude"
+msgstr "Latitudine"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/Parts/CaligooLocation.cshtml"
+msgid "Longitude"
+msgstr "Longitudine"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/Parts/CaligooLocation.cshtml"
+msgid "Postal Code"
+msgstr "CAP"
+
+msgctxt "~/Modules/Laser.Orchard.Caligoo/Views/Parts/CaligooUser.cshtml"
+msgid "Caligoo User ID"
+msgstr "ID dell'utente Caligoo"
+
+msgctxt "Laser.Orchard.Caligoo.Activities.CaligooLoginLogoutEvent"
+msgid "A contact has just performed login or logout from Caligoo network."
+msgstr "Un contatto ha appena effettuato login o logout dalla rete Caligoo."
+
+msgctxt "Laser.Orchard.Caligoo.Activities.CaligooLoginLogoutEvent"
+msgid "Content Event"
+msgstr "Evento del Contenuto"
+
+msgctxt "Laser.Orchard.Caligoo.Activities.CaligooLoginLogoutEvent"
+msgid "Login"
+msgstr "Login"
+
+msgctxt "Laser.Orchard.Caligoo.Activities.CaligooLoginLogoutEvent"
+msgid "Logout"
+msgstr "Logout"
+
+msgctxt "Laser.Orchard.Caligoo.Activities.CaligooLoginLogoutEvent"
+msgid "Unknown"
+msgstr "Sconosciuto"
+
+msgctxt "Laser.Orchard.Caligoo.Handlers.CaligooSiteSettingsHandler"
+msgid "Caligoo"
+msgstr "Caligoo"
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilter"
+msgid "Caligoo"
+msgstr "Caligoo"
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilter"
+msgid "Caligoo User Filter"
+msgstr "Filtro sugli utenti Caligoo"
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilter"
+msgid "Caligoo users filtered by available criteria."
+msgstr "Utenti Caligoo filtrati in base ai criteri disponibili."
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilter"
+msgid "Filter Caligoo users by availble criteria."
+msgstr "Filtra gli utenti Caligoo in base ai criteri disponibili."
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilterForm"
+msgid "All"
+msgstr "Tutti"
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilterForm"
+msgid "Both online and not online users"
+msgstr "Sia gli utenti online sia quelli offline"
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilterForm"
+msgid "Date (dd/MM/yyyy)"
+msgstr "Data (gg/MM/aaaa)"
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilterForm"
+msgid "From"
+msgstr "Dal"
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilterForm"
+msgid "List of Caligoo Location Id (separated by comma)"
+msgstr "Elenco degli ID delle Location Caligoo (separati da virgola)"
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilterForm"
+msgid "New"
+msgstr "Nuovi utenti"
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilterForm"
+msgid "Not online users only"
+msgstr "Solo gli utenti offline"
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilterForm"
+msgid "Online users"
+msgstr "Utenti online"
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilterForm"
+msgid "Online users only"
+msgstr "Solo utenti online"
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilterForm"
+msgid "Returning"
+msgstr "Utenti già noti"
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilterForm"
+msgid "To"
+msgstr "Al"
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilterForm"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilterForm"
+msgid "Visit duration (seconds)"
+msgstr "Durata della visita (secondi)"
+
+msgctxt "Laser.Orchard.Caligoo.Projections.CaligooUserQueryFilterForm"
+msgid "Wi-fi session duration (seconds)"
+msgstr "Durata della sessione wi-fi (secondi)"
+

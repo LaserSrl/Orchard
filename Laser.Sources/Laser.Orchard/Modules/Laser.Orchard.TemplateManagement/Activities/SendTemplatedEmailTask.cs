@@ -75,23 +75,16 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             string recipientBCC = activityContext.GetState<string>("RecipientBCC");
             string fromEmail = activityContext.GetState<string>("FromEmail");
             string replyTo = activityContext.GetState<string>("ReplyTo");
+            string emailTemplate = activityContext.GetState<string>("EmailTemplate");
             bool NotifyReadEmail = activityContext.GetState<string>("NotifyReadEmail") == "NotifyReadEmail";
-
-            var properties = new Dictionary<string, string> {
-                {"Body", activityContext.GetState<string>("Body")},
-                {"Subject", activityContext.GetState<string>("Subject")},
-                {"RecipientOther",activityContext.GetState<string>("RecipientOther")},
-                {"RecipientCC",activityContext.GetState<string>("RecipientCC")},
-                {"RecipientBCC",activityContext.GetState<string>("RecipientBCC")},
-                {"ReplyTo",activityContext.GetState<string>("ReplyTo")},
-                {"EmailTemplate",activityContext.GetState<string>("EmailTemplate")},
-                {"FromEmail",activityContext.GetState<string>("FromEmail")}
-            };
             List<string> sendTo = new List<string>();
             List<string> sendCC = new List<string>();
             List<string> sendBCC = new List<string>();
             var templateId = 0;
-            int.TryParse(properties["EmailTemplate"], out templateId);
+            var customTemplateId = activityContext.GetState<string>("CustomTemplateId");
+            if(int.TryParse(customTemplateId, out templateId) == false) {
+                int.TryParse(emailTemplate, out templateId);
+            }
             int contentVersion = 0;
             ContentItem content = null;
             if (workflowContext.Content != null) {
