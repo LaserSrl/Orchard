@@ -17,6 +17,7 @@ using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Utility.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
@@ -182,20 +183,9 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                 _usersExtensionsServices.Register(userRegistrationParams);
                 List<string> roles = new List<string>();
                 var message = "";
-                var registeredServicesData = new JObject();
-                registeredServicesData.Add("RegisteredServices", new JArray(_controllerContextAccessor.Context.Controller.TempData));
-                if (_orchardServices.WorkContext.CurrentUser != null) {
-                    var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
-                    foreach (var provider in _identityProviders) {
-                        var val = provider.GetRelatedId(context);
-                        if (string.IsNullOrWhiteSpace(val.Key) == false) {
-                            registeredServicesData.Add(val.Key, new JValue(val.Value));
-                        }
-                    }
-                } else {
-                    if (registrationSettings.UsersMustValidateEmail) {
-                        message = T("Thank you for registering. We sent you an e-mail with instructions to enable your account.").ToString();
-                    }
+                var registeredServicesData = _utilsServices.GetUserIdentityProviders(_identityProviders, _controllerContextAccessor.Context.Controller.TempData);
+                if (_orchardServices.WorkContext.CurrentUser == null && registrationSettings.UsersMustValidateEmail) {
+                    message = T("Thank you for registering. We sent you an e-mail with instructions to enable your account.").ToString();
                 }
                 var json = registeredServicesData.ToString();
                 result = _utilsServices.GetResponse(ResponseType.Success, message, json);
@@ -209,17 +199,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
             try {
                 _usersExtensionsServices.SignIn(login);
                 List<string> roles = new List<string>();
-                var registeredServicesData = new JObject();
-                registeredServicesData.Add("RegisteredServices", new JArray(_controllerContextAccessor.Context.Controller.TempData));
-                if (_orchardServices.WorkContext.CurrentUser != null) {
-                    var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
-                    foreach (var provider in _identityProviders) {
-                        var val = provider.GetRelatedId(context);
-                        if (string.IsNullOrWhiteSpace(val.Key) == false) {
-                            registeredServicesData.Add(val.Key, new JValue(val.Value));
-                        }
-                    }
-                }
+                var registeredServicesData = _utilsServices.GetUserIdentityProviders(_identityProviders, _controllerContextAccessor.Context.Controller.TempData);
                 var json = registeredServicesData.ToString();
                 result = _utilsServices.GetResponse(ResponseType.Success, "", json);
             } catch (Exception ex) {

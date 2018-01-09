@@ -1,11 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.Roles.Models;
-using Orchard.Users.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Laser.Orchard.StartupConfig.IdentityProvider {
     public class RolesIdentityProvider : IIdentityProvider {
@@ -16,7 +11,7 @@ namespace Laser.Orchard.StartupConfig.IdentityProvider {
                 if (ci is ContentItem) {
                     var rolesPart = (ci as ContentItem).As<UserRolesPart>();
                     if (rolesPart != null) {
-                        result = new KeyValuePair<string, object>("Roles", new JArray(rolesPart.Roles));
+                        result = new KeyValuePair<string, object>("Roles", rolesPart.Roles);
                     }
                 }
             }
