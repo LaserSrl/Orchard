@@ -207,6 +207,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App_DataFiles", "App_DataFi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Caligoo", "Modules\Laser.Orchard.Caligoo\Laser.Orchard.Caligoo.csproj", "{C780EC98-0D4D-47D6-A147-A4BBED6FC94C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.MultiStepAuthentication", "Modules\Laser.Orchard.MultiStepAuthentication\Laser.Orchard.MultiStepAuthentication.csproj", "{B5B95A77-5DF7-49B5-B083-91F48E9B9E54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.MultiStepAuthentication.Tests", "Modules\Laser.Orchard.MultiStepAuthentication\Laser.Orchard.MultiStepAuthentication.Tests\Laser.Orchard.MultiStepAuthentication.Tests.csproj", "{9B2D5686-1A8D-48CA-B2A6-7EA1B942D5A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -575,6 +579,13 @@ Global
 		{C780EC98-0D4D-47D6-A147-A4BBED6FC94C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C780EC98-0D4D-47D6-A147-A4BBED6FC94C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C780EC98-0D4D-47D6-A147-A4BBED6FC94C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5B95A77-5DF7-49B5-B083-91F48E9B9E54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5B95A77-5DF7-49B5-B083-91F48E9B9E54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5B95A77-5DF7-49B5-B083-91F48E9B9E54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5B95A77-5DF7-49B5-B083-91F48E9B9E54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B2D5686-1A8D-48CA-B2A6-7EA1B942D5A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B2D5686-1A8D-48CA-B2A6-7EA1B942D5A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B2D5686-1A8D-48CA-B2A6-7EA1B942D5A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -672,5 +683,7 @@ Global
 		{F33D9F18-B69D-4512-A6A9-3D4E585ACE01} = {43B44FB0-ECDC-4552-8D02-302983E0AC0A}
 		{54548A99-0B95-4143-A4DF-2E92EEA5752A} = {4641B8B9-62AD-45A5-B0C0-9F31BBC8B425}
 		{C780EC98-0D4D-47D6-A147-A4BBED6FC94C} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{B5B95A77-5DF7-49B5-B083-91F48E9B9E54} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{9B2D5686-1A8D-48CA-B2A6-7EA1B942D5A9} = {43B44FB0-ECDC-4552-8D02-302983E0AC0A}
 	EndGlobalSection
 EndGlobal
