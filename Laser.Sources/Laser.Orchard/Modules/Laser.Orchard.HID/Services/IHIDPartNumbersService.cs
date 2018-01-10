@@ -62,5 +62,12 @@ namespace Laser.Orchard.HID.Services {
         /// <remarks>We return the view model rather than the model, because the former's properties
         /// are more straigthforward.</remarks>
         IEnumerable<HIDPartNumberSetViewModel> GetSets(HIDUser hidUser);
+
+        /// <summary>
+        /// Updates the selected sets in the part based on the view model
+        /// </summary>
+        /// <param name="part">The part to update.</param>
+        /// <param name="vm">The view model used as source.</param>
+        void UpdatePart(PartNumberSetsUserPart part, PartNumberSetsUserPartEditViewModel vm);
     }
 }

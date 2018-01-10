@@ -14,17 +14,20 @@ namespace Laser.Orchard.HID.Services {
     public class HIDPartNumbersService : IHIDPartNumbersService {
 
         private readonly IHIDAdminService _HIDAdminService;
-        private readonly IRepository<HIDPartNumberSet> _repository;
+        private readonly IRepository<HIDPartNumberSet> _HIDPartNumberSetRepository;
         private readonly IContentManager _contentManager;
+        private readonly IRepository<PartNumberSetUserPartJunctionRecord> _setUserJunctionRecordRepository;
 
         public HIDPartNumbersService(
             IHIDAdminService HIDAdminService,
-            IRepository<HIDPartNumberSet> repository,
-            IContentManager contentManager) {
+            IRepository<HIDPartNumberSet> HIDPartNumberSetrepository,
+            IContentManager contentManager,
+            IRepository<PartNumberSetUserPartJunctionRecord> setUserJunctionRecordRepository) {
 
             _HIDAdminService = HIDAdminService;
-            _repository = repository;
+            _HIDPartNumberSetRepository = HIDPartNumberSetrepository;
             _contentManager = contentManager;
+            _setUserJunctionRecordRepository = setUserJunctionRecordRepository;
 
             T = NullLocalizer.Instance;
         }
@@ -35,7 +38,7 @@ namespace Laser.Orchard.HID.Services {
         public string[] PartNumbers {
             get {
                 if (_partNumbers == null) {
-                    _partNumbers = _repository
+                    _partNumbers = _HIDPartNumberSetRepository
                         .Table
                         .Select(pns => new HIDPartNumberSetViewModel(pns))
                         .SelectMany(vm => vm.PartNumbers)
@@ -68,7 +71,7 @@ namespace Laser.Orchard.HID.Services {
             }
 
             // Get the old HIDPartNumberSets from the records
-            var oldSets = _repository.Table.ToList();
+            var oldSets = _HIDPartNumberSetRepository.Table.ToList();
 
             var todo = new List<SetUpdate>(); //list of the changes
             // Check whether any set has changed
@@ -121,19 +124,24 @@ namespace Laser.Orchard.HID.Services {
                 if (update.OldSet != null) {
                     if (update.Delete) {
                         // delete the old set
-                        _repository.Delete(update.OldSet);
-                        // Revoke all corresponding credentials
+                        _HIDPartNumberSetRepository.Delete(update.OldSet);
+                        // Remove all Junction records
+                        // Revoke all corresponding credentials (unless the users have credentials for
+                        // the same part numbers from other sets)
                     } else {
                         // update the old set using data from the new set
-                        var updatedSet = update.NewSet;
-                        updatedSet.Id = update.OldSet.Id;
-                        _repository.Update(updatedSet);
+                        // We start from the OldSetand change it, otherwise there is an issue with
+                        // pre-existing relations in the db 
+                        var updatedSet = update.OldSet;
+                        updatedSet.Name = update.NewSet.Name;
+                        updatedSet.StoredPartNumbers = update.NewSet.StoredPartNumbers;
+                        _HIDPartNumberSetRepository.Update(updatedSet);
                         // if the part numbers have changed, we need to issue/revoke credentials accordingly
                     }
                 } else {
                     // we need to add the new set
                     if (update.NewSet != null) {
-                        _repository.Create(update.NewSet);
+                        _HIDPartNumberSetRepository.Create(update.NewSet);
                         // since this is a new set, it cannot have any connected user yet, so we don't need to
                         // issue/revoke credentials just yet.
                     }
@@ -162,7 +170,7 @@ namespace Laser.Orchard.HID.Services {
         }
 
         public IEnumerable<HIDPartNumberSetViewModel> GetAllSets() {
-            return _repository.Table
+            return _HIDPartNumberSetRepository.Table
                 .Select(pns => new HIDPartNumberSetViewModel(pns))
                 .ToList();
         }
@@ -191,6 +199,56 @@ namespace Laser.Orchard.HID.Services {
                 return GetSets(user.As<UserPart>());
             }
             return new List<HIDPartNumberSetViewModel>();
+        }
+
+        public void UpdatePart(PartNumberSetsUserPart part, PartNumberSetsUserPartEditViewModel vm) {
+            var record = part.Record;
+            // fetch old part number sets (actually, the junction records)
+            var oldSets = _setUserJunctionRecordRepository
+                .Fetch(os => os.PartNumberSetsUserPartRecord == record)
+                .ToList();
+            // see what the new part number sets are
+            var newIds = vm.Sets
+                .Where(entry => entry.IsSelected)
+                .Select(entry => entry.Id);
+            var newSetsLookup = _HIDPartNumberSetRepository
+                .Fetch(pns => newIds.Contains(pns.Id))
+                .ToDictionary(s => s.Id, s => new HIDPartNumberSetViewModel(s));
+
+            // get the part numbers that the user will have, to prevent revoking them in case
+            // some of them are also configured to PartNumberSets we will remove
+            var oldPartNumbers = oldSets
+                .SelectMany(jr => new HIDPartNumberSetViewModel(jr.HIDPartNumberSet).PartNumbers)
+                .Distinct();
+            var newPartNumbers = newSetsLookup.Values.ToList()
+                .SelectMany(pns => pns.PartNumbers)
+                .Distinct();
+
+            var toRevoke = oldPartNumbers.Except(newPartNumbers);
+            var toIssue = newPartNumbers.Except(oldPartNumbers);
+
+            // Some sets may have been removed
+            foreach (var old in oldSets) {
+                var key = old.HIDPartNumberSet.Id;
+                if (!newSetsLookup.ContainsKey(key)) {
+                    // set removed
+                    _setUserJunctionRecordRepository.Delete(old);
+                } else {
+                    // set was there and still is. We remove it from the lookup, so that dictionary
+                    // will end up containing only the sets we have to actually add
+                    newSetsLookup.Remove(key);
+                }
+            }
+            // Some sets may have been added
+            foreach (var item in newSetsLookup) {
+                _setUserJunctionRecordRepository.Create(new PartNumberSetUserPartJunctionRecord {
+                    HIDPartNumberSet = item.Value.Set,
+                    PartNumberSetsUserPartRecord = record
+                });
+            }
+
+            // TODO: issue and revoke credentials
+            var user = part.As<UserPart>();
         }
 
         class SetUpdate {

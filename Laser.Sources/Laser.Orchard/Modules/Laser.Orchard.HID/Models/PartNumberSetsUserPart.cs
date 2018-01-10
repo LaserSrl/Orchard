@@ -1,4 +1,5 @@
 ﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,18 @@ namespace Laser.Orchard.HID.Models {
     public class PartNumberSetsUserPart : ContentPart<PartNumberSetsUserPartRecord> {
 
         public IEnumerable<HIDPartNumberSet> PartNumberSets {
-            get { return Record.PartNumberSets; }
+            get { return Record.PartNumberSetsJR.Select(jr => jr.HIDPartNumberSet); }
         }
-        
+
+        //private readonly LazyField<IEnumerable<HIDPartNumberSet>> _partNumberSets =
+        //    new LazyField<IEnumerable<HIDPartNumberSet>>();
+
+        //public LazyField<IEnumerable<HIDPartNumberSet>> PartNumberSetsField {
+        //    get { return _partNumberSets; }
+        //}
+
+        //public IEnumerable<HIDPartNumberSet> PartNumberSets {
+        //    get { return _partNumberSets.Value; }
+        //}
     }
 }

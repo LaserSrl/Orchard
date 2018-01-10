@@ -129,6 +129,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="placement.info" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -173,6 +174,8 @@
     <Compile Include="Services\IHIDPartNumbersService.cs" />
     <Compile Include="ViewModels\HIDPartNumberSetViewModel.cs" />
     <Compile Include="ViewModels\HIDSiteSettingsViewModel.cs" />
+    <Compile Include="ViewModels\PartNumberSetsUserPartEditEntry.cs" />
+    <Compile Include="ViewModels\PartNumberSetsUserPartEditViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
@@ -188,6 +191,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\HIDPartNumberSetViewModel.cshtml" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\PartNumberSetsUserPart.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
