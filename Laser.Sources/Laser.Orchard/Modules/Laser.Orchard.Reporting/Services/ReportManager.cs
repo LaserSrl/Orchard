@@ -159,19 +159,45 @@ namespace Laser.Orchard.Reporting.Services {
                 result = new object[0];
             }
 
-            foreach(var record in result) {
-                var ht = record as Hashtable;
-                string key = Convert.ToString(ht[hql.ReturnAliases[0]]);
-                if (returnValue.ContainsKey(key)) {
-                    var previousItem = returnValue[key];
-                    previousItem.AggregationValue += Convert.ToDouble(ht[hql.ReturnAliases[1]]);
-                    returnValue[key] = previousItem;
-                } else {
-                    returnValue[key] = new AggregationResult {
-                        AggregationValue = Convert.ToDouble(ht[hql.ReturnAliases[1]]),
-                        Label = key,
-                        GroupingField = hql.ReturnAliases[0]
-                    };
+            if(hql.ReturnAliases.Count() > 2) {
+                returnValue.Add("0", new AggregationResult {
+                    AggregationValue = 0,
+                    Label = "",
+                    GroupingField = "",
+                    Other = hql.ReturnAliases
+                });
+                int rownum = 0;
+                foreach (var record in result) {
+                    var row = new List<object>();
+                    var ht = record as Hashtable;
+                    foreach(var alias in hql.ReturnAliases) {
+                        row.Add(ht[alias]);
+                    }
+                    rownum++;
+                    returnValue.Add(rownum.ToString(), new AggregationResult {
+                        AggregationValue = 0,
+                        Label = "",
+                        GroupingField = "",
+                        Other = row.ToArray()
+                    });
+                }
+            } else {
+                foreach (var record in result) {
+                    var ht = record as Hashtable;
+                    string key = Convert.ToString(ht[hql.ReturnAliases[0]]);
+                    double value = 0;
+                    double.TryParse(Convert.ToString(ht[hql.ReturnAliases[1]]), out value);
+                    if (returnValue.ContainsKey(key)) {
+                        var previousItem = returnValue[key];
+                        previousItem.AggregationValue += value;
+                        returnValue[key] = previousItem;
+                    } else {
+                        returnValue[key] = new AggregationResult {
+                            AggregationValue = value,
+                            Label = key,
+                            GroupingField = hql.ReturnAliases[0]
+                        };
+                    }
                 }
             }
             return returnValue.Values;
