@@ -9,7 +9,7 @@ namespace Laser.Orchard.HID.ViewModels {
     public class HIDPartNumberSetViewModel {
 
         public HIDPartNumberSetViewModel() {
-            Set = HIDPartNumberSet.DefaultEmptySet();
+            Set = new HIDPartNumberSet();
         }
 
         public HIDPartNumberSetViewModel(HIDPartNumberSet set) {
@@ -18,7 +18,10 @@ namespace Laser.Orchard.HID.ViewModels {
 
         public HIDPartNumberSet Set { get; set; }
 
-        public string Name { get { return Set.Name; } }
+        public string Name {
+            get { return Set.Name; }
+            set { Set.Name = value; }
+        }
 
         public int Id {
             get { return Set.Id; }

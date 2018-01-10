@@ -37,7 +37,7 @@ namespace Laser.Orchard.HID.Services {
                 PartNumberSets = _repository.Table.Select(pns => new HIDPartNumberSetViewModel(pns)).ToList()
             };
             if (!vm.PartNumberSets.Any()) {
-                vm.PartNumberSets.Add(new HIDPartNumberSetViewModel());
+                vm.PartNumberSets.Add(new HIDPartNumberSetViewModel(HIDPartNumberSet.DefaultEmptySet()));
             }
             return vm;
         }

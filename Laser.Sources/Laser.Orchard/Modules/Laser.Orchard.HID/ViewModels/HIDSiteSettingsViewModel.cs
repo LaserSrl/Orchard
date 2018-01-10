@@ -30,8 +30,7 @@ namespace Laser.Orchard.HID.ViewModels {
             get {
                 return PartNumberSets
                     .Where(pns => !pns.Delete)
-                    .Select(pns => pns.PartNumbers.ToList())
-                    .Aggregate((first, second) => { first.AddRange(second); return first; })
+                    .SelectMany(pns => pns.PartNumbers.ToList())
                     .ToArray();
             }
         }

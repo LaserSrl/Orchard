@@ -50,35 +50,38 @@ namespace Laser.Orchard.HID.Controllers {
                 
                 _orchardServices.Notifier.Information(T("Settings saved successfully."));
                 // attempt authentication
-                switch (_HIDAdminService.Authenticate()) {
-                    case AuthenticationErrors.NoError:
-                        _orchardServices.Notifier.Information(T("Authentication OK."));
-                        break;
-                    case AuthenticationErrors.NotAuthenticated:
-                        _orchardServices.Notifier.Error(T("Unable to attempt authentication."));
-                        break;
-                    case AuthenticationErrors.ClientInfoInvalid:
-                        _orchardServices.Notifier.Error(T("Client information invalid: Authentication failed."));
-                        break;
-                    case AuthenticationErrors.CommunicationError:
-                        _orchardServices.Notifier.Error(T("Communication errors: Authentication failed."));
-                        break;
-                    default:
-                        break;
-                }
-
-                // Part number validation must happen after authentication
-                if (_HIDAdminService.VerifyAuthentication()) {
+                var authResult = _HIDAdminService.Authenticate();
+                if (authResult == AuthenticationErrors.NoError) {
+                    _orchardServices.Notifier.Information(T("Authentication OK."));
+                    // part number validatio can only happen if authentication is successful
                     var pnValidation = _HIDPartNumbersService.TryUpdatePartNumbers(settings);
                     if (!pnValidation.Success) {
                         _orchardServices.Notifier.Error(T("Part number validation failed: {0}", pnValidation.Message));
+                        return View(settings); // keep the edited viewmodel in case of error
                     }
+                    // Here everything was ok with both authentication and part numbers
+                    return RedirectToAction("Index");
+                } else {
+                    switch (authResult) {
+                        case AuthenticationErrors.NotAuthenticated:
+                            _orchardServices.Notifier.Error(T("Unable to attempt authentication."));
+                            break;
+                        case AuthenticationErrors.ClientInfoInvalid:
+                            _orchardServices.Notifier.Error(T("Client information invalid: Authentication failed."));
+                            break;
+                        case AuthenticationErrors.CommunicationError:
+                            _orchardServices.Notifier.Error(T("Communication errors: Authentication failed."));
+                            break;
+                        default:
+                            break;
+                    }
+                    return View(settings); // keep the edited viewmodel in case of error
                 }
-
             } else {
                 _orchardServices.Notifier.Error(T("Could not save settings."));
+                return View(settings); // keep the edited viewmodel in case of error
             }
-            return View(settings);
         }
+
     }
 }
