@@ -14,6 +14,11 @@ namespace Laser.Orchard.HID.Models {
     /// </summary>
     public class HIDPartNumberSet {
 
+        public HIDPartNumberSet() {
+
+            PartNumberSetsUserParts = new List<PartNumberSetsUserPartRecord>();
+        }
+
         public virtual int Id { get; set; } // Primary Key
 
         /// <summary>
@@ -23,6 +28,8 @@ namespace Laser.Orchard.HID.Models {
         
         [StringLengthMax]
         public virtual string StoredPartNumbers { get; set; }
+
+        public virtual IList<PartNumberSetsUserPartRecord> PartNumberSetsUserParts { get; set; }
 
         public static HIDPartNumberSet DefaultEmptySet() {
             return new HIDPartNumberSet {

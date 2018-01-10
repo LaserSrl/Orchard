@@ -145,10 +145,12 @@
     <Compile Include="Attributes\PartNumberSetsValidationAttribute.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HIDAPIController.cs" />
+    <Compile Include="Drivers\PartNumberSetsUserPartDriver.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\Constants.cs" />
     <Compile Include="Extensions\Helpers.cs" />
     <Compile Include="Handlers\HIDSettingsPartHandler.cs" />
+    <Compile Include="Handlers\PartNumberSetsUserPartHandler.cs" />
     <Compile Include="HIDRoutes.cs" />
     <Compile Include="Migrations\HIDMigration.cs" />
     <Compile Include="Models\HIDAuthToken.cs" />
@@ -158,6 +160,9 @@
     <Compile Include="Models\HIDSearchResult.cs" />
     <Compile Include="Models\HIDSiteSettingsPart.cs" />
     <Compile Include="Models\HIDUser.cs" />
+    <Compile Include="Models\PartNumberSetsUserPart.cs" />
+    <Compile Include="Models\PartNumberSetsUserPartRecord.cs" />
+    <Compile Include="Models\PartNumberSetUserPartJunctionRecord.cs" />
     <Compile Include="Models\PartNumberValidationResult.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Services\HIDAdminService.cs" />

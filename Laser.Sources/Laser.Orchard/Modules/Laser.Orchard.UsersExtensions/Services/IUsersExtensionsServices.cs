@@ -39,6 +39,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
         bool ValidateRegistration(string userName, string email, string password, string confirmPassword, out List<string> errors);
         IList<UserPolicyAnswerWithContent> BuildEditorForRegistrationPolicies();
         string SendLostPasswordSms(string internationalPrefix, string phoneNumber, Func<string, string> createUrl);
+        UserPart GetUserByMail(string mail);
     }
 
 
@@ -284,7 +285,14 @@ namespace Laser.Orchard.UsersExtensions.Services {
             }).ToList();
             return policies;
         }
-
+        public UserPart GetUserByMail(string mail) {
+            var qry = _orchardServices.ContentManager.Query("User").Where<UserPartRecord>(x => x.Email == mail);
+            var usr = qry.Slice(0, 1).FirstOrDefault();
+            if(usr != null) {
+                return usr.As<UserPart>();
+            }
+            return null;
+        }
 
         private RegistrationSettingsPart RegistrationSettings {
             get {

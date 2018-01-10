@@ -7,20 +7,24 @@ using System.Linq;
 using System.Web;
 using Orchard.Security;
 using Laser.Orchard.HID.ViewModels;
-
+using Orchard.ContentManagement;
+using Orchard.Users.Models;
 
 namespace Laser.Orchard.HID.Services {
     public class HIDPartNumbersService : IHIDPartNumbersService {
 
         private readonly IHIDAdminService _HIDAdminService;
         private readonly IRepository<HIDPartNumberSet> _repository;
+        private readonly IContentManager _contentManager;
 
         public HIDPartNumbersService(
             IHIDAdminService HIDAdminService,
-            IRepository<HIDPartNumberSet> repository) {
+            IRepository<HIDPartNumberSet> repository,
+            IContentManager contentManager) {
 
             _HIDAdminService = HIDAdminService;
             _repository = repository;
+            _contentManager = contentManager;
 
             T = NullLocalizer.Instance;
         }
@@ -35,6 +39,7 @@ namespace Laser.Orchard.HID.Services {
                         .Table
                         .Select(pns => new HIDPartNumberSetViewModel(pns))
                         .SelectMany(vm => vm.PartNumbers)
+                        .Distinct()
                         .ToArray();
                 }
                 return _partNumbers;
@@ -143,15 +148,49 @@ namespace Laser.Orchard.HID.Services {
         }
 
         public string[] GetPartNumbersForUser(IUser user) {
-            // TODO
-
-            return PartNumbers;
+            return GetSets(user)
+                .SelectMany(pns => pns.PartNumbers)
+                .Distinct()
+                .ToArray();
         }
 
         public string[] GetPartNumbersForUser(HIDUser hidUser) {
-            // TODO: use the HIDUser.Emails.First
+            return GetSets(hidUser)
+                .SelectMany(pns => pns.PartNumbers)
+                .Distinct()
+                .ToArray();
+        }
 
-            return PartNumbers;
+        public IEnumerable<HIDPartNumberSetViewModel> GetAllSets() {
+            return _repository.Table
+                .Select(pns => new HIDPartNumberSetViewModel(pns))
+                .ToList();
+        }
+
+        public IEnumerable<HIDPartNumberSetViewModel> GetSets(IUser user) {
+            if (user == null) {
+                return new List<HIDPartNumberSetViewModel>();
+            }
+            var part = user.ContentItem.As<PartNumberSetsUserPart>();
+            if (part == null) {
+                return new List<HIDPartNumberSetViewModel>();
+            }
+            return part.PartNumberSets.Select(pns => new HIDPartNumberSetViewModel(pns));
+        }
+
+        public IEnumerable<HIDPartNumberSetViewModel> GetSets(HIDUser hidUser) {
+            if (hidUser == null || hidUser.Emails == null || !hidUser.Emails.Any()) {
+                return new List<HIDPartNumberSetViewModel>();
+            }
+            var user = _contentManager
+                .Query("User")
+                .Where<UserPartRecord>(x => x.Email == hidUser.Emails.First())
+                .Slice(0, 1)
+                .FirstOrDefault();
+            if (user != null) {
+                return GetSets(user.As<UserPart>());
+            }
+            return new List<HIDPartNumberSetViewModel>();
         }
 
         class SetUpdate {

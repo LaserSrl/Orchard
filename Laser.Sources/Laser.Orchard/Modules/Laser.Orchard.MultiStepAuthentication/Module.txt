@@ -1,0 +1,17 @@
+﻿Name: Laser.Orchard.MultiStepAuthentication
+AntiForgery: enabled
+Author: Laser srl
+Website: http://www.laser-group.com
+Version: 1.0
+OrchardVersion: 1.10
+Description: This module provides ways to enable and configure multi-step authentication
+Features:
+    Laser.Orchard.MultiStepAuthentication:
+        Description: This feature provides the base infrastructure for multi-step authentication.
+		Category: Security
+		Dependencies: Laser.Orchard.StartupConfig
+	Laser.Orchard.NonceLogin:
+        Name: Nonce Login
+		Description: Allows authentication by using a nonce sent in an email to the user.
+		Category: Security
+		Dependencies: Laser.Orchard.MultiStepAuthentication, Laser.Orchard.UsersExtensions
