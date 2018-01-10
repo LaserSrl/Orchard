@@ -22,9 +22,10 @@ namespace Laser.Orchard.HID.Services {
         private readonly IOrchardServices _orchardServices;
         private readonly ICacheStorageProvider _cacheStorageProvider;
         private readonly ShellSettings _shellSetting;
-        private readonly IRepository<HIDPartNumberSet> _repository;
         private readonly IHIDPartNumbersService _HIDPartNumbersService;
         private readonly IHIDAdminService _HIDAdminService;
+        private readonly IHIDCredentialsService _HIDCredentialsService;
+        private readonly IHIDSearchUserService _HIDSearchUserService;
 
         public ILogger Logger { get; set; }
 
@@ -32,24 +33,22 @@ namespace Laser.Orchard.HID.Services {
             IOrchardServices orchardServices,
             ICacheStorageProvider cacheStorageProvider,
             ShellSettings shellSetting,
-            IRepository<HIDPartNumberSet> repository,
             IHIDPartNumbersService HIDPartNumbersService,
-            IHIDAdminService HIDAdminService) {
+            IHIDAdminService HIDAdminService,
+            IHIDCredentialsService HIDCredentialsService,
+            IHIDSearchUserService HIDSearchUserService) {
 
             _orchardServices = orchardServices;
             _cacheStorageProvider = cacheStorageProvider;
             _shellSetting = shellSetting;
-            _repository = repository;
             _HIDPartNumbersService = HIDPartNumbersService;
             _HIDAdminService = HIDAdminService;
+            _HIDCredentialsService = HIDCredentialsService;
+            _HIDSearchUserService = HIDSearchUserService;
 
             Logger = NullLogger.Instance;
         }
-
-        public string BaseEndpoint {
-            get { return _HIDAdminService.BaseEndpoint; }
-        }
-
+        
         public string UsersEndpoint {
             get { return _HIDAdminService.UsersEndpoint; }
         }
@@ -57,20 +56,12 @@ namespace Laser.Orchard.HID.Services {
         private string UsersSearchEndpoint {
             get { return String.Format(HIDAPIEndpoints.UserSearchEndpointFormat, UsersEndpoint); }
         }
-
-        private string CreateInvitationEndpointFormat {
-            get { return string.Format(HIDAPIEndpoints.CreateInvitationEndpointFormat, UsersEndpoint, @"{0}"); }
-        }
-        
-        public string AuthorizationToken {
+                
+        private string AuthorizationToken {
             get {return _HIDAdminService.AuthorizationToken; }
         }
-
-        public HIDSiteSettingsViewModel GetSiteSettings() {
-            return _HIDAdminService.GetSiteSettings();
-        }
-
-        public AuthenticationErrors Authenticate() {
+        
+        private AuthenticationErrors Authenticate() {
             return _HIDAdminService.Authenticate();
         }
 
@@ -88,19 +79,6 @@ namespace Laser.Orchard.HID.Services {
         /// <returns>A string that may be used as body in search requests to HID's systems.</returns>
         private string CreateSearchFormat(string eId, int count = 20) {
             JObject format = JObject.Parse(string.Format(BaseSearchFormat, eId, count.ToString()));
-            return format.ToString();
-        }
-
-        private const string BaseSearchByMailFormat = @"{{ 'schemas':[ 'urn:ietf:params:scim:api:messages:2.0:SearchRequest' ], 'filter':'emails eq ""{0}"" and status eq ""ACTIVE""', 'sortBy':'name.familyName', 'sortOrder':'descending', 'startIndex':1, 'count':{1} }}";
-
-        /// <summary>
-        /// Creates a user's search string by email.
-        /// </summary>
-        /// <param name="email">The email to search for.</param>
-        /// <param name="count">The number of users to return from the search.</param>
-        /// <returns>A string that may be used as body in search requests to HID's systems.</returns>
-        private string CreateSearchFormatByMail(string email, int count = 20) {
-            JObject format = JObject.Parse(string.Format(BaseSearchByMailFormat, email.ToLowerInvariant(), count.ToString()));
             return format.ToString();
         }
 
@@ -176,71 +154,7 @@ namespace Laser.Orchard.HID.Services {
         }
 
         public HIDUserSearchResult SearchHIDUser(string email) {
-            HIDUserSearchResult result = new HIDUserSearchResult();
-            if (!VerifyAuthentication()) {
-                result.Error = SearchErrors.AuthorizationFailed;
-                return result;
-            }
-
-            HttpWebRequest wr = HttpWebRequest.CreateHttp(UsersSearchEndpoint);
-            wr.Method = WebRequestMethods.Http.Post;
-            wr.ContentType = Constants.DefaultContentType;
-            wr.Headers.Add(HttpRequestHeader.Authorization, AuthorizationToken);
-            string bodyText = CreateSearchFormatByMail(email);
-            byte[] bodyData = Encoding.UTF8.GetBytes(bodyText);
-            using (Stream reqStream = wr.GetRequestStream()) {
-                reqStream.Write(bodyData, 0, bodyData.Length);
-            }
-            try {
-                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
-                    if (resp.StatusCode == HttpStatusCode.OK) {
-                        //read the json response
-                        using (var reader = new StreamReader(resp.GetResponseStream())) {
-                            string respJson = reader.ReadToEnd();
-                            var jo = JObject.Parse(respJson);
-                            result = new HIDUserSearchResult(jo);
-                            if (result.TotalResults == 1) {
-                                result.User = HIDUser.GetUser(_HIDAdminService, jo["Resources"].Children().First()["meta"]["location"].ToString());
-                                result.Error = SearchErrors.NoError;
-                            } else if (result.TotalResults == 0) {
-                                result.Error = SearchErrors.NoResults;
-                            } else {
-                                result.Error = SearchErrors.TooManyResults;
-                            }
-                        }
-                    }
-                }
-            } catch (WebException ex) {
-                HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
-                if (resp != null) {
-                    switch (resp.StatusCode) {
-                        case HttpStatusCode.BadRequest:
-                            result.Error = SearchErrors.InvalidParameters;
-                            break;
-                        case HttpStatusCode.Unauthorized:
-                            // Authentication could have expired while this method was running
-                            if (Authenticate() == AuthenticationErrors.NoError) {
-                                result = SearchHIDUser(email);
-                            } else {
-                                result.Error = SearchErrors.AuthorizationFailed;
-                            }
-                            break;
-                        case HttpStatusCode.InternalServerError:
-                            result.Error = SearchErrors.InternalServerError;
-                            break;
-                        default:
-                            result.Error = SearchErrors.UnknownError;
-                            break;
-                    }
-                } else {
-                    result.Error = SearchErrors.UnknownError;
-                }
-            } catch (Exception ex) {
-                result.Error = SearchErrors.UnknownError;
-                Logger.Error(ex, "Fallback error management.");
-            }
-
-            return result;
+            return _HIDSearchUserService.SearchHIDUser(email);
         }
 
         public HIDUser CreateHIDUser(IUser user, string familyName, string givenName, string email = null) {
@@ -259,27 +173,11 @@ namespace Laser.Orchard.HID.Services {
         }
 
         public HIDUser IssueCredentials(IUser user, string[] partNumbers) {
-            var searchResult = SearchHIDUser(user.Email);
-            if (searchResult.Error == SearchErrors.NoError) {
-                return IssueCredentials(searchResult.User, partNumbers);
-            } else {
-                return new HIDUser();
-            }
+            return _HIDCredentialsService.IssueCredentials(user, partNumbers);
         }
 
         public HIDUser IssueCredentials(HIDUser hidUser, string[] partNumbers) {
-            if (partNumbers.Length == 0) {
-                hidUser = hidUser.IssueCredential(""); //this assigns the default part number for the customer
-            } else {
-                foreach (var pn in partNumbers) {
-                    hidUser = hidUser.IssueCredential(pn);
-                    if (hidUser.Error != UserErrors.NoError && hidUser.Error != UserErrors.PreconditionFailed) {
-                        break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential having been
-                        //assigned already, which is fine
-                    }
-                }
-            }
-            return hidUser;
+            return _HIDCredentialsService.IssueCredentials(hidUser, partNumbers);
         }
         
         public HIDUser RevokeCredentials(IUser user) {
@@ -291,27 +189,11 @@ namespace Laser.Orchard.HID.Services {
         }
 
         public HIDUser RevokeCredentials(IUser user, string[] partNumbers) {
-            var searchResult = SearchHIDUser(user.Email);
-            if (searchResult.Error == SearchErrors.NoError) {
-                return RevokeCredentials(searchResult.User, partNumbers);
-            } else {
-                return new HIDUser();
-            }
+            return _HIDCredentialsService.RevokeCredentials(user, partNumbers);
         }
 
         public HIDUser RevokeCredentials(HIDUser hidUser, string[] partNumbers) {
-            if (partNumbers.Length == 0) {
-                hidUser = hidUser.RevokeCredential();
-            } else {
-                foreach (var pn in partNumbers) {
-                    hidUser = hidUser.RevokeCredential(pn);
-                    if (hidUser.Error != UserErrors.NoError && hidUser.Error != UserErrors.PreconditionFailed) {
-                        break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential being
-                        //revoked right now
-                    }
-                }
-            }
-            return hidUser;
+            return _HIDCredentialsService.RevokeCredentials(hidUser, partNumbers);
         }
     }
 

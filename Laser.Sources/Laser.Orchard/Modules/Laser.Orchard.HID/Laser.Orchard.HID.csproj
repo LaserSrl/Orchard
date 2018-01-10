@@ -167,11 +167,15 @@
     <Compile Include="Models\PartNumberValidationResult.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Services\HIDAdminService.cs" />
+    <Compile Include="Services\HIDCredentialsService.cs" />
     <Compile Include="Services\HIDPartNumbersService.cs" />
+    <Compile Include="Services\HIDSearchUserService.cs" />
     <Compile Include="Services\HIDService.cs" />
     <Compile Include="Services\IHIDAdminService.cs" />
     <Compile Include="Services\IHIDAPIService.cs" />
+    <Compile Include="Services\IHIDCredentialsService.cs" />
     <Compile Include="Services\IHIDPartNumbersService.cs" />
+    <Compile Include="Services\IHIDSearchUserService.cs" />
     <Compile Include="ViewModels\HIDPartNumberSetViewModel.cs" />
     <Compile Include="ViewModels\HIDSiteSettingsViewModel.cs" />
     <Compile Include="ViewModels\PartNumberSetsUserPartEditEntry.cs" />
