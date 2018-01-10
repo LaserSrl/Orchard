@@ -31,7 +31,17 @@ namespace Laser.Orchard.HID.Models {
 
         public virtual IList<PartNumberSetUserPartJunctionRecord> PartNumberSetsUserPartsJR { get; set; }
 
-
+        /// <summary>
+        /// This property controls the behaviour of the system when this HIDPartNumberSet gets updated.
+        /// If it's true: when a new part number is added to this Set, credentials for it are issued to
+        /// all users associated with the set; when the Set is associated to a user, credentials are issued
+        /// to that user for all part numbers in the set. Its default value is false, which means that
+        /// additions to the list of part numbers do not automatically cause credentials to be issued, and
+        /// neither does the addition of this Set to a user.
+        /// Credentials are always automatically revoked if part numbers are removed from the Set, if the Set
+        /// is deleted, or if the Set is de-associated from the user.
+        /// </summary>
+        public virtual bool IssueCredentialsAutomatically { get; set; }
 
         public static HIDPartNumberSet DefaultEmptySet() {
             return new HIDPartNumberSet {

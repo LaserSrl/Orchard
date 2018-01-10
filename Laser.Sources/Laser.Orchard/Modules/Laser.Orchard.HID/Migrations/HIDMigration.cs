@@ -12,18 +12,14 @@ namespace Laser.Orchard.HID.Migrations {
             SchemaBuilder.CreateTable("HIDPartNumberSet", table => table
                 .Column<int>("Id", col => col.Identity().PrimaryKey())
                 .Column<string>("Name", col => col.NotNull())
-                .Column<string>("StoredPartNumbers", col => col.Unlimited()));
-
-            return 1;
-        }
-
-        public int UpdateFrom1() {
+                .Column<string>("StoredPartNumbers", col => col.Unlimited())
+                .Column<bool>("IssueCredentialsAutomatically"));
+            
+            // set up many to many relationship between PartNumberSets and users
 
             SchemaBuilder.CreateTable("PartNumberSetsUserPartRecord", table => table
                 .ContentPartRecord());
             
-            // set up many to many relationship
-
             SchemaBuilder.CreateTable("PartNumberSetUserPartJunctionRecord", table => table
                 .Column<int>("Id", col => col.Identity().PrimaryKey())
                 .Column<int>("HIDPartNumberSet_Id")
@@ -43,7 +39,8 @@ namespace Laser.Orchard.HID.Migrations {
                 "PartNumberSetsUserPartRecord", // Table
                     new[] { "Id" }); // Column
 
-            return 2;
+            return 1;
         }
+
     }
 }
