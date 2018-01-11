@@ -15,6 +15,7 @@ using Orchard.Users.Models;
 using Orchard.Security;
 using Orchard.Users.Events;
 using Laser.Orchard.StartupConfig.IdentityProvider;
+using System.Web.Http.Results;
 
 namespace Laser.Orchard.MultiStepAuthentication.Controllers {
     [OrchardFeature("Laser.Orchard.NonceLogin")]
@@ -27,15 +28,16 @@ namespace Laser.Orchard.MultiStepAuthentication.Controllers {
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserEventHandler _userEventHandler;
         private readonly IEnumerable<IIdentityProvider> _identityProviders;
-
+     
         public NonceLoginApiController(
             IUtilsServices utilsServices,
             IUsersExtensionsServices usersExtensionsServices,
             INonceService nonceService,
             IAuthenticationService authenticationService,
             IUserEventHandler userEventHandler,
-            IEnumerable<IIdentityProvider> identityProviders) {
-
+            IEnumerable<IIdentityProvider> identityProviders
+           ) {
+       
             _utilsServices = utilsServices;
             _usersExtensionsServices = usersExtensionsServices;
             _nonceService = nonceService;
@@ -52,12 +54,15 @@ namespace Laser.Orchard.MultiStepAuthentication.Controllers {
             }
 
             var user = _usersExtensionsServices.GetUserByMail(mail);
-
+            var flowToUse = FlowType.Website;
             if (user != null) {
                 var data = new Dictionary<string, string>();
-                data.Add("uuid", uuid);
+                if (!string.IsNullOrEmpty(uuid)) {
+                    data.Add("uuid", uuid);// uuid used only by mobile channel
+                    flowToUse = FlowType.App;
+                }
                 // create and send an OTP (this may overwrite any previous OTP for the user)
-                _nonceService.SendNewOTP(user, data, DeliveryChannelType.Email);
+                _nonceService.SendNewOTP(user, data, DeliveryChannelType.Email, flowToUse);
                 return _utilsServices.GetResponse(ResponseType.Success);
             }
 
@@ -78,7 +83,8 @@ namespace Laser.Orchard.MultiStepAuthentication.Controllers {
 
             if (msgObj != null) {
                 var data = new Dictionary<string, string>();
-                data.Add("uuid", uuid);
+                    data.Add("uuid", uuid);
+                
                 var iuser = _nonceService.UserFromNonce(msgObj.Nonce, data);
                 if (iuser != null) {
                     // log the user in

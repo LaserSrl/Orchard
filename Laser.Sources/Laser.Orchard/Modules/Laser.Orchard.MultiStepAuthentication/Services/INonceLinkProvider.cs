@@ -15,6 +15,14 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
         /// <returns>A string containing the URI.</returns>
         string FormatURI(string nonce);
 
+
+        /// <summary>
+        /// Given the nonce, returns URI link for it.
+        /// </summary>
+        /// <param name="nonce">The nonce for the link.</param>
+        /// <returns>A string containing the URI.</returns>
+        string FormatURI(string nonce,FlowType? flow);
+
         /// <summary>
         /// Gets the schema that will be used when generating URIs with this provider.
         /// </summary>
