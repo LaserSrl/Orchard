@@ -43,6 +43,10 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
         }
 
         public bool TrySendOTP(OTPRecord otp, IUser user) {
+            return TrySendOTP(otp, user, null);
+        }
+
+        public bool TrySendOTP(OTPRecord otp, IUser user,FlowType? flow) {
             if (otp == null // paarmeter validation
                 || user == null
                 || otp.UserRecord.UserName != user.UserName) {
@@ -53,7 +57,9 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
             var data = new Dictionary<string, object>();
 
             // get link
-            var link = _nonceLinkProvider.FormatURI(otp.Password);
+            var link = _nonceLinkProvider.FormatURI(otp.Password, flow);
+     
+           
             // fill in email dictionary
             data.Add("Subject", T("{0} - Login", currentSite.SiteName).Text);
             data.Add("Body", T("<html><body>To login on \"{0}\", please open the following link: <a href=\"{1}\">Login</a></body></html>", currentSite.SiteName, link).Text);

@@ -24,6 +24,16 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
         bool TrySendOTP(OTPRecord otp, IUser user);
 
         /// <summary>
+        /// Sends the password or nonce to the user.
+        /// </summary>
+        /// <param name="otp">The record containing the information about hte password or nonce to be delivered.</param>
+        /// <param name="user">The user we should send the password to.</param>
+        /// <returns>True if the delivery happened successfully, false otherwise.</returns>
+        /// <remarks>Validation errors in this method should be handled internally and only cause the method to
+        /// return false.</remarks>
+        bool TrySendOTP(OTPRecord otp, IUser user,FlowType? flow);
+
+        /// <summary>
         /// Tells the channel type used by this delivery service. It allows to prevent sending several communication
         /// on the same channel for a single authentication attempt.
         /// </summary>

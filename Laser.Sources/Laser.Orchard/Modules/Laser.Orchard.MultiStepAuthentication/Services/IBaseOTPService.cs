@@ -59,6 +59,10 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
         /// <exception cref="ArgumentNullException">Throws an ArgumentNullException if the record is null.</exception>
         bool SendOTP(OTPRecord otp, DeliveryChannelType? channel);
 
+
+
+
+
         /// <summary>
         /// Attempts to send a new one-time password to the user provided.
         /// </summary>
@@ -86,6 +90,18 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
         /// <exception cref="ArgumentException">Implmentations may throw an ArgumentException if validation
         /// of additionalInformation fails.</exception>
         bool SendNewOTP(IUser user, Dictionary<string, string> additionalInformation, DeliveryChannelType? channel);
-        
+
+        /// <summary>
+        /// Attempts to send a new one-time password to the user provided.
+        /// </summary>
+        /// <param name="user">The user for whom a new one-time password will be generated.</param>
+        /// <param name="additionalInformation">Additional information that may be used to generate
+        /// the password.</param>
+        /// <param name="channel">The channel type used for the delivery. If null, the service will attempt
+        /// to send the password through all channel types.</param>
+        /// <param name="flow">The program flow to use, same data required by different channel (web/app) must generate a nonce's link or a link to download special nonce with custom structure used for app interaction </param>
+        /// <returns></returns>
+        bool SendNewOTP(IUser user, Dictionary<string, string> additionalInformation, DeliveryChannelType? channel,FlowType? flow);
+       
     }
 }

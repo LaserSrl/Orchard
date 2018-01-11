@@ -106,6 +106,7 @@
     <Compile Include="Controllers\IMultiStepAccountApiController.cs" />
     <Compile Include="Controllers\IMultiStepAccountController.cs" />
     <Compile Include="Controllers\IMultiStepAdminController.cs" />
+    <Compile Include="Controllers\NonceAppCamouflageController.cs" />
     <Compile Include="Controllers\NonceLoginAdminController.cs" />
     <Compile Include="Controllers\NonceLoginApiController.cs" />
     <Compile Include="DataContracts\NonceLoginMessage.cs" />

@@ -6,23 +6,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Laser.Orchard.StartupConfig.Services;
+using Orchard.Mvc.Extensions;
 
 namespace Laser.Orchard.MultiStepAuthentication.Services {
     [OrchardFeature("Laser.Orchard.NonceLogin")]
     public class NonceLinkFromSettingsProvider : INonceLinkProvider {
 
         private readonly IWorkContextAccessor _workContextAccessor;
-
+        private readonly ICommonsServices _commonsServices;
         public NonceLinkFromSettingsProvider(
-            IWorkContextAccessor workContextAccessor) {
+            IWorkContextAccessor workContextAccessor,
+            ICommonsServices commonsServices) {
 
             _workContextAccessor = workContextAccessor;
+            _commonsServices = commonsServices;
         }
 
         public string FormatURI(string nonce) {
-            return string.Format(GetFormat(), nonce);
+            return FormatURI(nonce, null);
         }
-
+        public string FormatURI(string nonce,FlowType? flow) {
+            if (flow == FlowType.App) {
+                  var urlHelper = _commonsServices.GetUrlHelper();
+                return urlHelper.MakeAbsolute(urlHelper.Action("GetByURL", "NonceAppCamouflage", new {  area = "Laser.Orchard.MultiStepAuthentication" ,n= nonce }), _workContextAccessor.GetContext().CurrentSite.BaseUrl);
+            }
+            else
+                return string.Format(GetFormat(), nonce);
+        }
         public string GetSchema() {
             var format = GetFormat();
             if (format.Contains(@"://")) {

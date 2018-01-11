@@ -13,4 +13,9 @@ namespace Laser.Orchard.MultiStepAuthentication {
     /// Types of password for OTPRecord
     /// </summary>
     public enum PasswordType { Password, Nonce }
+
+    /// <summary>
+    /// Types of ux to use  
+    /// </summary>
+    public enum FlowType { App , Website}
 }
