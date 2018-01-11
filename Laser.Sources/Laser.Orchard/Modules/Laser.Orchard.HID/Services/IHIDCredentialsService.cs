@@ -42,5 +42,11 @@ namespace Laser.Orchard.HID.Services {
         /// <returns>This always returns an HIDUser object, but we should check its Error field before using it.</returns>
         HIDUser RevokeCredentials(HIDUser hidUser, string[] partNumbers);
 
+        /// <summary>
+        /// Processes issue/revoke credentials in bulk.
+        /// </summary>
+        /// <param name="context">An object that contains the information on the issue/revoke 
+        /// credential operations to be performed, and those performed.</param>
+        void ProcessUserCredentialActions(BulkCredentialsOperationsContext context);
     }
 }

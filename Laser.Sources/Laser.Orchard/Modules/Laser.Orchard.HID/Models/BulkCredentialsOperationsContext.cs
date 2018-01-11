@@ -1,7 +1,9 @@
-﻿using Orchard.Security;
+﻿using Orchard.Localization;
+using Orchard.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 
 namespace Laser.Orchard.HID.Models {
@@ -16,10 +18,17 @@ namespace Laser.Orchard.HID.Models {
 
         public Dictionary<int, UserCredentialActions> UserActions { get; set; }
 
+        public Dictionary<int, UserCredentialErrors> UserErrors { get; set; }
+
         public BulkCredentialsOperationsContext(bool prioritizeIssue = true) {
             PrioritizeIssue = prioritizeIssue;
             UserActions = new Dictionary<int, UserCredentialActions>();
+            UserErrors = new Dictionary<int, UserCredentialErrors>();
+
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         public void AddRevokeAction(int userId, string partNumber) {
             if (!UserActions.ContainsKey(userId)) {
@@ -73,6 +82,56 @@ namespace Laser.Orchard.HID.Models {
             AddIssueAction(user.Id, partNumbers);
         }
 
+        public void AddError(IUser user, UserErrors error) {
+            var userId = user.Id;
+            if (!UserErrors.ContainsKey(userId)) {
+                var ue = new UserCredentialErrors(user);
+                UserErrors.Add(userId, ue);
+            }
+            UserErrors[userId].AddError(error);
+        }
+
+        public void AddError(IUser user, SearchErrors error) {
+            var userId = user.Id;
+            if (!UserErrors.ContainsKey(userId)) {
+                var ue = new UserCredentialErrors(user);
+                UserErrors.Add(userId, ue);
+            }
+            UserErrors[userId].AddError(error);
+        }
+
+        public void ConsolidateDictionary() {
+            var usersToRemove = new List<int>();
+            foreach (var ua in UserActions) {
+                ua.Value.ConsolidateLists(PrioritizeIssue);
+                if (!ua.Value.IssueList.Any() && !ua.Value.RevokeList.Any()) {
+                    usersToRemove.Add(ua.Key);
+                }
+            }
+            // Remove elements where both lists are empty
+            foreach (var userId in usersToRemove) {
+                UserActions.Remove(userId);
+            }
+        }
+
+        public string ErrorSummary() {
+            if (!UserErrors.Any()) { // no error
+                return string.Empty;
+            }
+
+            var sr = new StringBuilder();
+            foreach (var uce in UserErrors) {
+                sr.AppendLine(T("Errors for user \"{0}\":", uce.Value.User.Email).Text);
+                foreach (var se in uce.Value.SearchErrors) {
+                    sr.AppendLine(T("\t{0}", se.ToString()).Text);
+                }
+                foreach (var ue in uce.Value.UserErrors) {
+                    sr.AppendLine(T("\t{0}", ue.ToString()).Text);
+                }
+            }
+            return sr.ToString();
+        }
+
         public class UserCredentialActions {
             public int UserId { get; private set; }
             public List<string> RevokeList { get; set; }
@@ -123,7 +182,44 @@ namespace Laser.Orchard.HID.Models {
                 }
             }
 
+            public void ConsolidateLists(bool prioritizeIssue) {
+                RevokeList = RevokeList.Distinct().ToList();
+                IssueList = IssueList.Distinct().ToList();
+                if (prioritizeIssue) {
+                    foreach (var pn in IssueList) {
+                        if (RevokeList.Contains(pn)) {
+                            RevokeList.Remove(pn);
+                        }
+                    }
+                } else {
+                    foreach (var pn in RevokeList) {
+                        if (IssueList.Contains(pn)) {
+                            IssueList.Remove(pn);
+                        }
+                    }
+                }
+            }
+
         }
 
+        public class UserCredentialErrors {
+            public IUser User { get; set; }
+            public List<SearchErrors> SearchErrors { get; set; }
+            public List<UserErrors> UserErrors { get; set; }
+
+            public UserCredentialErrors(IUser user) {
+                User = user;
+                SearchErrors = new List<SearchErrors>();
+                UserErrors = new List<UserErrors>();
+            }
+
+            public void AddError(UserErrors error) {
+                UserErrors.Add(error);
+            }
+
+            public void AddError(SearchErrors error) {
+                SearchErrors.Add(error);
+            }
+        }
     }
 }

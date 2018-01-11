@@ -60,6 +60,9 @@ namespace Laser.Orchard.HID.Controllers {
                         return View(settings); // keep the edited viewmodel in case of error
                     }
                     // Here everything was ok with both authentication and part numbers
+                    if (!string.IsNullOrWhiteSpace(pnValidation.Message)) {
+                        _orchardServices.Notifier.Warning(T(pnValidation.Message));
+                    }
                     return RedirectToAction("Index");
                 } else {
                     switch (authResult) {

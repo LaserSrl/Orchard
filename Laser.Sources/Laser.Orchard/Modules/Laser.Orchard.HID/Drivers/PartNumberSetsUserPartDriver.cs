@@ -9,17 +9,26 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Laser.Orchard.HID.Services;
 using Laser.Orchard.HID.ViewModels;
+using Orchard.UI.Notify;
+using Orchard.Localization;
 
 namespace Laser.Orchard.HID.Drivers {
     public class PartNumberSetsUserPartDriver : ContentPartDriver<PartNumberSetsUserPart> {
 
         private readonly IHIDPartNumbersService _HIDPartNumbersService;
+        private readonly INotifier _notifier;
 
         public PartNumberSetsUserPartDriver(
-            IHIDPartNumbersService HIDPartNumbersService) {
+            IHIDPartNumbersService HIDPartNumbersService,
+            INotifier notifier) {
 
             _HIDPartNumbersService = HIDPartNumbersService;
+            _notifier = notifier;
+
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         protected override string Prefix { get { return "PartNumberSetsUserPart"; } }
 
@@ -47,7 +56,10 @@ namespace Laser.Orchard.HID.Drivers {
             var vm = new PartNumberSetsUserPartEditViewModel();
             if (updater.TryUpdateModel(vm, Prefix, null, null)) {
                 // Update the part
-                _HIDPartNumbersService.UpdatePart(part, vm);
+                var context = _HIDPartNumbersService.UpdatePart(part, vm);
+                if (context.UserErrors.Any()) {
+                    _notifier.Error(T(context.ErrorSummary()));
+                }
             }
             return Editor(part, shapeHelper);
         }

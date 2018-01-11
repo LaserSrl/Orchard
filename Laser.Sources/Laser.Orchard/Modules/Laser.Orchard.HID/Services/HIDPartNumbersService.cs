@@ -10,6 +10,7 @@ using Laser.Orchard.HID.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Users.Models;
 using Laser.Orchard.HID.Extensions;
+using System.Net;
 
 namespace Laser.Orchard.HID.Services {
     public class HIDPartNumbersService : IHIDPartNumbersService {
@@ -56,22 +57,28 @@ namespace Laser.Orchard.HID.Services {
 
         public PartNumberValidationResult TryUpdatePartNumbers(HIDSiteSettingsViewModel settings) {
 
-            // Get all Part Numbers from HID
-            var allowedPartNumbers = HIDPartNumbers();
+            var message = string.Empty;
 
-            // See whether any of the part numbers we are trying to configure is not allowed
-            // (i.e. is not among the numbers returned by hid)
-            var badNumbers = settings.PartNumberSets
-                    .Where(pns => !pns.Delete)
-                    .SelectMany(pns => pns.PartNumbers.ToList())
-                    .Except(allowedPartNumbers);
-            if (badNumbers.Any()) {
-                return new PartNumberValidationResult {
-                    Success = false,
-                    Message = T("Some of the PartNumbers are not allowed from HID: {0}",
-                        string.Join(", ", badNumbers)).Text,
-                    Error = PartNumberError.PartNumbersNotValid
-                };
+            // Get all Part Numbers from HID to attempt validation. 
+            var allowedPartNumbers = HIDPartNumbers();
+            if (allowedPartNumbers != null) {
+
+                // See whether any of the part numbers we are trying to configure is not allowed
+                // (i.e. is not among the numbers returned by hid)
+                var badNumbers = settings.PartNumberSets
+                        .Where(pns => !pns.Delete)
+                        .SelectMany(pns => pns.PartNumbers.ToList())
+                        .Except(allowedPartNumbers);
+                if (badNumbers.Any()) {
+                    return new PartNumberValidationResult {
+                        Success = false,
+                        Message = T("Some of the PartNumbers are not allowed from HID: {0}",
+                            string.Join(", ", badNumbers)).Text,
+                        Error = PartNumberError.PartNumbersNotValid
+                    };
+                }
+            } else {
+                message = T("It was impossible to contact HID to validate the Part Numbers.").Text;
             }
 
             // Get the old HIDPartNumberSets from the records
@@ -120,7 +127,7 @@ namespace Laser.Orchard.HID.Services {
                 };
             }
             
-            return PartNumberValidationResult.SuccessResult();
+            return PartNumberValidationResult.SuccessResult(message);
         }
 
         private void ExecuteUpdates(List<SetUpdate> updates) {
@@ -199,7 +206,69 @@ namespace Laser.Orchard.HID.Services {
             // TODO: create task to handle all the issue/revokes
         }
 
+        /// <summary>
+        /// This method will return null if it's not able to get the list of Part Numbers from
+        /// HID's servers.
+        /// </summary>
+        /// <returns></returns>
         private IEnumerable<string> HIDPartNumbers() {
+            // First we GET from {Base_URI}/customer/{customer_id}/part-number
+            // This returns a json, that looks like this:
+            // {
+            //  "schemas": [ "urn:ietf:params:scim:api:messages:2.0:ListResponse" ],
+            //      "totalResults": 1,
+            //      "itemsPerPage": 1,
+            //      "startIndex": 1,
+            //      "Resources": [
+            //          {"meta": {
+            //              "resourceType": "PartNumber",
+            //              "lastModified": "2016-12-12T17:07:44Z",
+            //              "location": "URI"
+            //          }},
+            //          {"meta": {
+            //              "resourceType": "PartNumber",
+            //              "lastModified": "2016-12-12T17:07:44Z",
+            //              "location": "URI"
+            //          }}
+            //      ]
+            //  }
+            // On principle there could be several of those "Resources". The "URI" in their "Location" property
+            // is the URI of the Part Number Resource. 
+            // Calling that in GET, we obtain the details for the Part Number:
+            //{
+            //    "schemas": [ "urn:hid:scim:api:ma:1.0:PartNumber" ],
+            //    "urn:hid:scim:api:ma:1.0:PartNumber": [
+            //        {
+            //            "meta": {
+            //                "resourceType": "PartNumber",
+            //                "lastModified": "2016-12-12T17:07:44Z",
+            //                "location": "URI"
+            //            },
+            //            "id": "1625",
+            //            "partNumber": "THIS IS THE PART NUMBER STRING",
+            //            "friendlyName": "Bla bla",
+            //            "description": "bla bla bla",
+            //            "availableQty": 284
+            //        }
+            //    ]
+            //}
+            // In that resource we need to take the "partNumber" property.
+            // This means we have to do a whole bunch of calls.
+            if (!_HIDAdminService.VerifyAuthentication()) {
+                return null;
+            }
+
+            // Create the first request
+            HttpWebRequest wr = HttpWebRequest.CreateHttp(_HIDAdminService.BaseEndpoint + "/part-number");
+            try {
+                using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
+                    // Process result of the first request and do the following ones.
+                }
+            } catch (Exception) {
+
+                throw;
+            }
+
             // TODO
             return new string[] { "asd", "qwe" };
             return new List<string>();
@@ -264,7 +333,7 @@ namespace Laser.Orchard.HID.Services {
             return new List<HIDPartNumberSetViewModel>();
         }
 
-        public void UpdatePart(PartNumberSetsUserPart part, PartNumberSetsUserPartEditViewModel vm) {
+        public BulkCredentialsOperationsContext UpdatePart(PartNumberSetsUserPart part, PartNumberSetsUserPartEditViewModel vm) {
             var record = part.Record;
             // fetch old part number sets (actually, the junction records)
             var oldSets = _setUserJunctionRecordRepository
@@ -313,12 +382,19 @@ namespace Laser.Orchard.HID.Services {
                 .Where(pns => pns.IssueCredentialsAutomatically)
                 .SelectMany(pns => pns.PartNumbers)
                 .Distinct();
+            
+            var context = new BulkCredentialsOperationsContext(true);
+            if (toRevoke.Any() || toIssue.Any()) {
+                var user = part.As<UserPart>();
+                context.AddIssueAction(user, toIssue);
+                context.AddRevokeAction(user, toRevoke);
 
-            // TODO: issue and revoke credentials
-            var user = part.As<UserPart>();
+                _HIDCredentialsService.ProcessUserCredentialActions(context);
+            }
+            return context;
         }
 
-        public void AddSetToUser(HIDPartNumberSet pnSet, IUser user) {
+        public BulkCredentialsOperationsContext AddSetToUser(HIDPartNumberSet pnSet, IUser user) {
             if (user == null) {
                 throw new ArgumentNullException("user");
             }
@@ -329,10 +405,10 @@ namespace Laser.Orchard.HID.Services {
             if (part == null) {
                 throw new ArgumentException(T("User must have PartNumberSetUserPart.").Text);
             }
-            AddSetToUser(pnSet, part);
+            return AddSetToUser(pnSet, part);
         }
 
-        public void AddSetToUser(HIDPartNumberSet pnSet, PartNumberSetsUserPart part) {
+        public BulkCredentialsOperationsContext AddSetToUser(HIDPartNumberSet pnSet, PartNumberSetsUserPart part) {
             if (part == null) {
                 throw new ArgumentNullException("part");
             }
@@ -340,15 +416,17 @@ namespace Laser.Orchard.HID.Services {
                 throw new ArgumentNullException("pnSet");
             }
 
-            AddSetToUser(pnSet, part, pnSet.IssueCredentialsAutomatically);
+            return AddSetToUser(pnSet, part, pnSet.IssueCredentialsAutomatically);
         }
 
-        private void AddSetToUser(HIDPartNumberSet pnSet, PartNumberSetsUserPart part, bool issueCredentials) {
+        private BulkCredentialsOperationsContext AddSetToUser(HIDPartNumberSet pnSet, PartNumberSetsUserPart part, bool issueCredentials) {
             var record = part.Record;
             // fetch old part number sets (actually, the junction records)
             var oldSets = _setUserJunctionRecordRepository
                 .Fetch(os => os.PartNumberSetsUserPartRecord == record)
                 .ToList();
+
+            var context = new BulkCredentialsOperationsContext(true);
 
             // if the user is already associated with the set there is nothing to do here
             if (!oldSets.Any(os => os.HIDPartNumberSet.Id == pnSet.Id)) {
@@ -362,13 +440,16 @@ namespace Laser.Orchard.HID.Services {
                 // Issue credentials if we have to
                 if (issueCredentials) {
                     var toIssue = Helpers.NumbersStringToArray(pnSet.StoredPartNumbers);
-                    // TODO
+                    context.AddIssueAction(part.As<UserPart>(), toIssue);
+                    _HIDCredentialsService.ProcessUserCredentialActions(context);
                 }
             }
+
+            return context;
         }
 
 
-        public void RemoveSetFromUser(HIDPartNumberSet pnSet, IUser user) {
+        public BulkCredentialsOperationsContext RemoveSetFromUser(HIDPartNumberSet pnSet, IUser user) {
             if (user == null) {
                 throw new ArgumentNullException("user");
             }
@@ -379,10 +460,11 @@ namespace Laser.Orchard.HID.Services {
             if (part == null) {
                 throw new ArgumentException(T("User must have PartNumberSetUserPart.").Text);
             }
-            RemoveSetFromUser(pnSet, part);
+
+            return RemoveSetFromUser(pnSet, part);
         }
 
-        public void RemoveSetFromUser(HIDPartNumberSet pnSet, PartNumberSetsUserPart part) {
+        public BulkCredentialsOperationsContext RemoveSetFromUser(HIDPartNumberSet pnSet, PartNumberSetsUserPart part) {
             if (part == null) {
                 throw new ArgumentNullException("part");
             }
@@ -395,6 +477,8 @@ namespace Laser.Orchard.HID.Services {
             var oldSets = _setUserJunctionRecordRepository
                 .Fetch(os => os.PartNumberSetsUserPartRecord == record)
                 .ToList();
+
+            var context = new BulkCredentialsOperationsContext(true);
 
             // If the user is not associated with the set, there is nothing to do
             var old = oldSets.FirstOrDefault(os => os.HIDPartNumberSet.Id == pnSet.Id);
@@ -409,8 +493,12 @@ namespace Laser.Orchard.HID.Services {
                             .NumbersStringToArray(os.HIDPartNumberSet.StoredPartNumbers)));
                 // remove association
                 _setUserJunctionRecordRepository.Delete(old);
-                // TODO: revoke credentials
+
+                context.AddRevokeAction(part.As<UserPart>(), toRevoke);
+                _HIDCredentialsService.ProcessUserCredentialActions(context);
             }
+
+            return context;
         }
 
         class SetUpdate {

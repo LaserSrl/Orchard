@@ -4,17 +4,31 @@ using System.Linq;
 using System.Web;
 using Laser.Orchard.HID.Models;
 using Orchard.Security;
+using Orchard.ContentManagement;
+using Orchard.Users.Models;
+using Orchard.Logging;
+using Orchard.Localization;
+using System.Text;
 
 namespace Laser.Orchard.HID.Services {
     public class HIDCredentialsService : IHIDCredentialsService {
 
         private readonly IHIDSearchUserService _HIDSearchUserService;
+        private readonly IContentManager _contentManager;
 
         public HIDCredentialsService(
-            IHIDSearchUserService HIDSearchUserService) {
+            IHIDSearchUserService HIDSearchUserService,
+            IContentManager contentManager) {
 
             _HIDSearchUserService = HIDSearchUserService;
+            _contentManager = contentManager;
+
+            Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
+
+        ILogger Logger { get; set; }
+        public Localizer T { get; set; }
 
         public HIDUser IssueCredentials(HIDUser hidUser, string[] partNumbers) {
             if (partNumbers.Length == 0) {
@@ -39,7 +53,7 @@ namespace Laser.Orchard.HID.Services {
                 return new HIDUser();
             }
         }
-        
+
         public HIDUser RevokeCredentials(HIDUser hidUser, string[] partNumbers) {
             if (partNumbers.Length == 0) {
                 hidUser = hidUser.RevokeCredential();
@@ -63,5 +77,37 @@ namespace Laser.Orchard.HID.Services {
                 return new HIDUser();
             }
         }
+
+        public void ProcessUserCredentialActions(BulkCredentialsOperationsContext context) {
+            context.ConsolidateDictionary();
+            foreach (var ua in context.UserActions) {
+                var user = _contentManager.Get<UserPart>(ua.Key);
+                if (user != null) {
+                    // For each user, the lists should have been processed in such a way that
+                    // 1. They contain no duplicate
+                    // 2. There's no PartNumber that is in both lists
+                    // 3. RevokeList and IssueList are not both empty
+                    // Get the HIDUser only once, as we will need it for both issue and revoke
+                    var searchResult = _HIDSearchUserService.SearchHIDUser(user.Email);
+                    if (searchResult.Error == SearchErrors.NoError) {
+                        var issueUser = ua.Value.IssueList.Any()
+                            ? IssueCredentials(searchResult.User, ua.Value.IssueList.ToArray())
+                            : null;
+                        if (issueUser.Error != UserErrors.NoError && issueUser.Error != UserErrors.PreconditionFailed) {
+                            context.AddError(user, issueUser.Error);
+                        }
+                        var revokeUser = ua.Value.RevokeList.Any()
+                            ? RevokeCredentials(searchResult.User, ua.Value.RevokeList.ToArray())
+                            : null;
+                        if (revokeUser.Error != UserErrors.NoError && revokeUser.Error != UserErrors.PreconditionFailed) {
+                            context.AddError(user, revokeUser.Error);
+                        }
+                    } else {
+                        context.AddError(user, searchResult.Error);
+                    }
+                }
+            }
+        }
+
     }
 }
