@@ -49,5 +49,15 @@ namespace Laser.Orchard.HID.Models {
                 StoredPartNumbers = string.Empty
             };
         }
+
+        /// <summary>
+        /// Copy all this HIDPartNumberSet's properties to the destination object passed as parameter
+        /// </summary>
+        /// <param name="dest">The object that properties will be copied onto</param>
+        public void CopyProperties(HIDPartNumberSet dest) {
+            dest.Name = Name;
+            dest.StoredPartNumbers = StoredPartNumbers;
+            dest.IssueCredentialsAutomatically = IssueCredentialsAutomatically;
+        }
     }
 }

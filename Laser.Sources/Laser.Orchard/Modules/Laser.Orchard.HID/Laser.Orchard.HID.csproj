@@ -154,6 +154,7 @@
     <Compile Include="Handlers\PartNumberSetsUserPartHandler.cs" />
     <Compile Include="HIDRoutes.cs" />
     <Compile Include="Migrations\HIDMigration.cs" />
+    <Compile Include="Models\BulkCredentialsOperationsContext.cs" />
     <Compile Include="Models\HIDAuthToken.cs" />
     <Compile Include="Models\HIDCredential.cs" />
     <Compile Include="Models\HIDCredentialContainer.cs" />

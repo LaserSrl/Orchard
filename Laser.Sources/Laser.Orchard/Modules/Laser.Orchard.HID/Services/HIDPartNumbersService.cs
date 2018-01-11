@@ -9,6 +9,7 @@ using Orchard.Security;
 using Laser.Orchard.HID.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Users.Models;
+using Laser.Orchard.HID.Extensions;
 
 namespace Laser.Orchard.HID.Services {
     public class HIDPartNumbersService : IHIDPartNumbersService {
@@ -17,17 +18,20 @@ namespace Laser.Orchard.HID.Services {
         private readonly IRepository<HIDPartNumberSet> _HIDPartNumberSetRepository;
         private readonly IContentManager _contentManager;
         private readonly IRepository<PartNumberSetUserPartJunctionRecord> _setUserJunctionRecordRepository;
+        private readonly IHIDCredentialsService _HIDCredentialsService;
 
         public HIDPartNumbersService(
             IHIDAdminService HIDAdminService,
             IRepository<HIDPartNumberSet> HIDPartNumberSetrepository,
             IContentManager contentManager,
-            IRepository<PartNumberSetUserPartJunctionRecord> setUserJunctionRecordRepository) {
+            IRepository<PartNumberSetUserPartJunctionRecord> setUserJunctionRecordRepository,
+            IHIDCredentialsService HIDCredentialsService) {
 
             _HIDAdminService = HIDAdminService;
             _HIDPartNumberSetRepository = HIDPartNumberSetrepository;
             _contentManager = contentManager;
             _setUserJunctionRecordRepository = setUserJunctionRecordRepository;
+            _HIDCredentialsService = HIDCredentialsService;
 
             T = NullLocalizer.Instance;
         }
@@ -120,23 +124,68 @@ namespace Laser.Orchard.HID.Services {
         }
 
         private void ExecuteUpdates(List<SetUpdate> updates) {
+            var context = new BulkCredentialsOperationsContext(true); // prioritize issueing credentials over revoking them
             foreach (var update in updates) {
                 if (update.OldSet != null) {
                     if (update.Delete) {
+                        var oldJunctions = _setUserJunctionRecordRepository
+                            .Fetch(jr => jr.HIDPartNumberSet.Id == update.OldSet.Id);
+                        // get all affected users
+                        var users = oldJunctions
+                            .Select(jr => _contentManager.Get<UserPart>(jr.PartNumberSetsUserPartRecord.Id))
+                            .ToList();
+                        foreach (var junction in oldJunctions) {
+                            // Remove all Junction records
+                            _setUserJunctionRecordRepository.Delete(junction);
+                        }
+                        // Get the part numbers from the set we are going to remove
+                        var partNumbersToRevoke = Helpers.NumbersStringToArray(update.OldSet.StoredPartNumbers);
                         // delete the old set
                         _HIDPartNumberSetRepository.Delete(update.OldSet);
-                        // Remove all Junction records
                         // Revoke all corresponding credentials (unless the users have credentials for
                         // the same part numbers from other sets)
+                        if (partNumbersToRevoke.Any() && users.Any()) {
+                            foreach (var user in users) {
+                                context.AddRevokeAction(user, partNumbersToRevoke.Except(PartNumbersRightNow(user)));
+                            }
+                        }
                     } else {
-                        // update the old set using data from the new set
-                        // We start from the OldSetand change it, otherwise there is an issue with
-                        // pre-existing relations in the db 
-                        var updatedSet = update.OldSet;
-                        updatedSet.Name = update.NewSet.Name;
-                        updatedSet.StoredPartNumbers = update.NewSet.StoredPartNumbers;
-                        _HIDPartNumberSetRepository.Update(updatedSet);
-                        // if the part numbers have changed, we need to issue/revoke credentials accordingly
+                        if (update.NewSet != null) { // should alway be true
+                            // update the old set using data from the new set
+                            // We start from the OldSet and change it, otherwise there is an issue with
+                            // pre-existing relations in the db 
+                            var oldPartNumbers = Helpers.NumbersStringToArray(update.OldSet.StoredPartNumbers);
+                            var newPartNumbers = Helpers.NumbersStringToArray(update.NewSet.StoredPartNumbers);
+
+                            // Do the update
+                            var updatedSet = update.OldSet;
+                            update.NewSet.CopyProperties(updatedSet);
+
+                            _HIDPartNumberSetRepository.Update(updatedSet);
+                            // If the part numbers have changed, we need to issue/revoke credentials accordingly
+                            // Get all the affected users
+                            var users = _setUserJunctionRecordRepository
+                                .Fetch(jr => jr.HIDPartNumberSet.Id == update.OldSet.Id)
+                                .Select(jr => _contentManager.Get<UserPart>(jr.PartNumberSetsUserPartRecord.Id));
+                            if (users.Any()) {
+                                if (update.NewSet.IssueCredentialsAutomatically) {
+                                    // We need to issue credentials for all new part numbers
+                                    var toIssue = newPartNumbers.Except(oldPartNumbers);
+                                    if (toIssue.Any()) {
+                                        foreach (var user in users) {
+                                            context.AddIssueAction(user, toIssue);
+                                        }
+                                    }
+                                }
+                                // We need to revoke credentials for all removed part numbers
+                                var toRevoke = oldPartNumbers.Except(newPartNumbers);
+                                if (toRevoke.Any()) {
+                                    foreach (var user in users) {
+                                        context.AddRevokeAction(user, toRevoke.Except(PartNumbersRightNow(user)));
+                                    }
+                                }
+                            }
+                        }
                     }
                 } else {
                     // we need to add the new set
@@ -147,12 +196,26 @@ namespace Laser.Orchard.HID.Services {
                     }
                 }
             }
+            // TODO: create task to handle all the issue/revokes
         }
 
         private IEnumerable<string> HIDPartNumbers() {
             // TODO
             return new string[] { "asd", "qwe" };
             return new List<string>();
+        }
+
+        /// <summary>
+        /// Use this internally while processing stuff as a shorthand call to fetching stuff from the Junction records.
+        /// It is actually fetching stuff from jusnction records.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        private IEnumerable<string> PartNumbersRightNow(IUser user) {
+            return _setUserJunctionRecordRepository
+                .Fetch(jr => jr.PartNumberSetsUserPartRecord.Id == user.Id) // junctions remaining for user
+                .SelectMany(jr => Helpers.NumbersStringToArray(jr.HIDPartNumberSet.StoredPartNumbers)) // part numbers
+                .Distinct();
         }
 
         public string[] GetPartNumbersForUser(IUser user) {
@@ -215,17 +278,16 @@ namespace Laser.Orchard.HID.Services {
                 .Fetch(pns => newIds.Contains(pns.Id))
                 .ToDictionary(s => s.Id, s => new HIDPartNumberSetViewModel(s));
 
+            // Get the part numbers associated with the user as of now (before the update)
+            var oldPartNumbers = oldSets
+                .SelectMany(jr => Helpers.NumbersStringToArray(jr.HIDPartNumberSet.StoredPartNumbers))
+                .Distinct();
             // get the part numbers that the user will have, to prevent revoking them in case
             // some of them are also configured to PartNumberSets we will remove
-            var oldPartNumbers = oldSets
-                .SelectMany(jr => new HIDPartNumberSetViewModel(jr.HIDPartNumberSet).PartNumbers)
-                .Distinct();
             var newPartNumbers = newSetsLookup.Values.ToList()
                 .SelectMany(pns => pns.PartNumbers)
                 .Distinct();
-
             var toRevoke = oldPartNumbers.Except(newPartNumbers);
-            var toIssue = newPartNumbers.Except(oldPartNumbers);
 
             // Some sets may have been removed
             foreach (var old in oldSets) {
@@ -241,14 +303,114 @@ namespace Laser.Orchard.HID.Services {
             }
             // Some sets may have been added
             foreach (var item in newSetsLookup) {
-                _setUserJunctionRecordRepository.Create(new PartNumberSetUserPartJunctionRecord {
-                    HIDPartNumberSet = item.Value.Set,
-                    PartNumberSetsUserPartRecord = record
-                });
+                // Add the set to the user, but don't issue credentials yet
+                AddSetToUser(item.Value.Set, part, false);
             }
+
+            // We only need to issue credentials for part numbers that are in new sets
+            // that have their IssueCredentialsAutomatically flag set
+            var toIssue = newSetsLookup.Values
+                .Where(pns => pns.IssueCredentialsAutomatically)
+                .SelectMany(pns => pns.PartNumbers)
+                .Distinct();
 
             // TODO: issue and revoke credentials
             var user = part.As<UserPart>();
+        }
+
+        public void AddSetToUser(HIDPartNumberSet pnSet, IUser user) {
+            if (user == null) {
+                throw new ArgumentNullException("user");
+            }
+            if (pnSet == null) {
+                throw new ArgumentNullException("pnSet");
+            }
+            var part = user.As<PartNumberSetsUserPart>();
+            if (part == null) {
+                throw new ArgumentException(T("User must have PartNumberSetUserPart.").Text);
+            }
+            AddSetToUser(pnSet, part);
+        }
+
+        public void AddSetToUser(HIDPartNumberSet pnSet, PartNumberSetsUserPart part) {
+            if (part == null) {
+                throw new ArgumentNullException("part");
+            }
+            if (pnSet == null) {
+                throw new ArgumentNullException("pnSet");
+            }
+
+            AddSetToUser(pnSet, part, pnSet.IssueCredentialsAutomatically);
+        }
+
+        private void AddSetToUser(HIDPartNumberSet pnSet, PartNumberSetsUserPart part, bool issueCredentials) {
+            var record = part.Record;
+            // fetch old part number sets (actually, the junction records)
+            var oldSets = _setUserJunctionRecordRepository
+                .Fetch(os => os.PartNumberSetsUserPartRecord == record)
+                .ToList();
+
+            // if the user is already associated with the set there is nothing to do here
+            if (!oldSets.Any(os => os.HIDPartNumberSet.Id == pnSet.Id)) {
+                // the user was not yet associated with the set
+                // actually add the set, by creating the corresponding junction record
+                _setUserJunctionRecordRepository.Create(new PartNumberSetUserPartJunctionRecord {
+                    HIDPartNumberSet = pnSet,
+                    PartNumberSetsUserPartRecord = record
+                });
+
+                // Issue credentials if we have to
+                if (issueCredentials) {
+                    var toIssue = Helpers.NumbersStringToArray(pnSet.StoredPartNumbers);
+                    // TODO
+                }
+            }
+        }
+
+
+        public void RemoveSetFromUser(HIDPartNumberSet pnSet, IUser user) {
+            if (user == null) {
+                throw new ArgumentNullException("user");
+            }
+            if (pnSet == null) {
+                throw new ArgumentNullException("pnSet");
+            }
+            var part = user.As<PartNumberSetsUserPart>();
+            if (part == null) {
+                throw new ArgumentException(T("User must have PartNumberSetUserPart.").Text);
+            }
+            RemoveSetFromUser(pnSet, part);
+        }
+
+        public void RemoveSetFromUser(HIDPartNumberSet pnSet, PartNumberSetsUserPart part) {
+            if (part == null) {
+                throw new ArgumentNullException("part");
+            }
+            if (pnSet == null) {
+                throw new ArgumentNullException("pnSet");
+            }
+
+            var record = part.Record;
+            // fetch old part number sets (actually, the junction records)
+            var oldSets = _setUserJunctionRecordRepository
+                .Fetch(os => os.PartNumberSetsUserPartRecord == record)
+                .ToList();
+
+            // If the user is not associated with the set, there is nothing to do
+            var old = oldSets.FirstOrDefault(os => os.HIDPartNumberSet.Id == pnSet.Id);
+            if (old != null) {
+                // The user is associated with the set
+                // Find the part numbers for which we will revoke credentials: these are the part numbers
+                // for the set we are removing, except those that are shared with some sets that will 
+                // remain associated with the user
+                var toRevoke = Helpers.NumbersStringToArray(pnSet.StoredPartNumbers)
+                    .Except(oldSets.Where(os => os.HIDPartNumberSet.Id != pnSet.Id)
+                        .SelectMany(os => Helpers
+                            .NumbersStringToArray(os.HIDPartNumberSet.StoredPartNumbers)));
+                // remove association
+                _setUserJunctionRecordRepository.Delete(old);
+                // TODO: revoke credentials
+            }
         }
 
         class SetUpdate {

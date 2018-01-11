@@ -49,7 +49,6 @@ namespace Laser.Orchard.HID.Drivers {
                 // Update the part
                 _HIDPartNumbersService.UpdatePart(part, vm);
             }
-            // TODO
             return Editor(part, shapeHelper);
         }
 

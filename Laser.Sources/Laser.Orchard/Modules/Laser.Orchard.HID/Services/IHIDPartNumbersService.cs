@@ -69,5 +69,39 @@ namespace Laser.Orchard.HID.Services {
         /// <param name="part">The part to update.</param>
         /// <param name="vm">The view model used as source.</param>
         void UpdatePart(PartNumberSetsUserPart part, PartNumberSetsUserPartEditViewModel vm);
+
+        /// <summary>
+        /// Associate the HIDPartNumberSet to the User, and eventually issue corresponding credentials.
+        /// </summary>
+        /// <param name="pnSet">The HIDPartNumberSet.</param>
+        /// <param name="user">The User.</param>
+        /// <exception cref="ArgumentNullException">Throws an ArgumentNullException if either argument is null</exception>
+        /// <exception cref="ArgumentException">Throws an ArgumentException if the User has no PartNumberSetUserPart.</exception>
+        void AddSetToUser(HIDPartNumberSet pnSet, IUser user);
+
+        /// <summary>
+        /// Associate the HIDPartNumberSet to the User, and eventually issue corresponding credentials.
+        /// </summary>
+        /// <param name="pnSet">The HIDPartNumberSet.</param>
+        /// <param name="part">The part attached to a User.</param>
+        /// <exception cref="ArgumentNullException">Throws an ArgumentNullException if either argument is null</exception>
+        void AddSetToUser(HIDPartNumberSet pnSet, PartNumberSetsUserPart part);
+
+        /// <summary>
+        /// De-associate the HIDPartNumberSet to the User, and eventually issue corresponding credentials.
+        /// </summary>
+        /// <param name="pnSet">The HIDPartNumberSet.</param>
+        /// <param name="user">The User.</param>
+        /// <exception cref="ArgumentNullException">Throws an ArgumentNullException if either argument is null</exception>
+        /// <exception cref="ArgumentException">Throws an ArgumentException if the User has no PartNumberSetUserPart.</exception>
+        void RemoveSetFromUser(HIDPartNumberSet pnSet, IUser user);
+
+        /// <summary>
+        /// De-associate the HIDPartNumberSet to the User, and eventually issue corresponding credentials.
+        /// </summary>
+        /// <param name="pnSet">The HIDPartNumberSet.</param>
+        /// <param name="part">The part attached to a User.</param>
+        /// <exception cref="ArgumentNullException">Throws an ArgumentNullException if either argument is null</exception>
+        void RemoveSetFromUser(HIDPartNumberSet pnSet, PartNumberSetsUserPart part);
     }
 }

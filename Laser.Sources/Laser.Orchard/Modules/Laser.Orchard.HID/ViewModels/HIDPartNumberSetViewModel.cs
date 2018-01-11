@@ -57,6 +57,11 @@ namespace Laser.Orchard.HID.ViewModels {
         /// </summary>
         public bool Delete { get; set; }
 
+        public bool IssueCredentialsAutomatically {
+            get { return Set.IssueCredentialsAutomatically; }
+            set { Set.IssueCredentialsAutomatically = value; }
+        }
+
         public IList<PartNumberSetsUserPartRecord> PartNumberSetsUserParts {
             get { return Set.PartNumberSetsUserPartsJR.Select(jr => jr.PartNumberSetsUserPartRecord).ToList(); }
         }
