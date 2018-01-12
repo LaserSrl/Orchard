@@ -16,10 +16,13 @@ using Orchard.Security;
 using Orchard.Users.Events;
 using Laser.Orchard.StartupConfig.IdentityProvider;
 using System.Web.Http.Results;
+using System.Web.Mvc;
+using Orchard.Logging;
 
 namespace Laser.Orchard.MultiStepAuthentication.Controllers {
     [OrchardFeature("Laser.Orchard.NonceLogin")]
     [WebApiKeyFilter(true)]
+    [OutputCache(NoStore = true, Duration = 0)]
     public class NonceLoginApiController : BaseMultiStepAccountApiController {
 
         private readonly IUtilsServices _utilsServices;
@@ -28,7 +31,7 @@ namespace Laser.Orchard.MultiStepAuthentication.Controllers {
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserEventHandler _userEventHandler;
         private readonly IEnumerable<IIdentityProvider> _identityProviders;
-     
+    
         public NonceLoginApiController(
             IUtilsServices utilsServices,
             IUsersExtensionsServices usersExtensionsServices,
@@ -70,6 +73,7 @@ namespace Laser.Orchard.MultiStepAuthentication.Controllers {
         }
 
         public Response Post(JObject message) {
+          
             var uuid = GetUUIDFromHeader();
             if (string.IsNullOrWhiteSpace(uuid)) {
                 return _utilsServices.GetResponse(ResponseType.UnAuthorized);

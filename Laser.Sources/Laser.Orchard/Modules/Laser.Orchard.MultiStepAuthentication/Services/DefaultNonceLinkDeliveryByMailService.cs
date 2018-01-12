@@ -47,7 +47,7 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
         }
 
         public bool TrySendOTP(OTPRecord otp, IUser user,FlowType? flow) {
-            if (otp == null // paarmeter validation
+            if (otp == null // parameter validation
                 || user == null
                 || otp.UserRecord.UserName != user.UserName) {
                 return false;
