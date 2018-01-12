@@ -1,4 +1,5 @@
-﻿using Orchard.Localization;
+﻿using Laser.Orchard.HID.Extensions;
+using Orchard.Localization;
 using Orchard.Security;
 using System;
 using System.Collections.Generic;
@@ -132,6 +133,19 @@ namespace Laser.Orchard.HID.Models {
             return sr.ToString();
         }
 
+        public void PopulateFromRecords(IEnumerable<BulkCredentialsOperationsRecord> records) {
+
+            foreach (var record in records) {
+                int userId = record.UserId;
+                var issueList = Helpers.NumbersStringToArray(record.SerializedIssueList);
+                var revokeList = Helpers.NumbersStringToArray(record.SerializedRevokeList);
+                AddIssueAction(userId, issueList);
+                AddRevokeAction(userId, revokeList);
+            }
+
+            ConsolidateDictionary();
+        }
+        
         public class UserCredentialActions {
             public int UserId { get; private set; }
             public List<string> RevokeList { get; set; }
@@ -200,6 +214,14 @@ namespace Laser.Orchard.HID.Models {
                 }
             }
 
+            public BulkCredentialsOperationsRecord ToRecord(int taskId) {
+                return new BulkCredentialsOperationsRecord {
+                    TaskId = taskId,
+                    UserId = this.UserId,
+                    SerializedRevokeList = Helpers.NumbersArrayToString(RevokeList),
+                    SerializedIssueList = Helpers.NumbersArrayToString(IssueList)
+                };
+            }
         }
 
         public class UserCredentialErrors {

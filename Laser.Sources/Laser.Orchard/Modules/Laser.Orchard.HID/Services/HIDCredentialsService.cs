@@ -9,19 +9,28 @@ using Orchard.Users.Models;
 using Orchard.Logging;
 using Orchard.Localization;
 using System.Text;
+using Laser.Orchard.HID.Extensions;
+using Orchard.Tasks.Scheduling;
+using Orchard.Data;
 
 namespace Laser.Orchard.HID.Services {
     public class HIDCredentialsService : IHIDCredentialsService {
 
         private readonly IHIDSearchUserService _HIDSearchUserService;
         private readonly IContentManager _contentManager;
+        private readonly IScheduledTaskManager _taskManager;
+        private readonly IRepository<BulkCredentialsOperationsRecord> _credentialsOperationsRepository;
 
         public HIDCredentialsService(
             IHIDSearchUserService HIDSearchUserService,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            IScheduledTaskManager taskManager,
+            IRepository<BulkCredentialsOperationsRecord> credentialsOperationsrepository) {
 
             _HIDSearchUserService = HIDSearchUserService;
             _contentManager = contentManager;
+            _taskManager = taskManager;
+            _credentialsOperationsRepository = credentialsOperationsrepository;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -93,19 +102,43 @@ namespace Laser.Orchard.HID.Services {
                         var issueUser = ua.Value.IssueList.Any()
                             ? IssueCredentials(searchResult.User, ua.Value.IssueList.ToArray())
                             : null;
-                        if (issueUser.Error != UserErrors.NoError && issueUser.Error != UserErrors.PreconditionFailed) {
+                        if (issueUser!=null && (issueUser.Error != UserErrors.NoError && issueUser.Error != UserErrors.PreconditionFailed)) {
                             context.AddError(user, issueUser.Error);
                         }
                         var revokeUser = ua.Value.RevokeList.Any()
                             ? RevokeCredentials(searchResult.User, ua.Value.RevokeList.ToArray())
                             : null;
-                        if (revokeUser.Error != UserErrors.NoError && revokeUser.Error != UserErrors.PreconditionFailed) {
+                        if (revokeUser!= null &&(revokeUser.Error != UserErrors.NoError && revokeUser.Error != UserErrors.PreconditionFailed)) {
                             context.AddError(user, revokeUser.Error);
                         }
                     } else {
                         context.AddError(user, searchResult.Error);
                     }
                 }
+            }
+        }
+
+        public void ScheduleCredentialActions(BulkCredentialsOperationsContext context) {
+            if (context.UserActions.Any()) {
+                // Create the record for the first user action in the db
+                // We will use the Id of this first record as taskId, so after creating the first
+                // we need to update its TaskId field (also in the db).
+                var firstRecord = context.UserActions.First().Value.ToRecord(0);
+                _credentialsOperationsRepository.Create(firstRecord);
+                var taskId = firstRecord.Id;
+                firstRecord.TaskId = taskId;
+                _credentialsOperationsRepository.Update(firstRecord);
+
+                // now create all other records
+                foreach (var ua in context.UserActions.Where(act => act.Key != firstRecord.UserId)) {
+                    var record = ua.Value.ToRecord(taskId);
+                    _credentialsOperationsRepository.Create(record);
+                }
+
+                // Generate the name of the task as Constant_TaskId
+                var taskTypeStr = Constants.HIDBulkCredentialsOperationsTaskName + "_" + taskId.ToString();
+                // create and schedule the task
+                _taskManager.CreateTask(taskTypeStr, DateTime.UtcNow, null);
             }
         }
 

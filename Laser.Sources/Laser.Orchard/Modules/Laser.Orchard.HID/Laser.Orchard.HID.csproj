@@ -150,11 +150,13 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\Constants.cs" />
     <Compile Include="Extensions\Helpers.cs" />
+    <Compile Include="Handlers\BulkCredentialOperationsTaskHandler.cs" />
     <Compile Include="Handlers\HIDSettingsPartHandler.cs" />
     <Compile Include="Handlers\PartNumberSetsUserPartHandler.cs" />
     <Compile Include="HIDRoutes.cs" />
     <Compile Include="Migrations\HIDMigration.cs" />
     <Compile Include="Models\BulkCredentialsOperationsContext.cs" />
+    <Compile Include="Models\BulkCredentialsOperationsRecord.cs" />
     <Compile Include="Models\HIDAuthToken.cs" />
     <Compile Include="Models\HIDCredential.cs" />
     <Compile Include="Models\HIDCredentialContainer.cs" />

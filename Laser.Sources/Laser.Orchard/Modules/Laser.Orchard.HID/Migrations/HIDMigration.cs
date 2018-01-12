@@ -42,5 +42,17 @@ namespace Laser.Orchard.HID.Migrations {
             return 1;
         }
 
+        public int UpdateFrom1() {
+
+            SchemaBuilder.CreateTable("BulkCredentialsOperationsRecord", table => table
+                .Column<int>("Id", col=> col.Identity().PrimaryKey())
+                .Column<int>("TaskId")
+                .Column<int>("UserId")
+                .Column<string>("SerializedRevokeList", col => col.Unlimited())
+                .Column<string>("SerializedIssueList", col => col.Unlimited()));
+
+            return 2;
+        }
+
     }
 }

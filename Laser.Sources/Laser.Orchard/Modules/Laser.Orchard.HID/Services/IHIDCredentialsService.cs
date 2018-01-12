@@ -48,5 +48,12 @@ namespace Laser.Orchard.HID.Services {
         /// <param name="context">An object that contains the information on the issue/revoke 
         /// credential operations to be performed, and those performed.</param>
         void ProcessUserCredentialActions(BulkCredentialsOperationsContext context);
+
+        /// <summary>
+        /// Schedules a task that will run as soon as possible to execute the credentials operations
+        /// in the context.
+        /// </summary>
+        /// <param name="context">The object that contains the information on the operations ot perform.</param>
+        void ScheduleCredentialActions(BulkCredentialsOperationsContext context);
     }
 }

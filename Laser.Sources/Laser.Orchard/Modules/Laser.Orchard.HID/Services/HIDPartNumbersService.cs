@@ -164,6 +164,8 @@ namespace Laser.Orchard.HID.Services {
                             var oldPartNumbers = Helpers.NumbersStringToArray(update.OldSet.StoredPartNumbers);
                             var newPartNumbers = Helpers.NumbersStringToArray(update.NewSet.StoredPartNumbers);
 
+                            var oldToIssue = update.OldSet.IssueCredentialsAutomatically;
+
                             // Do the update
                             var updatedSet = update.OldSet;
                             update.NewSet.CopyProperties(updatedSet);
@@ -177,7 +179,10 @@ namespace Laser.Orchard.HID.Services {
                             if (users.Any()) {
                                 if (update.NewSet.IssueCredentialsAutomatically) {
                                     // We need to issue credentials for all new part numbers
-                                    var toIssue = newPartNumbers.Except(oldPartNumbers);
+                                    // if we had not issued earlier, we may need to do it now
+                                    var toIssue = oldToIssue
+                                        ? newPartNumbers.Except(oldPartNumbers)
+                                        : newPartNumbers;
                                     if (toIssue.Any()) {
                                         foreach (var user in users) {
                                             context.AddIssueAction(user, toIssue);
@@ -203,7 +208,11 @@ namespace Laser.Orchard.HID.Services {
                     }
                 }
             }
-            // TODO: create task to handle all the issue/revokes
+            // create task to handle all the issue/revokes
+            context.ConsolidateDictionary();
+            if (context.UserActions.Any()) {
+                _HIDCredentialsService.ScheduleCredentialActions(context);
+            }
         }
 
         /// <summary>
@@ -257,7 +266,7 @@ namespace Laser.Orchard.HID.Services {
             if (!_HIDAdminService.VerifyAuthentication()) {
                 return null;
             }
-
+            return null; //TODO IMPLEMENT THIS
             // Create the first request
             HttpWebRequest wr = HttpWebRequest.CreateHttp(_HIDAdminService.BaseEndpoint + "/part-number");
             try {
@@ -384,6 +393,7 @@ namespace Laser.Orchard.HID.Services {
                 .Distinct();
             
             var context = new BulkCredentialsOperationsContext(true);
+
             if (toRevoke.Any() || toIssue.Any()) {
                 var user = part.As<UserPart>();
                 context.AddIssueAction(user, toIssue);
