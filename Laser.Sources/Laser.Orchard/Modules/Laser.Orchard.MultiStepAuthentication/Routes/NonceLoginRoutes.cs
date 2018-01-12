@@ -41,7 +41,22 @@ namespace Laser.Orchard.MultiStepAuthentication.Routes {
                             {"area", "Laser.Orchard.MultiStepAuthentication"}
                         },
                         new MvcRouteHandler())
+                },
+                    new RouteDescriptor {
+                    Route = new Route(
+                        "NonceAppCamouflage",
+                        new RouteValueDictionary {
+                            {"area", "Laser.Orchard.MultiStepAuthentication"},
+                            {"controller", "NonceAppCamouflage"},
+                            {"action", "GetByURL"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Laser.Orchard.MultiStepAuthentication"}
+                        },
+                        new MvcRouteHandler())
                 }
+                
             };
         }
     }
