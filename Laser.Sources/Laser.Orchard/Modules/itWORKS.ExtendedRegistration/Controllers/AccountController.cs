@@ -37,7 +37,7 @@ namespace itWORKS.ExtendedRegistration.Controllers {
 
         int MinPasswordLength {
             get {
-                return _membershipService.GetSettings().MinRequiredPasswordLength;
+                return _membershipService.GetSettings().GetMinimumPasswordLength();
             }
         }
 

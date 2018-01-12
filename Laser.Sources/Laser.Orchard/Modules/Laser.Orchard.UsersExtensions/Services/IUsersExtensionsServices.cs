@@ -80,7 +80,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
 
         int MinPasswordLength {
             get {
-                return _membershipService.GetSettings().MinRequiredPasswordLength;
+                return _membershipService.GetSettings().GetMinimumPasswordLength();
             }
         }
 
