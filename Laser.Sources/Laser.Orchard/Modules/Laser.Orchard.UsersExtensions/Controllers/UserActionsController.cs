@@ -33,7 +33,6 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
     public class UserActionsController : Controller {
         private readonly ICsrfTokenHelper _csrfTokenHelper;
         private readonly IUsersExtensionsServices _usersExtensionsServices;
-        private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IOrchardServices _orchardServices;
         private readonly IUserService _userService;
         private readonly IUtilsServices _utilsServices;
@@ -42,10 +41,9 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
         public ILogger Log { get; set; }
 
         public UserActionsController(IOrchardServices orchardServices, ICsrfTokenHelper csrfTokenHelper, IUsersExtensionsServices usersExtensionsServices, IUserService userService,
-            IControllerContextAccessor controllerContextAccessor, IUtilsServices utilsServices, IEnumerable<IIdentityProvider> identityProviders) {
+             IUtilsServices utilsServices, IEnumerable<IIdentityProvider> identityProviders) {
             _csrfTokenHelper = csrfTokenHelper;
             _usersExtensionsServices = usersExtensionsServices;
-            _controllerContextAccessor = controllerContextAccessor;
             _orchardServices = orchardServices;
             _userService = userService;
             _identityProviders = identityProviders;
@@ -183,7 +181,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
                 _usersExtensionsServices.Register(userRegistrationParams);
                 List<string> roles = new List<string>();
                 var message = "";
-                var registeredServicesData = _utilsServices.GetUserIdentityProviders(_identityProviders, _controllerContextAccessor.Context.Controller.TempData);
+                var registeredServicesData = _utilsServices.GetUserIdentityProviders(_identityProviders);
                 if (_orchardServices.WorkContext.CurrentUser == null && registrationSettings.UsersMustValidateEmail) {
                     message = T("Thank you for registering. We sent you an e-mail with instructions to enable your account.").ToString();
                 }
@@ -199,7 +197,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
             try {
                 _usersExtensionsServices.SignIn(login);
                 List<string> roles = new List<string>();
-                var registeredServicesData = _utilsServices.GetUserIdentityProviders(_identityProviders, _controllerContextAccessor.Context.Controller.TempData);
+                var registeredServicesData = _utilsServices.GetUserIdentityProviders(_identityProviders);
                 var json = registeredServicesData.ToString();
                 result = _utilsServices.GetResponse(ResponseType.Success, "", json);
             } catch (Exception ex) {

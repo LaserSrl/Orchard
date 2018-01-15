@@ -29,7 +29,7 @@ namespace Laser.Orchard.MultiStepAuthentication.Routes {
                     }
                 },
                 new RouteDescriptor {
-                    Route = new Route(
+                        Route = new Route(
                         "Admin/NonceLoginSettings",
                         new RouteValueDictionary {
                             {"area", "Laser.Orchard.MultiStepAuthentication"},
@@ -56,7 +56,6 @@ namespace Laser.Orchard.MultiStepAuthentication.Routes {
                         },
                         new MvcRouteHandler())
                 }
-                
             };
         }
     }

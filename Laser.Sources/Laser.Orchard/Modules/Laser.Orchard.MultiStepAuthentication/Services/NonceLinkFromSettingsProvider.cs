@@ -40,22 +40,8 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
                 var sitebase = _workContextAccessor.GetContext().CurrentSite.BaseUrl.Replace("http://","").Replace("https://", "");
                 var site = "/" + _shellSettings.RequestUrlPrefix + "/NonceAppCamouflage";
                 site = protocol+ sitebase + site.Replace("//", "/").Replace("//", "/") + string.Format("?n={0}",urlHelper.Encode(nonce));
-                Logger.Error("site=>" + site);
                 return site;
-                //urlHelper.MakeAbsolute(urlHelper.Action("GetByURL", "NonceAppCamouflage", new { area = "Laser.Orchard.MultiStepAuthentication", n = nonce }, scheme), _workContextAccessor.GetContext().CurrentSite.BaseUrl);
-                // return site;
-
-                //    Logger.Error("base=>", _workContextAccessor.GetContext().CurrentSite.BaseUrl);
-                //    string scheme = urlHelper.RequestContext.HttpContext.Request.Url.Scheme;
-
-                //    Logger.Error("scheme =>" + scheme);
-                //    Logger.Error("resto =>" +string.Format("/api/noncelogin?n={0}", nonce)); 
-                //    Logger.Error("urlhelper 0=> "+  urlHelper.HttpRouteUrl("", new { httproute = true, area = "Laser.Orchard.MultiStepAuthentication", controller = "NonceAppCamouflage", n = nonce }));
-                //    Logger.Error("urlhelper 1=> " + urlHelper.Action("GetByURL", "NonceAppCamouflage", new { area = "Laser.Orchard.MultiStepAuthentication", n = nonce }, scheme));
-                //   // Logger.Error("urlhelper 2=> " + urlHelper.MakeAbsolute(urlHelper.Action("GetByURL", "NonceAppCamouflage", new { area = "Laser.Orchard.MultiStepAuthentication", n = nonce })));
-                //    Logger.Error("urlhelper 2=> " + urlHelper.MakeAbsolute(urlHelper.Action("GetByURL", "NonceAppCamouflage", new { area = "Laser.Orchard.MultiStepAuthentication", n = nonce }, scheme), _workContextAccessor.GetContext().CurrentSite.BaseUrl));
-                //    return urlHelper.MakeAbsolute(urlHelper.Action("GetByURL", "NonceAppCamouflage", new {  area = "Laser.Orchard.MultiStepAuthentication" ,n= nonce }, scheme), _workContextAccessor.GetContext().CurrentSite.BaseUrl);
-            }
+           }
             else
                 return string.Format(GetFormat(), nonce);
         }

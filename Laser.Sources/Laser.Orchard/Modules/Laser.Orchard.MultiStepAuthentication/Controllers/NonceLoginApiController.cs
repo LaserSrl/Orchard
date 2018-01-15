@@ -76,7 +76,7 @@ namespace Laser.Orchard.MultiStepAuthentication.Controllers {
           
             var uuid = GetUUIDFromHeader();
             if (string.IsNullOrWhiteSpace(uuid)) {
-                return _utilsServices.GetResponse(ResponseType.UnAuthorized);
+                return  _utilsServices.GetResponse(ResponseType.UnAuthorized);
             }
             NonceLoginMessage msgObj;
             try {
@@ -95,7 +95,7 @@ namespace Laser.Orchard.MultiStepAuthentication.Controllers {
                     var user = iuser as UserPart;
                     _authenticationService.SignIn(user, true);
                     _userEventHandler.LoggedIn(user);
-                    return _utilsServices.GetUserResponse("", _identityProviders, null);
+                    return  _utilsServices.GetUserResponse("", _identityProviders);
                 }
             }
 
