@@ -1,7 +1,6 @@
 ﻿using Laser.Orchard.HID.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Data;
 using Orchard.Logging;
 using Orchard.Security;
 using System;

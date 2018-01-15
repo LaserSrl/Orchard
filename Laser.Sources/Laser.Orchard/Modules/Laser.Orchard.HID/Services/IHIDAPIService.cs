@@ -1,30 +1,23 @@
 ﻿using Laser.Orchard.HID.Models;
 using Orchard;
 using Orchard.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Laser.Orchard.HID.Services {
-    public interface IHIDAPIService : IHIDAdminService, IDependency {
-        /// <summary>
-        /// Attempts authentication to the HID services, using the login information from the settings.
-        /// </summary>
-        /// <returns>A value identifying possible errors, or NoError in case of success.</returns>
-        AuthenticationErrors Authenticate();
+    public interface IHIDAPIService : IDependency {
+
         /// <summary>
         /// Searches the HIDUser corresponding to the IUser passed as parameter.
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="user">The IUser whose corresponding HIDUser we are looking for.</param>
         /// <returns>An object describing the results of the search, that contains the HIDUser if found.</returns>
         HIDUserSearchResult SearchHIDUser(IUser user);
         /// <summary>
         /// Searches the HIDUser corresponding to the email passed as parameter.
         /// </summary>
-        /// <param name="user"></param>
-        /// <returns>An object describing the results of the search, that contains the HIDUser if found.</returns>
+        /// <param name="email">The email we will use as key to find the user in HID's systems.</param>
+        /// <returns>An object describing the results of the search, that contains the HIDUser if found.
+        /// This method fails to return the user if it was not found, or if more than one user matches the
+        /// email for the search.</returns>
         HIDUserSearchResult SearchHIDUser(string email);
         /// <summary>
         /// Creates a new HIDUser on the HID servers using the information provided as parameters.
@@ -88,8 +81,5 @@ namespace Laser.Orchard.HID.Services {
         /// <returns>This always returns an HIDUser object, but we should check its Error field before using it.</returns>
         HIDUser RevokeCredentials(HIDUser hidUser, string[] partNumbers);
 
-        string AuthorizationToken { get; }
-        string BaseEndpoint { get; }
-        string UsersEndpoint { get; }
     }
 }

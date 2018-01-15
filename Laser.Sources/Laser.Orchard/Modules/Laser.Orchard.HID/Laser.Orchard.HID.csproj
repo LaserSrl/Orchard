@@ -129,6 +129,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="placement.info" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />
     <Content Include="Styles\Web.config" />
@@ -138,22 +139,55 @@
   <ItemGroup>
     <Compile Include="Activities\CreateHIDUserForm.cs" />
     <Compile Include="Activities\CreateHIDUserTask.cs" />
+    <Compile Include="Activities\HIDEventActivity.cs" />
+    <Compile Include="Activities\IssueCredentialsForm.cs" />
+    <Compile Include="Activities\IssueCredentialsTask.cs" />
+    <Compile Include="Activities\RevokeCredentialsForm.cs" />
+    <Compile Include="Activities\RevokeCredentialsTask.cs" />
+    <Compile Include="Attributes\PartNumberSetsValidationAttribute.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HIDAPIController.cs" />
+    <Compile Include="Drivers\PartNumberSetsUserPartDriver.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Events\HIDCredentialEventContext.cs" />
+    <Compile Include="Events\HIDEventContext.cs" />
+    <Compile Include="Events\IHIDEventHandler.cs" />
     <Compile Include="Extensions\Constants.cs" />
+    <Compile Include="Extensions\Helpers.cs" />
+    <Compile Include="Handlers\BulkCredentialOperationsTaskHandler.cs" />
     <Compile Include="Handlers\HIDSettingsPartHandler.cs" />
+    <Compile Include="Handlers\HIDWorkflowEventHandler.cs" />
+    <Compile Include="Handlers\PartNumberSetsUserPartHandler.cs" />
     <Compile Include="HIDRoutes.cs" />
+    <Compile Include="Migrations\HIDMigration.cs" />
+    <Compile Include="Models\BulkCredentialsOperationsContext.cs" />
+    <Compile Include="Models\BulkCredentialsOperationsRecord.cs" />
     <Compile Include="Models\HIDAuthToken.cs" />
     <Compile Include="Models\HIDCredential.cs" />
     <Compile Include="Models\HIDCredentialContainer.cs" />
+    <Compile Include="Models\HIDPartNumberSet.cs" />
     <Compile Include="Models\HIDSearchResult.cs" />
     <Compile Include="Models\HIDSiteSettingsPart.cs" />
     <Compile Include="Models\HIDUser.cs" />
+    <Compile Include="Models\PartNumberSetsUserPart.cs" />
+    <Compile Include="Models\PartNumberSetsUserPartRecord.cs" />
+    <Compile Include="Models\PartNumberSetUserPartJunctionRecord.cs" />
+    <Compile Include="Models\PartNumberValidationResult.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
+    <Compile Include="Services\HIDAdminService.cs" />
+    <Compile Include="Services\HIDCredentialsService.cs" />
+    <Compile Include="Services\HIDPartNumbersService.cs" />
+    <Compile Include="Services\HIDSearchUserService.cs" />
     <Compile Include="Services\HIDService.cs" />
     <Compile Include="Services\IHIDAdminService.cs" />
     <Compile Include="Services\IHIDAPIService.cs" />
+    <Compile Include="Services\IHIDCredentialsService.cs" />
+    <Compile Include="Services\IHIDPartNumbersService.cs" />
+    <Compile Include="Services\IHIDSearchUserService.cs" />
+    <Compile Include="ViewModels\HIDPartNumberSetViewModel.cs" />
+    <Compile Include="ViewModels\HIDSiteSettingsViewModel.cs" />
+    <Compile Include="ViewModels\PartNumberSetsUserPartEditEntry.cs" />
+    <Compile Include="ViewModels\PartNumberSetsUserPartEditViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
@@ -166,6 +200,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\HIDPartNumberSetViewModel.cshtml" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\PartNumberSetsUserPart.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

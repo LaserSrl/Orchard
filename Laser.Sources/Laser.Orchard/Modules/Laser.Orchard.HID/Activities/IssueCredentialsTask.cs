@@ -7,34 +7,39 @@ using Orchard.Security;
 using Orchard.Users.Models;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Laser.Orchard.HID.Activities {
-    public class CreateHIDUserTask : Task {
-        
-        public Localizer T { get; set; }
+    public class IssueCredentialsTask : Task {
 
-        private readonly IHIDAPIService _HIDAPIService;
+        private readonly IHIDCredentialsService _HIDCredentialsService;
         private readonly IContentManager _contentManager;
+        private readonly IHIDPartNumbersService _HIDPartNumbersService;
 
-        public CreateHIDUserTask(IHIDAPIService hidAPIService, IContentManager contentManager) {
-            _HIDAPIService = hidAPIService;
+        public IssueCredentialsTask(
+            IHIDCredentialsService HIDCredentialsService,
+            IContentManager contentManager,
+            IHIDPartNumbersService HIDPartNumbersService) {
+
+            _HIDCredentialsService = HIDCredentialsService;
             _contentManager = contentManager;
-            
-            T = NullLocalizer.Instance;
+            _HIDPartNumbersService = HIDPartNumbersService;
         }
 
+        public Localizer T { get; set; }
+
         public override string Form {
-            get { return Constants.ActivityCreateHIDUserFormName; }
+            get { return Constants.ActivityIssueCredentialsFormName; }
         }
 
         public override string Name {
-            get { return "CreateHIDUser"; }
+            get { return "IssueCredentials"; }
         }
 
         public override LocalizedString Description {
-            get { return T("Creates a user in the HID systems."); }
+            get { return T("Issues credentials to the user."); }
         }
 
         public override LocalizedString Category {
@@ -42,11 +47,19 @@ namespace Laser.Orchard.HID.Activities {
         }
 
         public override IEnumerable<LocalizedString> GetPossibleOutcomes(WorkflowContext workflowContext, ActivityContext activityContext) {
-            return new[] { T("OK"), T("NoIUser"), T("UnknownError"), T("AuthorizationFailed"), T("InvalidParameters"), T("UserExists") };
+            return new[] {
+                T("OK"),
+                T("NoIUser"),
+                T("NoPartNumber"),
+                T("UnknownError"),
+                T("AuthorizationFailed"),
+                T("UserHasNoDevices")
+            };
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
 
+            // Get the user from the form
             var userString = activityContext.GetState<string>("IUser");
             IUser user = null;
             if (string.IsNullOrWhiteSpace(userString)) {
@@ -67,15 +80,23 @@ namespace Laser.Orchard.HID.Activities {
                 yield return T("NoIUser");
             }
 
-            var familyName = activityContext.GetState<string>("FamilyName");
-            var givenName = activityContext.GetState<string>("GivenName");
+            // Get the part numbers from the form
+            var pnString = activityContext.GetState<string>("PartNumbers");
+            var partNumbers = string.IsNullOrWhiteSpace(pnString)
+                ? new string[] { }
+                : pnString.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
-            var email = activityContext.GetState<string>("EMail");
-            if (string.IsNullOrWhiteSpace(email)) {
-                email = user.Email;
+            // Validataion for part numbers
+            if (partNumbers == null || partNumbers.Length == 0) {
+                partNumbers = _HIDPartNumbersService.GetPartNumbersForUser(user);
             }
-
-            var hidUser = _HIDAPIService.CreateHIDUser(user, familyName, givenName, email);
+            if (partNumbers.Length == 0) {
+                // No part number found configured, either in this activity's form or in the site settings
+                yield return T("NoPartNumber");
+            }
+            
+            // Issue and handle response
+            var hidUser = _HIDCredentialsService.IssueCredentials(user, partNumbers);
             switch (hidUser.Error) {
                 case UserErrors.NoError:
                     yield return T("OK");
@@ -86,20 +107,15 @@ namespace Laser.Orchard.HID.Activities {
                 case UserErrors.AuthorizationFailed:
                     yield return T("AuthorizationFailed");
                     break;
-                case UserErrors.InvalidParameters:
-                    yield return T("InvalidParameters");
-                    break;
-                case UserErrors.PreconditionFailed:
-                    yield return T("UnknownError");
-                    break;
-                case UserErrors.EmailNotUnique:
-                    yield return T("UserExists");
+                case UserErrors.DoesNotHaveDevices:
+                    yield return T("UserHasNoDevices");
                     break;
                 default:
                     yield return T("UnknownError");
                     break;
             }
-
+            
         }
+
     }
 }
