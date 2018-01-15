@@ -1,4 +1,5 @@
 ﻿using Laser.Orchard.HID.Models;
+using Orchard.Security;
 
 namespace Laser.Orchard.HID.Events {
     public class HIDEventContext {
@@ -11,7 +12,7 @@ namespace Laser.Orchard.HID.Events {
 
         public HIDUser HIDUser { get; set; }
 
-
+        public IUser User { get; set; }
     }
     
 }

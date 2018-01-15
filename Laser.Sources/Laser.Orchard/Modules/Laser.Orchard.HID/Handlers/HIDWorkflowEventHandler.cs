@@ -15,7 +15,7 @@ namespace Laser.Orchard.HID.Handlers {
 
         public void HIDCredentialIssued(HIDCredentialEventContext context) {
             _workflowManager.TriggerEvent("HIDCredentialIssued",
-                null,
+                context.User,
                 () => new Dictionary<string, object> {
                     {"HIDUser", context.HIDUser},
                     { "PartNumber", context.PartNumber }
@@ -24,7 +24,7 @@ namespace Laser.Orchard.HID.Handlers {
 
         public void HIDCredentialRevoked(HIDCredentialEventContext context) {
             _workflowManager.TriggerEvent("HIDCredentialRevoked",
-                null,
+                context.User,
                 () => new Dictionary<string, object> {
                     {"HIDUser", context.HIDUser},
                     { "PartNumber", context.PartNumber }
@@ -33,7 +33,7 @@ namespace Laser.Orchard.HID.Handlers {
 
         public void HIDUserCreated(HIDEventContext context) {
             _workflowManager.TriggerEvent("UserCreated",
-                null,
+                context.User,
                 () => new Dictionary<string, object> {
                     {"HIDUser", context.HIDUser}
                 });

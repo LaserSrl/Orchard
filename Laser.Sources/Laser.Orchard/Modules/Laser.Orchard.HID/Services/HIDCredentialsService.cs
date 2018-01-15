@@ -41,8 +41,13 @@ namespace Laser.Orchard.HID.Services {
         public Localizer T { get; set; }
 
         public HIDUser IssueCredentials(HIDUser hidUser, string[] partNumbers) {
+            var user = UserFromEmail(hidUser.Emails.FirstOrDefault());
             if (partNumbers.Length == 0) {
                 hidUser = hidUser.IssueCredential(""); //this assigns the default part number for the customer
+                if (hidUser.Error == UserErrors.NoError && hidUser.Error == UserErrors.PreconditionFailed) {
+                    // trigger events on success
+                    _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") { User = user });
+                }
             } else {
                 foreach (var pn in partNumbers) {
                     hidUser = hidUser.IssueCredential(pn);
@@ -51,7 +56,7 @@ namespace Laser.Orchard.HID.Services {
                                 //assigned already, which is fine
                     }
                     // trigger events on success
-                    _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, pn));
+                    _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") { User = user });
                 }
             }
             return hidUser;
@@ -67,8 +72,13 @@ namespace Laser.Orchard.HID.Services {
         }
 
         public HIDUser RevokeCredentials(HIDUser hidUser, string[] partNumbers) {
+            var user = UserFromEmail(hidUser.Emails.FirstOrDefault());
             if (partNumbers.Length == 0) {
                 hidUser = hidUser.RevokeCredential();
+                if (hidUser.Error == UserErrors.NoError && hidUser.Error == UserErrors.PreconditionFailed) {
+                    // trigger events on success
+                    _HIDEventHandlers.HIDCredentialRevoked(new HIDCredentialEventContext(hidUser, "") { User = user });
+                }
             } else {
                 foreach (var pn in partNumbers) {
                     hidUser = hidUser.RevokeCredential(pn);
@@ -77,7 +87,7 @@ namespace Laser.Orchard.HID.Services {
                         //revoked right now
                     }
                     // trigger events on success
-                    _HIDEventHandlers.HIDCredentialRevoked(new HIDCredentialEventContext(hidUser, pn));
+                    _HIDEventHandlers.HIDCredentialRevoked(new HIDCredentialEventContext(hidUser, "") { User = user });
                 }
             }
             return hidUser;
@@ -107,13 +117,13 @@ namespace Laser.Orchard.HID.Services {
                         var issueUser = ua.Value.IssueList.Any()
                             ? IssueCredentials(searchResult.User, ua.Value.IssueList.ToArray())
                             : null;
-                        if (issueUser!=null && (issueUser.Error != UserErrors.NoError && issueUser.Error != UserErrors.PreconditionFailed)) {
+                        if (issueUser != null && (issueUser.Error != UserErrors.NoError && issueUser.Error != UserErrors.PreconditionFailed)) {
                             context.AddError(user, issueUser.Error);
                         }
                         var revokeUser = ua.Value.RevokeList.Any()
                             ? RevokeCredentials(searchResult.User, ua.Value.RevokeList.ToArray())
                             : null;
-                        if (revokeUser!= null &&(revokeUser.Error != UserErrors.NoError && revokeUser.Error != UserErrors.PreconditionFailed)) {
+                        if (revokeUser != null && (revokeUser.Error != UserErrors.NoError && revokeUser.Error != UserErrors.PreconditionFailed)) {
                             context.AddError(user, revokeUser.Error);
                         }
                     } else {
@@ -147,5 +157,16 @@ namespace Laser.Orchard.HID.Services {
             }
         }
 
+
+        private IUser UserFromEmail(string email) {
+            if (string.IsNullOrWhiteSpace(email)) {
+                return null;
+            }
+            return _contentManager
+                .Query<UserPart, UserPartRecord>()
+                .Where(u => u.Email == email)
+                .Slice(0, 1)
+                .FirstOrDefault();
+        }
     }
 }

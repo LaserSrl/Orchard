@@ -164,7 +164,7 @@ namespace Laser.Orchard.HID.Services {
             var hidUser = HIDUser.CreateUser(_HIDAdminService, user, familyName, givenName, email);
             if (hidUser.Error == UserErrors.NoError) {
                 // user created correctly: trigger events
-                _HIDEventHandlers.HIDUserCreated(new HIDEventContext(hidUser));
+                _HIDEventHandlers.HIDUserCreated(new HIDEventContext(hidUser) { User = user });
             }
             return hidUser;
         }
