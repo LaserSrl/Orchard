@@ -15,16 +15,16 @@ using Orchard.Core.Common.Models;
 namespace Laser.Orchard.HID.Activities {
     public class IssueCredentialsTask : Task {
 
-        private readonly IHIDAPIService _HIDAPIService;
+        private readonly IHIDCredentialsService _HIDCredentialsService;
         private readonly IContentManager _contentManager;
         private readonly IHIDPartNumbersService _HIDPartNumbersService;
 
         public IssueCredentialsTask(
-            IHIDAPIService hidAPIService,
+            IHIDCredentialsService HIDCredentialsService,
             IContentManager contentManager,
             IHIDPartNumbersService HIDPartNumbersService) {
 
-            _HIDAPIService = hidAPIService;
+            _HIDCredentialsService = HIDCredentialsService;
             _contentManager = contentManager;
             _HIDPartNumbersService = HIDPartNumbersService;
         }
@@ -97,7 +97,7 @@ namespace Laser.Orchard.HID.Activities {
             }
             
             // Issue and handle response
-            var hidUser = _HIDAPIService.IssueCredentials(user, partNumbers);
+            var hidUser = _HIDCredentialsService.IssueCredentials(user, partNumbers);
             switch (hidUser.Error) {
                 case UserErrors.NoError:
                     yield return T("OK");

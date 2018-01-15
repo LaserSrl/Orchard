@@ -1,6 +1,9 @@
 ﻿using Laser.Orchard.HID.Models;
+using Laser.Orchard.HID.Services;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
+using Orchard.Users.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,38 +12,31 @@ using System.Web;
 namespace Laser.Orchard.HID.Handlers {
     public class PartNumberSetsUserPartHandler : ContentHandler {
 
+        private readonly IHIDPartNumbersService _HIDPartNumbersService;
+        private readonly IHIDCredentialsService _HIDCredentialsService;
+
         public PartNumberSetsUserPartHandler(
-            IRepository<PartNumberSetsUserPartRecord> repository) {
+            IRepository<PartNumberSetsUserPartRecord> repository,
+            IHIDPartNumbersService HIDPartNumbersService,
+            IHIDCredentialsService HIDCredentialsService) {
+
+            _HIDPartNumbersService = HIDPartNumbersService;
+            _HIDCredentialsService = HIDCredentialsService;
 
             Filters.Add(StorageFilter.For(repository));
 
             // sneakily attach the part to users
             Filters.Add(new ActivatingFilter<PartNumberSetsUserPart>("User"));
 
-            // LazyField loader
-            //OnLoading<PartNumberSetsUserPart>((ctx, part) => LazyLoadHandlers(part));
-            //OnVersioning<PartNumberSetsUserPart>((context, part, newVersionPart) => LazyLoadHandlers(newVersionPart));
-            OnUpdating<PartNumberSetsUserPart>(MyMethod1);
-            OnUpdated<PartNumberSetsUserPart>(MyMethod1);
+            // When a user is deleted, revoke all its credentials
+            OnRemoving<PartNumberSetsUserPart>(RevokeAllCredentials);
         }
 
-        public void MyMethod1(UpdateContentContext context, PartNumberSetsUserPart part) {
-
-            var a = 7;
-            for (int i = 0; i < a; i++) {
-
+        public void RevokeAllCredentials(RemoveContentContext context, PartNumberSetsUserPart part) {
+            var user = part.As<UserPart>();
+            if (user != null) {
+                _HIDCredentialsService.RevokeCredentials(user, _HIDPartNumbersService.GetPartNumbersForUser(user));
             }
         }
-
-        //void LazyLoadHandlers(PartNumberSetsUserPart part) {
-
-        //    part.PartNumberSetsField.Loader(() => {
-        //        if (part.Record.PartNumberSetsJR != null && part.Record.PartNumberSetsJR.Any()) {
-        //            return part.Record.PartNumberSetsJR.Select(jr => jr.HIDPartNumberSet);
-        //        }
-        //        return Enumerable.Empty<HIDPartNumberSet>();
-        //    });
-        //}
-
     }
 }

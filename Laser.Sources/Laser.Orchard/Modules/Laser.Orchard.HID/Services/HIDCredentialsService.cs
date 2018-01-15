@@ -12,6 +12,7 @@ using System.Text;
 using Laser.Orchard.HID.Extensions;
 using Orchard.Tasks.Scheduling;
 using Orchard.Data;
+using Laser.Orchard.HID.Events;
 
 namespace Laser.Orchard.HID.Services {
     public class HIDCredentialsService : IHIDCredentialsService {
@@ -20,17 +21,20 @@ namespace Laser.Orchard.HID.Services {
         private readonly IContentManager _contentManager;
         private readonly IScheduledTaskManager _taskManager;
         private readonly IRepository<BulkCredentialsOperationsRecord> _credentialsOperationsRepository;
+        private readonly IHIDEventHandler _HIDEventHandlers;
 
         public HIDCredentialsService(
             IHIDSearchUserService HIDSearchUserService,
             IContentManager contentManager,
             IScheduledTaskManager taskManager,
-            IRepository<BulkCredentialsOperationsRecord> credentialsOperationsrepository) {
+            IRepository<BulkCredentialsOperationsRecord> credentialsOperationsrepository,
+            IHIDEventHandler HIDEventHandlers) {
 
             _HIDSearchUserService = HIDSearchUserService;
             _contentManager = contentManager;
             _taskManager = taskManager;
             _credentialsOperationsRepository = credentialsOperationsrepository;
+            _HIDEventHandlers = HIDEventHandlers;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -47,8 +51,10 @@ namespace Laser.Orchard.HID.Services {
                     hidUser = hidUser.IssueCredential(pn);
                     if (hidUser.Error != UserErrors.NoError && hidUser.Error != UserErrors.PreconditionFailed) {
                         break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential having been
-                        //assigned already, which is fine
+                                //assigned already, which is fine
                     }
+                    // trigger events on success
+                    _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, pn));
                 }
             }
             return hidUser;
@@ -73,6 +79,8 @@ namespace Laser.Orchard.HID.Services {
                         break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential being
                         //revoked right now
                     }
+                    // trigger events on success
+                    _HIDEventHandlers.HIDCredentialRevoked(new HIDCredentialEventContext(hidUser, pn));
                 }
             }
             return hidUser;

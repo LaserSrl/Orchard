@@ -14,7 +14,7 @@ using Orchard.Security;
 using Orchard.Logging;
 using Orchard.Data;
 using Laser.Orchard.HID.ViewModels;
-
+using Laser.Orchard.HID.Events;
 
 namespace Laser.Orchard.HID.Services {
     public class HIDService : IHIDAPIService {
@@ -26,6 +26,7 @@ namespace Laser.Orchard.HID.Services {
         private readonly IHIDAdminService _HIDAdminService;
         private readonly IHIDCredentialsService _HIDCredentialsService;
         private readonly IHIDSearchUserService _HIDSearchUserService;
+        private readonly IHIDEventHandler _HIDEventHandlers;
 
         public ILogger Logger { get; set; }
 
@@ -36,7 +37,8 @@ namespace Laser.Orchard.HID.Services {
             IHIDPartNumbersService HIDPartNumbersService,
             IHIDAdminService HIDAdminService,
             IHIDCredentialsService HIDCredentialsService,
-            IHIDSearchUserService HIDSearchUserService) {
+            IHIDSearchUserService HIDSearchUserService,
+            IHIDEventHandler HIDEventHandlers) {
 
             _orchardServices = orchardServices;
             _cacheStorageProvider = cacheStorageProvider;
@@ -45,6 +47,7 @@ namespace Laser.Orchard.HID.Services {
             _HIDAdminService = HIDAdminService;
             _HIDCredentialsService = HIDCredentialsService;
             _HIDSearchUserService = HIDSearchUserService;
+            _HIDEventHandlers = HIDEventHandlers;
 
             Logger = NullLogger.Instance;
         }
@@ -161,7 +164,12 @@ namespace Laser.Orchard.HID.Services {
             if (string.IsNullOrWhiteSpace(email)) {
                 email = user.Email;
             }
-            return HIDUser.CreateUser(_HIDAdminService, user, familyName, givenName, email);
+            var hidUser = HIDUser.CreateUser(_HIDAdminService, user, familyName, givenName, email);
+            if (hidUser.Error == UserErrors.NoError) {
+                // user created correctly: trigger events
+                _HIDEventHandlers.HIDUserCreated(new HIDEventContext(hidUser));
+            }
+            return hidUser;
         }
 
         public HIDUser IssueCredentials(IUser user) {

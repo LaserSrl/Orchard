@@ -15,16 +15,16 @@ using System.Web;
 namespace Laser.Orchard.HID.Activities {
     public class RevokeCredentialsTask : Task {
 
-        private readonly IHIDAPIService _HIDAPIService;
+        private readonly IHIDCredentialsService _HIDCredentialsService;
         private readonly IContentManager _contentManager;
         private readonly IHIDPartNumbersService _HIDPartNumbersService;
 
         public RevokeCredentialsTask(
-            IHIDAPIService hidAPIService,
+            IHIDCredentialsService HIDCredentialsService,
             IContentManager contentManager,
             IHIDPartNumbersService HIDPartNumbersService) {
 
-            _HIDAPIService = hidAPIService;
+            _HIDCredentialsService = HIDCredentialsService;
             _contentManager = contentManager;
             _HIDPartNumbersService = HIDPartNumbersService;
         }
@@ -96,7 +96,7 @@ namespace Laser.Orchard.HID.Activities {
             }
 
             // Revoke and handle response
-            var hidUser = _HIDAPIService.RevokeCredentials(user, partNumbers);
+            var hidUser = _HIDCredentialsService.RevokeCredentials(user, partNumbers);
             switch (hidUser.Error) {
                 case UserErrors.NoError:
                     // In this case, we need to ensure that no CredentialContainer has errors

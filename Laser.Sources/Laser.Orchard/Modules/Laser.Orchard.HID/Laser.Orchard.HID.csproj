@@ -139,6 +139,7 @@
   <ItemGroup>
     <Compile Include="Activities\CreateHIDUserForm.cs" />
     <Compile Include="Activities\CreateHIDUserTask.cs" />
+    <Compile Include="Activities\HIDEventActivity.cs" />
     <Compile Include="Activities\IssueCredentialsForm.cs" />
     <Compile Include="Activities\IssueCredentialsTask.cs" />
     <Compile Include="Activities\RevokeCredentialsForm.cs" />
@@ -148,10 +149,14 @@
     <Compile Include="Controllers\HIDAPIController.cs" />
     <Compile Include="Drivers\PartNumberSetsUserPartDriver.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Events\HIDCredentialEventContext.cs" />
+    <Compile Include="Events\HIDEventContext.cs" />
+    <Compile Include="Events\IHIDEventHandler.cs" />
     <Compile Include="Extensions\Constants.cs" />
     <Compile Include="Extensions\Helpers.cs" />
     <Compile Include="Handlers\BulkCredentialOperationsTaskHandler.cs" />
     <Compile Include="Handlers\HIDSettingsPartHandler.cs" />
+    <Compile Include="Handlers\HIDWorkflowEventHandler.cs" />
     <Compile Include="Handlers\PartNumberSetsUserPartHandler.cs" />
     <Compile Include="HIDRoutes.cs" />
     <Compile Include="Migrations\HIDMigration.cs" />
