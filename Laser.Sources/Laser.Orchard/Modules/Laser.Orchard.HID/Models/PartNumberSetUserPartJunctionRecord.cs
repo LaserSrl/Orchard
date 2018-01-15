@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Laser.Orchard.HID.Models {
+﻿namespace Laser.Orchard.HID.Models {
     /// <summary>
     /// This class represents records in a junction table to implement a many-to-many relationship
     /// between users and their selected part number sets.

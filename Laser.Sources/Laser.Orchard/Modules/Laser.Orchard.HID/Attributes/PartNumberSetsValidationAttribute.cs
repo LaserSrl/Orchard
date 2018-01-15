@@ -1,12 +1,9 @@
-﻿
-using Laser.Orchard.HID.Models;
-using Laser.Orchard.HID.ViewModels;
+﻿using Laser.Orchard.HID.ViewModels;
 using Orchard.Localization;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web;
 
 namespace Laser.Orchard.HID.Attributes {
     /// <summary>

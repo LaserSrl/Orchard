@@ -1,10 +1,5 @@
-﻿using Laser.Orchard.HID.Extensions;
-using Orchard.Data.Conventions;
-using System;
+﻿using Orchard.Data.Conventions;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web;
 
 namespace Laser.Orchard.HID.Models {
     /// <summary>

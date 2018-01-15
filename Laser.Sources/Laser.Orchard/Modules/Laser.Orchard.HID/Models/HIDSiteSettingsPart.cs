@@ -1,12 +1,8 @@
-﻿using Laser.Orchard.HID.Attributes;
-using Laser.Orchard.HID.Extensions;
+﻿using Laser.Orchard.HID.Extensions;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Utilities;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web.Script.Serialization;
 
 namespace Laser.Orchard.HID.Models {
     public class HIDSiteSettingsPart : ContentPart {

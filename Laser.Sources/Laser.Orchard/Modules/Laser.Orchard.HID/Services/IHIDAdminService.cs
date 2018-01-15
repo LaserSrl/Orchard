@@ -1,5 +1,4 @@
-﻿using Laser.Orchard.HID.Models;
-using Laser.Orchard.HID.ViewModels;
+﻿using Laser.Orchard.HID.ViewModels;
 using Orchard;
 
 namespace Laser.Orchard.HID.Services {

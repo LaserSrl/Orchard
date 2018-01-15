@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Laser.Orchard.HID.Models;
-using Orchard.Security;
-using Orchard.ContentManagement;
-using Orchard.Users.Models;
-using Orchard.Logging;
-using Orchard.Localization;
-using System.Text;
+﻿using Laser.Orchard.HID.Events;
 using Laser.Orchard.HID.Extensions;
-using Orchard.Tasks.Scheduling;
+using Laser.Orchard.HID.Models;
+using Orchard.ContentManagement;
 using Orchard.Data;
-using Laser.Orchard.HID.Events;
+using Orchard.Localization;
+using Orchard.Logging;
+using Orchard.Security;
+using Orchard.Tasks.Scheduling;
+using Orchard.Users.Models;
+using System;
+using System.Linq;
 
 namespace Laser.Orchard.HID.Services {
     public class HIDCredentialsService : IHIDCredentialsService {

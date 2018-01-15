@@ -1,9 +1,6 @@
 ﻿using Laser.Orchard.HID.Events;
 using Orchard.Workflows.Services;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Laser.Orchard.HID.Handlers {
     public class HIDWorkflowEventHandler : IHIDEventHandler {

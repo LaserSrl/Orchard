@@ -7,9 +7,7 @@ using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace Laser.Orchard.HID.Services {
     public class HIDAdminService : IHIDAdminService {

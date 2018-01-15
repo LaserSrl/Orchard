@@ -1,9 +1,4 @@
 ﻿using Orchard.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Laser.Orchard.HID.Events {
     public interface IHIDEventHandler : IEventHandler {

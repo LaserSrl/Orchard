@@ -3,9 +3,6 @@ using Orchard.DisplayManagement;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Laser.Orchard.HID.Activities {
     public class IssueCredentialsForm : IFormProvider {

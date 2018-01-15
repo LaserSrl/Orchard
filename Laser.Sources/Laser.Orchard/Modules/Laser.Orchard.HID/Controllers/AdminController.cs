@@ -1,7 +1,5 @@
-﻿using Laser.Orchard.HID.Models;
-using Laser.Orchard.HID.Services;
+﻿using Laser.Orchard.HID.Services;
 using Orchard;
-using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Admin;
@@ -14,19 +12,16 @@ namespace Laser.Orchard.HID.Controllers {
 
         private readonly IOrchardServices _orchardServices;
         private readonly IHIDAdminService _HIDAdminService;
-        private readonly IHIDAPIService _HIDAPIService;
         private readonly IHIDPartNumbersService _HIDPartNumbersService;
 
         public Localizer T { get; set; }
 
         public AdminController(IOrchardServices orchardServices,
             IHIDAdminService HIDAdminService,
-            IHIDAPIService hIDAPISerivce,
             IHIDPartNumbersService HIDPartNumbersService) {
 
             _orchardServices = orchardServices;
             _HIDAdminService = HIDAdminService;
-            _HIDAPIService = hIDAPISerivce;
             _HIDPartNumbersService = HIDPartNumbersService;
 
             T = NullLocalizer.Instance;

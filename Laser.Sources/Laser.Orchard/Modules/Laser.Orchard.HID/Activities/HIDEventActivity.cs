@@ -1,10 +1,7 @@
 ﻿using Orchard.Localization;
-using Orchard.Workflows.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Orchard.Workflows.Models;
+using Orchard.Workflows.Services;
+using System.Collections.Generic;
 
 namespace Laser.Orchard.HID.Activities {
     public abstract class HIDEventActivity : Event {

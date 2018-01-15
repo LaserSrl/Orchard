@@ -1,8 +1,4 @@
 ﻿using Orchard.Data.Migration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Laser.Orchard.HID.Migrations {
     public class HIDMigration : DataMigrationImpl {

@@ -1,16 +1,12 @@
 ﻿using Laser.Orchard.HID.Models;
-using Orchard.ContentManagement.Drivers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Runtime.CompilerServices;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
 using Laser.Orchard.HID.Services;
 using Laser.Orchard.HID.ViewModels;
-using Orchard.UI.Notify;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
+using Orchard.UI.Notify;
+using System.Linq;
 
 namespace Laser.Orchard.HID.Drivers {
     public class PartNumberSetsUserPartDriver : ContentPartDriver<PartNumberSetsUserPart> {

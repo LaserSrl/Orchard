@@ -6,7 +6,6 @@ using Orchard;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Security;
-using System;
 using System.Web.Http;
 
 namespace Laser.Orchard.HID.Controllers {

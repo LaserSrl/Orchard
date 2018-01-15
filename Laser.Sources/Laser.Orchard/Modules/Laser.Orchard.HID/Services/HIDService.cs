@@ -1,20 +1,17 @@
-﻿using Laser.Orchard.HID.Models;
+﻿using Laser.Orchard.HID.Events;
 using Laser.Orchard.HID.Extensions;
+using Laser.Orchard.HID.Models;
+using Newtonsoft.Json.Linq;
 using Orchard;
-using Orchard.ContentManagement;
+using Orchard.Caching.Services;
+using Orchard.Environment.Configuration;
+using Orchard.Logging;
+using Orchard.Security;
 using System;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using Newtonsoft.Json.Linq;
-using Orchard.Caching.Services;
-using Orchard.Environment.Configuration;
-using Orchard.Security;
-using Orchard.Logging;
-using Orchard.Data;
-using Laser.Orchard.HID.ViewModels;
-using Laser.Orchard.HID.Events;
 
 namespace Laser.Orchard.HID.Services {
     public class HIDService : IHIDAPIService {

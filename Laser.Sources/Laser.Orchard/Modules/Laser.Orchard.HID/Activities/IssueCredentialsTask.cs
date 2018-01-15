@@ -1,16 +1,15 @@
-﻿using Orchard.Workflows.Services;
+﻿using Laser.Orchard.HID.Extensions;
+using Laser.Orchard.HID.Services;
+using Orchard.ContentManagement;
+using Orchard.Core.Common.Models;
+using Orchard.Localization;
+using Orchard.Security;
+using Orchard.Users.Models;
+using Orchard.Workflows.Models;
+using Orchard.Workflows.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using Orchard.Localization;
-using Orchard.Workflows.Models;
-using Laser.Orchard.HID.Services;
-using Orchard.ContentManagement;
-using Laser.Orchard.HID.Extensions;
-using Orchard.Security;
-using Orchard.Users.Models;
-using Orchard.Core.Common.Models;
 
 namespace Laser.Orchard.HID.Activities {
     public class IssueCredentialsTask : Task {

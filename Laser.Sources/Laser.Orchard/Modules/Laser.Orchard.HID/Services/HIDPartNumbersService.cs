@@ -1,15 +1,14 @@
-﻿using Laser.Orchard.HID.Models;
+﻿using Laser.Orchard.HID.Extensions;
+using Laser.Orchard.HID.Models;
+using Laser.Orchard.HID.ViewModels;
+using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Localization;
+using Orchard.Security;
+using Orchard.Users.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using Orchard.Security;
-using Laser.Orchard.HID.ViewModels;
-using Orchard.ContentManagement;
-using Orchard.Users.Models;
-using Laser.Orchard.HID.Extensions;
 using System.Net;
 
 namespace Laser.Orchard.HID.Services {

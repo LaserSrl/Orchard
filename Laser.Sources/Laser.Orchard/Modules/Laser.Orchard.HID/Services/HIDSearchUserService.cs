@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Laser.Orchard.HID.Extensions;
 using Laser.Orchard.HID.Models;
-using System.Net;
-using Laser.Orchard.HID.Extensions;
-using System.Text;
-using System.IO;
 using Newtonsoft.Json.Linq;
 using Orchard.Logging;
+using System;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
 
 namespace Laser.Orchard.HID.Services {
     public class HIDSearchUserService : IHIDSearchUserService {
