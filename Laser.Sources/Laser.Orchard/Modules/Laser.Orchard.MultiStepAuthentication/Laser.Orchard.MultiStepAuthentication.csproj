@@ -69,6 +69,10 @@
     <Reference Include="Orchard.Framework">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Localization, Version=1.10.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Localization\bin\Orchard.Localization.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Users">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
     </Reference>
@@ -111,10 +115,13 @@
     <Compile Include="Controllers\NonceLoginApiController.cs" />
     <Compile Include="DataContracts\NonceLoginMessage.cs" />
     <Compile Include="Drivers\NonceLoginSettingsPartDriver.cs" />
+    <Compile Include="Drivers\NonceTemplateSettingsPartDriver.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Handlers\NonceLoginSettingsPartHandler.cs" />
+    <Compile Include="Handlers\NonceTemplateSettingsPartHandler.cs" />
     <Compile Include="Migrations\MultiStepAuthenticationMigrations.cs" />
     <Compile Include="Models\NonceLoginSettingsPart.cs" />
+    <Compile Include="Models\NonceTemplateSettingsPart.cs" />
     <Compile Include="Models\OTPRecord.cs" />
     <Compile Include="Navigation\MultiStepAuthenticationNavigation.cs" />
     <Compile Include="Permissions\MultiStepAuthenticationPermissions.cs" />
@@ -151,6 +158,10 @@
     <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
       <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>
       <Name>Laser.Orchard.StartupConfig</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.TemplateManagement\Laser.Orchard.TemplateManagement.csproj">
+      <Project>{CA85F4F3-216C-4EAB-BFBC-4044EE307CD7}</Project>
+      <Name>Laser.Orchard.TemplateManagement</Name>
     </ProjectReference>
     <ProjectReference Include="..\Laser.Orchard.UsersExtensions\Laser.Orchard.UsersExtensions.csproj">
       <Project>{a65d8bc6-6d65-41aa-b409-8faed243f432}</Project>

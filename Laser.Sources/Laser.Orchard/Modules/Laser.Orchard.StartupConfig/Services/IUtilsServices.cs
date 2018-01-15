@@ -67,15 +67,14 @@ namespace Laser.Orchard.StartupConfig.Services {
         /// Get a JObject which contains identity providers informations of the current user.
         /// </summary>
         /// <param name="identityProviders"></param>
-        /// <param name="controllerTempData"></param>
         /// <returns></returns>
-        JObject GetUserIdentityProviders(IEnumerable<IIdentityProvider> identityProviders, TempDataDictionary controllerTempData);
+        JObject GetUserIdentityProviders(IEnumerable<IIdentityProvider> identityProviders);
         /// <summary>
         /// Get a successfull response to a login request with registration data.
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        Response GetUserResponse(String message, IEnumerable<IIdentityProvider> identityProviders, TempDataDictionary controllerTempData);
+        Response GetUserResponse(String message, IEnumerable<IIdentityProvider> identityProviders);
         /// <summary>
         /// Set values on a field in a content part.
         /// </summary>
@@ -236,7 +235,7 @@ namespace Laser.Orchard.StartupConfig.Services {
             result = result.Replace("\b", "\\b");
             return result;
         }
-        public JObject GetUserIdentityProviders(IEnumerable<IIdentityProvider> identityProviders, TempDataDictionary controllerTempData) {
+        public JObject GetUserIdentityProviders(IEnumerable<IIdentityProvider> identityProviders) {
             var registeredServicesData = new JObject();
             if (_orchardServices.WorkContext.CurrentUser != null) {
                 var context = new Dictionary<string, object> { { "Content", _orchardServices.WorkContext.CurrentUser.ContentItem } };
@@ -249,10 +248,10 @@ namespace Laser.Orchard.StartupConfig.Services {
             }
             return registeredServicesData;
         }
-        public Response GetUserResponse(String message, IEnumerable<IIdentityProvider> identityProviders, TempDataDictionary controllerTempData) {
-            var registeredServicesData = GetUserIdentityProviders(identityProviders, controllerTempData);
-            var json = registeredServicesData.ToString();
-            return GetResponse(ResponseType.Success, message, json);
+        public Response GetUserResponse(String message, IEnumerable<IIdentityProvider> identityProviders) {
+            var registeredServicesData = GetUserIdentityProviders(identityProviders);
+            //var json = registeredServicesData.ToString();
+            return GetResponse(ResponseType.Success, message, registeredServicesData);
         }
         /// <summary>
         /// Returns the tenant path

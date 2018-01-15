@@ -43,7 +43,6 @@ namespace Laser.Orchard.UsersExtensions.Services {
     public class UserActionMethods : IUserActionMethods {
         private readonly ICsrfTokenHelper _csrfTokenHelper;
         private readonly IUsersExtensionsServices _usersExtensionsServices;
-        private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IOrchardServices _orchardServices;
         private readonly IUserService _userService;
         private readonly IUtilsServices _utilsServices;
@@ -52,10 +51,9 @@ namespace Laser.Orchard.UsersExtensions.Services {
         public ILogger Log { get; set; }
 
         public UserActionMethods(IOrchardServices orchardServices, ICsrfTokenHelper csrfTokenHelper, IUsersExtensionsServices usersExtensionsServices, IUserService userService,
-            IControllerContextAccessor controllerContextAccessor, IUtilsServices utilsServices, IEnumerable<IIdentityProvider> identityProviders) {
+            IUtilsServices utilsServices, IEnumerable<IIdentityProvider> identityProviders) {
             _csrfTokenHelper = csrfTokenHelper;
             _usersExtensionsServices = usersExtensionsServices;
-            _controllerContextAccessor = controllerContextAccessor;
             _orchardServices = orchardServices;
             _userService = userService;
             _identityProviders = identityProviders;
@@ -76,7 +74,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
             try {
                 _usersExtensionsServices.Register(userRegistrationParams);
 
-                var registeredServicesData = _utilsServices.GetUserIdentityProviders(_identityProviders, _controllerContextAccessor.Context.Controller.TempData);
+                var registeredServicesData = _utilsServices.GetUserIdentityProviders(_identityProviders);
                 var json = registeredServicesData.ToString();
                 result = _utilsServices.GetResponse(ResponseType.Success, data: json);
             } catch (Exception ex) {
@@ -89,7 +87,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
             Response result;
             try {
                 _usersExtensionsServices.SignIn(login);
-                var registeredServicesData = _utilsServices.GetUserIdentityProviders(_identityProviders, _controllerContextAccessor.Context.Controller.TempData);
+                var registeredServicesData = _utilsServices.GetUserIdentityProviders(_identityProviders);
                 var json = registeredServicesData.ToString();
                 result = _utilsServices.GetResponse(ResponseType.Success, "", json);
             } catch (Exception ex) {
