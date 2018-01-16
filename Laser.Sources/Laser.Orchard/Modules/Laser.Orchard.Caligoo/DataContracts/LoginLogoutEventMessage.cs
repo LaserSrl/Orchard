@@ -10,6 +10,8 @@ namespace Laser.Orchard.Caligoo.DataContracts {
         public bool New { get; set; }
         [DataMember(Name = "user_id")]
         public string CaligooUserId { get; set; }
+        [DataMember(Name = "username")]
+        public string CaligooUserName { get; set; }
         [DataMember(Name = "location_id")]
         public string CaligooLocationId { get; set; }
         [DataMember(Name = "start_timestamp")]
