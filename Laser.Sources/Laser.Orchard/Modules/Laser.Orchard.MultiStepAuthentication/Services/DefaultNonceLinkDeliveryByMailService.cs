@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using Laser.Orchard.MultiStepAuthentication.Models;
-using Orchard.Security;
 using Orchard;
-using Orchard.Localization;
-using Orchard.Messaging.Services;
 using Orchard.Email.Services;
 using Orchard.Environment.Extensions;
+using Orchard.Localization;
+using Orchard.Messaging.Services;
+using Orchard.Security;
 
 namespace Laser.Orchard.MultiStepAuthentication.Services {
     [OrchardFeature("Laser.Orchard.NonceLogin")]
@@ -26,7 +23,6 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
             _workContextAccessor = workContextAccessor;
             _nonceLinkProvider = nonceLinkProvider;
             _messageService = messageService;
-
             T = NullLocalizer.Instance;
         }
 
@@ -38,30 +34,28 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
         }
 
         public int Priority {
-            get { return 0; }
+            get { return (int)PriorityDelivery.Defaultmail; }
             set { }
         }
 
         public bool TrySendOTP(OTPRecord otp, IUser user) {
-            if (otp == null // paarmeter validation
+            return TrySendOTP(otp, user, null);
+        }
+
+        public bool TrySendOTP(OTPRecord otp, IUser user, FlowType? flow) {
+            if (otp == null // parameter validation
                 || user == null
                 || otp.UserRecord.UserName != user.UserName) {
                 return false;
             }
-
             var currentSite = _workContextAccessor.GetContext().CurrentSite;
             var data = new Dictionary<string, object>();
-
-            // get link
-            var link = _nonceLinkProvider.FormatURI(otp.Password);
-            // fill in email dictionary
+            //// get link
+            var link = _nonceLinkProvider.FormatURI(otp.Password, flow);
             data.Add("Subject", T("{0} - Login", currentSite.SiteName).Text);
             data.Add("Body", T("<html><body>To login on \"{0}\", please open the following link: <a href=\"{1}\">Login</a></body></html>", currentSite.SiteName, link).Text);
             data.Add("Recipients", user.Email);
-
-            //send email
             _messageService.Send(SmtpMessageChannel.MessageType, data);
-
             return true;
         }
     }
