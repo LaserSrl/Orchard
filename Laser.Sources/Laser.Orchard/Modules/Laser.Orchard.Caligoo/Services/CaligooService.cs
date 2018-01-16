@@ -117,9 +117,9 @@ namespace Laser.Orchard.Caligoo.Services {
             }
         }
         public UserMessage GetUserDetails(string caligooUserName) {
-            var url = _caligooSettings.UsersPath;
-            url = url.TrimEnd('/') + "/" + caligooUserName;
-            var response = ResultFromCaligooApiGet(url);
+            var resource = _caligooSettings.UsersPath;
+            resource = resource.TrimEnd('/') + "/" + caligooUserName;
+            var response = ResultFromCaligooApiGet(resource);
             if (response.Success) {
                 var jUsers = JObject.Parse(response.Body);
                 var user = jUsers.ToObject<UserMessage>();
