@@ -118,6 +118,7 @@
     <None Include="Sites\MyVEC\Code\UpdateQuestionnaireContext.cshtml" />
     <None Include="Sites\MyVEC\Code\UscitaDaStore.cshtml" />
     <None Include="Sites\MyVEC\Code\ValidazioneSalesAssistantsPerNegozio.cshtml" />
+    <None Include="Sites\MyVEC\Code\WebTracking.cshtml" />
     <None Include="Sites\MyVEC\Mobile\devVec.p12" />
     <None Include="Sites\MyVEC\Mobile\prodVec.p12" />
     <None Include="Sites\Quincinetto\Mobile\dev._3_2017.p12" />
