@@ -8,7 +8,7 @@ namespace Laser.Orchard.Caligoo.DataContracts {
         public string CaligooUserId { get; set; }
         [DataMember(Name = "username")]
         public string CaligooUserName { get; set; }
-        [DataMember(Name = "additional_info")]
-        public List<KeyValuePair<string, object>> AdditionalInfo { get; set; }
+        [DataMember(Name = "additionalInfo")]
+        public List<KeyValueMessage> AdditionalInfo { get; set; }
     }
 }
