@@ -1,4 +1,5 @@
 ﻿using Orchard.ContentManagement;
+using Orchard.Environment.Extensions;
 using Orchard.Workflows.Services;
 using System.Collections.Generic;
 using System.IO;
@@ -8,6 +9,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.TemplateManagement.Controllers {
+    [OrchardFeature("Laser.Orchard.WebTracking")]
     public class WebTrackingApiController : ApiController {
         private readonly IContentManager _contentManager;
         private readonly IWorkflowManager _workflowManager;

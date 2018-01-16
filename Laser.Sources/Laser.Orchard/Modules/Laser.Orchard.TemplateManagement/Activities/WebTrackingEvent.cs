@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using Orchard.Localization;
 using Orchard.Workflows.Models;
-using Newtonsoft.Json.Linq;
+using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.TemplateManagement.Activities {
+    [OrchardFeature("Laser.Orchard.WebTracking")]
     public class WebTrackingEvent : Event {
         public Localizer T { get; set; }
         public WebTrackingEvent() {
