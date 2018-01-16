@@ -13,9 +13,7 @@ namespace Laser.Orchard.MultiStepAuthentication.Handlers {
     public class NonceLoginSettingsPartHandler : ContentHandler {
 
         public NonceLoginSettingsPartHandler() {
-            Filters.Add(new ActivatingFilter<NonceLoginSettingsPart>("Site"));
-            
+            Filters.Add(new ActivatingFilter<NonceLoginSettingsPart>("Site"));          
         }
-
     }
 }

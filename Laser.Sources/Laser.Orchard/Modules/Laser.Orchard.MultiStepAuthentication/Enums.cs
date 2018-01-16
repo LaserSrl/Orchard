@@ -18,4 +18,6 @@ namespace Laser.Orchard.MultiStepAuthentication {
     /// Types of ux to use  
     /// </summary>
     public enum FlowType { App , Website}
+
+    public enum PriorityDelivery {Defaultmail=0, TempleteEmail = 1 }
 }
