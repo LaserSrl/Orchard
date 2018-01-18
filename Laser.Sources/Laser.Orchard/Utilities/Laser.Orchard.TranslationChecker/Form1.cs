@@ -26,7 +26,7 @@ namespace Laser.Orchard.TranslationChecker {
         const string NAMESPACE_REGEX = @"namespace\s+([^{\r\:\s]+)";
         const string CLASSNAME_REGEX = @"\s+class\s+([^{\r\:\s]+)";
         const string PO_REGEX = @"msgctxt\s+{0}[\r|\n]+msgid\s+{1}";
-        const string PO_SUBSTRINGS_REGEX = @"[\\\.\(\[\)\]\{\}\*\?\!\<\>]{1}"; // these chars will be escaped in the match regex \.()[]{}*?!<>
+        const string PO_SUBSTRINGS_REGEX = @"[\\\.\(\[\)\]\{\}\*\?\!\<\>\/]{1}"; // these chars will be escaped in the match regex \.()[]{}*?!<>/
 
         private string _folder, _baseFolderModules, _baseFolderThemes;
         private string[] _modulesFolders, _themesFolders;
@@ -221,12 +221,14 @@ namespace Laser.Orchard.TranslationChecker {
                     if (!httpResult.Result.IsSuccessStatusCode) {
                         this.txtLogOperations.AppendText(String.Concat("Error: ", httpResult.Result.ReasonPhrase, "\r\n"));
                         result = false;
-                    }
-                    var t = httpResult.Result.Content.ReadAsStringAsync();
-                    t.Wait();
-                    if (t.Result.ToLowerInvariant() != "true") {
-                        this.txtLogOperations.AppendText(String.Concat("An error occurred on Traslation server: please see log file.\r\n"));
-                        result = false;
+                    } else {
+                        var t = httpResult.Result.Content.ReadAsStringAsync();
+                        t.Wait();
+                        if (t.Result.ToLowerInvariant() != "true") {
+                            // il server ha risposto con 200 ma il contenuto indica un errore
+                            this.txtLogOperations.AppendText(String.Concat("An error occurred on Traslation server: please see log file.\r\n"));
+                            result = false;
+                        }
                     }
                 }
             } catch (HttpRequestException e) {
