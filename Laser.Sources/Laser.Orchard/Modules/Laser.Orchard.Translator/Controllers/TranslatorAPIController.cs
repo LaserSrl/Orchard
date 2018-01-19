@@ -48,8 +48,14 @@ namespace Laser.Orchard.Translator.Controllers
                                                                                               && r.Context == record.Context
                                                                                               && r.Message == record.Message
                                                                                               && r.Language == record.Language);
-
-                    if (!alreadyExistingRecords.Any())
+                    var tryAddOrUpdateTranslation = true;
+                    if (alreadyExistingRecords.Any()) {
+                        // verifica maiuscole/minuscole del message
+                        if(record.Message.Equals(alreadyExistingRecords.First().Message, StringComparison.InvariantCulture)) {
+                            tryAddOrUpdateTranslation = false;
+                        }
+                    }
+                    if (tryAddOrUpdateTranslation)
                     {
                         bool success = _translatorServices.TryAddOrUpdateTranslation(record);
                         if (!success)

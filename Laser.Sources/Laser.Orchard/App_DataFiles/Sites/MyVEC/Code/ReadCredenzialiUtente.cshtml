@@ -41,8 +41,10 @@
         wfContext.SetState("Password", pwd);
         // calculate custom template id relaying on the fact that this workflow contains only one activity of type SendTemplatedEmail
         var customTemplateId = "";
-        var activity = wfContext.Record.WorkflowDefinitionRecord.ActivityRecords.FirstOrDefault(x => x.Name == "SendTemplatedEmail");
-        if(activity != null) {
+        var activity = wfContext.Record.WorkflowDefinitionRecord.ActivityRecords.FirstOrDefault(x => x.Name == "SendTemplatedEmail"
+            && x.State.Contains("\"RecipientOther\":\"{Content.CreatorEmail}\"")
+            && x.State.Contains("\"Recipient\":\"other\""));
+        if (activity != null) {
             var state = JObject.Parse(activity.State);
             var templateId = Convert.ToInt32(state["EmailTemplate"]);
             var templateCi = _contentManager.Get(templateId);

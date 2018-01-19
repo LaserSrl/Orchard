@@ -4,7 +4,9 @@
 @using Orchard.Projections.Models;
 @using Orchard.Projections.Services;
 @using Orchard.Data;
+@using Orchard.Localization.Services;
 @using System.Linq;
+@using Newtonsoft.Json.Linq;
 @using Orchard.Security;
 @using Orchard.ContentManagement;
 @using Laser.Orchard.StartupConfig.Handlers;
@@ -12,23 +14,23 @@
 @using Laser.Orchard.CommunicationGateway.Services;
 
 @functions{
+    string retString = "Error"; //possible outcomes: "Error","Ok"
     IContentManager _contentManager;
     IMembershipService _membershipService;
-  //  IContactRelatedEventHandler _contactEventHandler;
-    string retString = "Error"; //possible outcomes: "Error","Ok"
+    ILocalizationService _localizationService = null;
     dynamic invito = null;
     dynamic prenotazione = null;
     Orchard.Workflows.Models.WorkflowContext wfCtx = null;
 }
 @{
     try {
-
         wfCtx = Model.Tokens["Workflow"];
         invito = Model.ContentItem;
+        // resolve services
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
-        //      _contactEventHandler = Model.OrchardServices.WorkContext.Resolve<IContactRelatedEventHandler>();
         _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
         ICommunicationService _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
+        _localizationService = Model.OrchardServices.WorkContext.Resolve<ILocalizationService>();
 
         int iduser = (int)invito.CommonPart.Creator.Value;
         dynamic RelatedUser = _contentManager.Get(iduser);
@@ -41,7 +43,6 @@
                 dUser.ProfilePart.ReservedParking.Ids = val;
                 dUser.VersionRecord.Published = false;
                 _contentManager.Publish(dUser);
-                // _contactEventHandler.Publish(dUser);
                 _communicationService.UserToContact((IUser)dUser.UserPart);
 
             }
@@ -50,7 +51,6 @@
             if (!(((int[])(dUser.User.ProfilePart.ReservedParking.Ids)).Contains((int)invito.Id)) ){
                 int[] val = ((int[])(dUser.ProfilePart.ReservedParking.Ids)).Concat(new int[] { (int)invito.Id }).ToArray();
                 dUser.ProfilePart.ReservedParking.Ids = val;
-                // _contactEventHandler.Publish(dUser);
                 dUser.VersionRecord.Published = false;
                 _contentManager.Publish(dUser);
                 _communicationService.UserToContact((IUser)dUser.UserPart);
@@ -82,11 +82,18 @@
         wfCtx.SetState("CodPrenotazioneParcheggio", prenotazione.Prenotazioneparcheggio.IDPrenotazione.Value);
         // calcola il template da usare per l'email al customer
         var idVisita = invito.SchedaInvito.Visita.Ids[0];
-        dynamic relatedVisita = _contentManager.Get(idVisita);
+        dynamic visita = _contentManager.Get(idVisita);
         var customTemplateId = "";
-        if(relatedVisita.LocalizationPart.Culture.Culture == "en-US") {
-            // english template
-            customTemplateId = "4269";
+        // seleziona l'activit in base al tipo e al destinatario della mail
+        var activity = wfCtx.Record.WorkflowDefinitionRecord.ActivityRecords.FirstOrDefault(x => x.Name == "SendTemplatedEmail"
+            && x.State.Contains("\"RecipientOther\":\"{Content.Fields.SchedaInvito.Email}\"") 
+            && x.State.Contains("\"Recipient\":\"other\""));
+        if (activity != null) {
+            var state = JObject.Parse(activity.State);
+            var templateId = Convert.ToInt32(state["EmailTemplate"]);
+            var templateCi = _contentManager.Get(templateId);
+            var localizationPart = _localizationService.GetLocalizedContentItem(templateCi, visita.LocalizationPart.Culture.Culture);
+            customTemplateId = Convert.ToString(localizationPart.Id);
         }
         wfCtx.SetState("CustomTemplateId", customTemplateId);
         retString = "Ok";
