@@ -97,6 +97,9 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
         }
 
         public bool SendNewOTP(IUser user, Dictionary<string, string> additionalInformation, DeliveryChannelType? channel) {
+            return SendNewOTP(user, additionalInformation, channel,null);
+        }
+        public bool SendNewOTP(IUser user, Dictionary<string, string> additionalInformation, DeliveryChannelType? channel, FlowType? flow) {
             if (user == null) {
                 throw new ArgumentNullException("user");
             }
@@ -104,7 +107,7 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
             // create OTP
             var otp = NewOTP(user.As<UserPart>(), additionalInformation);
 
-            return SendOTP(otp, user, channel);
+            return SendOTP(otp, user, channel,flow);
         }
 
         public bool SendOTP(OTPRecord otp, DeliveryChannelType? channel) {
@@ -117,8 +120,11 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
 
             return SendOTP(otp, user, channel);
         }
-
         private bool SendOTP(OTPRecord otp, IUser user, DeliveryChannelType? channel) {
+            return SendOTP(otp, user, channel, FlowType.Website);
+        }
+
+        private bool SendOTP(OTPRecord otp, IUser user, DeliveryChannelType? channel, FlowType? flow) {
             // Select / order delivery services
             var deliveryServices = _deliveryServices;
             if (channel != null) {
@@ -130,13 +136,15 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
             // send through the first channel that does not fail
             var success = false;
             foreach (var ds in deliveryServices) {
-                success = ds.TrySendOTP(otp, user);
+                success = ds.TrySendOTP(otp, user,flow);
                 if (success)
                     break; // break on first success
             }
 
             return success;
         }
+
+
 
 
         public IUser UserFromNonce(string nonce) {
@@ -230,5 +238,6 @@ namespace Laser.Orchard.MultiStepAuthentication.Services {
             return valid;
         }
 
+   
     }
 }

@@ -265,6 +265,7 @@
     <Content Include="Views\EditorTemplates\Parts\MobilePushApproved_Edit.cshtml" />
     <Content Include="Views\Parts\MobileContact.cshtml" />
     <None Include="Service References\SmsServiceReference\SmsWebService.wsdl" />
+    <Content Include="Views\EditorTemplates\Parts\Users.LastDeviceUserDataProviderSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\CheckMAMController.cs" />
@@ -281,6 +282,7 @@
     <Compile Include="Feature\MobileCommunicationImportFeature.cs" />
     <Compile Include="Feature\SmsCommunicationImportFeature.cs" />
     <Compile Include="Handlers\ContactRelatedEventHandler.cs" />
+    <Compile Include="Handlers\LastDeviceUserDataProviderSettingsPartHandler.cs" />
     <Compile Include="Handlers\MobileContactPartHandler.cs" />
     <Compile Include="Handlers\PushScheduledTaskHandler.cs" />
     <Compile Include="Handlers\SmsGatewayEventHandler.cs" />
@@ -288,6 +290,7 @@
     <Compile Include="Handlers\SmsPlaceholdersSettingsHandler.cs" />
     <Compile Include="Handlers\SmsScheduledTaskHandler.cs" />
     <Compile Include="Handlers\UserPwdRecoveryPartHandler.cs" />
+    <Compile Include="Models\LastDeviceUserDataProviderSettingsPart.cs" />
     <Compile Include="Models\MobileContactPart.cs" />
     <Compile Include="Models\PushState.cs" />
     <Compile Include="Models\SentRecord.cs" />
@@ -302,6 +305,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Services\LastDeviceUserDataProvider.cs" />
     <Compile Include="Services\MissingSmsSettingsBanner.cs" />
     <Compile Include="Services\PushGatewayService.cs" />
     <Compile Include="Services\SmsCommunicationService.cs" />

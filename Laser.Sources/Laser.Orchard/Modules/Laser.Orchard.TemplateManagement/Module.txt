@@ -21,4 +21,9 @@ Features:
         Description: Add some tasks to send a Templated Email Messages.
 		Category: Messaging
 		Dependencies: Laser.Orchard.TemplateManagement, Orchard.Workflows,Laser.Orchard.StartupConfig, Orchard.Email
+    Laser.Orchard.WebTracking:
+        Name:  Laser Orchard Web Tracking
+        Description: Api Controller to track users on web contents (e.g. web pages, e-mail).
+		Category: Social
+		Dependencies: Orchard.Workflows,Laser.Orchard.StartupConfig
 		

@@ -1,0 +1,49 @@
+@using Orchard;
+@using Orchard.Data;
+@using Orchard.ContentManagement;
+@using Orchard.Environment.Configuration;
+@using Orchard.Users.Models;
+@using Orchard.Projections.Models;
+@using Orchard.Workflows.Models;
+@using Laser.Orchard.Caligoo.Services;
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","Ok"
+    WorkflowContext wfContext = null;
+    IContentManager _contentManager;
+}
+@{
+    try {
+        wfContext = Model.Tokens["Workflow"];
+        // resolve services
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        // do work
+        if (Model.Tokens.ContainsKey("mail")) {
+            string fromMail = Model.Tokens["mail"];
+            if (string.IsNullOrWhiteSpace(fromMail) == false) {
+                var qry = _contentManager.Query().ForType("User").Where<UserPartRecord>(x => x.Email == fromMail);
+                dynamic ci = qry.List().FirstOrDefault();
+                if (ci != null) {
+                    ci.ProfilePart.MailInvitoLetta.Value = true;
+                    ci.VersionRecord.Published = false;
+                    _contentManager.Publish(ci);
+                }
+            }
+        }
+        if (Model.Tokens.ContainsKey("utm_source")) {
+            string fromLandingPage = Model.Tokens["utm_source"];
+            if (string.IsNullOrWhiteSpace(fromLandingPage) == false) {
+                var qry = _contentManager.Query().ForType("User").Where<UserPartRecord>(x => x.Email == fromLandingPage);
+                dynamic ci = qry.List().FirstOrDefault();
+                if (ci != null) {
+                    ci.ProfilePart.LandingPageVisualizzata.Value = true;
+                    ci.VersionRecord.Published = false;
+                    _contentManager.Publish(ci);
+                }
+            }
+        }
+        retString = "Ok";
+    } catch (Exception ex) {
+        Model.OrchardServices.TransactionManager.Logger.Log(Orchard.Logging.LogLevel.Error, ex, "Error in test.cshtml", null);
+        wfContext.SetState("ErrorMessage", ex.Message);
+    }
+}@retString

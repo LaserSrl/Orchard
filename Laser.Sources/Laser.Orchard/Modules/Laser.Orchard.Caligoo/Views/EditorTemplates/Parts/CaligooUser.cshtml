@@ -6,4 +6,9 @@
         @Html.TextBoxFor(m => m.CaligooUserId, new { @class = "text medium" })
         <span class="hint">@T("The value of the corresponding user_id in Caligoo.")</span>
     </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.CaligooUserName)">@T("Caligoo User Name")</label>
+        @Html.TextBoxFor(m => m.CaligooUserName, new { @class = "text medium" })
+        <span class="hint">@T("The value of the corresponding username in Caligoo.")</span>
+    </div>
 </fieldset>

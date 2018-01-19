@@ -233,6 +233,7 @@
     <Content Include="Views\Parts\DataReportViewer.Donut.cshtml" />
     <Content Include="Views\Report\DashboardList.cshtml" />
     <Content Include="Views\Parts\DataReportViewer.HorizontalBars.cshtml" />
+    <Content Include="Views\Parts\DataReportViewer.SimpleTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />

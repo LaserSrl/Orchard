@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2017 Laser s.r.l.
+# Copyright (c) 2018 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -133,6 +133,10 @@ msgid "Sent"
 msgstr "Inviata"
 
 msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
+msgid "A default template to format your email message."
+msgstr "Un template di default per il formato del messaggio di posta elettronica."
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
 msgid "A template to format your email message."
 msgstr "Un modello per formattare il tuo messaggio di email."
 
@@ -147,6 +151,14 @@ msgstr "BCC"
 msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
 msgid "CC"
 msgstr "CC"
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
+msgid "Custom template ID"
+msgstr "ID del modello personalizzato"
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
+msgid "Default template"
+msgstr "Modello di default"
 
 msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
 msgid "E-mail"
@@ -197,6 +209,10 @@ msgid "Specify a comma-separated list of e-mail recipients."
 msgstr "Specificare una lista di email di destinatari separata da virgola"
 
 msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
+msgid "Specify a template ID to format your email message. Leave blank to use the default template."
+msgstr "Specificare l'ID di un modello per il formato del messaggio di posta elettronica. Lasciare vuoto per usare il modello di default."
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
 msgid "Specify email sender."
 msgstr "Inserire il mittente della mail."
 
@@ -227,6 +243,18 @@ msgstr "E' necessario fornire un indirizzo e-mail"
 msgctxt "Laser.Orchard.TemplateManagement.Activities.TemplatedEmailEditForm"
 msgid "You must select at least one recipient"
 msgstr "E' necessario selezionare almeno un destinatario"
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.WebTrackingEvent"
+msgid "A user has just loaded a tracking image."
+msgstr "Un utente ha appena caricato un'immagine utilizzata per il tracciamento (tracking)."
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.WebTrackingEvent"
+msgid "Content Event"
+msgstr "Evento del Contenuto"
+
+msgctxt "Laser.Orchard.TemplateManagement.Activities.WebTrackingEvent"
+msgid "Done"
+msgstr "Fatto"
 
 msgctxt "Laser.Orchard.TemplateManagement.Handlers.SiteSettingsPartHandler"
 msgid "Template"

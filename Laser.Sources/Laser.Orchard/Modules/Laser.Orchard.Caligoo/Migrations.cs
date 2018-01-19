@@ -33,5 +33,11 @@ namespace Laser.Orchard.Caligoo {
             );
             return 1;
         }
+        public int UpdateFrom1() {
+            SchemaBuilder.AlterTable("CaligooUserPartRecord", t => t
+                .AddColumn<string>("CaligooUserName", c => c.Nullable())
+            );
+            return 2;
+        }
     }
 }

@@ -1,4 +1,8 @@
 ﻿@{ 
     var caligooUserPart = Model.ContentPart;
 }
-@T("Caligoo User ID"): @caligooUserPart.CaligooUserId
+<fieldset>
+    <legend>Caligoo</legend>
+    @T("Caligoo User ID"): @caligooUserPart.CaligooUserId<br />
+    @T("Caligoo User Name"): @caligooUserPart.CaligooUserName
+</fieldset>
