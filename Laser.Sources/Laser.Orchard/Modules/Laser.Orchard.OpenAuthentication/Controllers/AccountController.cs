@@ -145,7 +145,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
-        public ContentResult ExternalTokenLogOnLogic(string __provider__, string token, string secret = "") {
+        private ContentResult ExternalTokenLogOnLogic(string __provider__, string token, string secret = "") {
             // TempDataDictionary registeredServicesData = new TempDataDictionary();
             var result = new Response();
 

@@ -8,7 +8,9 @@ using DotNetOpenAuth.AspNet;
 using Laser.Orchard.OpenAuthentication.Models;
 using Orchard;
 using Orchard.Security;
+using Orchard.Users.Models;
 using Orchard.Validation;
+using Orchard.ContentManagement;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOrchardOpenAuthWebSecurity : IDependency {
@@ -18,6 +20,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         string SerializeProviderUserId(string providerName, string providerUserId);
         OrchardAuthenticationClientData GetOAuthClientData(string providerName);
         bool TryDeserializeProviderUserId(string data, out string providerName, out string providerUserId);
+        IUser GetMasterUserOf(AuthenticationResult authenticationResult);
     }
 
     public class OrchardOpenAuthWebSecurity : IOrchardOpenAuthWebSecurity {
@@ -25,16 +28,25 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         private readonly IUserProviderServices _userProviderServices;
         private readonly IOrchardOpenAuthClientProvider _orchardOpenAuthClientProvider;
         private readonly IEncryptionService _encryptionService;
+        private readonly IAuthenticationService _authenticationService;
+        private readonly IOrchardServices _orchardServices;
+
+
 
         public OrchardOpenAuthWebSecurity(IOpenAuthSecurityManagerWrapper openAuthSecurityManagerWrapper,
                                           IUserProviderServices userProviderServices,
                                           IOrchardOpenAuthClientProvider orchardOpenAuthClientProvider,
-                                          IEncryptionService encryptionService) {
+                                          IEncryptionService encryptionService,
+                                          IAuthenticationService authenticationService,
+                                          IOrchardServices orchardServices) {
             _openAuthSecurityManagerWrapper = openAuthSecurityManagerWrapper;
             _userProviderServices = userProviderServices;
             _orchardOpenAuthClientProvider = orchardOpenAuthClientProvider;
             _encryptionService = encryptionService;
+            _authenticationService = authenticationService;
+            _orchardServices = orchardServices;
         }
+
 
         public AuthenticationResult VerifyAuthentication(string returnUrl) {
             return _openAuthSecurityManagerWrapper.VerifyAuthentication(returnUrl);
@@ -52,8 +64,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
             if (record == null) {
                 _userProviderServices.Create(providerName, providerUserId, user, providerUserData);
-            }
-            else {
+            } else {
                 _userProviderServices.Update(providerName, providerUserId, user, providerUserData);
             }
         }
@@ -82,6 +93,22 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             return _orchardOpenAuthClientProvider.GetClientData(providerName);
         }
 
+        public IUser GetMasterUserOf(AuthenticationResult authenticationResult) {
+            var masterUser = _authenticationService.GetAuthenticatedUser();
+
+            if (masterUser != null) {
+                var authSettings = _orchardServices.WorkContext.CurrentSite.As<OpenAuthenticationSettingsPart>();
+                var userSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
+
+                if (authSettings.AutoMergeNewUsersEnabled && (!userSettings.UsersCanRegister || userSettings.UsersMustValidateEmail)) {
+                    // discover user with same email, enabled, most recent
+                }
+            }
+
+            return masterUser;
+        }
+
+
         [Serializable]
         private struct SerializedProvider {
             public string ProviderName { get; set; }
@@ -104,5 +131,6 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                 }
             }
         }
+
     }
 }
