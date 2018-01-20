@@ -11,6 +11,10 @@ using Orchard.Security;
 using Orchard.Users.Models;
 using Orchard.Validation;
 using Orchard.ContentManagement;
+using Laser.Orchard.OpenAuthentication.Security;
+using Orchard.Data;
+using Orchard.Core.Common.Models;
+using System.Linq;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOrchardOpenAuthWebSecurity : IDependency {
@@ -20,7 +24,10 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         string SerializeProviderUserId(string providerName, string providerUserId);
         OrchardAuthenticationClientData GetOAuthClientData(string providerName);
         bool TryDeserializeProviderUserId(string data, out string providerName, out string providerUserId);
-        IUser GetMasterUserOf(AuthenticationResult authenticationResult);
+        /// <summary>
+        /// Gets the authenticated user or the first user with the same email if settings ask for merging new users. Returns null in all the other cases.
+        /// </summary>
+        IUser GetClosestKnownUser(AuthenticationResult authenticationResult);
     }
 
     public class OrchardOpenAuthWebSecurity : IOrchardOpenAuthWebSecurity {
@@ -30,11 +37,11 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         private readonly IEncryptionService _encryptionService;
         private readonly IAuthenticationService _authenticationService;
         private readonly IOrchardServices _orchardServices;
-
-
+        private readonly IOpenAuthMembershipServices _openAuthService;
 
         public OrchardOpenAuthWebSecurity(IOpenAuthSecurityManagerWrapper openAuthSecurityManagerWrapper,
                                           IUserProviderServices userProviderServices,
+                                          IOpenAuthMembershipServices openAuthService,
                                           IOrchardOpenAuthClientProvider orchardOpenAuthClientProvider,
                                           IEncryptionService encryptionService,
                                           IAuthenticationService authenticationService,
@@ -45,6 +52,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             _encryptionService = encryptionService;
             _authenticationService = authenticationService;
             _orchardServices = orchardServices;
+            _openAuthService = openAuthService;
         }
 
 
@@ -64,7 +72,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
             if (record == null) {
                 _userProviderServices.Create(providerName, providerUserId, user, providerUserData);
-            } else {
+            }
+            else {
                 _userProviderServices.Update(providerName, providerUserId, user, providerUserData);
             }
         }
@@ -93,15 +102,25 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             return _orchardOpenAuthClientProvider.GetClientData(providerName);
         }
 
-        public IUser GetMasterUserOf(AuthenticationResult authenticationResult) {
+        public IUser GetClosestKnownUser(AuthenticationResult authenticationResult) {
             var masterUser = _authenticationService.GetAuthenticatedUser();
 
-            if (masterUser != null) {
+            if (masterUser == null) {
                 var authSettings = _orchardServices.WorkContext.CurrentSite.As<OpenAuthenticationSettingsPart>();
                 var userSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
 
                 if (authSettings.AutoMergeNewUsersEnabled && (!userSettings.UsersCanRegister || userSettings.UsersMustValidateEmail)) {
-                    // discover user with same email, enabled, most recent
+                    var userParams = new OpenAuthCreateUserParams(authenticationResult.UserName,
+                                                    authenticationResult.Provider,
+                                                    authenticationResult.ProviderUserId,
+                                                    authenticationResult.ExtraData);
+                    var temporaryUser = _openAuthService.CreateTemporaryUser(userParams);
+
+                    var existingUserWithSameMail = _orchardServices.ContentManager.Query()
+                        .Where<UserPartRecord>(x => x.Email == temporaryUser.Email && x.RegistrationStatus == UserStatus.Approved)
+                        .OrderBy(order => order.CreatedUtc)
+                        .Slice(0, 1);
+                    masterUser = existingUserWithSameMail.Select(x => ((dynamic)x).UserPart).FirstOrDefault();
                 }
             }
 

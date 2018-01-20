@@ -325,6 +325,7 @@
     <Compile Include="Shapes.cs" />
     <Compile Include="ViewModels\CreateProviderViewModel.cs" />
     <Compile Include="ViewModels\IndexViewModel.cs" />
+    <Compile Include="ViewModels\OpenAuthTemporaryUser.cs" />
     <Compile Include="ViewModels\UserProviderDisplayViewModel.cs" />
     <Compile Include="ViewModels\UserProvidersViewModel.cs" />
   </ItemGroup>
