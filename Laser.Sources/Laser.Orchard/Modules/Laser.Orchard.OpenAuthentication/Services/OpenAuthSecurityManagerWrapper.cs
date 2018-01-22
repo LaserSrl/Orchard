@@ -24,14 +24,13 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         private readonly IUserEventHandler _userEventHandler;
         private readonly IEnumerable<IExternalAuthenticationClient> _openAuthAuthenticationClients;
 
-        public OpenAuthSecurityManagerWrapper(IHttpContextAccessor httpContextAccessor, 
+        public OpenAuthSecurityManagerWrapper(IHttpContextAccessor httpContextAccessor,
                                               IOrchardOpenAuthClientProvider orchardOpenAuthClientProvider,
                                               IOrchardOpenAuthDataProvider orchardOpenAuthDataProvider,
                                               IAuthenticationService authenticationService,
                                               IMembershipService membershipService,
                                               IUserEventHandler userEventHandler,
-                                              IEnumerable<IExternalAuthenticationClient> openAuthAuthenticationClients)
-        {
+                                              IEnumerable<IExternalAuthenticationClient> openAuthAuthenticationClients) {
             _httpContextAccessor = httpContextAccessor;
             _orchardOpenAuthClientProvider = orchardOpenAuthClientProvider;
             _orchardOpenAuthDataProvider = orchardOpenAuthDataProvider;
@@ -72,8 +71,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
             if (authenticatedUser == null)
                 return false;
-            else
-            {
+            else {
                 _userEventHandler.LoggedIn(authenticatedUser);
                 return true;
             }
@@ -94,7 +92,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         }
 
         private OpenAuthSecurityManager SecurityManager(string providerName) {
-            return new OpenAuthSecurityManager(_httpContextAccessor.Current(), _orchardOpenAuthClientProvider.GetClient(providerName), _orchardOpenAuthDataProvider); 
+            return new OpenAuthSecurityManager(_httpContextAccessor.Current(), _orchardOpenAuthClientProvider.GetClient(providerName), _orchardOpenAuthDataProvider);
         }
         private void RewriteRequest() {
             foreach (var client in _openAuthAuthenticationClients) {

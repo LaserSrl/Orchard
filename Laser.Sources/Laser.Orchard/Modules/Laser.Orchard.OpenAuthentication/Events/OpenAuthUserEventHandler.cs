@@ -80,11 +80,23 @@ namespace Laser.Orchard.OpenAuthentication.Events {
         }
 
         public void ConfirmedEmail(IUser user) {
+            MergeUserToClosestMergeable(user);
         }
 
         public void Approved(IUser user) {
+            MergeUserToClosestMergeable(user);
+        }
+
+        public void LoggingIn(string userNameOrEmail, string password) {
+        }
+
+        public void LogInFailed(string userNameOrEmail, string password) {
+        }
+
+        private void MergeUserToClosestMergeable(IUser user) {
             var userPart = user.ContentItem.As<UserPart>();
-            if (userPart.LastLoginUtc!= null) return;
+            if (userPart.LastLoginUtc != null) return;
+            if (userPart.EmailStatus == UserStatus.Pending || userPart.RegistrationStatus== UserStatus.Pending) return;
 
             var closestUser = _orchardOpenAuthWebSecurity.GetClosestMergeableKnownUser(userPart);
             if (closestUser.UserName != user.UserName) {
@@ -93,20 +105,14 @@ namespace Laser.Orchard.OpenAuthentication.Events {
                 closestUser.ContentItem.As<UserPart>().PasswordSalt = userPart.PasswordSalt;
                 closestUser.ContentItem.As<UserPart>().UserName = userPart.UserName;
                 closestUser.ContentItem.As<UserPart>().NormalizedUserName = userPart.NormalizedUserName;
-                closestUser.ContentItem.As<UserPart>().HashAlgorithm= userPart.HashAlgorithm;
+                closestUser.ContentItem.As<UserPart>().HashAlgorithm = userPart.HashAlgorithm;
                 userPart.RegistrationStatus = UserStatus.Pending;
-                _notifier.Information(T("Approved account has been merged with previous account."));
-                if (_authenticationService.GetAuthenticatedUser()==null) { // TODO: to specialize behaviour based on caller (registration, approved back-end, approved front-end
-                    _authenticationService.SignIn(closestUser, false);
-                    LoggedIn(closestUser);
-                }
+                _notifier.Information(T("Your account has been merged with your previous account."));
+                //if (_authenticationService.GetAuthenticatedUser() == null) { // TODO: to specialize behaviour based on caller (registration, approved back-end, approved front-end
+                //    _authenticationService.SignIn(closestUser, false);
+                //    LoggedIn(closestUser);
+                //}
             }
-        }
-
-        public void LoggingIn(string userNameOrEmail, string password) {
-        }
-
-        public void LogInFailed(string userNameOrEmail, string password) {
         }
     }
 }

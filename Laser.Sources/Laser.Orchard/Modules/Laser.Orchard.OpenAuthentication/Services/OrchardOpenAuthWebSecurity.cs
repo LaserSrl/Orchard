@@ -107,8 +107,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             var userSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
 
             if (authSettings.AutoMergeNewUsersEnabled && (!userSettings.UsersCanRegister || userSettings.UsersMustValidateEmail)) {
-                var existingUserWithSameMail = _orchardServices.ContentManager.Query()
-                    .Where<UserPartRecord>(x => x.Email == user.Email && x.RegistrationStatus == UserStatus.Approved)
+                var existingUserWithSameMail = _orchardServices.ContentManager.Query(VersionOptions.Published)
+                    .Where<UserPartRecord>(x => x.Email == user.Email && x.NormalizedUserName != user.UserName && x.RegistrationStatus == UserStatus.Approved && x.EmailStatus == UserStatus.Approved)
                     .OrderBy(order => order.CreatedUtc)
                     .Slice(0, 1);
                 masterUser = existingUserWithSameMail.Select(x => ((dynamic)x).UserPart).FirstOrDefault();

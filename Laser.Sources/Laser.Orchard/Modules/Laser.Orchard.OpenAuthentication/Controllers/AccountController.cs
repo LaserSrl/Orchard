@@ -92,10 +92,10 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             else {
                 result = _openAuthClientProvider.GetUserData(result.Provider, result, "");
             }
-            var userParams = new OpenAuthCreateUserParams(result.UserName,
+            var userParams = _openAuthClientProvider.NormalizeData(result.Provider, new OpenAuthCreateUserParams(result.UserName,
                                                         result.Provider,
                                                         result.ProviderUserId,
-                                                        result.ExtraData);
+                                                        result.ExtraData)); 
             var temporaryUser = _openAuthMembershipServices.CreateTemporaryUser(userParams);
 
             var masterUser = _authenticationService.GetAuthenticatedUser() ?? _orchardOpenAuthWebSecurity.GetClosestMergeableKnownUser(temporaryUser); // The autheticated User or depending from settings the first created user with the same e-mail
@@ -198,10 +198,10 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         }
                     }
                     else {
-                        var userParams = new OpenAuthCreateUserParams(authResult.UserName,
+                        var userParams = _openAuthClientProvider.NormalizeData(authResult.Provider, new OpenAuthCreateUserParams(authResult.UserName,
                                                                     authResult.Provider,
                                                                     authResult.ProviderUserId,
-                                                                    authResult.ExtraData);
+                                                                    authResult.ExtraData));
                         var temporaryUser = _openAuthMembershipServices.CreateTemporaryUser(userParams);
                         masterUser = _authenticationService.GetAuthenticatedUser() ?? _orchardOpenAuthWebSecurity.GetClosestMergeableKnownUser(temporaryUser); // The autheticated User or depending from settings the first created user with the same e-mail
                         authenticatedUser = _authenticationService.GetAuthenticatedUser();

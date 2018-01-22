@@ -126,7 +126,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
             return new OpenAuthTemporaryUser {
                 Email = emailAddress,
-                UserName = _usernameService.Normalize(createUserParams.UserName),
+                UserName = _usernameService.Calculate(_usernameService.Normalize(createUserParams.UserName)),
                 Provider = createUserParams.ProviderName,
                 ProviderUserId = createUserParams.ProviderUserId
             };
