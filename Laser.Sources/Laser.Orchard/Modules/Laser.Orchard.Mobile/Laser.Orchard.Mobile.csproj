@@ -291,6 +291,7 @@
     <Compile Include="Handlers\SmsScheduledTaskHandler.cs" />
     <Compile Include="Handlers\UserPwdRecoveryPartHandler.cs" />
     <Compile Include="Models\LastDeviceUserDataProviderSettingsPart.cs" />
+    <Compile Include="Models\LatestUUIDForUserRecord.cs" />
     <Compile Include="Models\MobileContactPart.cs" />
     <Compile Include="Models\PushState.cs" />
     <Compile Include="Models\SentRecord.cs" />
