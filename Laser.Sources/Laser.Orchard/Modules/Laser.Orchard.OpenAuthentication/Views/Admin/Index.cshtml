@@ -51,6 +51,12 @@
             @T("Note: Remember to enable \"Users can create new accounts on the site\" in Settings > Users")
         </span>
     </fieldset>
+    <fieldset>
+        @Html.CheckBoxFor(m => m.AutoMergeNewUsersEnabled)
+        <label for="@Html.FieldIdFor(m => m.AutoMergeNewUsersEnabled)" class="forcheckbox">@T("Auto merge new users Enabled")</label>
+        <span class="hint">
+            @T("When checked, the system will try to merge new users to exixting users based on same e-mail.")</span>
+</fieldset>
     if (Model.ShowAppDirectSetting) {
         <fieldset>
             @Html.LabelFor(m => m.AppDirectBaseUrl, T("App Direct BaseUrl"))

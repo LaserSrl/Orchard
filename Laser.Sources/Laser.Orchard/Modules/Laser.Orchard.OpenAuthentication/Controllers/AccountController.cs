@@ -92,8 +92,13 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             else {
                 result = _openAuthClientProvider.GetUserData(result.Provider, result, "");
             }
+            var userParams = new OpenAuthCreateUserParams(result.UserName,
+                                                        result.Provider,
+                                                        result.ProviderUserId,
+                                                        result.ExtraData);
+            var temporaryUser = _openAuthMembershipServices.CreateTemporaryUser(userParams);
 
-            var masterUser = _orchardOpenAuthWebSecurity.GetClosestKnownUser(result); // The autheticated User or depending from settings the first created user with the same e-mail
+            var masterUser = _authenticationService.GetAuthenticatedUser() ?? _orchardOpenAuthWebSecurity.GetClosestMergeableKnownUser(temporaryUser); // The autheticated User or depending from settings the first created user with the same e-mail
 
             if (masterUser != null) {
                 // If the current user is logged in or settings ask for a user merge and we found a User with the same email creates or merge accounts
@@ -193,7 +198,12 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         }
                     }
                     else {
-                        masterUser = _orchardOpenAuthWebSecurity.GetClosestKnownUser(authResult); // The autheticated User or depending from settings the first created user with the same e-mail
+                        var userParams = new OpenAuthCreateUserParams(authResult.UserName,
+                                                                    authResult.Provider,
+                                                                    authResult.ProviderUserId,
+                                                                    authResult.ExtraData);
+                        var temporaryUser = _openAuthMembershipServices.CreateTemporaryUser(userParams);
+                        masterUser = _authenticationService.GetAuthenticatedUser() ?? _orchardOpenAuthWebSecurity.GetClosestMergeableKnownUser(temporaryUser); // The autheticated User or depending from settings the first created user with the same e-mail
                         authenticatedUser = _authenticationService.GetAuthenticatedUser();
                     }
 

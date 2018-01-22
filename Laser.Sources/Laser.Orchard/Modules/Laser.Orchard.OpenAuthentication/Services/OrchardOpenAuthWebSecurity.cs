@@ -25,9 +25,9 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         OrchardAuthenticationClientData GetOAuthClientData(string providerName);
         bool TryDeserializeProviderUserId(string data, out string providerName, out string providerUserId);
         /// <summary>
-        /// Gets the authenticated user or the first user with the same email if settings ask for merging new users. Returns null in all the other cases.
+        /// Gets the first user with the same email if settings ask for merging new users. Returns null in all the other cases.
         /// </summary>
-        IUser GetClosestKnownUser(AuthenticationResult authenticationResult);
+        IUser GetClosestMergeableKnownUser(IUser user);
     }
 
     public class OrchardOpenAuthWebSecurity : IOrchardOpenAuthWebSecurity {
@@ -72,8 +72,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
             if (record == null) {
                 _userProviderServices.Create(providerName, providerUserId, user, providerUserData);
-            }
-            else {
+            } else {
                 _userProviderServices.Update(providerName, providerUserId, user, providerUserData);
             }
         }
@@ -101,32 +100,22 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         public OrchardAuthenticationClientData GetOAuthClientData(string providerName) {
             return _orchardOpenAuthClientProvider.GetClientData(providerName);
         }
+        public IUser GetClosestMergeableKnownUser(IUser user) {
+            IUser masterUser = null;
 
-        public IUser GetClosestKnownUser(AuthenticationResult authenticationResult) {
-            var masterUser = _authenticationService.GetAuthenticatedUser();
+            var authSettings = _orchardServices.WorkContext.CurrentSite.As<OpenAuthenticationSettingsPart>();
+            var userSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
 
-            if (masterUser == null) {
-                var authSettings = _orchardServices.WorkContext.CurrentSite.As<OpenAuthenticationSettingsPart>();
-                var userSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
-
-                if (authSettings.AutoMergeNewUsersEnabled && (!userSettings.UsersCanRegister || userSettings.UsersMustValidateEmail)) {
-                    var userParams = new OpenAuthCreateUserParams(authenticationResult.UserName,
-                                                    authenticationResult.Provider,
-                                                    authenticationResult.ProviderUserId,
-                                                    authenticationResult.ExtraData);
-                    var temporaryUser = _openAuthService.CreateTemporaryUser(userParams);
-
-                    var existingUserWithSameMail = _orchardServices.ContentManager.Query()
-                        .Where<UserPartRecord>(x => x.Email == temporaryUser.Email && x.RegistrationStatus == UserStatus.Approved)
-                        .OrderBy(order => order.CreatedUtc)
-                        .Slice(0, 1);
-                    masterUser = existingUserWithSameMail.Select(x => ((dynamic)x).UserPart).FirstOrDefault();
-                }
+            if (authSettings.AutoMergeNewUsersEnabled && (!userSettings.UsersCanRegister || userSettings.UsersMustValidateEmail)) {
+                var existingUserWithSameMail = _orchardServices.ContentManager.Query()
+                    .Where<UserPartRecord>(x => x.Email == user.Email && x.RegistrationStatus == UserStatus.Approved)
+                    .OrderBy(order => order.CreatedUtc)
+                    .Slice(0, 1);
+                masterUser = existingUserWithSameMail.Select(x => ((dynamic)x).UserPart).FirstOrDefault();
             }
 
             return masterUser;
         }
-
 
         [Serializable]
         private struct SerializedProvider {

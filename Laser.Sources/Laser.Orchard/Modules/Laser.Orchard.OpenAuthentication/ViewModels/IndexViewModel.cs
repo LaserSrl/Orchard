@@ -4,6 +4,7 @@ using Laser.Orchard.OpenAuthentication.Models;
 namespace Laser.Orchard.OpenAuthentication.ViewModels {
     public class IndexViewModel {
         public bool AutoRegistrationEnabled { get; set; }
+        public bool AutoMergeNewUsersEnabled { get; set; }
 
         public IEnumerable<ProviderConfigurationRecord> CurrentProviders { get; set; }
         public string AppDirectBaseUrl { get; set; }
