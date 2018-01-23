@@ -209,10 +209,12 @@ namespace Laser.Orchard.HID.Models {
             wr.ContentType = Constants.DefaultContentType;
             wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
             byte[] bodyData = Encoding.UTF8.GetBytes(CreateUserBody);
-            using (Stream reqStream = wr.GetRequestStream()) {
-                reqStream.Write(bodyData, 0, bodyData.Length);
-            }
+            
             try {
+                using (Stream reqStream = wr.GetRequestStream()) {
+                    // body stream is written in try-catch, because it needs to resolve destination url
+                    reqStream.Write(bodyData, 0, bodyData.Length);
+                }
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                     if (resp.StatusCode == HttpStatusCode.Created) {
                         using (var reader = new StreamReader(resp.GetResponseStream())) {
@@ -264,10 +266,12 @@ namespace Laser.Orchard.HID.Models {
             wr.ContentType = Constants.DefaultContentType;
             wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
             byte[] bodyData = Encoding.UTF8.GetBytes(CreateInvitationBody);
-            using (Stream reqStream = wr.GetRequestStream()) {
-                reqStream.Write(bodyData, 0, bodyData.Length);
-            }
+            
             try {
+                using (Stream reqStream = wr.GetRequestStream()) {
+                    // body stream is written in try-catch, because it needs to resolve destination url
+                    reqStream.Write(bodyData, 0, bodyData.Length);
+                }
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                     if (resp.StatusCode == HttpStatusCode.Created) {
                         using (var reader = new StreamReader(resp.GetResponseStream())) {
