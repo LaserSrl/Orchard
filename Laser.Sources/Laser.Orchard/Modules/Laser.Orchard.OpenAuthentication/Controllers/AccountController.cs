@@ -33,8 +33,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
         private readonly IAuthenticationService _authenticationService;
         private readonly IOpenAuthMembershipServices _openAuthMembershipServices;
         private readonly IOrchardOpenAuthClientProvider _openAuthClientProvider;
-        private readonly IControllerContextAccessor _controllerContextAccessor;
-        private readonly IUtilsServices _utilsServices;
+         private readonly IUtilsServices _utilsServices;
         private readonly IOrchardServices _orchardServices;
         private readonly IEnumerable<IIdentityProvider> _identityProviders;
 
@@ -44,7 +43,6 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             IAuthenticationService authenticationService,
             IOpenAuthMembershipServices openAuthMembershipServices,
             IOrchardOpenAuthClientProvider openAuthClientProvider,
-            IControllerContextAccessor controllerContextAccessor,
             IUserEventHandler userEventHandler, 
             IUtilsServices utilsServices, 
             IOrchardServices orchardServices, 
@@ -54,7 +52,6 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             _authenticationService = authenticationService;
             _openAuthMembershipServices = openAuthMembershipServices;
             _openAuthClientProvider = openAuthClientProvider;
-            _controllerContextAccessor = controllerContextAccessor;
             _userEventHandler = userEventHandler;
             _utilsServices = utilsServices;
             _orchardServices = orchardServices;
@@ -175,7 +172,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         } else {
                             authenticatedUser = _authenticationService.GetAuthenticatedUser();
                             _userEventHandler.LoggedIn(authenticatedUser);
-                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse("", _identityProviders, _controllerContextAccessor.Context.Controller.TempData));
+                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse("", _identityProviders));
                         }
                     } else {
                         authenticatedUser = _authenticationService.GetAuthenticatedUser();
@@ -192,7 +189,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         } else {
                             // Handle LoggedIn Event
                             _userEventHandler.LoggedIn(authenticatedUser);
-                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse(T("Your {0} account has been attached to your local account.", authResult.Provider).Text, _identityProviders, _controllerContextAccessor.Context.Controller.TempData));
+                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse(T("Your {0} account has been attached to your local account.", authResult.Provider).Text, _identityProviders));
                         }
                     }
 
@@ -215,7 +212,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         } else {
                             // Handle LoggedIn Event
                             _userEventHandler.LoggedIn(newUser);
-                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse(T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", authResult.Provider, newUser.UserName).Text, _identityProviders, _controllerContextAccessor.Context.Controller.TempData));
+                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse(T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", authResult.Provider, newUser.UserName).Text, _identityProviders));
                         }
                     }
                     result = _utilsServices.GetResponse(ResponseType.None, "Login failed.");

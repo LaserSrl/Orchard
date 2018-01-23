@@ -1,5 +1,5 @@
 # Orchard resource strings - it-IT
-# Copyright (c) 2017 Laser s.r.l.
+# Copyright (c) 2018 Laser s.r.l.
 
 
 # > #: msgctxt { contesto del messaggio - Originale }
@@ -69,6 +69,10 @@ msgid "There is no data"
 msgstr "Nessun dato"
 
 msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Parts/DataReportViewer.SimpleList.cshtml"
+msgid "There is no data"
+msgstr "Nessun dato"
+
+msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Parts/DataReportViewer.SimpleTable.cshtml"
 msgid "There is no data"
 msgstr "Nessun dato"
 

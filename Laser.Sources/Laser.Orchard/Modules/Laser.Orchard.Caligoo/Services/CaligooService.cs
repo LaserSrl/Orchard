@@ -25,7 +25,7 @@ namespace Laser.Orchard.Caligoo.Services {
     public interface ICaligooService : IDependency {
         ContentItem GetContact(string caligooUserId);
         ContentItem CreateContact(LoginLogoutEventMessage caligooUserEvent);
-        JObject GetUserDetails(string caligooUserId);
+        UserMessage GetUserDetails(string caligooUserId);
         List<string> GetFilteredCaligooUsers(CaligooUsersFilterValue filters);
         List<LocationMessage> GetLocations();
         void UpdateLocation(LocationMessage messsage);
@@ -52,13 +52,16 @@ namespace Laser.Orchard.Caligoo.Services {
         }
         public ContentItem CreateContact(LoginLogoutEventMessage caligooUserEvent) {
             var contact = _orchardServices.ContentManager.New("CommunicationContact");
-            contact.As<TitlePart>().Title = caligooUserEvent.CaligooUserId;
-            contact.As<CaligooUserPart>().CaligooUserId = caligooUserEvent.CaligooUserId;
+            contact.As<TitlePart>().Title = caligooUserEvent.CaligooUserName;
+            var caligooUserPart = contact.As<CaligooUserPart>();
+            caligooUserPart.CaligooUserId = caligooUserEvent.CaligooUserId;
+            caligooUserPart.CaligooUserName = caligooUserEvent.CaligooUserName;
             var commonPart = contact.As<CommonPart>();
             if(commonPart != null) {
                 commonPart.Owner = GetAdministrator();
             }
             _orchardServices.ContentManager.Create(contact);
+            // if we will have email and phone number we can use the following code
             //if (string.IsNullOrWhiteSpace(email) == false) {
             //    _communicationService.AddEmailToContact(email, contact);
             //}
@@ -113,9 +116,16 @@ namespace Laser.Orchard.Caligoo.Services {
                 Logger.Error("JwtTokenRenew: token refresh error. Message: {0}", auth.Message);
             }
         }
-        public JObject GetUserDetails(string caligooUserId) {
-            // TODO: vedere se questo metodo serve o no
-            return new JObject();
+        public UserMessage GetUserDetails(string caligooUserName) {
+            var resource = _caligooSettings.UsersPath;
+            resource = resource.TrimEnd('/') + "/" + caligooUserName;
+            var response = ResultFromCaligooApiGet(resource);
+            if (response.Success) {
+                var jUsers = JObject.Parse(response.Body);
+                var user = jUsers.ToObject<UserMessage>();
+                return user;
+            }
+            return null;
         }
         public List<string> GetFilteredCaligooUsers(CaligooUsersFilterValue filters) {
             var result = new List<string>();

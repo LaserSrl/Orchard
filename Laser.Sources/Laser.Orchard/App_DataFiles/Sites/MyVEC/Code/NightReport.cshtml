@@ -1,0 +1,129 @@
+@using Orchard;
+@using Orchard.Data;
+@using Orchard.ContentManagement;
+@using Orchard.Environment.Configuration;
+@using Orchard.Projections.Models;
+@using Orchard.Workflows.Models;
+@using System.Globalization;
+@using System.IO;
+@functions{
+    string retString = "Error"; //possible outcomes: "Error","Ok"
+    WorkflowContext wfContext = null;
+    IContentManager _contentManager;
+    IOrchardServices _orchardServices;
+    ITransactionManager _transactionManager;
+
+    private string SaveCsv(string csv, string titoloVisita) {
+        // create csv file in temp directory
+        var temp = Path.GetTempPath();
+        var dir = Path.Combine(temp, Guid.NewGuid().ToString());
+        // normalize the title in order to insert it into a file name
+        var titolo = titoloVisita;
+        foreach(var ch in Path.GetInvalidFileNameChars()) {
+            titolo = titolo.Replace(ch, '-');
+        }
+        var path = Path.Combine(dir, string.Format("report {0}.csv", titolo));
+        Directory.CreateDirectory(dir);
+        File.WriteAllText(path, csv);
+        return path;
+    }
+    private string GetCsv(int idVisita) {
+        var query = @"select 
+	        cast(day(activity.DateTimeStart) as string)+'-'+cast(month(activity.DateTimeStart) as string)+'-'+cast(year(activity.DateTimeStart) as string) as data, 
+	        fi_nome.Value as nome, fi_cognome.Value as cognome, fi_mail.Value as mail,
+	        case fi_partecipato.Value when 1 then 'X' else '-' end as partecipato, 
+	        case when fi_prenotazione_parcheggio.Value like '{%}' then 'X' else '-' end as prenotazione_parcheggio,
+	        usr.UserName as username, case fi_appdownloaded.Value when 1 then 'X' else '-' end as app_downloaded, 
+	        fi_tempo_negozio.Value as tot_tempo_store, 
+	        case fi_mailletta.Value when 1 then 'X' else '-' end as mail_letta, 
+	        case fi_landingpage.Value when 1 then 'X' else '-' end as landing_page,
+	        replace(replace(replace(replace(replace(replace(profiler.ListJson, '{''ProfilTag'':{ DetProfilTag:[', ''),']}}', ''), '{''Count'':', ''), ',''Text'':''', ' '), '''}', ''), '{}', '') as tags
+        from Orchard.ContentManagement.Records.ContentItemRecord as ci
+        join ci.Versions as civ with civ.Published=1
+        join ci.ContentType as ct with ct.Name='SchedaInvito'
+        join ci.FieldIndexPartRecord as fip_invito
+        join fip_invito.IntegerFieldIndexRecords as fi_partecipato with fi_partecipato.PropertyName='SchedaInvito.Hapartecipato.'
+        join fip_invito.StringFieldIndexRecords as fi_nome with fi_nome.PropertyName='SchedaInvito.Nome.'
+        join fip_invito.StringFieldIndexRecords as fi_cognome with fi_cognome.PropertyName='SchedaInvito.Cognome.'
+        join fip_invito.StringFieldIndexRecords as fi_visita with fi_visita.PropertyName='SchedaInvito.Visita.'
+        join fip_invito.StringFieldIndexRecords as fi_mail with fi_mail.PropertyName='SchedaInvito.Email.'
+        join fip_invito.DecimalFieldIndexRecords as fi_creator with fi_creator.PropertyName='CommonPart.Creator.'
+        join fip_invito.StringFieldIndexRecords as fi_prenotazione_parcheggio with fi_prenotazione_parcheggio.PropertyName='SchedaInvito.Prenotazioneparcheggio.'
+        ,Orchard.Users.Models.UserPartRecord as usr
+        ,Orchard.Projections.Models.FieldIndexPartRecord as fi_usr
+        join fi_usr.IntegerFieldIndexRecords as fi_appdownloaded with fi_appdownloaded.PropertyName='ProfilePart.AppDownloaded.'
+        join fi_usr.DecimalFieldIndexRecords as fi_tempo_negozio with fi_tempo_negozio.PropertyName='ProfilePart.TotaleTempoNegozio.'
+        join ci.ActivityPartRecord as activity
+        left outer join fi_usr.IntegerFieldIndexRecords as fi_mailletta with fi_mailletta.PropertyName='ProfilePart.MailInvitoLetta.'
+        left outer join fi_usr.IntegerFieldIndexRecords as fi_landingpage with fi_landingpage.PropertyName='ProfilePart.LandingPageVisualizzata.'
+        ,Orchard.ContentManagement.Records.ContentItemRecord as ci_usr
+        left outer join ci_usr.UserProfilingPartRecord as profiler
+        where 
+            usr.Id = fi_creator.Value
+            and fi_usr.Id = usr.Id
+            and ci_usr.Id = usr.Id
+            and fi_visita.Value = '{" + idVisita + "}'";
+        var hql = _transactionManager.GetSession().CreateQuery(query);
+        var result = hql.SetResultTransformer(NHibernate.Transform.Transformers.AliasToEntityMap).Enumerable();
+        string text = "";
+        var sb = new System.Text.StringBuilder();
+        // intestazioni
+        foreach (var header in hql.ReturnAliases) {
+            sb.AppendFormat("{0};", header);
+        }
+        sb.Append("\r\n");
+        // dati
+        foreach (var record in result) {
+            var ht = record as System.Collections.Hashtable;
+            var types = hql.ReturnTypes;
+            var aliases = hql.ReturnAliases;
+            for (var i = 0; i < aliases.Length; i++) {
+                switch (types[i].Name) {
+                    case "DateTime":
+                        sb.AppendFormat("{0:dd/MM/yyyy}", ht[aliases[i]]);
+                        break;
+                    case "Decimal":
+                        sb.Append(Convert.ToString(ht[aliases[i]], CultureInfo.InvariantCulture).Replace('.', ','));
+                        break;
+                    default:
+                        text = Convert.ToString(ht[aliases[i]]);
+                        if (text.Contains(';')) {
+                            text = string.Format("\"{0}\"", text);
+                        }
+                        sb.Append(text);
+                        break;
+                }
+                sb.Append(";");
+            }
+            sb.Append("\r\n");
+        }
+        return sb.ToString();
+    }
+}
+@{
+    try {
+        wfContext = Model.Tokens["Workflow"];
+        // resolve services
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _orchardServices = Model.OrchardServices.WorkContext.Resolve<IOrchardServices>();
+        _transactionManager = Model.OrchardServices.WorkContext.Resolve<ITransactionManager>();
+        // do work
+
+        // visite del giorno prima
+        var attachments = new List<string>();
+        var ieri = DateTime.Today.AddDays(-1);
+        var qryVisite = _contentManager.Query("Visita")
+            .Where<Laser.Orchard.Events.Models.ActivityPartRecord>(x => x.DateTimeEnd >= ieri && x.DateTimeEnd <= DateTime.Today);
+        var records = qryVisite.List();
+        foreach (dynamic ci in records) {
+            var csv = GetCsv(ci.Id);
+            var titolo = ci.TitlePart == null ? "" : ci.TitlePart.Title;
+            attachments.Add(SaveCsv(csv, titolo));
+        }
+        wfContext.SetState("Attachments", string.Join(",", attachments));
+        retString = "Ok";
+    } catch (Exception ex) {
+        Model.OrchardServices.TransactionManager.Logger.Log(Orchard.Logging.LogLevel.Error, ex, "Error in test.cshtml", null);
+        wfContext.SetState("ErrorMessage", ex.Message);
+    }
+    }@retString
