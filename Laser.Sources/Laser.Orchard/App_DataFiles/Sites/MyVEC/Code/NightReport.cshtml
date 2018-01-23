@@ -5,6 +5,7 @@
 @using Orchard.Projections.Models;
 @using Orchard.Workflows.Models;
 @using System.Globalization;
+@using System.IO;
 @functions{
     string retString = "Error"; //possible outcomes: "Error","Ok"
     WorkflowContext wfContext = null;
@@ -12,23 +13,19 @@
     IOrchardServices _orchardServices;
     ITransactionManager _transactionManager;
 
-    private void SendCsv(string destinatario, string csv, string titoloVisita) {
-        // send email
-        var mailSettings = _orchardServices.WorkContext.CurrentSite.As<Orchard.Email.Models.SmtpSettingsPart>();
-        var mail = new System.Net.Mail.MailMessage(mailSettings.Address, destinatario, "Report csv - Visita " + titoloVisita, "Vedi allegato. \r\nRedLink");
-        var stream = new System.IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(csv));
-        var att = new System.Net.Mail.Attachment(stream, "report.csv", "application/csv");
-        mail.Attachments.Add(att);
-        var client = new System.Net.Mail.SmtpClient(mailSettings.Host, mailSettings.Port);
-        if (mailSettings.RequireCredentials) {
-            if (mailSettings.UseDefaultCredentials) {
-                client.UseDefaultCredentials = true;
-            } else {
-                client.Credentials = new System.Net.NetworkCredential(mailSettings.UserName, mailSettings.Password);
-            }
+    private string SaveCsv(string csv, string titoloVisita) {
+        // create csv file in temp directory
+        var temp = Path.GetTempPath();
+        var dir = Path.Combine(temp, Guid.NewGuid().ToString());
+        // normalize the title in order to insert it into a file name
+        var titolo = titoloVisita;
+        foreach(var ch in Path.GetInvalidFileNameChars()) {
+            titolo = titolo.Replace(ch, '-');
         }
-        client.EnableSsl = mailSettings.EnableSsl;
-        client.Send(mail);
+        var path = Path.Combine(dir, string.Format("report {0}.csv", titolo));
+        Directory.CreateDirectory(dir);
+        File.WriteAllText(path, csv);
+        return path;
     }
     private string GetCsv(int idVisita) {
         var query = @"select 
@@ -113,6 +110,7 @@
         // do work
 
         // visite del giorno prima
+        var attachments = new List<string>();
         var ieri = DateTime.Today.AddDays(-1);
         var qryVisite = _contentManager.Query("Visita")
             .Where<Laser.Orchard.Events.Models.ActivityPartRecord>(x => x.DateTimeEnd >= ieri && x.DateTimeEnd <= DateTime.Today);
@@ -120,8 +118,9 @@
         foreach (dynamic ci in records) {
             var csv = GetCsv(ci.Id);
             var titolo = ci.TitlePart == null ? "" : ci.TitlePart.Title;
-            SendCsv("giuseppe.musso@laser-group.com", csv, titolo);
+            attachments.Add(SaveCsv(csv, titolo));
         }
+        wfContext.SetState("Attachments", string.Join(",", attachments));
         retString = "Ok";
     } catch (Exception ex) {
         Model.OrchardServices.TransactionManager.Logger.Log(Orchard.Logging.LogLevel.Error, ex, "Error in test.cshtml", null);
