@@ -112,6 +112,13 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                                 Title: T("Custom template ID"),
                                 Description: T("Specify a template ID to format your email message. Leave blank to use the default template."),
                                 Classes: new[] { "large", "text", "tokenized" }
+                        ),
+                        _Attachments: Shape.Textbox(
+                                Id: "attachment-list",
+                                Name: "AttachmentList",
+                                Title: T("Attachment Path List"),
+                                Description: T("Specify a comma separated list of file phisical path (e.g. c:\\Temp\\dummy_file.txt)."),
+                                Classes: new[] { "large", "text", "tokenized" }
                         )
                     );
 
