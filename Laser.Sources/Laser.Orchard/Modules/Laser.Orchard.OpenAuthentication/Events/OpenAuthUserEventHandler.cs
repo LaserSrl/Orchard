@@ -7,6 +7,7 @@ using Orchard.Users.Models;
 using Orchard.ContentManagement;
 using Orchard.UI.Notify;
 using Orchard.Localization;
+using Orchard.Users.Services;
 
 namespace Laser.Orchard.OpenAuthentication.Events {
     public class OpenAuthUserEventHandler : IUserEventHandler {
@@ -14,6 +15,8 @@ namespace Laser.Orchard.OpenAuthentication.Events {
         private readonly IOrchardOpenAuthWebSecurity _orchardOpenAuthWebSecurity;
         private readonly INotifier _notifier;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IContentManager _contentManager;
+
 
         public OpenAuthUserEventHandler(IHttpContextAccessor httpContextAccessor,
             IOrchardOpenAuthWebSecurity orchardOpenAuthWebSecurity,
@@ -96,22 +99,18 @@ namespace Laser.Orchard.OpenAuthentication.Events {
         private void MergeUserToClosestMergeable(IUser user) {
             var userPart = user.ContentItem.As<UserPart>();
             if (userPart.LastLoginUtc != null) return;
-            if (userPart.EmailStatus == UserStatus.Pending || userPart.RegistrationStatus== UserStatus.Pending) return;
+            if (userPart.EmailStatus == UserStatus.Pending || userPart.RegistrationStatus == UserStatus.Pending) return;
 
             var closestUser = _orchardOpenAuthWebSecurity.GetClosestMergeableKnownUser(userPart);
-            if (closestUser.UserName != user.UserName) {
+            if (closestUser != null && closestUser.UserName != user.UserName) {
                 closestUser.ContentItem.As<UserPart>().Password = userPart.Password;
                 closestUser.ContentItem.As<UserPart>().PasswordFormat = userPart.PasswordFormat;
                 closestUser.ContentItem.As<UserPart>().PasswordSalt = userPart.PasswordSalt;
                 closestUser.ContentItem.As<UserPart>().UserName = userPart.UserName;
                 closestUser.ContentItem.As<UserPart>().NormalizedUserName = userPart.NormalizedUserName;
                 closestUser.ContentItem.As<UserPart>().HashAlgorithm = userPart.HashAlgorithm;
-                userPart.RegistrationStatus = UserStatus.Pending;
+                _contentManager.Destroy(userPart.ContentItem);
                 _notifier.Information(T("Your account has been merged with your previous account."));
-                //if (_authenticationService.GetAuthenticatedUser() == null) { // TODO: to specialize behaviour based on caller (registration, approved back-end, approved front-end
-                //    _authenticationService.SignIn(closestUser, false);
-                //    LoggedIn(closestUser);
-                //}
             }
         }
     }

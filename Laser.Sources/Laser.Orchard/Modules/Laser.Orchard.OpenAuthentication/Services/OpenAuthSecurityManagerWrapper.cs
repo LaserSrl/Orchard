@@ -52,18 +52,6 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             if (string.IsNullOrWhiteSpace(userName))
                 return false;
 
-            // Merge User if AutoMergeUsersEnabled
-            /*
-             1. get Email of the user
-             2. if other "Active" users have same email
-                2a. set most recent user as master
-                2b. Invoke all implementations of IMergingUserHandlers using MergingUserContext(IUser masterUser, IEnumerable<IUser> slave users)
-                    - Mobile UUID > UserId
-                    - Creator, LastModifier
-                    - Owner
-                2c. Disable Slave Users
-                2d. SignIn MasterUser
-             */
             if (_membershipService.GetUser(userName) != null)
                 _authenticationService.SignIn(_membershipService.GetUser(userName), createPersistentCookie);
 
