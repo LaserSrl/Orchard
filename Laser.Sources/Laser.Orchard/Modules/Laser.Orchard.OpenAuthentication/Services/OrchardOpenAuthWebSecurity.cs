@@ -106,7 +106,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             var authSettings = _orchardServices.WorkContext.CurrentSite.As<OpenAuthenticationSettingsPart>();
             var userSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
 
-            if (authSettings.AutoMergeNewUsersEnabled && (!userSettings.UsersCanRegister || userSettings.UsersMustValidateEmail)) {
+            if (authSettings.AutoMergeNewUsersEnabled && (!userSettings.UsersCanRegister || userSettings.UsersMustValidateEmail || userSettings.UsersAreModerated)) {
                 var existingUserWithSameMail = _orchardServices.ContentManager.Query(VersionOptions.Published)
                     .Where<UserPartRecord>(x => x.Email == user.Email && x.NormalizedUserName != user.UserName && x.RegistrationStatus == UserStatus.Approved && x.EmailStatus == UserStatus.Approved)
                     .OrderBy(order => order.CreatedUtc)

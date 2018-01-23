@@ -1,9 +1,14 @@
 ﻿@using Laser.Orchard.OpenAuthentication.Extensions
 @using Orchard.Utility.Extensions
+@using Orchard.ContentManagement
+@using Orchard.Users.Models
 @model Laser.Orchard.OpenAuthentication.ViewModels.IndexViewModel
 
 @{
     Layout.Title = T("Open Authentication Settings");
+    var _userSettings = WorkContext.CurrentSite.As<RegistrationSettingsPart>();
+    var autoMergeEditable= (!_userSettings.UsersCanRegister || _userSettings.UsersMustValidateEmail || _userSettings.UsersAreModerated);
+
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {
@@ -32,7 +37,7 @@
                  <td>@currentProvider.UserIdentifier</td>
                 <td>@currentProvider.ProviderIdKey</td>
                 <td>@currentProvider.ProviderSecret</td>
-                 <td>@(currentProvider.IsEnabled==1)</td>
+                 <td>@(currentProvider.IsEnabled == 1)</td>
                 <td>
                 <a href="@Url.EditProviderConfiguration(currentProvider.Id)">@T("Edit")</a>&nbsp;|&nbsp;<a href="@Url.RemoveProviderConfiguration(currentProvider.Id)">@T("Remove")</a>
                 </td>
@@ -43,7 +48,7 @@
     } else {
     <p class="noproviders">@T("There are no providers registered. Why not <a href=\"{0}\">register one</a>?", Url.ProviderCreate())</p>
     }
-    
+
     <fieldset>
         @Html.CheckBoxFor(m => m.AutoRegistrationEnabled)
         <label for="@Html.FieldIdFor(m => m.AutoRegistrationEnabled)" class="forcheckbox">@T("Auto Registration Enabled")</label>
@@ -52,10 +57,17 @@
         </span>
     </fieldset>
     <fieldset>
-        @Html.CheckBoxFor(m => m.AutoMergeNewUsersEnabled)
+        @Html.CheckBoxFor(m => m.AutoMergeNewUsersEnabled, (!autoMergeEditable ? new { onclick = "return false" } : null))
         <label for="@Html.FieldIdFor(m => m.AutoMergeNewUsersEnabled)" class="forcheckbox">@T("Auto merge new users Enabled")</label>
-        <span class="hint">
-            @T("When checked, the system will try to merge new users to exixting users based on same e-mail.")</span>
+        <div class="hint">
+            @T("When checked, the system will try to merge new users to exixting users based on their e-mail.") 
+            @T("In order to enable \"Auto merge\", Users registration settings have to be in one of these status:")
+            <ul>
+                <li>@T("Users can create new accounts on the site")</li>
+                <li>@T("Users must verify their email address")</li>
+                <li>@T("Users must be approved before they can log in")</li>
+            </ul>
+        </div>
 </fieldset>
     if (Model.ShowAppDirectSetting) {
         <fieldset>
