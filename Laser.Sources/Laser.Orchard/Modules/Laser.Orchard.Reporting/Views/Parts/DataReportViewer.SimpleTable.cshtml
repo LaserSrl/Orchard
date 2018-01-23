@@ -1,0 +1,32 @@
+﻿@using Laser.Orchard.Reporting.ViewModels;
+@using System.Collections;
+@{
+    DataReportViewerViewModel dataReportViewerViewModel = Model.Model;
+}
+<div class="@dataReportViewerViewModel.ContainerCssClass">
+    <h3>@dataReportViewerViewModel.ReportTitle</h3>
+    @if (dataReportViewerViewModel.Data.Count == 0) {
+        <div>@T("There is no data")</div>
+    } else {
+        var isHeader = true;
+        <table>
+            @foreach (var item in dataReportViewerViewModel.Data) {
+                var array = item.Other as Array;
+                if (isHeader) {
+                    <tr>
+                        @foreach (var element in array) {
+                            <td style="padding:2px 5px 2px 5px;border-bottom:1px solid red">@element</td>
+                        }
+                    </tr>
+                    isHeader = false;
+                } else {
+                    <tr>
+                        @foreach (var element in array) {
+                            <td style="padding:2px 5px 2px 5px">@element</td>
+                        }
+                    </tr>
+                }
+            }
+        </table>
+    }
+</div>

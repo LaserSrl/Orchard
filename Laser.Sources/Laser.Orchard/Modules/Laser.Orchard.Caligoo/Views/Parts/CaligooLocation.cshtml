@@ -1,0 +1,15 @@
+﻿@using Laser.Orchard.Caligoo.Models;
+@{
+    var caligooLocationPart = Model.ContentPart as CaligooLocationPart;
+}
+<fieldset>
+    <legend>@T("Caligoo Location")</legend>
+    @T("Caligoo Location ID"): @caligooLocationPart.CaligooLocationId<br />
+    @T("Display Name"): @caligooLocationPart.DisplayName<br />
+    @T("Address"): @caligooLocationPart.Address<br />
+    @T("Postal Code"): @caligooLocationPart.PostalCode<br />
+    @T("City"): @caligooLocationPart.City<br />
+    @T("Country"): @caligooLocationPart.Country<br />
+    @T("Latitude"): @caligooLocationPart.Latitude<br />
+    @T("Longitude"): @caligooLocationPart.Longitude<br />
+</fieldset>

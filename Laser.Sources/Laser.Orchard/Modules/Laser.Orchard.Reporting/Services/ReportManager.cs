@@ -19,6 +19,7 @@ using Orchard.Core.Title.Models;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Security.Permissions;
+using Orchard.Logging;
 
 namespace Laser.Orchard.Reporting.Services {
     public class ReportManager : IReportManager
@@ -33,6 +34,7 @@ namespace Laser.Orchard.Reporting.Services {
         private Dictionary<int, Permission> _reportPermissions;
         private Dictionary<int, Permission> _dashboardPermissions;
         public Localizer T { get; set; }
+        public ILogger Log { get; set; }
 
         public ReportManager(
             IRepository<QueryPartRecord> queryRepository,
@@ -51,6 +53,7 @@ namespace Laser.Orchard.Reporting.Services {
             _transactionManager = transactionManager;
             _authorizer = authorizer;
             T = NullLocalizer.Instance;
+            Log = NullLogger.Instance;
         }
 
         public IEnumerable<TypeDescriptor<GroupByDescriptor>> DescribeGroupByFields()
@@ -155,23 +158,50 @@ namespace Laser.Orchard.Reporting.Services {
                     throw new ArgumentOutOfRangeException("HQL query not valid: please specify select clause with at least 2 columns (the first for labels, the second for values).");
                 }
                 result = hql.SetResultTransformer(Transformers.AliasToEntityMap).Enumerable();
-            } catch {
-                result = new object[0];
+            } catch (Exception ex) {
+                Log.Error(ex, "RunHqlReport error - query: " + query);
+                throw new ArgumentOutOfRangeException("HQL query not valid: please specify select clause with at least 2 columns (the first for labels, the second for values).");
             }
 
-            foreach(var record in result) {
-                var ht = record as Hashtable;
-                string key = Convert.ToString(ht[hql.ReturnAliases[0]]);
-                if (returnValue.ContainsKey(key)) {
-                    var previousItem = returnValue[key];
-                    previousItem.AggregationValue += Convert.ToDouble(ht[hql.ReturnAliases[1]]);
-                    returnValue[key] = previousItem;
-                } else {
-                    returnValue[key] = new AggregationResult {
-                        AggregationValue = Convert.ToDouble(ht[hql.ReturnAliases[1]]),
-                        Label = key,
-                        GroupingField = hql.ReturnAliases[0]
-                    };
+            if (hql.ReturnAliases.Count() > 2) {
+                returnValue.Add("0", new AggregationResult {
+                    AggregationValue = 0,
+                    Label = "",
+                    GroupingField = "",
+                    Other = hql.ReturnAliases
+                });
+                int rownum = 0;
+                foreach (var record in result) {
+                    var row = new List<object>();
+                    var ht = record as Hashtable;
+                    foreach(var alias in hql.ReturnAliases) {
+                        row.Add(ht[alias]);
+                    }
+                    rownum++;
+                    returnValue.Add(rownum.ToString(), new AggregationResult {
+                        AggregationValue = 0,
+                        Label = "",
+                        GroupingField = "",
+                        Other = row.ToArray()
+                    });
+                }
+            } else {
+                foreach (var record in result) {
+                    var ht = record as Hashtable;
+                    string key = Convert.ToString(ht[hql.ReturnAliases[0]]);
+                    double value = 0;
+                    double.TryParse(Convert.ToString(ht[hql.ReturnAliases[1]]), out value);
+                    if (returnValue.ContainsKey(key)) {
+                        var previousItem = returnValue[key];
+                        previousItem.AggregationValue += value;
+                        returnValue[key] = previousItem;
+                    } else {
+                        returnValue[key] = new AggregationResult {
+                            AggregationValue = value,
+                            Label = key,
+                            GroupingField = hql.ReturnAliases[0]
+                        };
+                    }
                 }
             }
             return returnValue.Values;
