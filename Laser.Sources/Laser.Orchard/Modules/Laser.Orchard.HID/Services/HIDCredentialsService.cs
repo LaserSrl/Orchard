@@ -71,6 +71,22 @@ namespace Laser.Orchard.HID.Services {
             }
         }
 
+        public HIDUser IssueCredentials(HIDUser hidUser, string[] partNumbers, int? endpointId) {
+            if (endpointId.HasValue) {
+                // try to issue credentials to the credential container specified
+                hidUser = hidUser.IssueCredential("", endpointId.Value);
+                if (hidUser.Error == UserErrors.NoError && hidUser.Error == UserErrors.PreconditionFailed) {
+                    // trigger events on success
+                    var user = UserFromEmail(hidUser.Emails.FirstOrDefault());
+                    _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") { User = user });
+                }
+            } else {
+                // issue credentials to the latest credentail container normally
+                return IssueCredentials(hidUser, partNumbers);
+            }
+            return hidUser;
+        }
+
         public HIDUser RevokeCredentials(HIDUser hidUser, string[] partNumbers) {
             var user = UserFromEmail(hidUser.Emails.FirstOrDefault());
             if (partNumbers.Length == 0) {

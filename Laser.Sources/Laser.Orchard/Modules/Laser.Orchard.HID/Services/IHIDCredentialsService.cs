@@ -50,5 +50,14 @@ namespace Laser.Orchard.HID.Services {
         /// </summary>
         /// <param name="context">The object that contains the information on the operations ot perform.</param>
         void ScheduleCredentialActions(BulkCredentialsOperationsContext context);
+
+        /// <summary>
+        /// Issue credentials to the HIDUser for all the PartNumbers that are passed as parameter and to the
+        /// Credential COntainer with the Id passed as parameter.
+        /// </summary>
+        /// <param name="hidUser"></param>
+        /// <param name="endpointId"></param>
+        /// <returns>This always returns an HIDUser object, but we should check its Error field before using it.</returns>
+        HIDUser IssueCredentials(HIDUser hidUser, string[] partNumbers, int? endpointId);
     }
 }

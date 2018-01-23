@@ -61,5 +61,10 @@ namespace Laser.Orchard.HID.ViewModels {
             get { return SettingsPart.SerializedAppVersionStrings; }
             set { SettingsPart.SerializedAppVersionStrings = value ?? string.Empty; }
         }
+
+        public bool PreventMoreThanOneDevice {
+            get { return SettingsPart.PreventMoreThanOneDevice; }
+            set { SettingsPart.PreventMoreThanOneDevice = value; }
+        }
     }
 }

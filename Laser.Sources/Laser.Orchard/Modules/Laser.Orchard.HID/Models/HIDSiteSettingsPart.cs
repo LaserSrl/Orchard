@@ -57,5 +57,18 @@ namespace Laser.Orchard.HID.Models {
             get { return (AppVersionStrings != null && AppVersionStrings.Length > 0) ? String.Join(Environment.NewLine, AppVersionStrings) : ""; }
             set { AppVersionStrings = value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(avs => avs.Trim()).ToArray(); }
         }
+
+        /// <summary>
+        /// This setting tells us whether we are allowed to create additional invitation codes for a user
+        /// when they already have active credential containers. There is no clear way to verify whether there
+        /// are upstanding invitation codes for the user, so we will not do that check (i.e. a single user may
+        /// have several "active" invitation codes, and thus may be able to create additional credential
+        /// containers).
+        /// </summary>
+        public bool PreventMoreThanOneDevice {
+            get { return this.Retrieve(x => x.PreventMoreThanOneDevice); }
+            set { this.Store(x => x.PreventMoreThanOneDevice, value); }
+        }
+
     }
 }

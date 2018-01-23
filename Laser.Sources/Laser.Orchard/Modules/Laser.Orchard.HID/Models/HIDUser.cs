@@ -367,6 +367,54 @@ namespace Laser.Orchard.HID.Models {
             return this;
         }
 
+        /// <summary>
+        /// Task HID's systems with issueing a credential for the given part number to the given credential container
+        /// </summary>
+        /// <param name="partNumber">The Part Number for which we are going to issue the credential</param>
+        /// <param name="endpointId">The Id in HID's systems of the credential container we will be trying to issue
+        /// credentials to.</param>
+        /// <returns></returns>
+        public HIDUser IssueCredential(string partNumber, int endpointId) {
+            if (!_HIDService.VerifyAuthentication()) {
+                Error = UserErrors.AuthorizationFailed;
+                return this;
+            }
+
+            if (CredentialContainers.Count == 0) {
+                Error = UserErrors.DoesNotHaveDevices;
+            }
+
+            var specificContainer = CredentialContainers.FirstOrDefault(cc => cc.Id == endpointId);
+            if (specificContainer == null) {
+                Error = UserErrors.InvalidParameters; // User does not have that Credential Container
+            }
+
+            specificContainer.IssueCredential(partNumber, _HIDService);
+            //error handling:
+            switch (specificContainer.Error) {
+                case CredentialErrors.NoError:
+                    Error = UserErrors.NoError;
+                    break;
+                case CredentialErrors.UnknownError:
+                    Error = UserErrors.UnknownError;
+                    break;
+                case CredentialErrors.CredentialDeliveredAlready:
+                    Error = UserErrors.NoError;
+                    break;
+                case CredentialErrors.AuthorizationFailed:
+                    // Authentication could have expired while this method was running
+                    if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
+                        return IssueCredential(partNumber);
+                    }
+                    Error = UserErrors.AuthorizationFailed;
+                    break;
+                default:
+                    break;
+            }
+
+            return this;
+        }
+
         private string GetCredentialContainerEndpointFormat {
             get { return String.Format(HIDAPIEndpoints.GetCredentialContainerEndpointFormat, _HIDService.BaseEndpoint, @"{0}"); }
         }
