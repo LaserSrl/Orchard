@@ -25,7 +25,7 @@ namespace Laser.Orchard.HID {
                 },
                 new HttpRouteDescriptor {
                     Priority = 5,
-                    RouteTemplate = "API/Laser.Orchard.HID/HIDAPI/IssueCredentials/{endpointId}",
+                    RouteTemplate = "API/Laser.Orchard.HID/HIDAPI/IssueCredentials",
                     Defaults = new {
                         area = "Laser.Orchard.HID",
                         controller = "HIDAPI",

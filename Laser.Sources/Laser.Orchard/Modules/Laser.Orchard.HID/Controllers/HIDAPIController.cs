@@ -41,6 +41,8 @@ namespace Laser.Orchard.HID.Controllers {
 
         /// <summary>
         /// Call this method to request for credentials to be issued to the credential container with the id passed.
+        /// call to API/Laser.Orchard.HID/HIDAPI/IssueCredentials
+        /// Eventually passing a value for endpointId in QueryString
         /// </summary>
         /// <param name="endpointId">The Id of the credential container to which we should try to issue credentials.</param>
         /// <returns></returns>
