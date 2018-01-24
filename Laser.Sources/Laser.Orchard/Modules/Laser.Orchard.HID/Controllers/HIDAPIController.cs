@@ -44,10 +44,10 @@ namespace Laser.Orchard.HID.Controllers {
         /// </summary>
         /// <param name="endpointId">The Id of the credential container to which we should try to issue credentials.</param>
         /// <returns></returns>
-        [System.Web.Mvc.HttpGet]
+        [System.Web.Mvc.HttpPost, ActionName("IssueCredentials")]
         [Authorize]
         [System.Web.Mvc.OutputCache(NoStore = true)]
-        public Response IssueCredentials(int? endpointId) {
+        public Response IssueCredentials(int? endpointId = null) {
             string message = "";
             HIDErrorCode eCode = HIDErrorCode.GenericError;
             HIDResolutionAction rAction = HIDResolutionAction.NoAction;
@@ -96,7 +96,7 @@ namespace Laser.Orchard.HID.Controllers {
         /// </summary>
         /// <returns>If successfull this method returns a Response json object that contains the invitation code in
         /// Response.Data.InvitationCode.</returns>
-        [System.Web.Mvc.HttpGet]
+        [System.Web.Mvc.HttpGet, ActionName("GetInvitation")]
         [Authorize]
         [System.Web.Mvc.OutputCache(NoStore = true)]
         public Response GetInvitation() {

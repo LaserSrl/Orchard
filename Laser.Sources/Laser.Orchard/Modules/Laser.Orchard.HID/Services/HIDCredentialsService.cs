@@ -74,11 +74,23 @@ namespace Laser.Orchard.HID.Services {
         public HIDUser IssueCredentials(HIDUser hidUser, string[] partNumbers, int? endpointId) {
             if (endpointId.HasValue) {
                 // try to issue credentials to the credential container specified
-                hidUser = hidUser.IssueCredential("", endpointId.Value);
-                if (hidUser.Error == UserErrors.NoError && hidUser.Error == UserErrors.PreconditionFailed) {
-                    // trigger events on success
-                    var user = UserFromEmail(hidUser.Emails.FirstOrDefault());
-                    _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") { User = user });
+                var user = UserFromEmail(hidUser.Emails.FirstOrDefault());
+                if (partNumbers.Length == 0) {
+                    hidUser = hidUser.IssueCredential("", endpointId.Value);
+                    if (hidUser.Error == UserErrors.NoError && hidUser.Error == UserErrors.PreconditionFailed) {
+                        // trigger events on success
+                        _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") { User = user });
+                    }
+                } else {
+                    foreach (var pn in partNumbers) {
+                        hidUser = hidUser.IssueCredential(pn, endpointId.Value);
+                        if (hidUser.Error != UserErrors.NoError && hidUser.Error != UserErrors.PreconditionFailed) {
+                            break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential having been
+                                    //assigned already, which is fine.
+                        }
+                        // trigger events on success
+                        _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") { User = user });
+                    }
                 }
             } else {
                 // issue credentials to the latest credentail container normally

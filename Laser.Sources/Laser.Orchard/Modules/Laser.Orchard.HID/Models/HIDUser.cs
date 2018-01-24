@@ -110,7 +110,8 @@ namespace Laser.Orchard.HID.Models {
         /// <param name="location">This is the complete endpoint corresponding to the user in HID's systems.</param>
         /// <returns>The HIDUser gotten from HID's systems.</returns>
         public static HIDUser GetUser(IHIDAdminService hidService, string location) {
-            return new HIDUser(hidService) { Location = location }.GetUser();
+            var id = IdFromLocation(location);
+            return new HIDUser(hidService) { Id = id, Location = location }.GetUser();
         }
 
         public HIDUser GetUser() {
@@ -461,6 +462,22 @@ namespace Laser.Orchard.HID.Models {
                 && _location.StartsWith(_HIDService.UsersEndpoint, StringComparison.InvariantCultureIgnoreCase)
                 && int.TryParse(_location.Substring(_HIDService.UsersEndpoint.Length + 1), out id)
                 && id == Id;
+        }
+
+        private int IdFromLocation() {
+            int id;
+            if (int.TryParse(_location.Substring(_HIDService.UsersEndpoint.Length + 1), out id)) {
+                return id;
+            }
+            return 0;
+        }
+
+        private static int IdFromLocation(string location) {
+            int id;
+            if (int.TryParse(location.Substring(location.LastIndexOf('/') + 1), out id)) {
+                return id;
+            }
+            return 0;
         }
     }
 }
