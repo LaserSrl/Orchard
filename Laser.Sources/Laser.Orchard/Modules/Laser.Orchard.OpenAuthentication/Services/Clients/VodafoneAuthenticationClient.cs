@@ -38,7 +38,7 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             OpenAuthCreateUserParams retVal = createUserParams;
             string emailAddress = string.Empty;
             foreach (KeyValuePair<string, string> values in createUserParams.ExtraData) {
-                if (values.Key == "mail") {
+                if (values.Key == "email") {
                     retVal.UserName = values.Value.IsEmailAddress() ? values.Value.Substring(0, values.Value.IndexOf('@')) : values.Value;
                 }
             }
@@ -52,12 +52,21 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
                 Logger.Error(string.Format("OpenAuth Utente Vodafone: il token {0} é valido ma login non accettata, nessuna email restituita dal servizio Vodafone", userAccessToken));
                 return AuthenticationResult.Failed;
             }
+            if (!userData.ContainsKey("userid")) { // email non presente
+                Logger.Error(string.Format("OpenAuth Utente Vodafone: il token {0} é valido ma login non accettata, nessun id restituito dal servizio Vodafone", userAccessToken));
+                return AuthenticationResult.Failed;
+            }
             if (userData.ContainsKey("mobile"))
                 userData["phone"] = userData["mobile"];
             string email = userData["email"];
-            string name = email;
-            string id = email;
-            userData["name"] = name;
+            string name = "";
+            try {
+                name = userData["surname"] + " " + userData["name"];
+              //  userData["name"] = name;
+            }
+            catch (Exception) { }
+            string id = userData["userid"];
+          
             userData["email"] = email;
             return new AuthenticationResult(true, this.ProviderName, id, name, userData);
         }
