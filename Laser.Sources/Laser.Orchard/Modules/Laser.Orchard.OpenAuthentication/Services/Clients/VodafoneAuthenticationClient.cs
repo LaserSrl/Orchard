@@ -48,15 +48,17 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
         public AuthenticationResult GetUserData(ProviderConfigurationRecord clientConfiguration, AuthenticationResult previosAuthResult, string userAccessToken) {
             var userData = (Build(clientConfiguration) as OpenAuthVodafoneOAuth2Client).GetUserDataDictionary(userAccessToken);
             //Logger.Error("user data count: {0}", userData.Count);
-            userData["accesstoken"] = userAccessToken;
-            string id = userData["UserIdentifier"];
-            string name = userData["Email"];
-            userData["name"] = userData["Name"];
-            userData["surname"] = userData["Surname"];
-            userData["cellulare"] = userData["Cellular"];
-            // string id = userData["id"];
-            // string name = userData["email"];
-            // userData["name"] = userData["email"];
+            if (!userData.ContainsKey("email")) { // email non presente
+                Logger.Error(string.Format("OpenAuth Utente Vodafone: il token {0} é valido ma login non accettata, nessuna email restituita dal servizio Vodafone", userAccessToken));
+                return AuthenticationResult.Failed;
+            }
+            if (userData.ContainsKey("mobile"))
+                userData["phone"] = userData["mobile"];
+            string email = userData["email"];
+            string name = email;
+            string id = email;
+            userData["name"] = name;
+            userData["email"] = email;
             return new AuthenticationResult(true, this.ProviderName, id, name, userData);
         }
 

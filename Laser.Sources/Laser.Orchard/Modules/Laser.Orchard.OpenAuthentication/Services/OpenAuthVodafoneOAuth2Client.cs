@@ -26,20 +26,21 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         /// <summary>
         /// The user info endpoint.
         /// </summary>
-        private const string UserInfoEndpoint = "https://demo3936772.mockable.io/";
-//{"UserIdentifier":"u124444",
-//"Cellular":"324646465486",
-//"Email":"ciao@ilmiociao.it",
-// "Name": "John",
-// "Surname":"Do"
-//}
-    //"https://vodafone.it/userinfo"; 
-    //"https://www.googleapis.com/oauth2/v1/userinfo";
+        private const string UserInfoEndpoint = "http://beta.vodafone.it/no-wp/iamVodafone/iamVodafone_api-main.php";
+            //"https://demo3936772.mockable.io/";
+            //{"UserIdentifier":"u124444",
+            //"Cellular":"324646465486",
+            //"Email":"ciao@ilmiociao.it",
+            // "Name": "John",
+            // "Surname":"Do"
+            //}
+            //"https://vodafone.it/userinfo"; 
+            //"https://www.googleapis.com/oauth2/v1/userinfo";
 
-    /// <summary>
-    /// The base uri for scopes.
-    /// </summary>
-    private const string ScopeBaseUri = "https://www.googleapis.com/auth/";
+        /// <summary>
+        /// The base uri for scopes.
+        /// </summary>
+        private const string ScopeBaseUri = "https://www.googleapis.com/auth/";
 
         /// <summary>
         /// The _app id.
@@ -111,7 +112,11 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         }
 
         protected override IDictionary<string, string> GetUserData(string accessToken) {
-            var uri = BuildUri(UserInfoEndpoint, new NameValueCollection { { "access_token", accessToken } });
+            var uri = BuildUri(UserInfoEndpoint, new NameValueCollection {
+                { "access_token", accessToken },
+                {"action","verifyToken" },
+                {"service_id_token","xtgCi8NHoWOMQbxW54C63dQOxuL2PUcN_iamvodafone" }
+            });
 
             //_clientId
             var webRequest = (HttpWebRequest)WebRequest.Create(uri);
