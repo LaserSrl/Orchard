@@ -118,11 +118,13 @@ namespace Laser.Orchard.HID.Models {
             wr.ContentType = Constants.DefaultContentType;
             wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
             byte[] bodyData = Encoding.UTF8.GetBytes(IssueCredentialBody(partNumber));
-            using (Stream reqStream = wr.GetRequestStream()) {
-                reqStream.Write(bodyData, 0, bodyData.Length);
-            }
+            
             //handle call
             try {
+                using (Stream reqStream = wr.GetRequestStream()) {
+                    // body stream is written in try-catch, because it needs to resolve destination url
+                    reqStream.Write(bodyData, 0, bodyData.Length);
+                }
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         // We trust that the HID API responds as documented

@@ -98,10 +98,12 @@ namespace Laser.Orchard.HID.Services {
             wr.Headers.Add(HttpRequestHeader.Authorization, AuthorizationToken);
             string bodyText = CreateSearchFormat(externalId);
             byte[] bodyData = Encoding.UTF8.GetBytes(bodyText);
-            using (Stream reqStream = wr.GetRequestStream()) {
-                reqStream.Write(bodyData, 0, bodyData.Length);
-            }
+            
             try {
+                using (Stream reqStream = wr.GetRequestStream()) {
+                    // body stream is written in try-catch, because it needs to resolve destination url
+                    reqStream.Write(bodyData, 0, bodyData.Length);
+                }
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         //read the json response

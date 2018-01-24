@@ -45,10 +45,11 @@ namespace Laser.Orchard.HID.Models {
             wr.ContentType = "application/x-www-form-urlencoded";
             wr.Accept = "application/json";
             //wr.ContentLength = bodyData.Length;
-            using (Stream reqStream = wr.GetRequestStream()) {
-                reqStream.Write(bodyData, 0, bodyData.Length);
-            }
             try {
+                using (Stream reqStream = wr.GetRequestStream()) {
+                    // body stream is written in try-catch, because it needs to resolve destination url
+                    reqStream.Write(bodyData, 0, bodyData.Length);
+                }
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         //read the json response

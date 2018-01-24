@@ -110,7 +110,8 @@ namespace Laser.Orchard.HID.Models {
         /// <param name="location">This is the complete endpoint corresponding to the user in HID's systems.</param>
         /// <returns>The HIDUser gotten from HID's systems.</returns>
         public static HIDUser GetUser(IHIDAdminService hidService, string location) {
-            return new HIDUser(hidService) { Location = location }.GetUser();
+            var id = IdFromLocation(location);
+            return new HIDUser(hidService) { Id = id, Location = location }.GetUser();
         }
 
         public HIDUser GetUser() {
@@ -209,10 +210,12 @@ namespace Laser.Orchard.HID.Models {
             wr.ContentType = Constants.DefaultContentType;
             wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
             byte[] bodyData = Encoding.UTF8.GetBytes(CreateUserBody);
-            using (Stream reqStream = wr.GetRequestStream()) {
-                reqStream.Write(bodyData, 0, bodyData.Length);
-            }
+            
             try {
+                using (Stream reqStream = wr.GetRequestStream()) {
+                    // body stream is written in try-catch, because it needs to resolve destination url
+                    reqStream.Write(bodyData, 0, bodyData.Length);
+                }
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                     if (resp.StatusCode == HttpStatusCode.Created) {
                         using (var reader = new StreamReader(resp.GetResponseStream())) {
@@ -264,10 +267,12 @@ namespace Laser.Orchard.HID.Models {
             wr.ContentType = Constants.DefaultContentType;
             wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
             byte[] bodyData = Encoding.UTF8.GetBytes(CreateInvitationBody);
-            using (Stream reqStream = wr.GetRequestStream()) {
-                reqStream.Write(bodyData, 0, bodyData.Length);
-            }
+            
             try {
+                using (Stream reqStream = wr.GetRequestStream()) {
+                    // body stream is written in try-catch, because it needs to resolve destination url
+                    reqStream.Write(bodyData, 0, bodyData.Length);
+                }
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                     if (resp.StatusCode == HttpStatusCode.Created) {
                         using (var reader = new StreamReader(resp.GetResponseStream())) {
@@ -363,6 +368,54 @@ namespace Laser.Orchard.HID.Models {
             return this;
         }
 
+        /// <summary>
+        /// Task HID's systems with issueing a credential for the given part number to the given credential container
+        /// </summary>
+        /// <param name="partNumber">The Part Number for which we are going to issue the credential</param>
+        /// <param name="endpointId">The Id in HID's systems of the credential container we will be trying to issue
+        /// credentials to.</param>
+        /// <returns></returns>
+        public HIDUser IssueCredential(string partNumber, int endpointId) {
+            if (!_HIDService.VerifyAuthentication()) {
+                Error = UserErrors.AuthorizationFailed;
+                return this;
+            }
+
+            if (CredentialContainers.Count == 0) {
+                Error = UserErrors.DoesNotHaveDevices;
+            }
+
+            var specificContainer = CredentialContainers.FirstOrDefault(cc => cc.Id == endpointId);
+            if (specificContainer == null) {
+                Error = UserErrors.InvalidParameters; // User does not have that Credential Container
+            }
+
+            specificContainer.IssueCredential(partNumber, _HIDService);
+            //error handling:
+            switch (specificContainer.Error) {
+                case CredentialErrors.NoError:
+                    Error = UserErrors.NoError;
+                    break;
+                case CredentialErrors.UnknownError:
+                    Error = UserErrors.UnknownError;
+                    break;
+                case CredentialErrors.CredentialDeliveredAlready:
+                    Error = UserErrors.NoError;
+                    break;
+                case CredentialErrors.AuthorizationFailed:
+                    // Authentication could have expired while this method was running
+                    if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
+                        return IssueCredential(partNumber);
+                    }
+                    Error = UserErrors.AuthorizationFailed;
+                    break;
+                default:
+                    break;
+            }
+
+            return this;
+        }
+
         private string GetCredentialContainerEndpointFormat {
             get { return String.Format(HIDAPIEndpoints.GetCredentialContainerEndpointFormat, _HIDService.BaseEndpoint, @"{0}"); }
         }
@@ -409,6 +462,22 @@ namespace Laser.Orchard.HID.Models {
                 && _location.StartsWith(_HIDService.UsersEndpoint, StringComparison.InvariantCultureIgnoreCase)
                 && int.TryParse(_location.Substring(_HIDService.UsersEndpoint.Length + 1), out id)
                 && id == Id;
+        }
+
+        private int IdFromLocation() {
+            int id;
+            if (int.TryParse(_location.Substring(_HIDService.UsersEndpoint.Length + 1), out id)) {
+                return id;
+            }
+            return 0;
+        }
+
+        private static int IdFromLocation(string location) {
+            int id;
+            if (int.TryParse(location.Substring(location.LastIndexOf('/') + 1), out id)) {
+                return id;
+            }
+            return 0;
         }
     }
 }

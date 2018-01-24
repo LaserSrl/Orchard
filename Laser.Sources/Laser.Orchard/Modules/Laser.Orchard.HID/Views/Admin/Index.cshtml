@@ -35,6 +35,12 @@
         @Html.PasswordFor(m => m.ClientSecret, new { @class = "medium text"})
         <span class="hint">@T("This is the password for the account responsible for managing Mobile Access.")</span>
     </fieldset>
+    <fieldset id="SettingsForUsers">
+        <legend>@T("Settings for the users of the system")</legend>
+        @Html.CheckBoxFor(m => m.PreventMoreThanOneDevice)
+        <label for="@Html.FieldIdFor(m => m.PreventMoreThanOneDevice)" class="forcheckbox">@T("Prevent multiple containers.")</label>
+        <span class="hint">@T("Selecting this checkbox will mean that the users are not allowed to register multiuple credential containers, and as such cannot receive invitations to register new ones as long as they have another active endpoint.")</span>
+    </fieldset>
     <fieldset id="PartNumbers">
         <legend>@T("Input your HID Part Numbers")</legend>
         <span class="hint">@T("Updating part numbers may take a long time in case credentials must be issued/revoked as a consequence.")</span>
