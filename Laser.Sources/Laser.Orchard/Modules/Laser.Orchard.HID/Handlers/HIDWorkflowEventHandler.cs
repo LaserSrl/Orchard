@@ -18,7 +18,8 @@ namespace Laser.Orchard.HID.Handlers {
                 context.User,
                 () => new Dictionary<string, object> {
                     {"HIDUser", context.HIDUser},
-                    { "PartNumber", context.PartNumber }
+                    { "PartNumber", context.PartNumber },
+                    { "HIDCredentials", context.AffectedCredentials }
                 });
         }
 
@@ -27,7 +28,8 @@ namespace Laser.Orchard.HID.Handlers {
                 context.User,
                 () => new Dictionary<string, object> {
                     {"HIDUser", context.HIDUser},
-                    { "PartNumber", context.PartNumber }
+                    { "PartNumber", context.PartNumber },
+                    { "HIDCredentials", context.AffectedCredentials }
                 });
         }
 

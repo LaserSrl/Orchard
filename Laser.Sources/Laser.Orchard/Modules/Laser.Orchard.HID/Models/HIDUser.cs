@@ -321,6 +321,9 @@ namespace Laser.Orchard.HID.Models {
         /// <param name="onlyLatestContainer">Tells wether to attept issueing credentials only for the most recent 
         /// container for each of the user's devices.</param>
         /// <returns></returns>
+        /// <remarks>Passing an empty string for partNumber means we will try to have HID issue a credential for
+        /// the default PartNumber. Contrary to the fact that is called a "default" Part Nunmber, it is something
+        /// that HID's customers have to configure explicitly. If they did not, the Issue will fail.</remarks>
         public HIDUser IssueCredential(string partNumber, bool onlyLatestContainer = true) {
             if (!_HIDService.VerifyAuthentication()) {
                 Error = UserErrors.AuthorizationFailed;
@@ -375,6 +378,9 @@ namespace Laser.Orchard.HID.Models {
         /// <param name="endpointId">The Id in HID's systems of the credential container we will be trying to issue
         /// credentials to.</param>
         /// <returns></returns>
+        /// <remarks>Passing an empty string for partNumber means we will try to have HID issue a credential for
+        /// the default PartNumber. Contrary to the fact that is called a "default" Part Nunmber, it is something
+        /// that HID's customers have to configure explicitly. If they did not, the Issue will fail.</remarks>
         public HIDUser IssueCredential(string partNumber, int endpointId) {
             if (!_HIDService.VerifyAuthentication()) {
                 Error = UserErrors.AuthorizationFailed;
@@ -424,6 +430,14 @@ namespace Laser.Orchard.HID.Models {
             get { return string.Format(HIDAPIEndpoints.RevokeCredentialEndpointFormat, _HIDService.BaseEndpoint, @"{0}"); }
         }
 
+        /// <summary>
+        /// Task HID's systems with revoking the credentials for the given part number.
+        /// </summary>
+        /// <param name="partNumber"></param>
+        /// <returns></returns>
+        /// <remarks>Passing an empty string for partNumber means we will try to have HID revoke tge credential for
+        /// the default PartNumber. Contrary to the fact that is called a "default" Part Nunmber, it is something
+        /// that HID's customers have to configure explicitly. If they did not, the Revoke will fail.</remarks>
         public HIDUser RevokeCredential(string partNumber = "") {
             if (!_HIDService.VerifyAuthentication()) {
                 Error = UserErrors.AuthorizationFailed;
