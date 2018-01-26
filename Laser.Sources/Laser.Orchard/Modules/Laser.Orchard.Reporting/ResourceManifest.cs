@@ -17,6 +17,8 @@ namespace Laser.Orchard.Reporting
             builder.Add().DefineScript("categoryAxisjqplot").SetUrl("plugins/jqplot.categoryAxisRenderer.js").SetDependencies("jqplot");
             builder.Add().DefineScript("pointLabelsjqplot").SetUrl("plugins/jqplot.pointLabels.min.js").SetDependencies("jqplot");
             builder.Add().DefineScript("donutRendererjqplot").SetUrl("plugins/jqplot.donutRenderer.js").SetDependencies("jqplot");
+            builder.Add().DefineScript("canvasAxisTickjqplot").SetUrl("plugins/jqplot.canvasAxisTickRenderer.min.js").SetDependencies("jqplot");
+            builder.Add().DefineScript("canvasTextjqplot").SetUrl("plugins/jqplot.canvasTextRenderer.min.js").SetDependencies("jqplot");
             builder.Add().DefineScript("Reporting").SetUrl("Reporting.js").SetDependencies("jqplot").SetDependencies("JQuery");
             builder.Add().DefineScript("Chosen").SetUrl("chosen/chosen.jquery.js").SetDependencies("jQuery");
         }
