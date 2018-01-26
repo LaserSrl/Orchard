@@ -24,6 +24,11 @@ using System.Dynamic;
 using NHibernate.Transform;
 using Orchard.Tokens;
 using Orchard.ContentManagement;
+using System.Web.Security;
+using Orchard.Utility.Extensions;
+using Orchard.Services;
+using Orchard.Security;
+using Orchard.Mvc;
 
 namespace Laser.Orchard.DevTools.Controllers {
 
@@ -38,6 +43,9 @@ namespace Laser.Orchard.DevTools.Controllers {
         public IOrchardServices _orchardServices { get; set; }
         private readonly INotifier _notifier;
         public Localizer T { get; set; }
+        private readonly IClock _clock;
+        private readonly ISslSettingsProvider _sslSettingsProvider;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AdminController(ICsrfTokenHelper csrfTokenHelper,
             IScheduledTaskManager scheduledTaskManager,
@@ -47,7 +55,11 @@ namespace Laser.Orchard.DevTools.Controllers {
              ICacheStorageProvider cacheStorageProvider,
             ShellSettings shellSetting,
             IRazorTemplateManager razorTemplateManager,
-            ITokenizer tokenizer) {
+            ITokenizer tokenizer,
+            IClock clock,
+            ISslSettingsProvider sslSettingsProvider,
+            IHttpContextAccessor httpContextAccessor) {
+
             _tokenizer = tokenizer;
             _csrfTokenHelper = csrfTokenHelper;
             _orchardServices = orchardServices;
@@ -58,6 +70,9 @@ namespace Laser.Orchard.DevTools.Controllers {
             _cacheStorageProvider = cacheStorageProvider;
             _shellSetting = shellSetting;
             _razorTemplateManager = razorTemplateManager;
+            _clock = clock;
+            _sslSettingsProvider = sslSettingsProvider;
+            _httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -320,6 +335,63 @@ namespace Laser.Orchard.DevTools.Controllers {
             //model.Results = hql.SetResultTransformer(Transformers.AliasToEntityMap)
             //    .List() as IList<object>;
             return View("CustomHqlQuery", model);
+        }
+
+        [HttpGet]
+        [Admin]
+        public ActionResult GetV3AuthCookieInfo() {
+            if (!_orchardServices.Authorizer.Authorize(Permissions.DevTools))
+                return new HttpUnauthorizedResult();
+
+            var now = _clock.UtcNow.ToLocalTime();
+            var currentUser = _orchardServices.WorkContext.CurrentUser;
+            var userData = string.Concat(currentUser.UserName.ToBase64(), ";", _shellSetting.Name);
+
+            var ticket = new FormsAuthenticationTicket(
+                3,
+                currentUser.UserName,
+                now,
+                now.Add(TimeSpan.FromDays(1)),
+                false,
+                userData,
+                FormsAuthentication.FormsCookiePath);
+
+            var encryptedTicket = FormsAuthentication.Encrypt(ticket);
+
+            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket) {
+                HttpOnly = true,
+                Secure = _sslSettingsProvider.GetRequiresSSL(),
+                Path = FormsAuthentication.FormsCookiePath
+            };
+
+            var httpContext = _httpContextAccessor.Current();
+
+            if (!String.IsNullOrEmpty(_shellSetting.RequestUrlPrefix)) {
+                cookie.Path = GetCookiePath(httpContext);
+            }
+
+            if (FormsAuthentication.CookieDomain != null) {
+                cookie.Domain = FormsAuthentication.CookieDomain;
+            }
+
+            var sb = new StringBuilder();
+            sb.AppendLine("New V3 authentication cookie (valid for 24 hours)");
+            sb.AppendLine("Cookie Name: " + cookie.Name);
+            sb.AppendLine("Cookie Path: " + cookie.Path);
+            sb.AppendLine("Cookie Value: " + cookie.Value);
+
+            var se = new Segnalazione { Testo = sb.ToString() };
+            return View("Index", se);
+        }
+        private string GetCookiePath(HttpContextBase httpContext) {
+            var cookiePath = httpContext.Request.ApplicationPath;
+            if (cookiePath != null && cookiePath.Length > 1) {
+                cookiePath += '/';
+            }
+
+            cookiePath += _shellSetting.RequestUrlPrefix;
+
+            return cookiePath;
         }
     }
 }
