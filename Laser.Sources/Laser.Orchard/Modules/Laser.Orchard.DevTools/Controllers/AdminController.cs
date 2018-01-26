@@ -380,6 +380,16 @@ namespace Laser.Orchard.DevTools.Controllers {
             sb.AppendLine("Cookie Path: " + cookie.Path);
             sb.AppendLine("Cookie Value: " + cookie.Value);
 
+            // We also add the csrf token that we are going to use to validate calls from mobile
+            var csrfToken = _csrfTokenHelper.GenerateCsrfTokenFromAuthToken(cookie.Value);
+            sb.AppendLine("CSRF Token: " + csrfToken);
+
+            // prepare a string to paste in a proxy for testing (e.g. in postman)
+            sb.AppendLine(""); //empty line separator
+            sb.AppendLine("Example of headers for a proxy (e.g. just paste the next few lines as headers in Postman):");
+            sb.AppendLine("Cookie: " + cookie.Name + "=" + cookie.Value + "; path=" + cookie.Path + ";");
+            sb.AppendLine("X-XSRF-TOKEN:" + csrfToken);
+
             var se = new Segnalazione { Testo = sb.ToString() };
             return View("Index", se);
         }
