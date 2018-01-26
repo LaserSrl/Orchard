@@ -33,7 +33,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
         private readonly IAuthenticationService _authenticationService;
         private readonly IOpenAuthMembershipServices _openAuthMembershipServices;
         private readonly IOrchardOpenAuthClientProvider _openAuthClientProvider;
-         private readonly IUtilsServices _utilsServices;
+        private readonly IUtilsServices _utilsServices;
         private readonly IOrchardServices _orchardServices;
         private readonly IEnumerable<IIdentityProvider> _identityProviders;
 
@@ -43,9 +43,9 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             IAuthenticationService authenticationService,
             IOpenAuthMembershipServices openAuthMembershipServices,
             IOrchardOpenAuthClientProvider openAuthClientProvider,
-            IUserEventHandler userEventHandler, 
-            IUtilsServices utilsServices, 
-            IOrchardServices orchardServices, 
+            IUserEventHandler userEventHandler,
+            IUtilsServices utilsServices,
+            IOrchardServices orchardServices,
             IEnumerable<IIdentityProvider> identityProviders) {
             _notifier = notifier;
             _orchardOpenAuthWebSecurity = orchardOpenAuthWebSecurity;
@@ -85,24 +85,33 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 return this.RedirectLocal(returnUrl);
             }
 
-            var authenticatedUser = _authenticationService.GetAuthenticatedUser();
+            //Get additional UserDatas 
+            if (result.ExtraData.ContainsKey("accesstoken")) {
+                result = _openAuthClientProvider.GetUserData(result.Provider, result, result.ExtraData["accesstoken"]);
+            } else {
+                result = _openAuthClientProvider.GetUserData(result.Provider, result, "");
+            }
+            var userParams = _openAuthClientProvider.NormalizeData(result.Provider, new OpenAuthCreateUserParams(result.UserName,
+                                                        result.Provider,
+                                                        result.ProviderUserId,
+                                                        result.ExtraData));
+            var temporaryUser = _openAuthMembershipServices.CreateTemporaryUser(userParams);
 
-            if (authenticatedUser != null) {
-                // If the current user is logged in add the new account
+            var masterUser = _authenticationService.GetAuthenticatedUser() ?? _orchardOpenAuthWebSecurity.GetClosestMergeableKnownUser(temporaryUser); // The autheticated User or depending from settings the first created user with the same e-mail
+
+            if (masterUser != null) {
+                // If the current user is logged in or settings ask for a user merge and we found a User with the same email creates or merge accounts
                 _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider, result.ProviderUserId,
-                                                                  authenticatedUser, result.ExtraData.ToJson());
+                                                                  masterUser, result.ExtraData.ToJson());
 
                 _notifier.Information(T("Your {0} account has been attached to your local account.", result.Provider));
 
-                return this.RedirectLocal(returnUrl);
+                if (_authenticationService.GetAuthenticatedUser() != null) { // if the user was already logged in 
+                    return this.RedirectLocal(returnUrl);
+                }
             }
 
-            if (_openAuthMembershipServices.CanRegister()) {
-                if (result.ExtraData.ContainsKey("accesstoken")) {
-                    result = _openAuthClientProvider.GetUserData(result.Provider, result, result.ExtraData["accesstoken"]);
-                } else {
-                    result = _openAuthClientProvider.GetUserData(result.Provider, result, "");
-                }
+            if (_openAuthMembershipServices.CanRegister() && masterUser == null) { // User can register and there is not a user with the same email
                 var createUserParams = new OpenAuthCreateUserParams(result.UserName,
                                                                     result.Provider,
                                                                     result.ProviderUserId,
@@ -117,17 +126,25 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
                 _authenticationService.SignIn(newUser, false);
 
-                if (newUser != null)
+                if (newUser != null) {
                     _notifier.Information(
                         T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", result.Provider, newUser.UserName));
-                else
+                    _userEventHandler.LoggedIn(newUser);
+                } else
                     _notifier.Error(T("Your authentication request failed."));
 
                 return this.RedirectLocal(returnUrl);
+            } else if (masterUser != null) {
+                _authenticationService.SignIn(masterUser, false);
+                _userEventHandler.LoggedIn(masterUser);
+                _notifier.Information(T("You have been logged in using your {0} account.", result.Provider));
+                return this.RedirectLocal(returnUrl);
             }
 
+            // We are in the case which we cannot creates new accounts, we have no user to merge, the user is not logged in
+            // so we ask to user to login to merge accounts
             string loginData = _orchardOpenAuthWebSecurity.SerializeProviderUserId(result.Provider,
-                                                                                   result.ProviderUserId);
+                                                                                       result.ProviderUserId);
 
             ViewBag.ProviderDisplayName = _orchardOpenAuthWebSecurity.GetOAuthClientData(result.Provider).DisplayName;
             ViewBag.ReturnUrl = returnUrl;
@@ -145,7 +162,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
-        public ContentResult ExternalTokenLogOnLogic(string __provider__, string token, string secret = "") {
+        private ContentResult ExternalTokenLogOnLogic(string __provider__, string token, string secret = "") {
             // TempDataDictionary registeredServicesData = new TempDataDictionary();
             var result = new Response();
 
@@ -159,7 +176,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 var returnUrl = Url.MakeAbsolute(Url.Action("ExternalLogOn", "Account"));
                 AuthenticationResult dummy = new AuthenticationResult(true);
                 AuthenticationResult authResult = _openAuthClientProvider.GetUserData(__provider__, dummy, token, secret, returnUrl);
-                IUser authenticatedUser;
+                IUser authenticatedUser, masterUser;
                 if (!authResult.IsSuccessful) {
                     result = _utilsServices.GetResponse(ResponseType.InvalidUser, "Token authentication failed.");
                     return _utilsServices.ConvertToJsonResult(result);
@@ -175,25 +192,28 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                             return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse("", _identityProviders));
                         }
                     } else {
+                        var userParams = _openAuthClientProvider.NormalizeData(authResult.Provider, new OpenAuthCreateUserParams(authResult.UserName,
+                                                                    authResult.Provider,
+                                                                    authResult.ProviderUserId,
+                                                                    authResult.ExtraData));
+                        var temporaryUser = _openAuthMembershipServices.CreateTemporaryUser(userParams);
+                        masterUser = _authenticationService.GetAuthenticatedUser() ?? _orchardOpenAuthWebSecurity.GetClosestMergeableKnownUser(temporaryUser); // The autheticated User or depending from settings the first created user with the same e-mail
                         authenticatedUser = _authenticationService.GetAuthenticatedUser();
                     }
 
-                    if (authenticatedUser != null) {
-                        // If the current user is logged in add the new account
+                    if (masterUser != null) {
                         _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(authResult.Provider, authResult.ProviderUserId,
-                                                                          authenticatedUser, authResult.ExtraData.ToJson());
-
-                        if (HttpContext.Response.Cookies.Count == 0) {
-                            result = _utilsServices.GetResponse(ResponseType.None, "Unable to send back a cookie.");
-                            return _utilsServices.ConvertToJsonResult(result);
-                        } else {
-                            // Handle LoggedIn Event
-                            _userEventHandler.LoggedIn(authenticatedUser);
-                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse(T("Your {0} account has been attached to your local account.", authResult.Provider).Text, _identityProviders));
+                                                                          masterUser, authResult.ExtraData.ToJson());
+                        // Handle LoggedIn Event
+                        if (authenticatedUser == null) {
+                            _authenticationService.SignIn(masterUser, false);
                         }
+                        _userEventHandler.LoggedIn(masterUser);
+                        return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse(T("Your {0} account has been attached to your local account.", authResult.Provider).Text, _identityProviders));
+
                     }
 
-                    if (_openAuthMembershipServices.CanRegister()) {
+                    if (_openAuthMembershipServices.CanRegister() && masterUser == null) {
                         var createUserParams = new OpenAuthCreateUserParams(authResult.UserName,
                                                                             authResult.Provider,
                                                                             authResult.ProviderUserId,

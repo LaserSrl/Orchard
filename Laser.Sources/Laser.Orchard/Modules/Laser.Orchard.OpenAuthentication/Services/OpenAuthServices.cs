@@ -11,11 +11,15 @@ using Orchard.Security;
 using Orchard.Users.Models;
 using Laser.Orchard.StartupConfig.Handlers;
 using System;
+using Laser.Orchard.OpenAuthentication.ViewModels;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOpenAuthMembershipServices : IDependency {
         bool CanRegister();
         IUser CreateUser(OpenAuthCreateUserParams createUserParams);
+        OpenAuthTemporaryUser CreateTemporaryUser(OpenAuthCreateUserParams createUserParams);
+
+
     }
 
     public class OpenAuthMembershipServices : IOpenAuthMembershipServices {
@@ -98,5 +102,35 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                 return createdUser;
             }
         }
+
+        public OpenAuthTemporaryUser CreateTemporaryUser(OpenAuthCreateUserParams createUserParams) {
+            string emailAddress = string.Empty;
+            string userName = _usernameService.Normalize(createUserParams.UserName);
+            if (createUserParams.UserName.IsEmailAddress()) {
+                emailAddress = createUserParams.UserName;
+            }
+            else {
+                foreach (var key in createUserParams.ExtraData.Keys) {
+                    switch (key.ToLower()) {
+                        case "mail":
+                        case "email":
+                        case "e-mail":
+                        case "email-address":
+                            emailAddress = createUserParams.ExtraData[key];
+                            break;
+                    }
+                }
+            }
+            if (string.IsNullOrWhiteSpace(emailAddress) || string.IsNullOrWhiteSpace(userName))
+                return null;
+
+            return new OpenAuthTemporaryUser {
+                Email = emailAddress,
+                UserName = _usernameService.Calculate(_usernameService.Normalize(createUserParams.UserName)),
+                Provider = createUserParams.ProviderName,
+                ProviderUserId = createUserParams.ProviderUserId
+            };
+        }
     }
+
 }
