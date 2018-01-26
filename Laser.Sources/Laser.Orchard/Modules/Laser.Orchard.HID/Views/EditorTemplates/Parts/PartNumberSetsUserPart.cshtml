@@ -1,0 +1,18 @@
+﻿@model Laser.Orchard.HID.ViewModels.PartNumberSetsUserPartEditViewModel
+
+<fieldset>
+    <label>@T("Part number sets for the User")</label>
+    <ul>
+        @{
+            int index = 0;
+            foreach (var setEntry in Model.Sets) {
+                @Html.HiddenFor(m => m.Sets[index].Id)
+                @Html.HiddenFor(m => m.Sets[index].Name)
+                @Html.CheckBoxFor(m => m.Sets[index].IsSelected)
+                @*<input type="checkbox" value="true" @if (setEntry.IsSelected) { <text> checked="checked" </text>   } name="@Html.FieldNameFor(m => m.Sets[index].IsSelected)" id="@Html.FieldIdFor(m => m.Sets[index].IsSelected)" />*@
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Sets[index].IsSelected)">@setEntry.Name</label>
+                index++;
+            }
+        }
+    </ul>
+</fieldset>

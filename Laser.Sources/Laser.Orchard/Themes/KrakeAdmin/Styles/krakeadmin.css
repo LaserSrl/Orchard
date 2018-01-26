@@ -9203,12 +9203,9 @@ sub.badge {
 .border-dashed {
     border-style: dashed;
 }
-
 .overlay {
-    position: absolute;
-    left: 0;
-    right: 0;
-    padding: 15px;
+	padding: 4px;
+	bottom: 40px;
 }
 
 .overlay-default {

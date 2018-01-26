@@ -14,11 +14,11 @@ namespace Laser.Orchard.HID.Models {
         public int ExpiresIn { get; private set; } //these are seconds
         public AuthenticationErrors Error { get; private set; }
 
-        private readonly IHIDAdminService _HIDService;
+        private readonly IHIDAdminService _HIDAdminService;
         public ILogger Logger { get; set; }
 
         private HIDAuthToken(IHIDAdminService hidService) {
-            _HIDService = hidService;
+            _HIDAdminService = hidService;
             TokenType = "";
             AccessToken = "";
             Error = AuthenticationErrors.NotAuthenticated;
@@ -31,12 +31,13 @@ namespace Laser.Orchard.HID.Models {
             return new HIDAuthToken(hidService).Authenticate();
         }
         public HIDAuthToken Authenticate() {
-            var settings = _HIDService.GetSiteSettings();
+            var settings = _HIDAdminService.GetSiteSettings();
             return Authenticate(settings.ClientID, settings.ClientSecret);
         }
         public HIDAuthToken Authenticate(string userName, string password) {
-            var settings = _HIDService.GetSiteSettings();
-            var LoginEndpoint = String.Format(HIDAPIEndpoints.LoginEndpointFormat, settings.UseTestEnvironment ? HIDAPIEndpoints.IdentityProviderTest : HIDAPIEndpoints.IdentityProviderProd);
+            var settings = _HIDAdminService.GetSiteSettings();
+            var LoginEndpoint = String.Format(HIDAPIEndpoints.LoginEndpointFormat,
+                settings.UseTestEnvironment ? HIDAPIEndpoints.IdentityProviderTest : HIDAPIEndpoints.IdentityProviderProd);
             HttpWebRequest wr = HttpWebRequest.CreateHttp(LoginEndpoint);
             wr.Method = WebRequestMethods.Http.Post;
             string bodyText = string.Format(AuthBodyFormat, userName, password);
@@ -44,10 +45,11 @@ namespace Laser.Orchard.HID.Models {
             wr.ContentType = "application/x-www-form-urlencoded";
             wr.Accept = "application/json";
             //wr.ContentLength = bodyData.Length;
-            using (Stream reqStream = wr.GetRequestStream()) {
-                reqStream.Write(bodyData, 0, bodyData.Length);
-            }
             try {
+                using (Stream reqStream = wr.GetRequestStream()) {
+                    // body stream is written in try-catch, because it needs to resolve destination url
+                    reqStream.Write(bodyData, 0, bodyData.Length);
+                }
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                     if (resp.StatusCode == HttpStatusCode.OK) {
                         //read the json response

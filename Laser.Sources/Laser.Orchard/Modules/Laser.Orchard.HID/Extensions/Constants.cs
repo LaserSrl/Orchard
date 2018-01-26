@@ -6,12 +6,15 @@ namespace Laser.Orchard.HID.Extensions {
         public const string CacheAccessTokenKeyFormat = @"{0}_HID_AccessToken";
 
         public const string ActivityCreateHIDUserFormName = "ActivityCreateHIDUser";
+        public const string ActivityIssueCredentialsFormName = "ActivityIssueCredentials";
+        public const string ActivityRevokeCredentialsFormName = "ActivityRevokeCredentials";
+
+        public const string HIDBulkCredentialsOperationsTaskName = "HIDBulkCredentialsOperationsTask";
+
+        public const string DefaultContentType = @"application/vnd.assaabloy.ma.credential-management-1.0+json";
     }
 
     public static class HIDAPIEndpoints {
-
-        public const string DefaultContentType = @"application/vnd.assaabloy.ma.credential-management-1.0+json";
-
         public const string BaseURIProd = @"https://ma.api.assaabloy.com";
         public const string BaseURITest = @"https://test-ma.api.assaabloy.com";
         public const string BaseURIFormat = @"{0}/credential-management";
