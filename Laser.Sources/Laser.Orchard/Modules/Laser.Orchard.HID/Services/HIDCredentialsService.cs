@@ -20,19 +20,22 @@ namespace Laser.Orchard.HID.Services {
         private readonly IScheduledTaskManager _taskManager;
         private readonly IRepository<BulkCredentialsOperationsRecord> _credentialsOperationsRepository;
         private readonly IHIDEventHandler _HIDEventHandlers;
+        private readonly IHIDAdminService _HIDAdminService;
 
         public HIDCredentialsService(
             IHIDSearchUserService HIDSearchUserService,
             IContentManager contentManager,
             IScheduledTaskManager taskManager,
             IRepository<BulkCredentialsOperationsRecord> credentialsOperationsrepository,
-            IHIDEventHandler HIDEventHandlers) {
+            IHIDEventHandler HIDEventHandlers,
+            IHIDAdminService HIDAdminService) {
 
             _HIDSearchUserService = HIDSearchUserService;
             _contentManager = contentManager;
             _taskManager = taskManager;
             _credentialsOperationsRepository = credentialsOperationsrepository;
             _HIDEventHandlers = HIDEventHandlers;
+            _HIDAdminService = HIDAdminService;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -41,10 +44,14 @@ namespace Laser.Orchard.HID.Services {
         ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
+        private bool AllowDefaultPartNumber {
+            get { return !_HIDAdminService.GetSiteSettings().PreventDefaultPartNumber; }
+        }
+
         public HIDUser IssueCredentials(HIDUser hidUser, string[] partNumbers) {
             var user = UserFromEmail(hidUser.Emails.FirstOrDefault());
 
-            if (partNumbers.Length == 0) {
+            if (partNumbers.Length == 0 && AllowDefaultPartNumber) {
                 // Get the credentials currently associated with the HIDUser. On success, we will compare
                 // what we have here to what we will have there to find the affected credentials to pass
                 // along to the event bus.
@@ -93,7 +100,7 @@ namespace Laser.Orchard.HID.Services {
             if (endpointId.HasValue) {
                 // try to issue credentials to the credential container specified
                 var user = UserFromEmail(hidUser.Emails.FirstOrDefault());
-                if (partNumbers.Length == 0) {
+                if (partNumbers.Length == 0 && AllowDefaultPartNumber) {
                     // Get the credentials currently associated with the HIDUser. On success, we will compare
                     // what we have here to what we will have there to find the affected credentials to pass
                     // along to the event bus.
