@@ -39,7 +39,10 @@
         <legend>@T("Settings for the users of the system")</legend>
         @Html.CheckBoxFor(m => m.PreventMoreThanOneDevice)
         <label for="@Html.FieldIdFor(m => m.PreventMoreThanOneDevice)" class="forcheckbox">@T("Prevent multiple containers.")</label>
-        <span class="hint">@T("Selecting this checkbox will mean that the users are not allowed to register multiuple credential containers, and as such cannot receive invitations to register new ones as long as they have another active endpoint.")</span>
+        <span class="hint">@T("Selecting this checkbox will mean that the users are not allowed to register multiple credential containers, and as such cannot receive invitations to register new ones as long as they have another active endpoint.")</span>
+        @Html.CheckBoxFor(m => m.PreventDefaultPartNumber)
+        <label for="@Html.FieldIdFor(m => m.PreventDefaultPartNumber)" class="forcheckbox">@T("Prevent issueing default part numbers.")</label>
+        <span class="hint">@T("Selecting this checkbox will mean that the users are not allowed to receive credentials unless we specified some in our systems, even though on HID's systems there may be configured default Part Numbers.")</span>
     </fieldset>
     <fieldset id="PartNumbers">
         <legend>@T("Input your HID Part Numbers")</legend>

@@ -42,18 +42,22 @@ namespace Laser.Orchard.HID.Controllers {
         /// <summary>
         /// Call this method to request for credentials to be issued to the credential container with the id passed.
         /// call to API/Laser.Orchard.HID/HIDAPI/IssueCredentials
-        /// Eventually passing a value for endpointId in QueryString
+        /// With the following body:
+        /// {
+        ///     "endpointId":"123456"
+        /// }
         /// </summary>
-        /// <param name="endpointId">The Id of the credential container to which we should try to issue credentials.</param>
+        /// <param name="endpointInfo">The object containing the Id of the credential container to which we should try to issue credentials.</param>
         /// <returns></returns>
         [System.Web.Mvc.HttpPost, ActionName("IssueCredentials")]
         [Authorize]
         [System.Web.Mvc.OutputCache(NoStore = true)]
-        public Response IssueCredentials(int? endpointId = null) {
+        public Response IssueCredentials(EndpointInfo endpoint) {
             string message = "";
             HIDErrorCode eCode = HIDErrorCode.GenericError;
             HIDResolutionAction rAction = HIDResolutionAction.NoAction;
             bool success = false;
+            var endpointId = endpoint.endpointId;
 
             // given the authenticated user, get the hidUser
             IUser caller = _orchardServices.WorkContext.CurrentUser;
@@ -92,6 +96,11 @@ namespace Laser.Orchard.HID.Controllers {
             }
             return (Response)response;
         }
+
+        public class EndpointInfo {
+            public int endpointId { get; set; }
+        }
+
 
         /// <summary>
         /// Call to this method to try and create a new invitation code for the authenticated user making the call.

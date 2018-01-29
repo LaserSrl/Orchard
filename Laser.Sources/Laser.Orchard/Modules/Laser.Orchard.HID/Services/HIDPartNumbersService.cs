@@ -395,10 +395,12 @@ namespace Laser.Orchard.HID.Services {
 
             if (toRevoke.Any() || toIssue.Any()) {
                 var user = part.As<UserPart>();
-                context.AddIssueAction(user, toIssue);
-                context.AddRevokeAction(user, toRevoke);
+                if (user.RegistrationStatus == UserStatus.Approved) {
+                    context.AddIssueAction(user, toIssue);
+                    context.AddRevokeAction(user, toRevoke);
 
-                _HIDCredentialsService.ProcessUserCredentialActions(context);
+                    _HIDCredentialsService.ProcessUserCredentialActions(context);
+                }
             }
             return context;
         }
