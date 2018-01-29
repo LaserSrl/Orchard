@@ -50,7 +50,7 @@ namespace Laser.Orchard.HID.Services {
                 // along to the event bus.
                 var oldCredentials = CredentialsFromUser(hidUser);
                 hidUser = hidUser.IssueCredential(""); //this assigns the default part number for the customer
-                if (hidUser.Error == UserErrors.NoError && hidUser.Error == UserErrors.PreconditionFailed) {
+                if (hidUser.Error == UserErrors.NoError || hidUser.Error == UserErrors.PreconditionFailed) {
                     // trigger events on success
                     _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") {
                         User = user,
@@ -99,7 +99,7 @@ namespace Laser.Orchard.HID.Services {
                     // along to the event bus.
                     var oldCredentials = CredentialsFromUser(hidUser);
                     hidUser = hidUser.IssueCredential("", endpointId.Value);
-                    if (hidUser.Error == UserErrors.NoError && hidUser.Error == UserErrors.PreconditionFailed) {
+                    if (hidUser.Error == UserErrors.NoError || hidUser.Error == UserErrors.PreconditionFailed) {
                         // trigger events on success
                         _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") {
                             User = user,
@@ -140,7 +140,7 @@ namespace Laser.Orchard.HID.Services {
                 // along to the event bus.
                 var oldCredentials = CredentialsFromUser(hidUser);
                 hidUser = hidUser.RevokeCredential();
-                if (hidUser.Error == UserErrors.NoError && hidUser.Error == UserErrors.PreconditionFailed) {
+                if (hidUser.Error == UserErrors.NoError || hidUser.Error == UserErrors.PreconditionFailed) {
                     // trigger events on success
                     _HIDEventHandlers.HIDCredentialRevoked(new HIDCredentialEventContext(hidUser, "") {
                         User = user,
