@@ -9,6 +9,7 @@ using Orchard.Security;
 using Orchard.Tasks.Scheduling;
 using Orchard.Users.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Laser.Orchard.HID.Services {
@@ -42,21 +43,37 @@ namespace Laser.Orchard.HID.Services {
 
         public HIDUser IssueCredentials(HIDUser hidUser, string[] partNumbers) {
             var user = UserFromEmail(hidUser.Emails.FirstOrDefault());
+
             if (partNumbers.Length == 0) {
+                // Get the credentials currently associated with the HIDUser. On success, we will compare
+                // what we have here to what we will have there to find the affected credentials to pass
+                // along to the event bus.
+                var oldCredentials = CredentialsFromUser(hidUser);
                 hidUser = hidUser.IssueCredential(""); //this assigns the default part number for the customer
                 if (hidUser.Error == UserErrors.NoError && hidUser.Error == UserErrors.PreconditionFailed) {
                     // trigger events on success
-                    _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") { User = user });
+                    _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") {
+                        User = user,
+                        AffectedCredentials = AffectedCredentials(hidUser, oldCredentials)
+                    });
                 }
             } else {
                 foreach (var pn in partNumbers) {
+                    // Get the credentials currently associated with the HIDUser. On success, we will compare
+                    // what we have here to what we will have there to find the affected credentials to pass
+                    // along to the event bus. If we are trying to do this here, we have to get the oldCredentials
+                    // at every iteration, since they will be affected by the Issue of the previous PartNumber.
+                    var oldCredentials = CredentialsFromUser(hidUser);
                     hidUser = hidUser.IssueCredential(pn);
                     if (hidUser.Error != UserErrors.NoError && hidUser.Error != UserErrors.PreconditionFailed) {
                         break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential having been
                                 //assigned already, which is fine
                     }
                     // trigger events on success
-                    _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") { User = user });
+                    _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, pn) {
+                        User = user,
+                        AffectedCredentials = AffectedCredentials(hidUser, oldCredentials)
+                    });
                 }
             }
             return hidUser;
@@ -72,24 +89,40 @@ namespace Laser.Orchard.HID.Services {
         }
 
         public HIDUser IssueCredentials(HIDUser hidUser, string[] partNumbers, int? endpointId) {
+
             if (endpointId.HasValue) {
                 // try to issue credentials to the credential container specified
                 var user = UserFromEmail(hidUser.Emails.FirstOrDefault());
                 if (partNumbers.Length == 0) {
+                    // Get the credentials currently associated with the HIDUser. On success, we will compare
+                    // what we have here to what we will have there to find the affected credentials to pass
+                    // along to the event bus.
+                    var oldCredentials = CredentialsFromUser(hidUser);
                     hidUser = hidUser.IssueCredential("", endpointId.Value);
                     if (hidUser.Error == UserErrors.NoError && hidUser.Error == UserErrors.PreconditionFailed) {
                         // trigger events on success
-                        _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") { User = user });
+                        _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") {
+                            User = user,
+                            AffectedCredentials = AffectedCredentials(hidUser, oldCredentials)
+                        });
                     }
                 } else {
                     foreach (var pn in partNumbers) {
+                        // Get the credentials currently associated with the HIDUser. On success, we will compare
+                        // what we have here to what we will have there to find the affected credentials to pass
+                        // along to the event bus. If we are trying to do this here, we have to get the oldCredentials
+                        // at every iteration, since they will be affected by the Issue of the previous PartNumber.
+                        var oldCredentials = CredentialsFromUser(hidUser);
                         hidUser = hidUser.IssueCredential(pn, endpointId.Value);
                         if (hidUser.Error != UserErrors.NoError && hidUser.Error != UserErrors.PreconditionFailed) {
                             break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential having been
                                     //assigned already, which is fine.
                         }
                         // trigger events on success
-                        _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") { User = user });
+                        _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, pn) {
+                            User = user,
+                            AffectedCredentials = AffectedCredentials(hidUser, oldCredentials)
+                        });
                     }
                 }
             } else {
@@ -102,20 +135,35 @@ namespace Laser.Orchard.HID.Services {
         public HIDUser RevokeCredentials(HIDUser hidUser, string[] partNumbers) {
             var user = UserFromEmail(hidUser.Emails.FirstOrDefault());
             if (partNumbers.Length == 0) {
+                // Get the credentials currently associated with the HIDUser. On success, we will compare
+                // what we have here to what we will have there to find the affected credentials to pass
+                // along to the event bus.
+                var oldCredentials = CredentialsFromUser(hidUser);
                 hidUser = hidUser.RevokeCredential();
                 if (hidUser.Error == UserErrors.NoError && hidUser.Error == UserErrors.PreconditionFailed) {
                     // trigger events on success
-                    _HIDEventHandlers.HIDCredentialRevoked(new HIDCredentialEventContext(hidUser, "") { User = user });
+                    _HIDEventHandlers.HIDCredentialRevoked(new HIDCredentialEventContext(hidUser, "") {
+                        User = user,
+                        AffectedCredentials = AffectedCredentials(hidUser, oldCredentials)
+                    });
                 }
             } else {
                 foreach (var pn in partNumbers) {
+                    // Get the credentials currently associated with the HIDUser. On success, we will compare
+                    // what we have here to what we will have there to find the affected credentials to pass
+                    // along to the event bus. If we are trying to do this here, we have to get the oldCredentials
+                    // at every iteration, since they will be affected by the Issue of the previous PartNumber.
+                    var oldCredentials = CredentialsFromUser(hidUser);
                     hidUser = hidUser.RevokeCredential(pn);
                     if (hidUser.Error != UserErrors.NoError && hidUser.Error != UserErrors.PreconditionFailed) {
                         break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential being
                         //revoked right now
                     }
                     // trigger events on success
-                    _HIDEventHandlers.HIDCredentialRevoked(new HIDCredentialEventContext(hidUser, "") { User = user });
+                    _HIDEventHandlers.HIDCredentialRevoked(new HIDCredentialEventContext(hidUser, pn) {
+                        User = user,
+                        AffectedCredentials = AffectedCredentials(hidUser, oldCredentials)
+                    });
                 }
             }
             return hidUser;
@@ -195,6 +243,34 @@ namespace Laser.Orchard.HID.Services {
                 .Where(u => u.Email == email)
                 .Slice(0, 1)
                 .FirstOrDefault();
+        }
+
+        private IEnumerable<HIDCredential> CredentialsFromUser(HIDUser hidUser) {
+            return hidUser
+                .CredentialContainers
+                .SelectMany(cc => cc.Credentials);
+        }
+
+        private IList<HIDCredential> AffectedCredentials(HIDUser hidUser, IEnumerable<HIDCredential> oldCredentials) {
+            // The methods in the HIDCredentialContainer update the information that is available
+            // in the HIDUser object. This means that we can compute the affected credentials by comparing
+            // the current ones with what was there previously.
+            var affectedCredentials = new List<HIDCredential>();
+
+            var currentCredentials = CredentialsFromUser(hidUser);
+            // We have current and old credentials. Affected Credentials is the "difference"
+            // 1. Credentials that we have now and were not there before
+            var oldCredentialsById = oldCredentials.ToDictionary(oc => oc.Id, oc => oc);
+            affectedCredentials.AddRange(currentCredentials
+                .Where(cc => !oldCredentialsById.ContainsKey(cc.Id))
+                );
+            // 2. Credentials whose status changed
+            affectedCredentials.AddRange(currentCredentials
+                .Where(cc => oldCredentialsById.ContainsKey(cc.Id)
+                    && oldCredentialsById[cc.Id].Status != cc.Status)
+                );
+
+            return affectedCredentials;
         }
     }
 }
