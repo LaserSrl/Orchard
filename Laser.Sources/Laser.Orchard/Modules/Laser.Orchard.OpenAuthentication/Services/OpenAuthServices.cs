@@ -61,6 +61,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         public void ApproveUser(IUser user) {
             var userpart = (UserPart)user;
             userpart.RegistrationStatus = UserStatus.Approved;
+            userpart.EmailStatus = UserStatus.Approved;
             _userEventHandlers.Approved(user);
             _contactEventHandler.Synchronize(user);
         }
@@ -99,7 +100,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                     creatingContext.EmailAddress,
                     @T("Auto Registered User").Text,
                     _passwordGeneratorService.Generate() /* Noone can guess this */,
-                    true
+                    false
                     ));
 
                 var createdContext = new CreatedOpenAuthUserContext(createdUser, createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
