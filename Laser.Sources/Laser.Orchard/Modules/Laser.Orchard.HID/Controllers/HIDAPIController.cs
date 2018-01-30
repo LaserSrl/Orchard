@@ -6,7 +6,7 @@ using Orchard;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Security;
-using System;
+using System.Linq;
 using System.Web.Http;
 
 namespace Laser.Orchard.HID.Controllers {
@@ -18,17 +18,98 @@ namespace Laser.Orchard.HID.Controllers {
 
         private readonly IHIDAPIService _HIDAPIService;
         private readonly IOrchardServices _orchardServices;
+        private readonly IHIDAdminService _HIDAdminService;
+        private readonly IHIDCredentialsService _HIDCredentialsService;
+        private readonly IHIDPartNumbersService _HIDPartNumbersService;
 
-        public HIDAPIController(IHIDAPIService hidapiService, IOrchardServices orchardService) {
+        public HIDAPIController(
+            IHIDAPIService hidapiService,
+            IOrchardServices orchardService,
+            IHIDAdminService HIDAdminService,
+            IHIDCredentialsService HIDCredentialsService,
+            IHIDPartNumbersService HIDPartNumbersService) {
+
             _HIDAPIService = hidapiService;
             _orchardServices = orchardService;
+            _HIDAdminService = HIDAdminService;
+            _HIDCredentialsService = HIDCredentialsService;
+            _HIDPartNumbersService = HIDPartNumbersService;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
 
-        [System.Web.Mvc.HttpGet]
+        /// <summary>
+        /// Call this method to request for credentials to be issued to the credential container with the id passed.
+        /// call to API/Laser.Orchard.HID/HIDAPI/IssueCredentials
+        /// With the following body:
+        /// {
+        ///     "endpointId":"123456"
+        /// }
+        /// </summary>
+        /// <param name="endpointInfo">The object containing the Id of the credential container to which we should try to issue credentials.</param>
+        /// <returns></returns>
+        [System.Web.Mvc.HttpPost, ActionName("IssueCredentials")]
         [Authorize]
+        [System.Web.Mvc.OutputCache(NoStore = true)]
+        public Response IssueCredentials(EndpointInfo endpoint) {
+            string message = "";
+            HIDErrorCode eCode = HIDErrorCode.GenericError;
+            HIDResolutionAction rAction = HIDResolutionAction.NoAction;
+            bool success = false;
+            var endpointId = endpoint.endpointId;
+
+            // given the authenticated user, get the hidUser
+            IUser caller = _orchardServices.WorkContext.CurrentUser;
+            if (caller != null) {
+                var searchResult = _HIDAPIService.SearchHIDUser(caller.Email);
+                if (searchResult.Error == SearchErrors.NoError) {
+                    var hidUser = searchResult.User;
+                    if (hidUser.Error == UserErrors.NoError) {
+                        hidUser = _HIDCredentialsService.IssueCredentials(hidUser, _HIDPartNumbersService.GetPartNumbersForUser(caller), endpointId);
+                        if (hidUser.Error == UserErrors.NoError) {
+                            success = true;
+                            eCode = HIDErrorCode.NoError;
+                            message = T("Credentials issued. Synchronize your device with the TSM.").Text;
+                        } else {
+                            HandleHIDUserError(hidUser, caller, out eCode, out rAction, out message);
+                        }
+                    } else {
+                        HandleHIDUserError(hidUser, caller, out eCode, out rAction, out message);
+                    }
+                } else {
+                    HandleSearchError(searchResult, caller, out eCode, out rAction, out message);
+                }
+            }
+
+            if (eCode != HIDErrorCode.NoError) {
+                Logger.Error(message);
+            }
+            var response = new HIDResponse() {
+                ErrorCode = eCode,
+                Success = success,
+                Message = message,
+                ResolutionAction = rAction
+            };
+            if (eCode == HIDErrorCode.NoError) {
+                response.Data = new { };
+            }
+            return (Response)response;
+        }
+
+        public class EndpointInfo {
+            public int endpointId { get; set; }
+        }
+
+
+        /// <summary>
+        /// Call to this method to try and create a new invitation code for the authenticated user making the call.
+        /// </summary>
+        /// <returns>If successfull this method returns a Response json object that contains the invitation code in
+        /// Response.Data.InvitationCode.</returns>
+        [System.Web.Mvc.HttpGet, ActionName("GetInvitation")]
+        [Authorize]
+        [System.Web.Mvc.OutputCache(NoStore = true)]
         public Response GetInvitation() {
             string message = "";
             HIDErrorCode eCode = HIDErrorCode.GenericError;
@@ -38,14 +119,16 @@ namespace Laser.Orchard.HID.Controllers {
             IUser caller = _orchardServices.WorkContext.CurrentUser;
             var searchResult = _HIDAPIService.SearchHIDUser(caller.Email); //("patrick.negretto@laser-group.com"); // 
 
-            /*****************TEST CODE********************/
-            //searchResult.User.IssueCredential("CRD633ZZ-TST0053");
-            //searchResult.User.RevokeCredential();
-            /**************************************/
-            switch (searchResult.Error) {
-                case SearchErrors.NoError:
-                    var hidUser = searchResult.User;
-                    if (hidUser.Error == UserErrors.NoError) {
+            if (searchResult.Error == SearchErrors.NoError) {
+                var hidUser = searchResult.User;
+                if (hidUser.Error == UserErrors.NoError) {
+                    if (_HIDAdminService.GetSiteSettings().PreventMoreThanOneDevice
+                        && hidUser.CredentialContainers.Any()) {
+
+                        eCode = HIDErrorCode.GenericError;
+                        rAction = HIDResolutionAction.NoAction;
+                        message = T("The user has already registered a Credential Container and is not allowed to have more. Id: {0}; UserName: {1}; Email: {2}", caller.Id, caller.UserName, caller.Email).Text;
+                    } else {
                         InvitationCode = hidUser.CreateInvitation();
                         if (hidUser.Error == UserErrors.NoError) {
                             success = true;
@@ -54,10 +137,32 @@ namespace Laser.Orchard.HID.Controllers {
                         } else {
                             HandleHIDUserError(hidUser, caller, out eCode, out rAction, out message);
                         }
-                    } else {
-                        HandleHIDUserError(hidUser, caller, out eCode, out rAction, out message);
                     }
-                    break;
+                } else {
+                    HandleHIDUserError(hidUser, caller, out eCode, out rAction, out message);
+                }
+            } else {
+                HandleSearchError(searchResult, caller, out eCode, out rAction, out message);
+            }
+
+            if (eCode != HIDErrorCode.NoError) {
+                Logger.Error(message);
+            }
+            var response = new HIDResponse() {
+                ErrorCode = eCode,
+                Success = success,
+                Message = message,
+                ResolutionAction = rAction
+            };
+            if (eCode == HIDErrorCode.NoError) {
+                response.Data = new { InvitationCode = InvitationCode };
+            }
+            return (Response)response;
+        }
+
+        private void HandleSearchError(HIDUserSearchResult searchResult, IUser caller,
+            out HIDErrorCode eCode, out HIDResolutionAction rAction, out string message) {
+            switch (searchResult.Error) {
                 case SearchErrors.InvalidParameters:
                     eCode = HIDErrorCode.InvalidSearchParameters;
                     rAction = HIDResolutionAction.NoAction;
@@ -94,22 +199,10 @@ namespace Laser.Orchard.HID.Controllers {
                     message = T("Unknown error while searching for user on HID server. Id: {0}; UserName: {1}; Email: {2}", caller.Id, caller.UserName, caller.Email).Text;
                     break;
             }
-            if (eCode != HIDErrorCode.NoError) {
-                Logger.Error(message);
-            }
-            var response = new HIDResponse() {
-                ErrorCode = eCode,
-                Success = success,
-                Message = message,
-                ResolutionAction = rAction
-            };
-            if (eCode == HIDErrorCode.NoError) {
-                response.Data = new { InvitationCode = InvitationCode };
-            }
-            return (Response)response;
         }
 
-        private void HandleHIDUserError(HIDUser hidUser, IUser caller, out HIDErrorCode eCode, out HIDResolutionAction rAction, out string message) {
+        private void HandleHIDUserError(HIDUser hidUser, IUser caller,
+            out HIDErrorCode eCode, out HIDResolutionAction rAction, out string message) {
             switch (hidUser.Error) {
                 case UserErrors.UnknownError:
                     eCode = HIDErrorCode.GenericError;
@@ -150,6 +243,28 @@ namespace Laser.Orchard.HID.Controllers {
                     eCode = HIDErrorCode.GenericError;
                     rAction = HIDResolutionAction.NoAction;
                     message = T("Unknown error while searching for user on HID server. Id: {0}; UserName: {1}; Email: {2}", caller.Id, caller.UserName, caller.Email).Text;
+                    break;
+            }
+        }
+
+        private void HandleContainerError(HIDCredentialContainer credentialContainer, IUser caller,
+            out HIDErrorCode eCode, out HIDResolutionAction rAction, out string message) {
+
+            switch (credentialContainer.Error) {
+                case CredentialErrors.UnknownError:
+                    eCode = HIDErrorCode.GenericError;
+                    rAction = HIDResolutionAction.NoAction;
+                    message = T("Unknown error issueing credentials to user on HID server. Id: {0}; UserName: {1}; Email: {2}", caller.Id, caller.UserName, caller.Email).Text;
+                    break;
+                case CredentialErrors.AuthorizationFailed:
+                    eCode = HIDErrorCode.AuthenticationFailed;
+                    rAction = HIDResolutionAction.TryAgain;
+                    message = T("There was an error while authenticating to the HID servers. This may be a temporary condition. Please try again.").Text;
+                    break;
+                default:
+                    eCode = HIDErrorCode.GenericError;
+                    rAction = HIDResolutionAction.NoAction;
+                    message = T("Unknown error issueing credentials to user on HID server. Id: {0}; UserName: {1}; Email: {2}", caller.Id, caller.UserName, caller.Email).Text;
                     break;
             }
         }

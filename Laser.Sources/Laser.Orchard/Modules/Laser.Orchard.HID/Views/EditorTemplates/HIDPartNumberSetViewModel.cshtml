@@ -1,0 +1,26 @@
+﻿@using Laser.Orchard.Commons.Helpers
+
+@model Laser.Orchard.HID.ViewModels.HIDPartNumberSetViewModel
+
+@{ MvcHtmlString answerBlock = Html.UniqueClientId("HIDPartNumberSetViewModel"); }
+@{
+    var setId = "pnsNum_" + answerBlock;
+}
+
+<div id="@setId" class="j_building">
+    <fieldset>
+        <legend>@T("Building details.")</legend>
+        @Html.HiddenFor(m => m.Delete, new { @class = "ph-mark-for-delete" })
+        @Html.HiddenFor(m => m.Id)
+        @Html.TextBoxFor(m => m.Name, new { placeholder = T("Name"), @class = "text medium" })
+        <span class="hint">@T("Insert the name given to this building.")</span>
+        @Html.TextAreaFor(m => m.SerializedPartNumbers, new { @class = "text medium" })
+        <span class="hint">@T("Input the Part Numbers you want to be able to manage automatically, one per line.")</span>
+        @Html.CheckBoxFor(m => m.IssueCredentialsAutomatically)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.IssueCredentialsAutomatically)">@T("Automatically issue credentials on change.")</label>
+        <span class="hint">@T("Select this option if you want credentials to automatically be issued to all users associated with this building. Credentials will be issued when part numbers are added to the building, as well as when the building is associated to a new user. For all buildings, credentials will always be revoked when the building is no more associated to a user, or when part numbers are removed.")</span>
+        <br/>
+        <i class="fa fa-times" style="color: red"></i>
+        @Html.LinkToRemoveNestedForm(T("Remove").Text, ".j_building", "input.ph-mark-for-delete")
+    </fieldset>
+</div>

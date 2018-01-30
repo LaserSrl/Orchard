@@ -10,11 +10,17 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
 
 namespace Laser.Orchard.HID.Models {
     public class HIDUser {
-        public string Location { get; set; }
+        private string _location;
+        public string Location { get {
+                if (!LocationIsValid()) {
+                    _location = _HIDService.UsersEndpoint + "/" + Id.ToString();
+                }
+                return _location;
+            }
+            set { _location = value; } }
         public int Id { get; set; } //id of user in HID systems
         public string ExternalId { get; set; }
         public string FamilyName { get; set; }
@@ -22,24 +28,22 @@ namespace Laser.Orchard.HID.Models {
         public List<string> Emails { get; set; }
         public string Status { get; set; }
         public List<int> InvitationIds { get; set; }
-        //public List<int> CredentialContainerIds { get; set; }
         public List<HIDCredentialContainer> CredentialContainers { get; set; }
         public UserErrors Error { get; set; }
 
-        private readonly IHIDAPIService _HIDService;
+        private readonly IHIDAdminService _HIDService;
 
         public ILogger Logger { get; set; }
 
         public HIDUser() {
             Emails = new List<string>();
             InvitationIds = new List<int>();
-            //CredentialContainerIds = new List<int>();
             CredentialContainers = new List<HIDCredentialContainer>();
             Error = UserErrors.UnknownError;
             Logger = NullLogger.Instance;
         }
 
-        private HIDUser(IHIDAPIService hidService)
+        private HIDUser(IHIDAdminService hidService)
             : this() {
             _HIDService = hidService;
         }
@@ -49,7 +53,7 @@ namespace Laser.Orchard.HID.Models {
         }
 
         private void PopulateFromJson(JObject json, bool onlyActiveContainers = true) {
-            Id = int.Parse(json["id"].ToString());
+            Id = int.Parse(json["id"].ToString()); //no null-checks for required properties
             ExternalId = json["externalId"].ToString();
             FamilyName = json["name"]["familyName"].ToString();
             GivenName = json["name"]["givenName"].ToString();
@@ -62,20 +66,20 @@ namespace Laser.Orchard.HID.Models {
                 InvitationIds = InvitationIds.Distinct().ToList();
             }
             if (json["urn:hid:scim:api:ma:1.0:CredentialContainer"] != null) {
-                //CredentialContainerIds.AddRange(json["urn:hid:scim:api:ma:1.0:CredentialContainer"].Children().Select(jt => int.Parse(jt["id"].ToString())));
-                //CredentialContainerIds = CredentialContainerIds.Distinct().ToList();
                 CredentialContainers.Clear();
-                var avStrings = _HIDService.GetSiteSettings().AppVersionStrings;
+                var avStrings = _HIDService.GetSiteSettings().AppVersionStrings; // used to validate our apps
                 CredentialContainers.AddRange(
                     json["urn:hid:scim:api:ma:1.0:CredentialContainer"]
                     .Children()
                     .Select(jt => new HIDCredentialContainer(jt, _HIDService))
-                    .Where(cc => onlyActiveContainers ? cc.Status == "ACTIVE" : true)
-                    .Where(cc => avStrings.Any(avs => cc.ApplicationVersion.Contains(avs)))
+                    // we can avoid trying to maange conatiners that have been deleted, or that have not yet been initialized
+                    .Where(cc => onlyActiveContainers ? cc.Status == "ACTIVE" : true) 
+                    .Where(cc => avStrings.Any(avs => cc.ApplicationVersion.Contains(avs))) //validate apps
                     );
             }
             Error = UserErrors.NoError;
         }
+
         private void ErrorFromStatusCode(HttpStatusCode sc) {
             switch (sc) {
                 case HttpStatusCode.BadRequest:
@@ -99,19 +103,26 @@ namespace Laser.Orchard.HID.Models {
             }
         }
 
-        public static HIDUser GetUser(IHIDAPIService hidService, string location) {
-            return new HIDUser(hidService) { Location = location }.GetUser();
+        /// <summary>
+        /// Get a specific user from HID's systems.
+        /// </summary>
+        /// <param name="hidService">The IHIDAdminService implementation to use.</param>
+        /// <param name="location">This is the complete endpoint corresponding to the user in HID's systems.</param>
+        /// <returns>The HIDUser gotten from HID's systems.</returns>
+        public static HIDUser GetUser(IHIDAdminService hidService, string location) {
+            var id = IdFromLocation(location);
+            return new HIDUser(hidService) { Id = id, Location = location }.GetUser();
         }
+
         public HIDUser GetUser() {
-            if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
-                if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
-                    Error = UserErrors.AuthorizationFailed;
-                    return this;
-                }
+            if (!_HIDService.VerifyAuthentication()) {
+                Error = UserErrors.AuthorizationFailed;
+                return this;
             }
+            
             HttpWebRequest wr = HttpWebRequest.CreateHttp(Location);
             wr.Method = WebRequestMethods.Http.Get;
-            wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.ContentType = Constants.DefaultContentType;
             wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
             try {
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
@@ -127,6 +138,7 @@ namespace Laser.Orchard.HID.Models {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null) {
                     if (resp.StatusCode == HttpStatusCode.Unauthorized) {
+                        // Authentication could have expired while this method was running
                         if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
                             return GetUser();
                         }
@@ -145,49 +157,72 @@ namespace Laser.Orchard.HID.Models {
         }
 
         private const string UserNameFormat = @"'name':{{ 'familyName': '{0}', 'givenName': '{1}'}}";
+
         private string UserNameBlock {
-            get { return string.Format(UserNameFormat, string.IsNullOrWhiteSpace(FamilyName) ? "FamilyName" : FamilyName, string.IsNullOrWhiteSpace(GivenName) ? "GivenName" : GivenName); }
-        }
-        private const string UserCreateFormat = @"{{ 'schemas':[ 'urn:hid:scim:api:ma:1.0:UserAction', 'urn:ietf:params:scim:schemas:core:2.0:User' ], 'externalId': '{0}', {1}, 'emails':[ {{ {2} }} ], 'urn:hid:scim:api:ma:1.0:UserAction':{{ 'createInvitationCode':'N', 'sendInvitationEmail':'N', 'assignCredential':'N', 'partNumber':'', 'credential':'' }}, 'meta':{{ 'resourceType':'PACSUser' }} }}";
-        private string CreateUserBody {
-            get { return JObject.Parse(string.Format(UserCreateFormat, ExternalId, UserNameBlock, string.Join(", ", Emails.Select(em => string.Format(@"'value':'{0}'", em.ToLowerInvariant()))))).ToString(); }
+            get { return string.Format(UserNameFormat, 
+                string.IsNullOrWhiteSpace(FamilyName) ? "FamilyName" : FamilyName, 
+                string.IsNullOrWhiteSpace(GivenName) ? "GivenName" : GivenName); }
         }
 
-        public static HIDUser CreateUser(IHIDAPIService hidService, IUser oUser, string familyName, string givenName) {
+        private const string UserCreateFormat = @"{{ 'schemas':[ 'urn:hid:scim:api:ma:1.0:UserAction', 'urn:ietf:params:scim:schemas:core:2.0:User' ], 'externalId': '{0}', {1}, 'emails':[ {{ {2} }} ], 'urn:hid:scim:api:ma:1.0:UserAction':{{ 'createInvitationCode':'N', 'sendInvitationEmail':'N', 'assignCredential':'N', 'partNumber':'', 'credential':'' }}, 'meta':{{ 'resourceType':'PACSUser' }} }}";
+
+        private string CreateUserBody {
+            get {
+                return JObject.Parse(
+                    string.Format(UserCreateFormat, 
+                        ExternalId, 
+                        UserNameBlock, 
+                        string.Join(", ", Emails.Select(em => string.Format(@"'value':'{0}'", em.ToLowerInvariant())))))
+                    .ToString();
+            }
+        }
+
+        public static HIDUser CreateUser(IHIDAdminService hidService, IUser oUser, string familyName, string givenName) {
             return CreateUser(hidService, oUser.Id, familyName, givenName, oUser.Email);
         }
-        public static HIDUser CreateUser(IHIDAPIService hidService, IUser oUser, string familyName, string givenName, string email) {
+
+        public static HIDUser CreateUser(IHIDAdminService hidService, IUser oUser, string familyName, string givenName, string email) {
             return CreateUser(hidService, oUser.Id, familyName, givenName, email);
         }
-        public static HIDUser CreateUser(IHIDAPIService hidService, int id, string familyName, string givenName, string email) {
+
+        public static HIDUser CreateUser(IHIDAdminService hidService, int id, string familyName, string givenName, string email) {
             return CreateUser(hidService, GenerateExternalId(id), familyName, givenName, email);
         }
-        public static HIDUser CreateUser(IHIDAPIService hidService, string extId, string familyName, string givenName, string email) {
+
+        public static HIDUser CreateUser(IHIDAdminService hidService, string extId, string familyName, string givenName, string email) {
             HIDUser user = new HIDUser(hidService) { ExternalId = extId, FamilyName = familyName, GivenName = givenName };
             user.Emails.Add(email);
             return user.CreateUser();
         }
+
+        /// <summary>
+        /// This method goes and creates the user information in HID's systems.
+        /// </summary>
+        /// <returns>This very user.</returns>
         public HIDUser CreateUser() {
-            if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
-                if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
-                    Error = UserErrors.AuthorizationFailed;
-                    return this;
-                }
+            if (!_HIDService.VerifyAuthentication()) {
+                Error = UserErrors.AuthorizationFailed;
+                return this;
             }
+
             HttpWebRequest wr = HttpWebRequest.CreateHttp(_HIDService.UsersEndpoint);
             wr.Method = WebRequestMethods.Http.Post;
-            wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.ContentType = Constants.DefaultContentType;
             wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
             byte[] bodyData = Encoding.UTF8.GetBytes(CreateUserBody);
-            using (Stream reqStream = wr.GetRequestStream()) {
-                reqStream.Write(bodyData, 0, bodyData.Length);
-            }
+            
             try {
+                using (Stream reqStream = wr.GetRequestStream()) {
+                    // body stream is written in try-catch, because it needs to resolve destination url
+                    reqStream.Write(bodyData, 0, bodyData.Length);
+                }
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                     if (resp.StatusCode == HttpStatusCode.Created) {
                         using (var reader = new StreamReader(resp.GetResponseStream())) {
                             string respJson = reader.ReadToEnd();
-                            PopulateFromJson(JObject.Parse(respJson));
+                            // populate the properties of the current HIDUser object with the values coming in the
+                            // response from HID's systems.
+                            PopulateFromJson(JObject.Parse(respJson)); 
                         }
                     }
                 }
@@ -195,6 +230,7 @@ namespace Laser.Orchard.HID.Models {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null) {
                     if (resp.StatusCode == HttpStatusCode.Unauthorized) {
+                        // Authentication could have expired while this method was running
                         if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
                             return CreateUser();
                         }
@@ -213,27 +249,30 @@ namespace Laser.Orchard.HID.Models {
         }
 
         private const string InvitationCreateFormat = @"{ 'schemas':[ 'urn:hid:scim:api:ma:1.0:UserAction' ], 'urn:hid:scim:api:ma:1.0:UserAction':{ 'createInvitationCode':'Y', 'sendInvitationEmail':'N', 'assignCredential':'N', 'partNumber':'', 'credential':'' }, 'meta':{ 'resourceType':'PACSUser' } }";
+
         private string CreateInvitationBody {
             get { return JObject.Parse(InvitationCreateFormat).ToString(); }
         }
 
         public string CreateInvitation() {
-            string invitationCode = "";
-            if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
-                if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
-                    Error = UserErrors.AuthorizationFailed;
-                    return "";
-                }
+            if (!_HIDService.VerifyAuthentication()) {
+                Error = UserErrors.AuthorizationFailed;
+                return "";
             }
+            
+            string invitationCode = "";
+
             HttpWebRequest wr = HttpWebRequest.CreateHttp(Location + "/invitation");
             wr.Method = WebRequestMethods.Http.Post;
-            wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
+            wr.ContentType = Constants.DefaultContentType;
             wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
             byte[] bodyData = Encoding.UTF8.GetBytes(CreateInvitationBody);
-            using (Stream reqStream = wr.GetRequestStream()) {
-                reqStream.Write(bodyData, 0, bodyData.Length);
-            }
+            
             try {
+                using (Stream reqStream = wr.GetRequestStream()) {
+                    // body stream is written in try-catch, because it needs to resolve destination url
+                    reqStream.Write(bodyData, 0, bodyData.Length);
+                }
                 using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
                     if (resp.StatusCode == HttpStatusCode.Created) {
                         using (var reader = new StreamReader(resp.GetResponseStream())) {
@@ -250,6 +289,7 @@ namespace Laser.Orchard.HID.Models {
                 HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                 if (resp != null) {
                     if (resp.StatusCode == HttpStatusCode.Unauthorized) {
+                        // Authentication could have expired while this method was running
                         if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
                             return CreateInvitation();
                         }
@@ -273,22 +313,23 @@ namespace Laser.Orchard.HID.Models {
             Error = UserErrors.UnknownError;
             return "";
         }
-
-        private string IssueCredentialEndpointFormat {
-            get { return string.Format(HIDAPIEndpoints.IssueCredentialEndpointFormat, _HIDService.BaseEndpoint, @"{0}"); }
-        }
-        private const string IssueCredentialBodyFormat = @"{{ 'schemas':[ 'urn:hid:scim:api:ma:1.0:UserAction' ], 'urn:hid:scim:api:ma:1.0:UserAction':{{ 'assignCredential':'Y', 'partNumber':'{0}', 'credential':'' }} }}";
-        private string IssueCredentialBody(string pn) {
-            return JObject.Parse(string.Format(IssueCredentialBodyFormat, pn)).ToString();
-        }
-
+        
+        /// <summary>
+        /// Task HID's systems with issueing a credential for the given part number
+        /// </summary>
+        /// <param name="partNumber">The Part Number for which we are going to issue the credential.</param>
+        /// <param name="onlyLatestContainer">Tells wether to attept issueing credentials only for the most recent 
+        /// container for each of the user's devices.</param>
+        /// <returns></returns>
+        /// <remarks>Passing an empty string for partNumber means we will try to have HID issue a credential for
+        /// the default PartNumber. Contrary to the fact that is called a "default" Part Nunmber, it is something
+        /// that HID's customers have to configure explicitly. If they did not, the Issue will fail.</remarks>
         public HIDUser IssueCredential(string partNumber, bool onlyLatestContainer = true) {
-            if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
-                if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
-                    Error = UserErrors.AuthorizationFailed;
-                    return this;
-                }
+            if (!_HIDService.VerifyAuthentication()) {
+                Error = UserErrors.AuthorizationFailed;
+                return this;
             }
+
             if (CredentialContainers.Count == 0) {
                 Error = UserErrors.DoesNotHaveDevices;
             }
@@ -303,7 +344,7 @@ namespace Laser.Orchard.HID.Models {
                     }).ToList();
             }
             foreach (var credentialContainer in CredentialContainers) {
-                credentialContainer.IssueCredential(partNumber, this, _HIDService);
+                credentialContainer.IssueCredential(partNumber, _HIDService);
                 //error handling:
                 switch (credentialContainer.Error) {
                     case CredentialErrors.NoError:
@@ -316,6 +357,7 @@ namespace Laser.Orchard.HID.Models {
                         Error = UserErrors.NoError;
                         break;
                     case CredentialErrors.AuthorizationFailed:
+                        // Authentication could have expired while this method was running
                         if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
                             return IssueCredential(partNumber);
                         }
@@ -329,80 +371,87 @@ namespace Laser.Orchard.HID.Models {
             return this;
         }
 
+        /// <summary>
+        /// Task HID's systems with issueing a credential for the given part number to the given credential container
+        /// </summary>
+        /// <param name="partNumber">The Part Number for which we are going to issue the credential</param>
+        /// <param name="endpointId">The Id in HID's systems of the credential container we will be trying to issue
+        /// credentials to.</param>
+        /// <returns></returns>
+        /// <remarks>Passing an empty string for partNumber means we will try to have HID issue a credential for
+        /// the default PartNumber. Contrary to the fact that is called a "default" Part Nunmber, it is something
+        /// that HID's customers have to configure explicitly. If they did not, the Issue will fail.</remarks>
+        public HIDUser IssueCredential(string partNumber, int endpointId) {
+            if (!_HIDService.VerifyAuthentication()) {
+                Error = UserErrors.AuthorizationFailed;
+                return this;
+            }
+
+            if (CredentialContainers.Count == 0) {
+                Error = UserErrors.DoesNotHaveDevices;
+            }
+
+            var specificContainer = CredentialContainers.FirstOrDefault(cc => cc.Id == endpointId);
+            if (specificContainer == null) {
+                Error = UserErrors.InvalidParameters; // User does not have that Credential Container
+            }
+
+            specificContainer.IssueCredential(partNumber, _HIDService);
+            //error handling:
+            switch (specificContainer.Error) {
+                case CredentialErrors.NoError:
+                    Error = UserErrors.NoError;
+                    break;
+                case CredentialErrors.UnknownError:
+                    Error = UserErrors.UnknownError;
+                    break;
+                case CredentialErrors.CredentialDeliveredAlready:
+                    Error = UserErrors.NoError;
+                    break;
+                case CredentialErrors.AuthorizationFailed:
+                    // Authentication could have expired while this method was running
+                    if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
+                        return IssueCredential(partNumber);
+                    }
+                    Error = UserErrors.AuthorizationFailed;
+                    break;
+                default:
+                    break;
+            }
+
+            return this;
+        }
+
         private string GetCredentialContainerEndpointFormat {
             get { return String.Format(HIDAPIEndpoints.GetCredentialContainerEndpointFormat, _HIDService.BaseEndpoint, @"{0}"); }
         }
+
         private string RevokeCredentialEndpointFormat {
             get { return string.Format(HIDAPIEndpoints.RevokeCredentialEndpointFormat, _HIDService.BaseEndpoint, @"{0}"); }
         }
+
+        /// <summary>
+        /// Task HID's systems with revoking the credentials for the given part number.
+        /// </summary>
+        /// <param name="partNumber"></param>
+        /// <returns></returns>
+        /// <remarks>Passing an empty string for partNumber means we will try to have HID revoke tge credential for
+        /// the default PartNumber. Contrary to the fact that is called a "default" Part Nunmber, it is something
+        /// that HID's customers have to configure explicitly. If they did not, the Revoke will fail.</remarks>
         public HIDUser RevokeCredential(string partNumber = "") {
-            if (string.IsNullOrWhiteSpace(_HIDService.AuthorizationToken)) {
-                if (_HIDService.Authenticate() != AuthenticationErrors.NoError) {
-                    Error = UserErrors.AuthorizationFailed;
-                    return this;
-                }
+            if (!_HIDService.VerifyAuthentication()) {
+                Error = UserErrors.AuthorizationFailed;
+                return this;
             }
+
             foreach (var credentialContainer in CredentialContainers) {
-                //TODO: move this functionality to a method of HIDCredentialContainer, like credentialContainer.RevokeCredential(partNumber)
-                HttpWebRequest wr = HttpWebRequest.CreateHttp(string.Format(GetCredentialContainerEndpointFormat, credentialContainer.Id));
-                wr.Method = WebRequestMethods.Http.Get;
-                wr.ContentType = "application/vnd.assaabloy.ma.credential-management-1.0+json";
-                wr.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
-                //get this container
                 try {
-                    using (HttpWebResponse resp = wr.GetResponse() as HttpWebResponse) {
-                        if (resp.StatusCode == HttpStatusCode.OK) {
-                            using (var reader = new StreamReader(resp.GetResponseStream())) {
-                                string respJson = reader.ReadToEnd();
-                                JObject json = JObject.Parse(respJson);
-                                credentialContainer.UpdateContainer(json["urn:hid:scim:api:ma:1.0:CredentialContainer"].Children().First(), _HIDService);
-                                var credentialsToRevoke = credentialContainer.Credentials.Where(cred => cred.Status.ToUpperInvariant() != "REVOKING" && cred.Status.ToUpperInvariant() != "REVOKE_INITIATED");
-                                if (!string.IsNullOrWhiteSpace(partNumber)) {
-                                    credentialsToRevoke = credentialContainer.Credentials.Where(cred => cred.PartNumber == partNumber);
-                                }
-                                foreach (var credential in credentialsToRevoke) {
-                                    //TODO: move this functionality to a method of the HIDCredential class, so we do it like credential.Revoke()
-                                    HttpWebRequest wrRevoke = HttpWebRequest.CreateHttp(string.Format(RevokeCredentialEndpointFormat, credential.Id));
-                                    wrRevoke.Method = "DELETE";
-                                    wrRevoke.Headers.Add(HttpRequestHeader.Authorization, _HIDService.AuthorizationToken);
-                                    try {
-                                        using (HttpWebResponse respRevoke = wrRevoke.GetResponse() as HttpWebResponse) {
-                                            if (resp.StatusCode == HttpStatusCode.NoContent || resp.StatusCode == HttpStatusCode.OK) {
-                                                Error = UserErrors.NoError;
-                                                credential.Status = "REVOKING";
-                                            } else {
-                                                Error = UserErrors.UnknownError;
-                                            }
-                                        }
-                                    } catch (WebException ex) {
-                                        HttpWebResponse respRevoke = (System.Net.HttpWebResponse)(ex.Response);
-                                        if (respRevoke != null) {
-                                            if (respRevoke.StatusCode == HttpStatusCode.Unauthorized) {
-                                                if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
-                                                    return RevokeCredential(partNumber);
-                                                }
-                                                Error = UserErrors.AuthorizationFailed;
-                                            } else {
-                                                ErrorFromStatusCode(respRevoke.StatusCode);
-                                            }
-                                            if (Error == UserErrors.PreconditionFailed) {
-                                                Error = UserErrors.NoError; //we are already revoking credentials
-                                            }
-                                        } else {
-                                            Error = UserErrors.UnknownError;
-                                        }
-                                    } catch (Exception ex) {
-                                        Error = UserErrors.UnknownError;
-                                        Logger.Error(ex, "Fallback error management.");
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    credentialContainer.RevokeCredentials(partNumber, _HIDService);
                 } catch (WebException ex) {
                     HttpWebResponse resp = (System.Net.HttpWebResponse)(ex.Response);
                     if (resp != null) {
                         if (resp.StatusCode == HttpStatusCode.Unauthorized) {
+                            // Authentication could have expired while this method was running
                             if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
                                 return RevokeCredential(partNumber);
                             }
@@ -417,12 +466,32 @@ namespace Laser.Orchard.HID.Models {
                     Error = UserErrors.UnknownError;
                     Logger.Error(ex, "Fallback error management.");
                 }
-                if (Error != UserErrors.NoError && Error != UserErrors.PreconditionFailed) {
-                    credentialContainer.Error = CredentialErrors.UnknownError;
-                    //break; //break early on error
-                }
             }
             return this;
+        }
+
+        private bool LocationIsValid() {
+            int id;
+            return !string.IsNullOrWhiteSpace(_location)
+                && _location.StartsWith(_HIDService.UsersEndpoint, StringComparison.InvariantCultureIgnoreCase)
+                && int.TryParse(_location.Substring(_HIDService.UsersEndpoint.Length + 1), out id)
+                && id == Id;
+        }
+
+        private int IdFromLocation() {
+            int id;
+            if (int.TryParse(_location.Substring(_HIDService.UsersEndpoint.Length + 1), out id)) {
+                return id;
+            }
+            return 0;
+        }
+
+        private static int IdFromLocation(string location) {
+            int id;
+            if (int.TryParse(location.Substring(location.LastIndexOf('/') + 1), out id)) {
+                return id;
+            }
+            return 0;
         }
     }
 }
