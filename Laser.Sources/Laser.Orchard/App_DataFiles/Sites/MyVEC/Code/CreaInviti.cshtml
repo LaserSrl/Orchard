@@ -1,5 +1,6 @@
 @using Orchard;
 @using Orchard.ContentManagement;
+@using Orchard.ContentManagement.Handlers;
 @using Orchard.ContentManagement.Records;
 @using Orchard.Projections.Models;
 @using Orchard.Projections.Services;
@@ -17,6 +18,7 @@
     Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
     IContentManager _contentManager;
     IScheduledTaskService _scheduledTaskService;
+    IEnumerable<IContentHandler> _handlers;
     string retString = "Error"; //possible outcomes: "Error","Ok"
     dynamic visita = null;
     string csv = "";
@@ -35,6 +37,7 @@
         _fieldIndexPartRecord = Model.OrchardServices.WorkContext.Resolve<IRepository<FieldIndexPartRecord>>();
         _scheduledTaskService = Model.OrchardServices.WorkContext.Resolve<IScheduledTaskService>();
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _handlers = Model.OrchardServices.WorkContext.Resolve<IEnumerable<IContentHandler>>();
         visita = Model.ContentItem;
         string visitaId = string.Format("{{{0}}}", visita.Id);
         // legge il csv con gli invivati
@@ -61,7 +64,7 @@
                 }
                 if (creaInvito) {
                     invito = Model.OrchardServices.ContentManager.New("SchedaInvito");
-                    Model.OrchardServices.ContentManager.Create(invito, VersionOptions.Draft);
+                    _contentManager.Create(invito, VersionOptions.Draft);
                     invito.SchedaInvito.Visita.Ids = new int[] { visita.Id };
                     invito.SchedaInvito.Email.Value = fields[0];
                     invito.ActivityPart.DateTimeStart = visita.ActivityPart.DateTimeStart;
@@ -106,6 +109,12 @@
                     }
                     invito.TitlePart.Title = fields[1] + " " + fields[2] + " - " + visita.TitlePart.Title;
                     invito.AutoroutePart.DisplayAlias = "Schedainvito" + invito.Id.ToString();
+
+                    // forza l'update per la valorizzazione del LatestValue dei FieldIndexRecords
+                    var context = new UpdateContentContext(invito);
+                    _handlers.Invoke(handler => handler.Updated(context), null);
+
+                    invito.VersionRecord.Published = false;
                     _contentManager.Publish(invito);
                     LogVisita += DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " Creato scheda invito -> " + invito.SchedaInvito.Email.Value + Environment.NewLine;
                     // attiva il workflow di update dell'invito per creare le utenze necessarie
