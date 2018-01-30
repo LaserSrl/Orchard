@@ -38,7 +38,6 @@
             if (values.ContainsKey("surname")) {
                 item.ProfilePart.Cognome.Value = values["surname"];
             }
-            _communicationService.UserToContact((IUser)item.UserPart);
         }
         retString = "OK";
     }

@@ -123,7 +123,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                                                                   result.ProviderUserId,
                                                                   newUser,
                                                                   result.ExtraData.ToJson());
-
+                _openAuthMembershipServices.ApproveUser(newUser);
                 _authenticationService.SignIn(newUser, false);
 
                 if (newUser != null) {
@@ -224,6 +224,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                                                                           authResult.ProviderUserId,
                                                                           newUser, authResult.ExtraData.ToJson());
 
+                        _openAuthMembershipServices.ApproveUser(newUser);
                         _authenticationService.SignIn(newUser, false);
 
                         if (HttpContext.Response.Cookies.Count == 0) {
