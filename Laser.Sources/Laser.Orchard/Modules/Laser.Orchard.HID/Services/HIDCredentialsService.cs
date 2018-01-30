@@ -255,7 +255,8 @@ namespace Laser.Orchard.HID.Services {
         private IEnumerable<HIDCredential> CredentialsFromUser(HIDUser hidUser) {
             return hidUser
                 .CredentialContainers
-                .SelectMany(cc => cc.Credentials);
+                .SelectMany(cc => cc.Credentials)
+                .ToList(); // Force enumeration
         }
 
         private IList<HIDCredential> AffectedCredentials(HIDUser hidUser, IEnumerable<HIDCredential> oldCredentials) {
@@ -277,7 +278,7 @@ namespace Laser.Orchard.HID.Services {
                     && oldCredentialsById[cc.Id].Status != cc.Status)
                 );
 
-            return affectedCredentials;
+            return affectedCredentials.ToList(); // Force enumeration
         }
     }
 }
