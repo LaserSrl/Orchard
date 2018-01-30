@@ -86,7 +86,9 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             }
 
             createUserParams.UserName = _usernameService.Normalize(createUserParams.UserName);
-            var creatingContext = new CreatingOpenAuthUserContext(createUserParams.UserName, emailAddress, createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
+            var creatingContext = new CreatingOpenAuthUserContext(
+                createUserParams.UserName, emailAddress, 
+                createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
 
             _openAuthUserEventHandlers.Invoke(o => o.Creating(creatingContext), Logger);
 
@@ -95,6 +97,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                 return null;
             }
             else {
+                // The default IMemebershipService from Orchard.Users fires the following user events:
+                // Creating, Created, Approved (because here we are also approving the user)
                 var createdUser = _membershipService.CreateUser(new CreateUserParams(
                     _usernameService.Calculate(createUserParams.UserName),
                     _passwordGeneratorService.Generate(),

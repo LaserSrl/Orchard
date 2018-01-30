@@ -52,14 +52,27 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             if (string.IsNullOrWhiteSpace(userName))
                 return false;
 
+            // Orchard's "normal" LogOn process would have the LoggingIn event raised here
+            // The parameters for that are Username and Password. Here we do not have the latter
+
+            // Before SignIn, the normal Orchard process attempts to validate the information. In
+            // case the validation fails, it raises the LoginFailed event. That has the same parameters
+            // as the LoggingIn event, and we still don't have the password to pass along.
+
             if (_membershipService.GetUser(userName) != null)
                 _authenticationService.SignIn(_membershipService.GetUser(userName), createPersistentCookie);
+            // If GetUser(userName) != null, and we perform SignIn, the next call should in general return the
+            // same IUser returned by GetUser(userName), unless that user has been disabled or some other way
+            // disallowed from actually signing in. Note that, using the default Orchard.Users IMembershipService
+            // along with the default FormsAuthenticationService, neither GetUser(userName) nor SignIn(user, flag)
+            // validate that condition: as a consequence, here we could be signing in a disabled user.
 
             var authenticatedUser = _authenticationService.GetAuthenticatedUser();
 
-            if (authenticatedUser == null)
+            if (authenticatedUser == null) {
+
                 return false;
-            else {
+            } else {
                 _userEventHandler.LoggedIn(authenticatedUser);
                 return true;
             }
