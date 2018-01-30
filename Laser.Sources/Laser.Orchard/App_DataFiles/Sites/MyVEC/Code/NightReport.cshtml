@@ -7,7 +7,7 @@
 @using System.Globalization;
 @using System.IO;
 @functions{
-    string retString = "Error"; //possible outcomes: "Error","Ok"
+    string retString = "Error"; //possible outcomes: Error,Ok,NoVisit
     WorkflowContext wfContext = null;
     IContentManager _contentManager;
     IOrchardServices _orchardServices;
@@ -121,7 +121,11 @@
             attachments.Add(SaveCsv(csv, titolo));
         }
         wfContext.SetState("Attachments", string.Join(",", attachments));
-        retString = "Ok";
+        if(attachments.Count > 0) {
+            retString = "Ok";
+        } else {
+            retString = "NoVisit";
+        }
     } catch (Exception ex) {
         Model.OrchardServices.TransactionManager.Logger.Log(Orchard.Logging.LogLevel.Error, ex, "Error in test.cshtml", null);
         wfContext.SetState("ErrorMessage", ex.Message);

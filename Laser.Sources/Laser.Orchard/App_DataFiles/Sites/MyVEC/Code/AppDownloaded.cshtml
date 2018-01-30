@@ -22,7 +22,7 @@
     string retString = "OK";
     try {
         dynamic item = Model.ContentItem;
-        if ((!(bool)(item.ProfilePart.AppDownloaded.Value ?? false)) && (!string.IsNullOrEmpty( Model.OrchardServices.WorkContext.HttpContext.Request.QueryString["UUID"]))) {
+        if ((!(bool)(item.ProfilePart.AppDownloaded.Value ?? false)) && (!string.IsNullOrEmpty( Model.OrchardServices.WorkContext.HttpContext.Request.Headers["x-UUID"]))) {
             item.ProfilePart.AppDownloaded.Value = true;
 			_communicationService.UserToContact((IUser)(_membershipService.GetUser(item.User.UserPart.UserName).UserPart));
         }

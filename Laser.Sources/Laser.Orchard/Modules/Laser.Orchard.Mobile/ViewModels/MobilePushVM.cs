@@ -1,9 +1,4 @@
-﻿using Laser.Orchard.Mobile.Models;
-using Orchard.Environment.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Orchard.Environment.Extensions;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.Mobile.ViewModels {
@@ -37,18 +32,7 @@ namespace Laser.Orchard.Mobile.ViewModels {
         public bool PushSent { get; set; }
         public int TargetDeviceNumber { get; set; }
         public int PushSentNumber { get; set; }
-
-        public SelectList ListOfDevice {
-            get {
-                SelectList enumToList = new SelectList(Enum.GetValues(typeof(TipoDispositivo)).Cast<TipoDispositivo>().Select(v => new SelectListItem {
-                    Text = v.ToString(),
-                    Value = v.ToString()
-                }).ToList(), "Value", "Text");
-                List<SelectListItem> _list = enumToList.ToList();
-                _list.Insert(0, new SelectListItem() { Value = "All", Text = "All" });
-                return new SelectList((IEnumerable<SelectListItem>)_list, "Value", "Text");
-            }
-        }
+        public SelectList ListOfDevice { get; set; }
         public bool ShowTestOptions { get; set; }
         public bool HideRelated { get; set; }
         public bool PushAdvertising { get; set; }
