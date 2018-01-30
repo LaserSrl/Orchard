@@ -1,0 +1,49 @@
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Projections.Services;
+@using Orchard.Security;
+@using Orchard.Users.Models;
+@using Orchard.Users.Services;
+@using System.Text.RegularExpressions;
+@using System.Web.Security;
+@using System.Text;
+@using System.Globalization;
+@using System.Collections.Generic;
+@using Laser.Orchard.StartupConfig.Handlers;
+@using Laser.Orchard.CommunicationGateway.Models;
+@using Laser.Orchard.CommunicationGateway.Services;
+@using Laser.Orchard.OpenAuthentication.Services;
+@using Laser.Orchard.OpenAuthentication.Models;
+@using Newtonsoft.Json.Linq;
+@using Newtonsoft.Json;
+
+@functions{
+    IMembershipService _membershipService;
+    ICommunicationService _communicationService;
+    IUserProviderServices _userProviderServices;
+}
+@{
+    _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
+    _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
+    _userProviderServices = Model.OrchardServices.WorkContext.Resolve<IUserProviderServices>();
+    string retString = "OK";
+    try {
+        dynamic item = Model.ContentItem;
+        var userprovidervodafone = _userProviderServices.Get((int)item.Id).FirstOrDefault(x => x.ProviderName == "Vodafone");
+        if (userprovidervodafone != null && !string.IsNullOrEmpty(userprovidervodafone.ProviderUserData)) {
+            var values = JsonConvert.DeserializeObject<Dictionary<string, string>>(userprovidervodafone.ProviderUserData);
+            if (values.ContainsKey("name")) {
+                item.ProfilePart.Nome.Value = values["name"];
+            }
+            if (values.ContainsKey("surname")) {
+                item.ProfilePart.Cognome.Value = values["surname"];
+            }
+        }
+        retString = "OK";
+    }
+    catch (Exception ex) {
+        retString = "Error";
+        string eMsg = string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    }
+}@retString
