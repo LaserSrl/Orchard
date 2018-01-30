@@ -3,19 +3,23 @@
 @using Orchard.ContentManagement;
 @using Orchard.Environment.Configuration;
 @using Orchard.Users.Models;
+@using Orchard.Security;
 @using Orchard.Projections.Models;
 @using Orchard.Workflows.Models;
 @using Laser.Orchard.Caligoo.Services;
+@using Laser.Orchard.CommunicationGateway.Services;
 @functions{
     string retString = "Error"; //possible outcomes: "Error","Ok"
     WorkflowContext wfContext = null;
     IContentManager _contentManager;
+    ICommunicationService _communicationService;
 }
 @{
     try {
         wfContext = Model.Tokens["Workflow"];
         // resolve services
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
         // do work
         if (Model.Tokens.ContainsKey("mail")) {
             string fromMail = Model.Tokens["mail"];
@@ -26,6 +30,7 @@
                     ci.ProfilePart.MailInvitoLetta.Value = true;
                     ci.VersionRecord.Published = false;
                     _contentManager.Publish(ci);
+                    _communicationService.UserToContact((IUser)(ci.UserPart));
                 }
             }
         }
@@ -38,6 +43,7 @@
                     ci.ProfilePart.LandingPageVisualizzata.Value = true;
                     ci.VersionRecord.Published = false;
                     _contentManager.Publish(ci);
+                    _communicationService.UserToContact((IUser)(ci.UserPart));
                 }
             }
         }
