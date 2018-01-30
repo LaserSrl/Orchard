@@ -11,17 +11,20 @@ using Orchard.Security;
 using Orchard.Users.Models;
 using Laser.Orchard.StartupConfig.Handlers;
 using System;
+using Orchard.Users.Events;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOpenAuthMembershipServices : IDependency {
         bool CanRegister();
         IUser CreateUser(OpenAuthCreateUserParams createUserParams);
-    }
+        void ApproveUser(IUser user);
+        }
 
     public class OpenAuthMembershipServices : IOpenAuthMembershipServices {
         private readonly IOrchardServices _orchardServices;
         private readonly IMembershipService _membershipService;
         private readonly IUsernameService _usernameService;
+        private readonly IUserEventHandler _userEventHandlers;
         private readonly IPasswordGeneratorService _passwordGeneratorService;
         private readonly IEnumerable<IOpenAuthUserEventHandler> _openAuthUserEventHandlers;
         private readonly IContactRelatedEventHandler _contactEventHandler;
@@ -31,8 +34,10 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             IUsernameService usernameService,
             IPasswordGeneratorService passwordGeneratorService,
             IEnumerable<IOpenAuthUserEventHandler> openAuthUserEventHandlers,
-            IContactRelatedEventHandler contactEventHandler) {
+            IContactRelatedEventHandler contactEventHandler,
+            IUserEventHandler userEventHandlers) {
             _orchardServices = orchardServices;
+            _userEventHandlers = userEventHandlers;
             _membershipService = membershipService;
             _usernameService = usernameService;
             _passwordGeneratorService = passwordGeneratorService;
@@ -50,6 +55,14 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             var orchardUsersSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
 
             return orchardUsersSettings.UsersCanRegister && openAuthenticationSettings.AutoRegistrationEnabled;
+        }
+
+
+        public void ApproveUser(IUser user) {
+            var userpart = (UserPart)user;
+            userpart.RegistrationStatus = UserStatus.Approved;
+            _userEventHandlers.Approved(user);
+            _contactEventHandler.Synchronize(user);
         }
 
         public IUser CreateUser(OpenAuthCreateUserParams createUserParams) {
@@ -91,10 +104,6 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
                 var createdContext = new CreatedOpenAuthUserContext(createdUser, createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
                 _openAuthUserEventHandlers.Invoke(o => o.Created(createdContext), Logger);
-
-                //solleva l'evento di sincronizzazione dell'utente orchard
-                _contactEventHandler.Synchronize(createdUser);
-
                 return createdUser;
             }
         }
