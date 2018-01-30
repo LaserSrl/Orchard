@@ -1,0 +1,31 @@
+@{ 
+    // possible outcomes: Error,Ok
+    var retString = "Error";
+    Orchard.Workflows.Models.WorkflowContext wfCtx = null;
+    try {
+        wfCtx = Model.Tokens["Workflow"];
+        dynamic item = Model.ContentItem;
+        // imposta il default solo se la visita è appena stata creata
+        if(item.VersionRecord.Number == 1) {
+            // valorizzazione questionario di default se necessario
+            var cpfSurvey = item.Visita.Questionario;
+            if (cpfSurvey.Ids.Length == 0) {
+                if (item.LocalizationPart.Culture.Culture == "en-US") {
+                    cpfSurvey.Ids = new int[] { 4337 };
+                } else {
+                    cpfSurvey.Ids = new int[] { 1216 };
+                }
+            }
+            var dtSurvey = item.Visita.DataPush;
+            if(dtSurvey.DateTime == DateTime.MinValue) {
+                dtSurvey.DateTime = item.ActivityPart.DateTimeEnd.AddHours(2);
+            }
+            item.VersionRecord.Published = false;
+            item.ContentManager.Publish(item);
+        }
+        retString = "Ok";
+    }
+    catch (Exception ex) {
+        wfCtx.SetState("ErrorMessage", ex.Message);
+    }
+}@retString
