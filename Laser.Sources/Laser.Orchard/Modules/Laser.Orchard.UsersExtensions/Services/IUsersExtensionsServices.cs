@@ -138,6 +138,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
                         }
                     }
                     if ((RegistrationSettings.UsersAreModerated == false) && (RegistrationSettings.UsersMustValidateEmail == false)) {
+                        _userEventHandler.LoggingIn(userRegistrationParams.Username, userRegistrationParams.Password);
                         _authenticationService.SignIn(createdUser, true);
 
                         // solleva l'evento LoggedIn sull'utente
@@ -170,6 +171,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
         public void SignIn(UserLogin userLoginParams) {
             var user = _membershipService.ValidateUser(userLoginParams.Username, userLoginParams.Password);
             if (user != null) {
+                _userEventHandler.LoggingIn(userLoginParams.Username, userLoginParams.Password);
                 _authenticationService.SignIn(user, true);
                 _userEventHandler.LoggedIn(user);
             } else {
@@ -179,6 +181,11 @@ namespace Laser.Orchard.UsersExtensions.Services {
 
         public void SignOut() {
             _authenticationService.SignOut();
+
+            var loggedUser = _authenticationService.GetAuthenticatedUser();
+            if (loggedUser != null) {
+                _userEventHandler.LoggedOut(loggedUser);
+            }
         }
 
         public string SendLostPasswordSms(string internationalPrefix, string phoneNumber, Func<string, string> createUrl) {
