@@ -99,7 +99,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             }
             else {
                 // The default IMemebershipService from Orchard.Users fires the following user events:
-                // Creating, Created, Approved (because here we are also approving the user)
+                // Creating, Created, but not Approved (because here we are creating a disabled user that we will
+                // eventually have to approve later)
                 var createdUser = _membershipService.CreateUser(new CreateUserParams(
                     _usernameService.Calculate(createUserParams.UserName),
                     _passwordGeneratorService.Generate(),

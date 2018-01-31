@@ -2,9 +2,11 @@
 using DotNetOpenAuth.AspNet.Clients;
 using Laser.Orchard.OpenAuthentication.Services.Clients;
 using Orchard;
+using Orchard.ContentManagement;
 using Orchard.Mvc;
 using Orchard.Security;
 using Orchard.Users.Events;
+using Orchard.Users.Models;
 using System.Collections.Generic;
 using System.Web;
 
@@ -59,14 +61,26 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             // case the validation fails, it raises the LoginFailed event. That has the same parameters
             // as the LoggingIn event, and we still don't have the password to pass along.
 
-            if (_membershipService.GetUser(userName) != null)
-                _authenticationService.SignIn(_membershipService.GetUser(userName), createPersistentCookie);
             // If GetUser(userName) != null, and we perform SignIn, the next call should in general return the
             // same IUser returned by GetUser(userName), unless that user has been disabled or some other way
             // disallowed from actually signing in. Note that, using the default Orchard.Users IMembershipService
             // along with the default FormsAuthenticationService, neither GetUser(userName) nor SignIn(user, flag)
             // validate that condition: as a consequence, here we could be signing in a disabled user.
+            var user = _membershipService.GetUser(userName);
+            // if the user is valid, sign them in
+            if (user != null) {
+                // Since this feature depends on Orchard.Users, we are allowed to use the same definition of "Approved"
+                // user that is used there.
+                var userPart = user.As<UserPart>();
+                if (userPart != null 
+                    && userPart.EmailStatus == UserStatus.Approved 
+                    && userPart.RegistrationStatus == UserStatus.Approved) {
+                    _authenticationService.SignIn(user, createPersistentCookie);
+                }
+            }
 
+            // If we have done the SignIn above, this will return user. Otherwise it should return null, unless we
+            // are in a weird condition where we are already authenticated and are trying to "add" an OAuth authentication.
             var authenticatedUser = _authenticationService.GetAuthenticatedUser();
 
             if (authenticatedUser == null) {
