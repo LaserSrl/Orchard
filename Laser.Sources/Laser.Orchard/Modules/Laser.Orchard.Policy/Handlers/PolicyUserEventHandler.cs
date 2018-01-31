@@ -24,6 +24,17 @@ namespace Laser.Orchard.Policy.Handlers {
             } catch { }
         }
 
+        public void LoggedOut(IUser user) {
+            HttpCookie currentPoliciesAnswers = _orchardServices.WorkContext.HttpContext.Request.Cookies["PoliciesAnswers"];
+            if (currentPoliciesAnswers != null) {
+                // may be the cookie is already not set
+                _orchardServices.WorkContext.HttpContext.Response.Cookies.Remove("PoliciesAnswers");
+                currentPoliciesAnswers.Expires = DateTime.Now.AddDays(-10);
+                currentPoliciesAnswers.Value = null;
+                _orchardServices.WorkContext.HttpContext.Response.SetCookie(currentPoliciesAnswers);
+            }
+        }
+
         #region Unused events
         public void Approved(IUser user) {
         }
@@ -33,15 +44,7 @@ namespace Laser.Orchard.Policy.Handlers {
 
         public void Creating(UserContext context) {
         }
-
-        public void LoggedOut(IUser user) {
-            HttpCookie currentPoliciesAnswers = _orchardServices.WorkContext.HttpContext.Request.Cookies["PoliciesAnswers"];
-            _orchardServices.WorkContext.HttpContext.Response.Cookies.Remove("PoliciesAnswers");
-            currentPoliciesAnswers.Expires = DateTime.Now.AddDays(-10);
-            currentPoliciesAnswers.Value = null;
-            _orchardServices.WorkContext.HttpContext.Response.SetCookie(currentPoliciesAnswers);
-        }
-
+        
         public void AccessDenied(IUser user) {
         }
 

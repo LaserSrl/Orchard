@@ -102,8 +102,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                 // Creating, Created, but not Approved (because here we are creating a disabled user that we will
                 // eventually have to approve later)
                 var createdUser = _membershipService.CreateUser(new CreateUserParams(
-                    _usernameService.Calculate(createUserParams.UserName),
-                    _passwordGeneratorService.Generate(),
+                    _usernameService.Calculate(createUserParams.UserName), // this makes a unique username by adding a number to its end
+                    _passwordGeneratorService.Generate(), 
                     creatingContext.EmailAddress,
                     @T("Auto Registered User").Text,
                     _passwordGeneratorService.Generate() /* Noone can guess this */,

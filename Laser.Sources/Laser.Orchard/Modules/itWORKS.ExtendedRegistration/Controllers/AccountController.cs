@@ -25,11 +25,11 @@ namespace itWORKS.ExtendedRegistration.Controllers {
         private readonly IMembershipService _membershipService;
         private readonly IUserService _userService;
         private readonly IOrchardServices _orchardServices;
-        private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
         //private readonly IShapeFactory shapeFactory;
         private readonly IContentManager _contentManager;
         private readonly IFrontEndProfileService _frontEndProfileService;
         private readonly ShellSettings _shellSettings;
+        private readonly IUserEventHandler _userEventHandler;
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
@@ -48,21 +48,21 @@ namespace itWORKS.ExtendedRegistration.Controllers {
           IOrchardServices orchardServices,
           IShapeFactory shapeFactory,
           IContentManager contentManager,
-          IEnumerable<IUserEventHandler> userEventHandlers,
           IFrontEndProfileService frontEndProfileService,
-          ShellSettings shellSetting) {
+          ShellSettings shellSetting,
+            IUserEventHandler userEventHandler) {
 
             _authenticationService = authenticationService;
             _membershipService = membershipService;
             _userService = userService;
             _orchardServices = orchardServices;
-            _userEventHandlers = userEventHandlers;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
             _contentManager = contentManager;
             _frontEndProfileService = frontEndProfileService;
             _shellSettings = shellSetting;
+            _userEventHandler = userEventHandler;
         }
 
         public ActionResult Register() {
@@ -131,10 +131,8 @@ namespace itWORKS.ExtendedRegistration.Controllers {
                     var userPart2 = user.As<UserPart>();
                     if (user.As<UserPart>().EmailStatus == UserStatus.Pending) {
                         _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce })));
-
-                        foreach (var userEventHandler in _userEventHandlers) {
-                            userEventHandler.SentChallengeEmail(user);
-                        }
+                        
+                        _userEventHandler.SentChallengeEmail(user);
                         return RedirectToAction("ChallengeEmailSent", "Account", new { area = "Orchard.Users" });
                     }
 
@@ -142,8 +140,9 @@ namespace itWORKS.ExtendedRegistration.Controllers {
                         return RedirectToAction("RegistrationPending", "Account", new { area = "Orchard.Users" });
                     }
 
+                    _userEventHandler.LoggingIn(userName, password);
                     _authenticationService.SignIn(user, false /* createPersistentCookie */);
-
+                    _userEventHandler.LoggedIn(user);
 
                     if (!string.IsNullOrEmpty(returnUrl)) {
                         return this.RedirectLocal(returnUrl);
