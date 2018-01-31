@@ -70,5 +70,15 @@ namespace Laser.Orchard.HID.Models {
             set { this.Store(x => x.PreventMoreThanOneDevice, value); }
         }
 
+        /// <summary>
+        /// If this value is set to true, when we will attempt to issue credentials without specifying part numbers, 
+        /// the call to HID will be prevented. This allows handling the situation where we are trying to issue credentials
+        /// to a user that we have not set up to receive any on our end, but with HID's systems configured to use
+        /// a default Part Number.
+        /// </summary>
+        public bool PreventDefaultPartNumber {
+            get { return this.Retrieve(x => x.PreventDefaultPartNumber); }
+            set { this.Store(x => x.PreventDefaultPartNumber, value); }
+        }
     }
 }

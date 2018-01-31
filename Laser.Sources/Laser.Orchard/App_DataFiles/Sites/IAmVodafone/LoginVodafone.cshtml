@@ -16,16 +16,24 @@
 @using Laser.Orchard.OpenAuthentication.Models;
 @using Newtonsoft.Json.Linq;
 @using Newtonsoft.Json;
+@using Laser.Orchard.HID.Services;
+@using Laser.Orchard.HID.ViewModels;
+
+
 
 @functions{
     IMembershipService _membershipService;
     ICommunicationService _communicationService;
     IUserProviderServices _userProviderServices;
+    IHIDPartNumbersService _hIDPartNumbersService;
+    IHIDAPIService _hIDAPIService;
 }
 @{
     _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
     _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
     _userProviderServices = Model.OrchardServices.WorkContext.Resolve<IUserProviderServices>();
+    _hIDPartNumbersService= Model.OrchardServices.WorkContext.Resolve<IHIDPartNumbersService>();
+    _hIDAPIService = Model.OrchardServices.WorkContext.Resolve<IHIDAPIService>();
     string retString = "OK";
     try {
         dynamic item = Model.ContentItem;
@@ -39,6 +47,22 @@
                 item.ProfilePart.Cognome.Value = values["surname"];
             }
         }
+
+        // Set first building as Default 
+        var hidPartNumberSetViewModel = _hIDPartNumbersService.GetAllSets().FirstOrDefault();
+        var vmPartNumberSetsUserPartEdit = new PartNumberSetsUserPartEditViewModel {
+            Sets = new List<PartNumberSetsUserPartEditEntry> { new PartNumberSetsUserPartEditEntry {
+                Name = hidPartNumberSetViewModel.Name,
+                IsSelected = true,
+                Id = hidPartNumberSetViewModel.Id
+            }}
+        };
+        _hIDPartNumbersService.UpdatePart(item.PartNumberSetsUserPart, vmPartNumberSetsUserPartEdit);
+
+        // CreateUser HID
+        var hiduser = _hIDAPIService.CreateHIDUser((IUser)item.UserPart, item.ProfilePart.Cognome.Value, item.ProfilePart.Nome.Value, item.UserPart.Email);
+
+
         retString = "OK";
     }
     catch (Exception ex) {
