@@ -150,7 +150,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 // newUser may be null here, if creation of a new user fails.
                 // TODO: we should elsewhere add an UserEventHandler that in the Creating event handles the case where
                 // here we are trying to create a user with the same Username or Email as an existing one. That would simply
-                // use IUserService.VerifyUnicity(username, email)
+                // use IUserService.VerifyUnicity(username, email). However this may break things for our older tenants.
                 _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider,
                                                                   result.ProviderUserId,
                                                                   newUser,
@@ -184,6 +184,8 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             ViewBag.ProviderDisplayName = _orchardOpenAuthWebSecurity.GetOAuthClientData(result.Provider).DisplayName;
             ViewBag.ReturnUrl = returnUrl;
 
+            // the LogOn Helper here is not doing any validaiton on the stuff it's putting in query string, so it 
+            // may end up having forbidden character sequences.
             return new RedirectResult(Url.LogOn(returnUrl, result.UserName, loginData));
         }
 

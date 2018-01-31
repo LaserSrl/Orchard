@@ -110,7 +110,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                 && (!userSettings.UsersCanRegister || userSettings.UsersMustValidateEmail || userSettings.UsersAreModerated)) {
                 var existingUserWithSameMail = _orchardServices
                     .ContentManager
-                    .Query(VersionOptions.Published)
+                    .Query<UserPart, UserPartRecord>(VersionOptions.Published)
                     .Where<UserPartRecord>(x => 
                         x.Email == user.Email //this assumes that the db is case insensitive (true by default on SQL server and SQL CE)
                         && x.NormalizedUserName != user.UserName 
@@ -118,7 +118,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                         && x.EmailStatus == UserStatus.Approved)
                     .OrderBy(order => order.CreatedUtc)
                     .Slice(0, 1);
-                masterUser = existingUserWithSameMail.Select(x => ((dynamic)x).UserPart).FirstOrDefault();
+                masterUser = existingUserWithSameMail.FirstOrDefault();
             }
 
             return masterUser;
