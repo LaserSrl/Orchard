@@ -87,7 +87,8 @@ namespace Laser.Orchard.UsersExtensions.Services {
         public void Register(UserRegistration userRegistrationParams) {
             if (RegistrationSettings.UsersCanRegister) {
                 var policyAnswers = new List<PolicyForUserViewModel>();
-                if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy") && UserRegistrationExtensionsSettings.IncludePendingPolicy == Policy.IncludePendingPolicyOptions.Yes) {
+                if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy") 
+                    && UserRegistrationExtensionsSettings.IncludePendingPolicy == Policy.IncludePendingPolicyOptions.Yes) {
                     IEnumerable<PolicyTextInfoPart> policies = GetUserLinkedPolicies(userRegistrationParams.Culture);
                     // controllo che tutte le policy abbiano una risposta e che le policy obbligatorie siano accettate 
                     var allRight = true;
@@ -117,7 +118,9 @@ namespace Laser.Orchard.UsersExtensions.Services {
                     }
                 }
                 var registrationErrors = new List<string>();
-                if (ValidateRegistration(userRegistrationParams.Username, userRegistrationParams.Email, userRegistrationParams.Password, userRegistrationParams.ConfirmPassword, out registrationErrors)) {
+                if (ValidateRegistration(userRegistrationParams.Username, userRegistrationParams.Email, 
+                    userRegistrationParams.Password, userRegistrationParams.ConfirmPassword, out registrationErrors)) {
+
                     var createdUser = _membershipService.CreateUser(new CreateUserParams(
                         userRegistrationParams.Username,
                         userRegistrationParams.Password,
@@ -126,6 +129,12 @@ namespace Laser.Orchard.UsersExtensions.Services {
                         userRegistrationParams.PasswordAnswer,
                         (RegistrationSettings.UsersAreModerated == false) && (RegistrationSettings.UsersMustValidateEmail == false)
                         ));
+                    // _membershipService.CreateUser may return null and tell nothing about why it failed to create the user
+                    // if the Creating user event handlers set the flag to cancel user creation.
+                    if (createdUser == null) {
+                        throw new SecurityException(T("User registration failed.").Text);
+                    }
+                    // here user was created
                     var favCulture = createdUser.As<FavoriteCulturePart>();
                     if (favCulture != null) {
                         var culture = _repositoryCultures.Fetch(x => x.Culture.Equals(userRegistrationParams.Culture)).SingleOrDefault();
@@ -140,7 +149,6 @@ namespace Laser.Orchard.UsersExtensions.Services {
                     if ((RegistrationSettings.UsersAreModerated == false) && (RegistrationSettings.UsersMustValidateEmail == false)) {
                         _userEventHandler.LoggingIn(userRegistrationParams.Username, userRegistrationParams.Password);
                         _authenticationService.SignIn(createdUser, true);
-
                         // solleva l'evento LoggedIn sull'utente
                         _userEventHandler.LoggedIn(createdUser);
                     }

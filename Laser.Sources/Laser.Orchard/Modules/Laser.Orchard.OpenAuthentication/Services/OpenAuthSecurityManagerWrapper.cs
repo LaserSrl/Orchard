@@ -87,6 +87,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
                 return false;
             } else {
+                // Login was successful using the OAuth provider, so we can fire the LoggedIn event
                 _userEventHandler.LoggedIn(authenticatedUser);
                 return true;
             }

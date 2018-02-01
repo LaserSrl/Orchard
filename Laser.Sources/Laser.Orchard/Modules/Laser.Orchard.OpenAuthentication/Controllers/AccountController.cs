@@ -151,17 +151,20 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 // TODO: we should elsewhere add an UserEventHandler that in the Creating event handles the case where
                 // here we are trying to create a user with the same Username or Email as an existing one. That would simply
                 // use IUserService.VerifyUnicity(username, email). However this may break things for our older tenants.
-                _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider,
-                                                                  result.ProviderUserId,
-                                                                  newUser,
-                                                                  result.ExtraData.ToJson());
-                // The default implementation of IOpendAuthMembershipService creates a disabled user.
-                // This next call to ApproveUser is here, so that in the event handlers we have that the records for the
-                // OAuth provider is populated.
-                _openAuthMembershipServices.ApproveUser(newUser);
-                _authenticationService.SignIn(newUser, false);
-
                 if (newUser != null) {
+                    _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider,
+                                                                      result.ProviderUserId,
+                                                                      newUser,
+                                                                      result.ExtraData.ToJson());
+                    // The default implementation of IOpendAuthMembershipService creates a disabled user.
+                    // This next call to ApproveUser is here, so that in the event handlers we have that the records for the
+                    // OAuth provider is populated.
+                    _openAuthMembershipServices.ApproveUser(newUser);
+                    // We created the user and are going to sign them in, so we should fire off the related events.
+                    // We cannot really invoke the LoggingIn event, because we do not have the password, but we can invoke
+                    // the LoggedIn event later.
+                    _authenticationService.SignIn(newUser, false);
+
                     _notifier.Information(
                         T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", result.Provider, newUser.UserName));
                     _userEventHandler.LoggedIn(newUser);
