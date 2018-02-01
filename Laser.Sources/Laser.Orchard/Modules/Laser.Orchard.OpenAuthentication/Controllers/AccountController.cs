@@ -225,23 +225,24 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 } else {
 
                     if (_orchardOpenAuthWebSecurity.Login(authResult.Provider, authResult.ProviderUserId)) {
-                        // Login may right now succeed for disabled users
+                        // Login also returns false for disabled users (this used to not be the case)
                         if (HttpContext.Response.Cookies.Count == 0) {
+                            // For some reason, SignIn failed to add the authentication cookie to the response
                             result = _utilsServices.GetResponse(ResponseType.None, "Unable to send back a cookie.");
                             return _utilsServices.ConvertToJsonResult(result);
                         } else {
                             authenticatedUser = _authenticationService.GetAuthenticatedUser();
-                            // If the user is disabled, we would still get it as authenticated here, but GetAuthenticatedUser() would 
-                            // return null on the next request.
+
                             _userEventHandler.LoggedIn(authenticatedUser);
                             return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse("", _identityProviders));
                         }
                     } else {
                         // Login returned false: either the user given by Provider+UserId has never been registered (so we have no
-                        // matching username to use), or no user exists in Orchard with that username, or SignIn failed somehow.
+                        // matching username to use), or no user exists in Orchard with that username, or SignIn failed somehow, or
+                        // the user is disabled.
 
                         // _openAuthClientProvider.NormalizeData(params) may return null if there is no configuration for a provider
-                        // with the given name. If result != null, that is not the case, because in that condition GetUserData(params)
+                        // with the given name. If authResult != null, that is not the case, because in that condition GetUserData(params)
                         // would return null, and we would have already exited the method.
                         var userParams = _openAuthClientProvider.NormalizeData(authResult.Provider, new OpenAuthCreateUserParams(authResult.UserName,
                                                                     authResult.Provider,
