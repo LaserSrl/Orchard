@@ -20,12 +20,14 @@ namespace Laser.Orchard.OpenAuthentication.Events {
 
         public OpenAuthUserEventHandler(IHttpContextAccessor httpContextAccessor,
             IOrchardOpenAuthWebSecurity orchardOpenAuthWebSecurity,
+            IContentManager contentManager,
             IAuthenticationService authenticationService,
             INotifier notifier) {
             _httpContextAccessor = httpContextAccessor;
             _orchardOpenAuthWebSecurity = orchardOpenAuthWebSecurity;
             _authenticationService = authenticationService;
             _notifier = notifier;
+            _contentManager = contentManager;
             T = NullLocalizer.Instance;
         }
 

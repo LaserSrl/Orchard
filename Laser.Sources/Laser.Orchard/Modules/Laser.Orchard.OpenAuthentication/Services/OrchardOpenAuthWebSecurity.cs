@@ -106,12 +106,19 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             var authSettings = _orchardServices.WorkContext.CurrentSite.As<OpenAuthenticationSettingsPart>();
             var userSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
 
-            if (authSettings.AutoMergeNewUsersEnabled && (!userSettings.UsersCanRegister || userSettings.UsersMustValidateEmail || userSettings.UsersAreModerated)) {
-                var existingUserWithSameMail = _orchardServices.ContentManager.Query(VersionOptions.Published)
-                    .Where<UserPartRecord>(x => x.Email == user.Email && x.NormalizedUserName != user.UserName && x.RegistrationStatus == UserStatus.Approved && x.EmailStatus == UserStatus.Approved)
+            if (authSettings.AutoMergeNewUsersEnabled 
+                && (!userSettings.UsersCanRegister || userSettings.UsersMustValidateEmail || userSettings.UsersAreModerated)) {
+                var existingUserWithSameMail = _orchardServices
+                    .ContentManager
+                    .Query<UserPart, UserPartRecord>(VersionOptions.Published)
+                    .Where<UserPartRecord>(x => 
+                        x.Email == user.Email //this assumes that the db is case insensitive (true by default on SQL server and SQL CE)
+                        && x.NormalizedUserName != user.UserName 
+                        && x.RegistrationStatus == UserStatus.Approved 
+                        && x.EmailStatus == UserStatus.Approved)
                     .OrderBy(order => order.CreatedUtc)
                     .Slice(0, 1);
-                masterUser = existingUserWithSameMail.Select(x => ((dynamic)x).UserPart).FirstOrDefault();
+                masterUser = existingUserWithSameMail.FirstOrDefault();
             }
 
             return masterUser;

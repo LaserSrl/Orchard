@@ -85,53 +85,92 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 return this.RedirectLocal(returnUrl);
             }
 
-            //Get additional UserDatas 
+            // At this point, login using the OpenAuth provider failed, meaning that we could not find a match
+            // between the information from the provider and Orchard's users.
+
+            // Get additional UserData
             if (result.ExtraData.ContainsKey("accesstoken")) {
                 result = _openAuthClientProvider.GetUserData(result.Provider, result, result.ExtraData["accesstoken"]);
             } else {
                 result = _openAuthClientProvider.GetUserData(result.Provider, result, "");
             }
+            // _openAuthClientProvider.GetUserData(params) may return null if there is no configuration for a provider
+            // with the given name.
+            if (result == null) {
+                // handle this condition and exit the method
+                _notifier.Error(T("Your authentication request failed."));
+
+                return new RedirectResult(Url.LogOn(returnUrl));
+            }
+
+            // _openAuthClientProvider.NormalizeData(params) may return null if there is no configuration for a provider
+            // with the given name. If result != null, that is not the case, because in that condition GetUserData(params)
+            // would return null, and we would have already exited the method.
             var userParams = _openAuthClientProvider.NormalizeData(result.Provider, new OpenAuthCreateUserParams(result.UserName,
                                                         result.Provider,
                                                         result.ProviderUserId,
                                                         result.ExtraData));
+
             var temporaryUser = _openAuthMembershipServices.CreateTemporaryUser(userParams);
 
-            var masterUser = _authenticationService.GetAuthenticatedUser() ?? _orchardOpenAuthWebSecurity.GetClosestMergeableKnownUser(temporaryUser); // The autheticated User or depending from settings the first created user with the same e-mail
+            // In what condition can GetAuthenticatedUser() not be null? To reach this code, _orchardOpenAuthWebSecurity.Login(params)
+            // must have returned false. That happens if there was no record for the combination Provider/ProviderUserId, or if
+            // GetAuthenticatedUser() returned null in it. In the latter case, it should still return null. The former case means
+            // we are trying to login with an OAuth provider and it's the first time we are calling it for this user, but we are 
+            // also already authenticated in some other way. This only makes sense in a situation where, as authenticated users,
+            // we are allowed to add information from OAuth providers to our account: Users/Account/LogOn, if the user is authenticated,
+            // redirects to the homepage, and does not give an option to go and login again using OAuth.
+            var masterUser = _authenticationService.GetAuthenticatedUser()
+                ?? _orchardOpenAuthWebSecurity.GetClosestMergeableKnownUser(temporaryUser);
+            // The authenticated User or depending from settings the first created user with the same e-mail
 
             if (masterUser != null) {
-                // If the current user is logged in or settings ask for a user merge and we found a User with the same email creates or merge accounts
+                // If the current user is logged in or settings ask for a user merge and we found a User with the same email 
+                // create or merge accounts
                 _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider, result.ProviderUserId,
                                                                   masterUser, result.ExtraData.ToJson());
 
                 _notifier.Information(T("Your {0} account has been attached to your local account.", result.Provider));
 
                 if (_authenticationService.GetAuthenticatedUser() != null) { // if the user was already logged in 
+                    // here masterUser == _authenticationService.GetAuthenticatedUser()
                     return this.RedirectLocal(returnUrl);
                 }
             }
 
-            if (_openAuthMembershipServices.CanRegister() && masterUser == null) { // User can register and there is not a user with the same email
+            if (_openAuthMembershipServices.CanRegister() && masterUser == null) {
+                // User can register and there is not a user with the same email
                 var createUserParams = new OpenAuthCreateUserParams(result.UserName,
                                                                     result.Provider,
                                                                     result.ProviderUserId,
                                                                     result.ExtraData);
                 createUserParams = _openAuthClientProvider.NormalizeData(result.Provider, createUserParams);
+                // Creating the user here calls the IMembershipService, that will take care of invoking the user events
                 var newUser = _openAuthMembershipServices.CreateUser(createUserParams);
-
-                _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider,
-                                                                  result.ProviderUserId,
-                                                                  newUser,
-                                                                  result.ExtraData.ToJson());
-                _openAuthMembershipServices.ApproveUser(newUser);
-                _authenticationService.SignIn(newUser, false);
-
+                // newUser may be null here, if creation of a new user fails.
+                // TODO: we should elsewhere add an UserEventHandler that in the Creating event handles the case where
+                // here we are trying to create a user with the same Username or Email as an existing one. That would simply
+                // use IUserService.VerifyUnicity(username, email). However this may break things for our older tenants.
                 if (newUser != null) {
+                    _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider,
+                                                                      result.ProviderUserId,
+                                                                      newUser,
+                                                                      result.ExtraData.ToJson());
+                    // The default implementation of IOpendAuthMembershipService creates a disabled user.
+                    // This next call to ApproveUser is here, so that in the event handlers we have that the records for the
+                    // OAuth provider is populated.
+                    _openAuthMembershipServices.ApproveUser(newUser);
+                    // We created the user and are going to sign them in, so we should fire off the related events.
+                    // We cannot really invoke the LoggingIn event, because we do not have the password, but we can invoke
+                    // the LoggedIn event later.
+                    _authenticationService.SignIn(newUser, false);
+
                     _notifier.Information(
                         T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", result.Provider, newUser.UserName));
                     _userEventHandler.LoggedIn(newUser);
-                } else
+                } else {
                     _notifier.Error(T("Your authentication request failed."));
+                }
 
                 return this.RedirectLocal(returnUrl);
             } else if (masterUser != null) {
@@ -149,8 +188,11 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             ViewBag.ProviderDisplayName = _orchardOpenAuthWebSecurity.GetOAuthClientData(result.Provider).DisplayName;
             ViewBag.ReturnUrl = returnUrl;
 
+            // the LogOn Helper here is not doing any validaiton on the stuff it's putting in query string, so it 
+            // may end up having forbidden character sequences.
             return new RedirectResult(Url.LogOn(returnUrl, result.UserName, loginData));
         }
+
         [OutputCache(NoStore = true, Duration = 0)]
         public ContentResult ExternalTokenLogOn(string __provider__, string token, string secret = "") {
             return ExternalTokenLogOnLogic(__provider__, token, secret);
@@ -176,66 +218,106 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 var returnUrl = Url.MakeAbsolute(Url.Action("ExternalLogOn", "Account"));
                 AuthenticationResult dummy = new AuthenticationResult(true);
                 AuthenticationResult authResult = _openAuthClientProvider.GetUserData(__provider__, dummy, token, secret, returnUrl);
-                IUser authenticatedUser, masterUser;
-                if (!authResult.IsSuccessful) {
+                // authResult may be null if the provider name matches no configured provider
+                if (authResult == null || !authResult.IsSuccessful) {
                     result = _utilsServices.GetResponse(ResponseType.InvalidUser, "Token authentication failed.");
                     return _utilsServices.ConvertToJsonResult(result);
                 } else {
 
                     if (_orchardOpenAuthWebSecurity.Login(authResult.Provider, authResult.ProviderUserId)) {
+                        // Login also returns false for disabled users (this used to not be the case)
                         if (HttpContext.Response.Cookies.Count == 0) {
+                            // For some reason, SignIn failed to add the authentication cookie to the response
                             result = _utilsServices.GetResponse(ResponseType.None, "Unable to send back a cookie.");
                             return _utilsServices.ConvertToJsonResult(result);
                         } else {
-                            authenticatedUser = _authenticationService.GetAuthenticatedUser();
-                            _userEventHandler.LoggedIn(authenticatedUser);
+                            // The LoggedIn event is already raised in the Login method just before returning true, 
+                            // so we should not be raising it here as well.
                             return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse("", _identityProviders));
                         }
-                    } else {
-                        var userParams = _openAuthClientProvider.NormalizeData(authResult.Provider, new OpenAuthCreateUserParams(authResult.UserName,
-                                                                    authResult.Provider,
-                                                                    authResult.ProviderUserId,
-                                                                    authResult.ExtraData));
-                        var temporaryUser = _openAuthMembershipServices.CreateTemporaryUser(userParams);
-                        masterUser = _authenticationService.GetAuthenticatedUser() ?? _orchardOpenAuthWebSecurity.GetClosestMergeableKnownUser(temporaryUser); // The autheticated User or depending from settings the first created user with the same e-mail
-                        authenticatedUser = _authenticationService.GetAuthenticatedUser();
                     }
+                    // Login returned false: either the user given by Provider+UserId has never been registered (so we have no
+                    // matching username to use), or no user exists in Orchard with that username, or SignIn failed somehow, or
+                    // the user is disabled.
+
+                    // _openAuthClientProvider.NormalizeData(params) may return null if there is no configuration for a provider
+                    // with the given name. If authResult != null, that is not the case, because in that condition GetUserData(params)
+                    // would return null, and we would have already exited the method.
+                    var userParams = _openAuthClientProvider.NormalizeData(authResult.Provider,
+                        new OpenAuthCreateUserParams(authResult.UserName,
+                            authResult.Provider,
+                            authResult.ProviderUserId,
+                            authResult.ExtraData));
+
+                    var temporaryUser = _openAuthMembershipServices.CreateTemporaryUser(userParams);
+
+                    // This is an attempt to login using an OAuth provider. The call to .Login(params) returned false. In an actual 
+                    // login there is no reason why GetAuthenticatedUser() should return a user, unless we are in a situation where,
+                    // as authenticated users, we are allowed to add information from OAuth providers to our account
+
+                    // The authenticated User or depending from settings the first created user with the same e-mail
+                    var masterUser = _authenticationService.GetAuthenticatedUser()
+                        ?? _orchardOpenAuthWebSecurity.GetClosestMergeableKnownUser(temporaryUser);
+
+                    var authenticatedUser = _authenticationService.GetAuthenticatedUser();
 
                     if (masterUser != null) {
+                        // If the current user is logged in or settings ask for a user merge and we found a User with the same email 
+                        // create or merge accounts
                         _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(authResult.Provider, authResult.ProviderUserId,
                                                                           masterUser, authResult.ExtraData.ToJson());
                         // Handle LoggedIn Event
                         if (authenticatedUser == null) {
                             _authenticationService.SignIn(masterUser, false);
+                            _userEventHandler.LoggedIn(masterUser);
+                            // The LoggedIn event is invoked here, because if authenticateUser != null, then it means the user
+                            // had already logged in some other time
                         }
-                        _userEventHandler.LoggedIn(masterUser);
-                        return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse(T("Your {0} account has been attached to your local account.", authResult.Provider).Text, _identityProviders));
+
+                        return _utilsServices
+                            .ConvertToJsonResult(_utilsServices
+                                .GetUserResponse(T("Your {0} account has been attached to your local account.", authResult.Provider).Text,
+                                _identityProviders));
 
                     }
 
                     if (_openAuthMembershipServices.CanRegister() && masterUser == null) {
+                        // User can register and there is not a user with the same email
                         var createUserParams = new OpenAuthCreateUserParams(authResult.UserName,
-                                                                            authResult.Provider,
-                                                                            authResult.ProviderUserId,
-                                                                            authResult.ExtraData);
+                            authResult.Provider,
+                            authResult.ProviderUserId,
+                            authResult.ExtraData);
                         createUserParams = _openAuthClientProvider.NormalizeData(authResult.Provider, createUserParams);
+                        // Creating the user here calls the IMembershipService, that will take care of invoking the user events
                         var newUser = _openAuthMembershipServices.CreateUser(createUserParams);
-                        _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(authResult.Provider,
-                                                                          authResult.ProviderUserId,
-                                                                          newUser, authResult.ExtraData.ToJson());
+                        // newUser may be null here, if creation of a new user fails.
+                        // TODO: we should elsewhere add an UserEventHandler that in the Creating event handles the case where
+                        // here we are trying to create a user with the same Username or Email as an existing one. That would simply
+                        // use IUserService.VerifyUnicity(username, email)
+                        if (newUser != null) {
+                            _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(authResult.Provider,
+                               authResult.ProviderUserId,
+                               newUser,
+                               authResult.ExtraData.ToJson());
+                            // The default implementation of IOpendAuthMembershipService creates a disabled user.
+                            // This next call to ApproveUser is here, so that in the event handlers we have that the records for the
+                            // OAuth provider is populated.
+                            _openAuthMembershipServices.ApproveUser(newUser);
+                            _authenticationService.SignIn(newUser, false);
 
-                        _openAuthMembershipServices.ApproveUser(newUser);
-                        _authenticationService.SignIn(newUser, false);
-
-                        if (HttpContext.Response.Cookies.Count == 0) {
-                            result = _utilsServices.GetResponse(ResponseType.None, "Unable to send back a cookie.");
-                            return _utilsServices.ConvertToJsonResult(result);
-                        } else {
-                            // Handle LoggedIn Event
-                            _userEventHandler.LoggedIn(newUser);
-                            return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse(T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", authResult.Provider, newUser.UserName).Text, _identityProviders));
+                            if (HttpContext.Response.Cookies.Count == 0) {
+                                // SignIn adds the authentication cookie to the response, so that is what we are checking here
+                                result = _utilsServices.GetResponse(ResponseType.None, "Unable to send back a cookie.");
+                                return _utilsServices.ConvertToJsonResult(result);
+                            } else {
+                                // Handle LoggedIn Event
+                                _userEventHandler.LoggedIn(newUser);
+                                return _utilsServices.ConvertToJsonResult(_utilsServices.GetUserResponse(T("You have been logged in using your {0} account. We have created a local account for you with the name '{1}'", authResult.Provider, newUser.UserName).Text, _identityProviders));
+                            }
                         }
+                        // if newUser == null, just go ahead and return the "Login Failed" Response
                     }
+
                     result = _utilsServices.GetResponse(ResponseType.None, "Login failed.");
                     return _utilsServices.ConvertToJsonResult(result);
                 }

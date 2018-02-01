@@ -87,7 +87,9 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             }
 
             createUserParams.UserName = _usernameService.Normalize(createUserParams.UserName);
-            var creatingContext = new CreatingOpenAuthUserContext(createUserParams.UserName, emailAddress, createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
+            var creatingContext = new CreatingOpenAuthUserContext(
+                createUserParams.UserName, emailAddress, 
+                createUserParams.ProviderName, createUserParams.ProviderUserId, createUserParams.ExtraData);
 
             _openAuthUserEventHandlers.Invoke(o => o.Creating(creatingContext), Logger);
 
@@ -96,9 +98,12 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                 return null;
             }
             else {
+                // The default IMemebershipService from Orchard.Users fires the following user events:
+                // Creating, Created, but not Approved (because here we are creating a disabled user that we will
+                // eventually have to approve later)
                 var createdUser = _membershipService.CreateUser(new CreateUserParams(
-                    _usernameService.Calculate(createUserParams.UserName),
-                    _passwordGeneratorService.Generate(),
+                    _usernameService.Calculate(createUserParams.UserName), // this makes a unique username by adding a number to its end
+                    _passwordGeneratorService.Generate(), 
                     creatingContext.EmailAddress,
                     @T("Auto Registered User").Text,
                     _passwordGeneratorService.Generate() /* Noone can guess this */,
