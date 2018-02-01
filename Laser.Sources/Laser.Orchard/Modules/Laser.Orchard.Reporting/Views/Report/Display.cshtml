@@ -25,6 +25,7 @@
             @Display(contentManager.BuildEditor(Model.FilterContent))
             <button class="primaryAction" type="button" value="Refresh" id="btnRefresh">@T("Refresh")</button>
             <button class="primaryAction" type="button" value="Print" id="btnPrint">@T("Print")</button>
+            <button class="primaryAction" type="submit" formaction="@Url.Action("DownloadChart")" value="Download" id="btnDownload">@T("Download")</button>
         </div>
     }
     <div id="divReportViewer"></div>
@@ -42,6 +43,16 @@
         });
     </script>
 } else {
-    <button class="primaryAction" type="button" value="Print" id="btnPrint" onclick="window.print();">@T("Print")</button>
+    <button class="primaryAction" type="button" value="Print" id="btnPrint">@T("Print")</button>
+    <button class="primaryAction" type="button" value="Download" id="btnDownload">@T("Download")</button>
     @Display(BuildDisplay(Model.ViewerContent, "Detail"))
+    <script type="text/javascript">
+        $(function () {
+            $("#btnPrint").click(function () { window.print(); });
+            var theForm = $("#reportFilters").parent();
+            $("#btnDownload").click(function () {
+                window.location.href = "@Url.Action("DownloadChart", new { id = Model.Id })";
+            });
+        });
+    </script>
 }

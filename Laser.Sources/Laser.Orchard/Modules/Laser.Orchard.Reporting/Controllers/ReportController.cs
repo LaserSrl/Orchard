@@ -20,6 +20,7 @@ using Orchard;
 using Orchard.Themes;
 using Orchard.ContentPicker.Fields;
 using Orchard.Security;
+using System.Text;
 
 namespace Laser.Orchard.Reporting.Controllers {
     [ValidateInput(false), Admin]
@@ -373,6 +374,21 @@ namespace Laser.Orchard.Reporting.Controllers {
             var model = services.ContentManager.New("DataReportEmptyType");
             model.Weld(viewerPart);
             return View(model);
+        }
+        [Themed(Enabled = false)]
+        public ActionResult DownloadChart(int id) {
+            if (_authorizer.Authorize(reportManager.GetReportPermissions()[id]) == false) {
+                return new HttpUnauthorizedResult(T("Not authorized to list Reports").ToString());
+            }
+            var ci = services.ContentManager.Get(id);
+            if (ci.Has<DataReportViewerPart>() == false) {
+                throw new ArgumentException(string.Format(CultureInfo.CurrentUICulture, "{0}={1}", T("There is no report with the Id"), id));
+            }
+            var viewerPart = ci.As<DataReportViewerPart>();
+            var q = reportManager.GetCsv(viewerPart);
+            return new FileContentResult(Encoding.UTF8.GetBytes(q), "application/csv") {
+                FileDownloadName = viewerPart.Record.Report.Title + ".csv"
+            };
         }
         public ActionResult ShowReports(ShowReportsViewModel model) {
             var list = reportManager.GetReportListForCurrentUser(model.TitleFilter);
