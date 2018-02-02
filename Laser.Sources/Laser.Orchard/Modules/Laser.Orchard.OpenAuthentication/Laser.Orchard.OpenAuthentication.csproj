@@ -272,6 +272,9 @@
     <Compile Include="Controllers\OpenIdController.cs" />
     <Compile Include="Drivers\UserProviderDisplayPartDriver.cs" />
     <Compile Include="Drivers\UserProvidersPartDriver.cs" />
+    <Compile Include="Events\BaseOpenAuthUserContext.cs" />
+    <Compile Include="Events\CreatedOpenAuthUserContext.cs" />
+    <Compile Include="Events\CreatingOpenAuthUserContext.cs" />
     <Compile Include="Events\IOpenAuthUserEventHandler.cs" />
     <Compile Include="Events\OpenAuthUserEventHandler.cs" />
     <Compile Include="Events\UserAppDirectEvent.cs" />
