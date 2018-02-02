@@ -19,7 +19,6 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         bool CanRegister();
         IUser CreateUser(OpenAuthCreateUserParams createUserParams);
         OpenAuthTemporaryUser CreateTemporaryUser(OpenAuthCreateUserParams createUserParams);
-        void ApproveUser(IUser user);
         }
 
     public class OpenAuthMembershipServices : IOpenAuthMembershipServices {
@@ -57,15 +56,6 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             var orchardUsersSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
 
             return orchardUsersSettings.UsersCanRegister && openAuthenticationSettings.AutoRegistrationEnabled;
-        }
-
-
-        public void ApproveUser(IUser user) {
-            var userpart = (UserPart)user;
-            userpart.RegistrationStatus = UserStatus.Approved;
-            userpart.EmailStatus = UserStatus.Approved;
-            _userEventHandlers.Approved(user);
-            _contactEventHandler.Synchronize(user);
         }
 
         public IUser CreateUser(OpenAuthCreateUserParams createUserParams) {
