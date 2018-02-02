@@ -1,0 +1,79 @@
+﻿@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Security;
+@using System.Text.RegularExpressions;
+@using System.Web.Security;
+@using System.Text;
+@using System.Globalization;
+@using System.Collections.Generic;
+@using System.Linq;
+@using Laser.Orchard.HID.Services;
+@using Laser.Orchard.HID.ViewModels;
+@functions{
+    IHIDPartNumbersService _hIDPartNumbersService;
+    IHIDAPIService _hIDAPIService;
+}
+@{
+    _hIDPartNumbersService = Model.OrchardServices.WorkContext.Resolve<IHIDPartNumbersService>();
+    _hIDAPIService = Model.OrchardServices.WorkContext.Resolve<IHIDAPIService>();
+    string retString = "Error";
+    string eMsg = "Unknown Error";
+    try {
+        // The OpenAuthRecordCreated event adds the following stuff into the the TokensDictionary:
+        // "User": The IUser for whom the UserProviderRecord was created.
+        // "ProviderName": The name of the OAuth provider used. Must be Vodafone for the execution of this razor.
+        // "ProviderUserId": The user id in the given provider.
+        // "ExtraData": the additional data sent by the provider.
+        // It's up to the event handler triggering the workflow to ensure those are there, so here we can assume
+        // they are.
+        if (Model.ContentItem != null && Model.Tokens != null) {
+            var tokensDictionary = (Dictionary<string, object>)(Model.Tokens);
+            if (tokensDictionary != null && tokensDictionary.Any()) {
+                if (tokensDictionary["ProviderName"].ToString() == "Vodafone") {
+                    // making sure this is not some other OAuth provider in case we will enable them in the future
+                    dynamic userItem = Model.ContentItem;
+                    var extraData = (Dictionary<string, string>)(tokensDictionary["ExtraData"]);
+                    if (extraData.ContainsKey("name")) {
+                        userItem.ProfilePart.Nome.Value = extraData["name"];
+                    }
+                    if (extraData.ContainsKey("surname")) {
+                        userItem.ProfilePart.Cognome.Value = extraData["surname"];
+                    }
+
+                    // Set first building as default
+                    var hidPartNumberSetViewModel = _hIDPartNumbersService.GetAllSets().FirstOrDefault();
+                    var vmPartNumberSetsUserPartEdit = new PartNumberSetsUserPartEditViewModel {
+                        Sets = new List<PartNumberSetsUserPartEditEntry> {
+                            new PartNumberSetsUserPartEditEntry {
+                                Name = hidPartNumberSetViewModel.Name,
+                                IsSelected = true,
+                                Id = hidPartNumberSetViewModel.Id
+                                }
+                            }
+                    };
+
+                    _hIDPartNumbersService.UpdatePart(userItem.PartNumberSetsUserPart, vmPartNumberSetsUserPartEdit);
+
+                    // Create User in HID systems
+                    var hiduser = _hIDAPIService.CreateHIDUser(
+                        (IUser)userItem.UserPart,
+                        userItem.ProfilePart.Cognome.Value,
+                        userItem.ProfilePart.Nome.Value,
+                        userItem.UserPart.Email);
+
+                    retString = "OK";
+                } else {
+                    // Different OAuth provider
+                    retString = "WrongProvider";
+                    eMsg = Environment.NewLine +
+                        string.Format("OAuth provider was \"{0}\" instead of \"Vodafone\"",
+                            tokensDictionary["ProviderName"].ToString());
+                }
+            }
+        }
+    } catch (Exception ex) {
+        retString = "Error";
+        eMsg = string.Format("\r\n{0}", ex.Message);
+    }
+    Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+}@retString

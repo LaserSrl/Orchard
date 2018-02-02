@@ -3,6 +3,7 @@ using Laser.Orchard.OpenAuthentication.Extensions;
 using Laser.Orchard.OpenAuthentication.Security;
 using Laser.Orchard.OpenAuthentication.Services;
 using Laser.Orchard.OpenAuthentication.Services.Clients;
+using Laser.Orchard.StartupConfig.Handlers;
 using Laser.Orchard.StartupConfig.IdentityProvider;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
@@ -47,6 +48,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             IUtilsServices utilsServices,
             IOrchardServices orchardServices,
             IEnumerable<IIdentityProvider> identityProviders) {
+
             _notifier = notifier;
             _orchardOpenAuthWebSecurity = orchardOpenAuthWebSecurity;
             _authenticationService = authenticationService;
@@ -56,6 +58,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
             _utilsServices = utilsServices;
             _orchardServices = orchardServices;
             _identityProviders = identityProviders;
+
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -128,7 +131,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 // If the current user is logged in or settings ask for a user merge and we found a User with the same email 
                 // create or merge accounts
                 _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider, result.ProviderUserId,
-                                                                  masterUser, result.ExtraData.ToJson());
+                                                                  masterUser, result.ExtraData);
 
                 _notifier.Information(T("Your {0} account has been attached to your local account.", result.Provider));
 
@@ -152,14 +155,15 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 // here we are trying to create a user with the same Username or Email as an existing one. That would simply
                 // use IUserService.VerifyUnicity(username, email). However this may break things for our older tenants.
                 if (newUser != null) {
+                    // CreateOrUpdateAccount causes specific OpenAuth events to fire
                     _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider,
                                                                       result.ProviderUserId,
                                                                       newUser,
-                                                                      result.ExtraData.ToJson());
-                    // The default implementation of IOpendAuthMembershipService creates a disabled user.
-                    // This next call to ApproveUser is here, so that in the event handlers we have that the records for the
-                    // OAuth provider is populated.
-                    _openAuthMembershipServices.ApproveUser(newUser);
+                                                                      result.ExtraData);
+                    // The default implementation of IOpendAuthMembershipService creates an approved user.
+                    // The events specific to open auth give points to attach handlers where the UserProviderRecord 
+                    // is populated correctly.
+
                     // We created the user and are going to sign them in, so we should fire off the related events.
                     // We cannot really invoke the LoggingIn event, because we do not have the password, but we can invoke
                     // the LoggedIn event later.
@@ -265,7 +269,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         // If the current user is logged in or settings ask for a user merge and we found a User with the same email 
                         // create or merge accounts
                         _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(authResult.Provider, authResult.ProviderUserId,
-                                                                          masterUser, authResult.ExtraData.ToJson());
+                                                                          masterUser, authResult.ExtraData);
                         // Handle LoggedIn Event
                         if (authenticatedUser == null) {
                             _authenticationService.SignIn(masterUser, false);
@@ -295,18 +299,20 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         // here we are trying to create a user with the same Username or Email as an existing one. That would simply
                         // use IUserService.VerifyUnicity(username, email)
                         if (newUser != null) {
+                            // CreateOrUpdateAccount causes specific OpenAuth events to fire
                             _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(authResult.Provider,
                                authResult.ProviderUserId,
                                newUser,
-                               authResult.ExtraData.ToJson());
-                            // The default implementation of IOpendAuthMembershipService creates a disabled user.
-                            // This next call to ApproveUser is here, so that in the event handlers we have that the records for the
-                            // OAuth provider is populated.
-                            _openAuthMembershipServices.ApproveUser(newUser);
+                               authResult.ExtraData);
+                            // The default implementation of IOpendAuthMembershipService creates an approved user.
+                            // The events specific to open auth give points to attach handlers where the UserProviderRecord 
+                            // is populated correctly.
+                            
                             _authenticationService.SignIn(newUser, false);
 
                             if (HttpContext.Response.Cookies.Count == 0) {
                                 // SignIn adds the authentication cookie to the response, so that is what we are checking here
+                                // We should never be here executing this code.
                                 result = _utilsServices.GetResponse(ResponseType.None, "Unable to send back a cookie.");
                                 return _utilsServices.ConvertToJsonResult(result);
                             } else {

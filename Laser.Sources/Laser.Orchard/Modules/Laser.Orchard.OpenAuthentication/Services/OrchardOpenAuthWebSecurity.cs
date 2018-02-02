@@ -15,12 +15,15 @@ using Laser.Orchard.OpenAuthentication.Security;
 using Orchard.Data;
 using Orchard.Core.Common.Models;
 using System.Linq;
+using System.Collections.Generic;
+using Laser.Orchard.OpenAuthentication.Extensions;
+using Laser.Orchard.OpenAuthentication.Events;
 
 namespace Laser.Orchard.OpenAuthentication.Services {
     public interface IOrchardOpenAuthWebSecurity : IDependency {
         AuthenticationResult VerifyAuthentication(string returnUrl);
         bool Login(string providerName, string providerUserId, bool createPersistantCookie = false);
-        void CreateOrUpdateAccount(string providerName, string providerUserId, IUser user, string providerUserData = null);
+        void CreateOrUpdateAccount(string providerName, string providerUserId, IUser user, IDictionary<string, string> providerUserData = null);
         string SerializeProviderUserId(string providerName, string providerUserId);
         OrchardAuthenticationClientData GetOAuthClientData(string providerName);
         bool TryDeserializeProviderUserId(string data, out string providerName, out string providerUserId);
@@ -38,6 +41,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
         private readonly IAuthenticationService _authenticationService;
         private readonly IOrchardServices _orchardServices;
         private readonly IOpenAuthMembershipServices _openAuthService;
+        private readonly IOpenAuthUserEventHandler _openAuthUserEventHandler;
 
         public OrchardOpenAuthWebSecurity(IOpenAuthSecurityManagerWrapper openAuthSecurityManagerWrapper,
                                           IUserProviderServices userProviderServices,
@@ -45,7 +49,8 @@ namespace Laser.Orchard.OpenAuthentication.Services {
                                           IOrchardOpenAuthClientProvider orchardOpenAuthClientProvider,
                                           IEncryptionService encryptionService,
                                           IAuthenticationService authenticationService,
-                                          IOrchardServices orchardServices) {
+                                          IOrchardServices orchardServices,
+                                          IOpenAuthUserEventHandler openAuthUserEventHandler) {
             _openAuthSecurityManagerWrapper = openAuthSecurityManagerWrapper;
             _userProviderServices = userProviderServices;
             _orchardOpenAuthClientProvider = orchardOpenAuthClientProvider;
@@ -53,6 +58,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             _authenticationService = authenticationService;
             _orchardServices = orchardServices;
             _openAuthService = openAuthService;
+            _openAuthUserEventHandler = openAuthUserEventHandler;
         }
 
 
@@ -64,17 +70,26 @@ namespace Laser.Orchard.OpenAuthentication.Services {
             return _openAuthSecurityManagerWrapper.Login(providerUserId, createPersistantCookie);
         }
 
-        public void CreateOrUpdateAccount(string providerName, string providerUserId, IUser user, string providerUserData = null) {
+        public void CreateOrUpdateAccount(string providerName, string providerUserId, 
+            IUser user, IDictionary<string, string> providerUserData = null) {
             if (user == null)
                 throw new MembershipCreateUserException(MembershipCreateStatus.ProviderError);
 
             var record = _userProviderServices.Get(providerName, providerUserId);
 
+            var providerData = providerUserData == null
+                ? null
+                : providerUserData.ToJson();
+
+            var eventContext = new CreatedOpenAuthUserContext(user,
+                providerName, providerUserId, providerUserData);
             if (record == null) {
-                _userProviderServices.Create(providerName, providerUserId, user, providerUserData);
+                _userProviderServices.Create(providerName, providerUserId, user, providerData);
+                _openAuthUserEventHandler.ProviderRecordCreated(eventContext);
             } else {
-                _userProviderServices.Update(providerName, providerUserId, user, providerUserData);
+                _userProviderServices.Update(providerName, providerUserId, user, providerData);
             }
+            _openAuthUserEventHandler.ProviderRecordUpdated(eventContext);
         }
 
         public string SerializeProviderUserId(string providerName, string providerUserId) {
