@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
-namespace Laser.Orchard.Reporting
-{
+namespace Laser.Orchard.Reporting {
     public static class Extensions
     {
         public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> newItems)

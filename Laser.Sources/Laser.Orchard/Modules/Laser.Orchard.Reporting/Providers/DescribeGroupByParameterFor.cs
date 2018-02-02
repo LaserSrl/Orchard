@@ -4,12 +4,8 @@ using Orchard.Projections.Descriptors.Filter;
 using Laser.Orchard.Reporting.Models;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Web;
 
-namespace Laser.Orchard.Reporting.Providers
-{
+namespace Laser.Orchard.Reporting.Providers {
     public class DescribeGroupByParameterFor
     {
         private readonly string _category;

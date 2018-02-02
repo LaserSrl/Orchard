@@ -1,14 +1,9 @@
 ﻿using Laser.Orchard.Reporting.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
-namespace Laser.Orchard.Reporting.ViewModels
-{
+namespace Laser.Orchard.Reporting.ViewModels {
     public class EditDataReportViewerViewModel
     {
         private Collection<SelectListItem> reports = new Collection<SelectListItem>();

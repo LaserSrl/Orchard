@@ -8,11 +8,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Web;
 
-namespace Laser.Orchard.Reporting.Services
-{
+namespace Laser.Orchard.Reporting.Services {
     public class FieldAggregateQueryService : IFieldAggregateQueryService
     {
         private readonly Lazy<ITransactionManager> _transactionManager;

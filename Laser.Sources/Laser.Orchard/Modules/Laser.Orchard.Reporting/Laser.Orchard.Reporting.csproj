@@ -85,6 +85,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -237,7 +238,12 @@
     <Compile Include="ViewModels\ShowDashboardViewModel.cs" />
     <Compile Include="ViewModels\ShowReportsViewModel.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
+      <Project>{9D49DF40-AE74-4CCE-B628-A1B26E99B2D4}</Project>
+      <Name>Laser.Orchard.Commons</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Report\Index.cshtml" />
   </ItemGroup>

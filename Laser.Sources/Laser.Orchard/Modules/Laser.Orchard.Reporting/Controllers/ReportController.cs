@@ -21,6 +21,8 @@ using Orchard.Themes;
 using Orchard.ContentPicker.Fields;
 using Orchard.Security;
 using System.Text;
+using System.IO;
+using Laser.Orchard.Commons.Services;
 
 namespace Laser.Orchard.Reporting.Controllers {
     [ValidateInput(false), Admin]
@@ -388,6 +390,43 @@ namespace Laser.Orchard.Reporting.Controllers {
             var q = reportManager.GetCsv(viewerPart);
             return new FileContentResult(Encoding.UTF8.GetBytes(q), "application/csv") {
                 FileDownloadName = viewerPart.Record.Report.Title + ".csv"
+            };
+        }
+        [Themed(Enabled = false)]
+        public ActionResult DownloadDashboard(int id) {
+            if (_authorizer.Authorize(reportManager.GetDashboardPermissions()[id]) == false) {
+                return new HttpUnauthorizedResult(T("Not authorized to execute this dashboard").ToString());
+            }
+            // recupera l'elenco dei report e lo aggiunge al model
+            var ciDashboard = services.ContentManager.Get(id);
+            var dashboard = ciDashboard.Parts.FirstOrDefault(x => x.PartDefinition.Name == "DataReportDashboardPart");
+            if (dashboard == null) {
+                throw new ArgumentException(string.Format(CultureInfo.CurrentUICulture, "{0}={1}", T("There is no dashboard with the Id"), id));
+            }
+            var cpf = dashboard.Fields.FirstOrDefault(x => x.Name == "ReportIds") as ContentPickerField;
+            var reports = services.ContentManager.GetMany<ContentItem>(cpf.Ids, VersionOptions.Published, QueryHints.Empty);
+            byte[] zip = new byte[0];
+            using (var memoryStream = new MemoryStream()) {
+                using(var archive = new System.IO.Compression.ZipArchive(memoryStream, System.IO.Compression.ZipArchiveMode.Create, true)) {
+                    foreach (var rep in reports) {
+                        var viewerPart = rep.As<DataReportViewerPart>();
+                        var csv = reportManager.GetCsv(viewerPart);
+                        var buffer = Encoding.UTF8.GetBytes(csv);
+                        var file = archive.CreateEntry(viewerPart.Record.Report.Title + ".csv");
+                        using (var writer = file.Open()) {
+                            writer.Write(buffer, 0, buffer.Length);
+                        }
+                    }
+                }
+                zip = memoryStream.ToArray();
+            }
+            var dashboardTitle = "dashboard";
+            var titlePart = ciDashboard.As<TitlePart>();
+            if(titlePart != null) {
+                dashboardTitle = new CommonUtils().NormalizeFileName(titlePart.Title, dashboardTitle);
+            }
+            return new FileContentResult(zip, "application/zip") {
+                FileDownloadName = dashboardTitle + ".zip"
             };
         }
         public ActionResult ShowReports(ShowReportsViewModel model) {

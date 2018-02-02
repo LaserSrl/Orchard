@@ -5,7 +5,6 @@ using Orchard.Localization;
 using Orchard.ContentManagement;
 using Laser.Orchard.Reporting.Models;
 using Orchard.Core.Title.Models;
-using Orchard.Data;
 
 namespace Laser.Orchard.Reporting.Security {
     public class Permissions : IPermissionProvider {

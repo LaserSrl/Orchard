@@ -106,6 +106,7 @@
     <Compile Include="Helpers\CypheringHelper.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\CommonUtils.cs" />
     <Compile Include="Services\ILocalConfigurationManager.cs" />
     <Compile Include="Services\JsonConverter.cs" />
     <Compile Include="Services\LocalWebConfigManager.cs" />
