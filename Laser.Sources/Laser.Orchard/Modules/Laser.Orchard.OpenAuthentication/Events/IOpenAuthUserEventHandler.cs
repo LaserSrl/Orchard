@@ -15,5 +15,9 @@ namespace Laser.Orchard.OpenAuthentication.Events {
         /// Called after a user has been created
         /// </summary>
         void Created(CreatedOpenAuthUserContext context);
+
+        void ProviderRecordCreated(CreatedOpenAuthUserContext context);
+
+        void ProviderRecordUpdated(CreatedOpenAuthUserContext context);
     }
 }

@@ -128,7 +128,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 // If the current user is logged in or settings ask for a user merge and we found a User with the same email 
                 // create or merge accounts
                 _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider, result.ProviderUserId,
-                                                                  masterUser, result.ExtraData.ToJson());
+                                                                  masterUser, result.ExtraData);
 
                 _notifier.Information(T("Your {0} account has been attached to your local account.", result.Provider));
 
@@ -155,7 +155,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                     _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(result.Provider,
                                                                       result.ProviderUserId,
                                                                       newUser,
-                                                                      result.ExtraData.ToJson());
+                                                                      result.ExtraData);
                     // The default implementation of IOpendAuthMembershipService creates a disabled user.
                     // This next call to ApproveUser is here, so that in the event handlers we have that the records for the
                     // OAuth provider is populated.
@@ -265,7 +265,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                         // If the current user is logged in or settings ask for a user merge and we found a User with the same email 
                         // create or merge accounts
                         _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(authResult.Provider, authResult.ProviderUserId,
-                                                                          masterUser, authResult.ExtraData.ToJson());
+                                                                          masterUser, authResult.ExtraData);
                         // Handle LoggedIn Event
                         if (authenticatedUser == null) {
                             _authenticationService.SignIn(masterUser, false);
@@ -298,7 +298,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                             _orchardOpenAuthWebSecurity.CreateOrUpdateAccount(authResult.Provider,
                                authResult.ProviderUserId,
                                newUser,
-                               authResult.ExtraData.ToJson());
+                               authResult.ExtraData);
                             // The default implementation of IOpendAuthMembershipService creates a disabled user.
                             // This next call to ApproveUser is here, so that in the event handlers we have that the records for the
                             // OAuth provider is populated.
