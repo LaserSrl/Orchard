@@ -13,6 +13,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.UI.Admin;
 using System.Collections.Generic;
+using System.Web.Mvc;
 
 namespace Laser.Orchard.Mobile.Drivers {
     [OrchardFeature("Laser.Orchard.PushGateway")]
@@ -66,7 +67,8 @@ namespace Laser.Orchard.Mobile.Drivers {
 
         protected override DriverResult Editor(MobilePushPart part, IUpdateModel updater, dynamic shapeHelper) {
             var viewModel = new MobilePushVM();
-            viewModel.ShowTestOptions = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>().ShowTestOptions;
+            var pushSettings = _orchardServices.WorkContext.CurrentSite.As<PushMobileSettingsPart>();
+            viewModel.ShowTestOptions = pushSettings.ShowTestOptions;
             if (updater != null) {
                 if (viewModel.ShowTestOptions == false)
                     viewModel.TestPush = false;
@@ -103,15 +105,12 @@ namespace Laser.Orchard.Mobile.Drivers {
                 viewModel.UseRecipientList = part.UseRecipientList;
                 viewModel.RecipientList = part.RecipientList;
             }
-
             viewModel.SiteUrl = _orchardServices.WorkContext.CurrentSite.BaseUrl + "/" + _shellSettings.RequestUrlPrefix;
-
             viewModel.HideRelated = part.Settings.GetModel<PushMobilePartSettingVM>().HideRelated;
             _controllerContextAccessor.Context.Controller.TempData["HideRelated"] = viewModel.HideRelated;
-
             // Valorizzo TextNumberPushTest
             viewModel.PushTestNumber = _repoPushNotification.Count(x => x.Produzione == false);
-            
+            viewModel.ListOfDevice = GetListOfDeviceTypes(pushSettings);
             if (part.ContentItem.ContentType == "CommunicationAdvertising") {
                 // Flag Approvato all'interno del tab
                 viewModel.PushAdvertising = true;
@@ -134,7 +133,20 @@ namespace Laser.Orchard.Mobile.Drivers {
                 return new CombinedResult(shapes);
             }
         }
-
+        private SelectList GetListOfDeviceTypes(PushMobileSettingsPart pushSettings) {
+            var _list = new List<SelectListItem>();
+            if(string.IsNullOrWhiteSpace(pushSettings.AndroidApiKey) == false) {
+                _list.Add(new SelectListItem() { Value = TipoDispositivo.Android.ToString(), Text = TipoDispositivo.Android.ToString() });
+            }
+            if (string.IsNullOrWhiteSpace(pushSettings.ApplePathCertificateFile) == false) {
+                _list.Add(new SelectListItem() { Value = TipoDispositivo.Apple.ToString(), Text = TipoDispositivo.Apple.ToString() });
+            }
+            if (string.IsNullOrWhiteSpace(pushSettings.WindowsAppPackageName) == false) {
+                _list.Add(new SelectListItem() { Value = TipoDispositivo.WindowsMobile.ToString(), Text = TipoDispositivo.WindowsMobile.ToString() });
+            }
+            _list.Insert(0, new SelectListItem() { Value = "All", Text = "All" });
+            return new SelectList((IEnumerable<SelectListItem>)_list, "Value", "Text");
+        }
         protected override void Importing(MobilePushPart part, ImportContentContext context) {
             var TitlePush = context.Attribute(part.PartDefinition.Name, "TitlePush");
             if (TitlePush != null)

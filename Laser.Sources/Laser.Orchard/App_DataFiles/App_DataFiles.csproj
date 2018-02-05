@@ -94,6 +94,7 @@
     <None Include="Sites\MyVEC\Code\GenerazioneCarta.cshtml" />
     <None Include="Sites\MyVEC\Code\GestioneRichiestaCamerino.cshtml" />
     <None Include="Sites\MyVEC\Code\InserimentoRichiestaCamerino.cshtml" />
+    <None Include="Sites\MyVEC\Code\NightReport.cshtml" />
     <None Include="Sites\MyVEC\Code\NotificaInviata.cshtml" />
     <None Include="Sites\MyVEC\Code\ReadCredenzialiUtente.cshtml" />
     <None Include="Sites\MyVEC\Code\RegistraPartecipazione.cshtml" />
