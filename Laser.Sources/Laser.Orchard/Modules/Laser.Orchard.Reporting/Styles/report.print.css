@@ -14,3 +14,4 @@ a[href]:after { content: none !important; }
 span.hint { display: none}
 /* hide scrollbars for tables */
 div.table-responsive { overflow: visible; width:auto; }
+div.fixed-table-container > div { overflow: visible; width:auto; }

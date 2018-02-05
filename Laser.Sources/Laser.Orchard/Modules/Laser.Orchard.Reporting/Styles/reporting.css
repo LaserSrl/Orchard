@@ -20,3 +20,6 @@ div.content-picker-message {
 .chart-container {
     padding: 5px;
 }
+table.simple-data > thead > tr > th {
+    border-bottom: 1px solid red !important;
+}

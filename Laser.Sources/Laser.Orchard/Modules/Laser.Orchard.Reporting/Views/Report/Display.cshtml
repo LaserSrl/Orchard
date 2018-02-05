@@ -5,6 +5,7 @@
     Style.Include("jquery.jqplot.css");
     Style.Include("reporting.css");
     Style.Include("report.print.css").Attributes.Add("media", "print");
+    Style.Include("//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css");
     Script.Require("jQueryUI_Widget").AtHead();
     Script.Require("jqplot").AtHead();
     Script.Require("barjqplot").AtHead();
@@ -14,6 +15,7 @@
     Script.Require("canvasAxisTickjqplot").AtHead();
     Script.Require("piejqplot").AtHead();
     Script.Require("donutRendererjqplot").AtHead();
+    Script.Require("bootstrap-table").AtHead();
     IContentManager contentManager = null;
     WorkContext.TryResolve<IContentManager>(out contentManager);
 }

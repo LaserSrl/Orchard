@@ -13,6 +13,7 @@ namespace Laser.Orchard.Reporting {
             builder.Add().DefineScript("donutRendererjqplot").SetUrl("plugins/jqplot.donutRenderer.js").SetDependencies("jqplot");
             builder.Add().DefineScript("canvasAxisTickjqplot").SetUrl("plugins/jqplot.canvasAxisTickRenderer.js").SetDependencies("jqplot");
             builder.Add().DefineScript("canvasTextjqplot").SetUrl("plugins/jqplot.canvasTextRenderer.js").SetDependencies("jqplot");
+            builder.Add().DefineScript("bootstrap-table").SetUrl("//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js").SetDependencies("bootstrap");
         }
     }
 }
