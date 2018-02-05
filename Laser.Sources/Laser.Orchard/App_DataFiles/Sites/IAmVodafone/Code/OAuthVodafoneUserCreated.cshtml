@@ -32,7 +32,7 @@
                 if (tokensDictionary["ProviderName"].ToString() == "Vodafone") {
                     // making sure this is not some other OAuth provider in case we will enable them in the future
                     dynamic userItem = Model.ContentItem;
-                    var extraData = (Dictionary<string, string>)(tokensDictionary["ExtraData"]);
+                    var extraData = (IDictionary<string, string>)(tokensDictionary["ExtraData"]);
                     if (extraData.ContainsKey("name")) {
                         userItem.ProfilePart.Nome.Value = extraData["name"];
                     }
