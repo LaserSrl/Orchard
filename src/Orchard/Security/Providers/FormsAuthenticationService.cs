@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
+using Newtonsoft.Json;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
 using Orchard.Mvc;
@@ -54,12 +55,28 @@ namespace Orchard.Security.Providers {
 
             Logger = NullLogger.Instance;
 
+            ExpirationTimeSpan = TimeSpan.Zero;
         }
 
         public ILogger Logger { get; set; }
 
         public TimeSpan ExpirationTimeSpan {
-            get { return _securityService.GetAuthenticationCookieLifeSpan(); }
+            get; set;
+            // The public setter allows injecting this from Sites.MyTenant.Config or Sites.config, by using
+            // an AutoFac component 
+        }
+
+        public TimeSpan GetExpirationTimeSpan() {
+            if (ExpirationTimeSpan != TimeSpan.Zero) {
+                // Basically here we are checking whether a value has been injected. If that is the case
+                // that takes priority over possible services. The idea is to make the existence of those
+                // services not-breaking, so that the introduction of new ones will not affect tenants where
+                // the value from the Sites.Config file has been used. Implementers of those services should
+                // take care of noting this in whatever UI they provide for their configuration, for the sake
+                // of clarity towards whoever handles the tenant's configuration.
+                return ExpirationTimeSpan;
+            }
+            return _securityService.GetAuthenticationCookieLifeSpan();
         }
 
         public void SignIn(IUser user, bool createPersistentCookie) {
@@ -132,8 +149,13 @@ namespace Orchard.Security.Providers {
                 userDataDictionary.Add("UserName", userDataName);
                 userDataDictionary.Add("TenantName", userDataTenant);
             }
-            else {
-                userDataDictionary = DeserializeUserData(userData);
+            else { //we assume that the version here will be 4
+                try {
+                    userDataDictionary = DeserializeUserData(userData);
+                }
+                catch (Exception) {
+                    return null;
+                }
             }
 
             // 1. Take the username
@@ -153,25 +175,38 @@ namespace Orchard.Security.Providers {
                 return null;
             }
 
+            // Upgrade old cookies
+            if (formsIdentity.Ticket.Version < 4) {
+                UpgradeAndAddAuthCookie(_signedInUser, formsIdentity.Ticket);
+            }
+
             _isAuthenticated = true;
             return _signedInUser;
         }
 
+        private HttpCookie UpgradeAndAddAuthCookie(IUser user, FormsAuthenticationTicket oldTicket) {
+            var ticket = UpgradeAuthenticationTicket(user, oldTicket);
+
+            var cookie = CreateCookieFromTicket(ticket);
+
+            var httpContext = _httpContextAccessor.Current();
+            httpContext.Response.Cookies.Add(cookie);
+
+            return cookie;
+        }
+
         private HttpCookie CreateAndAddAuthCookie(IUser user, bool createPersistentCookie) {
+            var ticket = NewAuthenticationTicket(user, createPersistentCookie);
 
-            var now = _clock.UtcNow.ToLocalTime();
+            var cookie = CreateCookieFromTicket(ticket);
 
-            var userData = ComputeUserData(user);
+            var httpContext = _httpContextAccessor.Current();
+            httpContext.Response.Cookies.Add(cookie);
 
-            var ticket = new FormsAuthenticationTicket(
-                _cookieVersion,
-                user.UserName,
-                now,
-                now.Add(ExpirationTimeSpan),
-                createPersistentCookie,
-                userData,
-                FormsAuthentication.FormsCookiePath);
+            return cookie;
+        }
 
+        private HttpCookie CreateCookieFromTicket(FormsAuthenticationTicket ticket) {
             var encryptedTicket = FormsAuthentication.Encrypt(ticket);
 
             var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket) {
@@ -190,13 +225,39 @@ namespace Orchard.Security.Providers {
                 cookie.Domain = FormsAuthentication.CookieDomain;
             }
 
-            if (createPersistentCookie) {
+            if (ticket.IsPersistent) {
                 cookie.Expires = ticket.Expiration;
             }
 
-            httpContext.Response.Cookies.Add(cookie);
-
             return cookie;
+        }
+
+        private FormsAuthenticationTicket NewAuthenticationTicket(IUser user, bool createPersistentCookie) {
+            var now = _clock.UtcNow.ToLocalTime();
+
+            var userData = ComputeUserData(user);
+
+            return new FormsAuthenticationTicket(
+                _cookieVersion,
+                user.UserName,
+                now,
+                now.Add(GetExpirationTimeSpan()),
+                createPersistentCookie,
+                userData,
+                FormsAuthentication.FormsCookiePath);
+        }
+
+        private FormsAuthenticationTicket UpgradeAuthenticationTicket(IUser user, FormsAuthenticationTicket oldTicket) {
+            var userData = ComputeUserData(user);
+
+            return new FormsAuthenticationTicket(
+                _cookieVersion,
+                user.UserName,
+                oldTicket.IssueDate,
+                oldTicket.Expiration,
+                oldTicket.IsPersistent,
+                userData,
+                FormsAuthentication.FormsCookiePath);
         }
 
         private Dictionary<string, string> ComputeUserDataDictionary(IUser user) {
@@ -229,34 +290,13 @@ namespace Orchard.Security.Providers {
         }
 
         #region Serialization of UserData Dictionary
-        // both keys and values are converted to base64 strings.
-        // the key and value of a pair are separated by a pipe character "|"
-        // pairs are separated by a semicolon ";"
-        // These custome methopds are to avoid a dependency 
+        // Use Newtonsoft.Json to handle this
         private string SerializeUserDataDictionary(IDictionary<string, string> userDataDictionary) {
-
-            return string.Join(";", userDataDictionary
-                .Where(kvp => kvp.Key != null && kvp.Value != null)
-                .Select(kvp =>
-                    string.Join("|", kvp.Key.ToBase64(), kvp.Value.ToBase64())));
+            return JsonConvert.SerializeObject(userDataDictionary, Formatting.None);
         }
 
         private Dictionary<string, string> DeserializeUserData(string userData) {
-            var dictionary = new Dictionary<string, string>();
-
-            var serializedPairs = userData.Split(';');
-            foreach (var sKvp in serializedPairs) {
-                var elements = sKvp.Split('|');
-                if (elements.Length != 2) {
-                    continue;
-                }
-                if (dictionary.ContainsKey(elements[0])) {
-                    continue; // keys should be unique
-                }
-                dictionary.Add(elements[0].FromBase64(), elements[1].FromBase64());
-            }
-
-            return dictionary;
+            return JsonConvert.DeserializeObject<Dictionary<string, string>>(userData);
         }
 
         #endregion
