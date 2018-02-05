@@ -331,20 +331,24 @@ namespace Laser.Orchard.Reporting.Services {
                     // multi column hql report
                     foreach (var row in rows) {
                         foreach (var col in (object[])(row.Other)) {
-                            switch (col.GetType().Name) {
-                                case "DateTime":
-                                    sb.AppendFormat("{0:dd/MM/yyyy}", col);
-                                    break;
-                                case "Decimal":
-                                    sb.Append(Convert.ToString(col, CultureInfo.InvariantCulture).Replace('.', ','));
-                                    break;
-                                default:
-                                    text = Convert.ToString(col);
-                                    if (text.Contains(';')) {
-                                        text = string.Format("\"{0}\"", text);
-                                    }
-                                    sb.Append(text);
-                                    break;
+                            if(col != null) {
+                                switch (col.GetType().Name) {
+                                    case "DateTime":
+                                        sb.AppendFormat("{0:yyyy-MM-dd HH:mm:ss}", col);
+                                        break;
+                                    case "Decimal":
+                                    case "Double":
+                                    case "Float":
+                                        sb.Append(Convert.ToString(col, CultureInfo.InvariantCulture).Replace('.', ','));
+                                        break;
+                                    default:
+                                        text = Convert.ToString(col);
+                                        if (text.Contains(';')) {
+                                            text = string.Format("\"{0}\"", text);
+                                        }
+                                        sb.Append(text);
+                                        break;
+                                }
                             }
                             sb.Append(";"); // terminatore di campo
                         }

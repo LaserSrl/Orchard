@@ -23,6 +23,7 @@ using Orchard.Security;
 using System.Text;
 using System.IO;
 using Laser.Orchard.Commons.Services;
+using System.Collections.Generic;
 
 namespace Laser.Orchard.Reporting.Controllers {
     [ValidateInput(false), Admin]
@@ -389,7 +390,7 @@ namespace Laser.Orchard.Reporting.Controllers {
             var viewerPart = ci.As<DataReportViewerPart>();
             var q = reportManager.GetCsv(viewerPart);
             return new FileContentResult(Encoding.UTF8.GetBytes(q), "application/csv") {
-                FileDownloadName = viewerPart.Record.Report.Title + ".csv"
+                FileDownloadName = new CommonUtils().NormalizeFileName(viewerPart.Record.Report.Title, "chart") + ".csv"
             };
         }
         [Themed(Enabled = false)]
@@ -405,25 +406,20 @@ namespace Laser.Orchard.Reporting.Controllers {
             }
             var cpf = dashboard.Fields.FirstOrDefault(x => x.Name == "ReportIds") as ContentPickerField;
             var reports = services.ContentManager.GetMany<ContentItem>(cpf.Ids, VersionOptions.Published, QueryHints.Empty);
-            byte[] zip = new byte[0];
-            using (var memoryStream = new MemoryStream()) {
-                using(var archive = new System.IO.Compression.ZipArchive(memoryStream, System.IO.Compression.ZipArchiveMode.Create, true)) {
-                    foreach (var rep in reports) {
-                        var viewerPart = rep.As<DataReportViewerPart>();
-                        var csv = reportManager.GetCsv(viewerPart);
-                        var buffer = Encoding.UTF8.GetBytes(csv);
-                        var file = archive.CreateEntry(viewerPart.Record.Report.Title + ".csv");
-                        using (var writer = file.Open()) {
-                            writer.Write(buffer, 0, buffer.Length);
-                        }
-                    }
-                }
-                zip = memoryStream.ToArray();
+            var csvContents = new List<string>();
+            var titles = new List<string>();
+            var commonUtils = new CommonUtils();
+            foreach (var rep in reports) {
+                var viewerPart = rep.As<DataReportViewerPart>();
+                var csv = reportManager.GetCsv(viewerPart);
+                csvContents.Add(csv);
+                titles.Add(viewerPart.Record.Report.Title);
             }
+            var zip = commonUtils.CreateZipArchive(csvContents, titles, "csv");
             var dashboardTitle = "dashboard";
             var titlePart = ciDashboard.As<TitlePart>();
             if(titlePart != null) {
-                dashboardTitle = new CommonUtils().NormalizeFileName(titlePart.Title, dashboardTitle);
+                dashboardTitle = commonUtils.NormalizeFileName(titlePart.Title, dashboardTitle);
             }
             return new FileContentResult(zip, "application/zip") {
                 FileDownloadName = dashboardTitle + ".zip"

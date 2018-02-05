@@ -1,7 +1,9 @@
 ﻿.hidden {
     visibility: collapse;
 }
-
+div.content-picker-message { 
+    display: none !important; 
+}
 .default-chart {
     width: 400px;
     height: 300px;
