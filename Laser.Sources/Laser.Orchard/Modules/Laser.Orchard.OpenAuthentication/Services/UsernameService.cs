@@ -28,12 +28,21 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
         public string Calculate(string currentValue) {
             /* I Dont want to user an email address as a Username...*/
-            string userName = currentValue.IsEmailAddress() ? currentValue.Substring(0, currentValue.IndexOf('@')) : currentValue; //.Replace(" ", "");
+            string userName = currentValue.IsEmailAddress() 
+                ? currentValue.Substring(0, currentValue.IndexOf('@')) 
+                : currentValue; //.Replace(" ", "");
             int uniqueValue = 0;
             string newUniqueUserName = userName;
-
+            // this is only as unique as the same process in generating an alias/autoroute:
+            // there is no guarantee that two calls happening at the same time will generate
+            // different usernames, given the same starting string. Actually, in that condition
+            // they will be likely to generate the same username.
             while (true) {
-                var numExistingUsers = _orchardServices.ContentManager.HqlQuery().ForPart<UserPart>().Where(a => a.ContentPartRecord<UserPartRecord>(), x => x.Eq("UserName", newUniqueUserName)).Count();
+                var numExistingUsers = _orchardServices
+                    .ContentManager.HqlQuery()
+                    .ForPart<UserPart>()
+                    .Where(a => a.ContentPartRecord<UserPartRecord>(), x => x.Eq("UserName", newUniqueUserName))
+                    .Count();
                 if (numExistingUsers == 0) {
                     break;
                 }
