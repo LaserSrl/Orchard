@@ -71,6 +71,11 @@ namespace Laser.Orchard.HID.Controllers {
                             success = true;
                             eCode = HIDErrorCode.NoError;
                             message = T("Credentials issued. Synchronize your device with the TSM.").Text;
+                        } else if (hidUser.Error == UserErrors.InvalidParameters) {
+                            success = false;
+                            eCode = HIDErrorCode.UserHasNoCredentialContainers;
+                            rAction = HIDResolutionAction.NoAction;
+                            message = T("There was an error with the parameters passed: endpoint ID not valid for the user. EndpointId: {0}; UserName: {1}; Email: {2}", endpoint.endpointId, caller.UserName, caller.Email).Text;
                         } else {
                             HandleHIDUserError(hidUser, caller, out eCode, out rAction, out message);
                         }
@@ -239,6 +244,11 @@ namespace Laser.Orchard.HID.Controllers {
                     rAction = HIDResolutionAction.NoAction;
                     message = T("Unknown error while searching for user on HID server. Id: {0}; UserName: {1}; Email: {2}", caller.Id, caller.UserName, caller.Email).Text;
                     break;
+                case UserErrors.DoesNotHaveDevices:
+                    eCode = HIDErrorCode.UserHasNoCredentialContainers;
+                    rAction = HIDResolutionAction.NoAction;
+                    message = T("No valid credential container has been registered for the user. Id: {0}; UserName: {1}; Email: {2}", caller.Id, caller.UserName, caller.Email).Text;
+                    break;
                 default:
                     eCode = HIDErrorCode.GenericError;
                     rAction = HIDResolutionAction.NoAction;
@@ -279,7 +289,8 @@ namespace Laser.Orchard.HID.Controllers {
         UserDoesNotExist = 5003,
         UserNotUnique = 5004,
         InvalidSearchParameters = 5005,
-        CannotConfigureAdditionalContainer = 5006
+        CannotConfigureAdditionalContainer = 5006,
+        UserHasNoCredentialContainers = 5007
     }
     public enum HIDResolutionAction {
         NoAction = 0,
