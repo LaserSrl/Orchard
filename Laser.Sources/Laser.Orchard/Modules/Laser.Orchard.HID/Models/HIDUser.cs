@@ -387,13 +387,15 @@ namespace Laser.Orchard.HID.Models {
                 return this;
             }
 
-            if (CredentialContainers.Count == 0) {
+            if (CredentialContainers == null || CredentialContainers.Count == 0) {
                 Error = UserErrors.DoesNotHaveDevices;
+                return this;
             }
 
             var specificContainer = CredentialContainers.FirstOrDefault(cc => cc.Id == endpointId);
             if (specificContainer == null) {
                 Error = UserErrors.InvalidParameters; // User does not have that Credential Container
+                return this;
             }
 
             specificContainer.IssueCredential(partNumber, _HIDService);
