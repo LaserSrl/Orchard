@@ -27,7 +27,9 @@
             @Display(contentManager.BuildEditor(Model.FilterContent))
             <button class="primaryAction" type="button" value="Refresh" id="btnRefresh">@T("Refresh")</button>
             <button class="primaryAction" type="button" value="Print" id="btnPrint">@T("Print")</button>
-            <button class="primaryAction" type="submit" formaction="@Url.Action("DownloadChart")" value="Download" id="btnDownload">@T("Download")</button>
+            @if (AuthorizedFor(Laser.Orchard.Reporting.Security.Permissions.DownloadReportData)) {
+                <button class="primaryAction" type="submit" formaction="@Url.Action("DownloadChart")" value="Download" id="btnDownload">@T("Download")</button>
+            }
         </div>
     }
     <div id="divReportViewer"></div>
@@ -46,7 +48,9 @@
     </script>
 } else {
     <button class="primaryAction" type="button" value="Print" id="btnPrint">@T("Print")</button>
-    <button class="primaryAction" type="button" value="Download" id="btnDownload">@T("Download")</button>
+    if (AuthorizedFor(Laser.Orchard.Reporting.Security.Permissions.DownloadReportData)) {
+        <button class="primaryAction" type="button" value="Download" id="btnDownload">@T("Download")</button>
+    }
     @Display(BuildDisplay(Model.ViewerContent, "Detail"))
     <script type="text/javascript">
         $(function () {

@@ -380,8 +380,8 @@ namespace Laser.Orchard.Reporting.Controllers {
         }
         [Themed(Enabled = false)]
         public ActionResult DownloadChart(int id) {
-            if (_authorizer.Authorize(reportManager.GetReportPermissions()[id]) == false) {
-                return new HttpUnauthorizedResult(T("Not authorized to list Reports").ToString());
+            if (_authorizer.Authorize(reportManager.GetReportPermissions()[id]) == false || _authorizer.Authorize(Security.Permissions.DownloadReportData) == false) {
+                return new HttpUnauthorizedResult(T("Not authorized").ToString());
             }
             var ci = services.ContentManager.Get(id);
             if (ci.Has<DataReportViewerPart>() == false) {
@@ -395,8 +395,8 @@ namespace Laser.Orchard.Reporting.Controllers {
         }
         [Themed(Enabled = false)]
         public ActionResult DownloadDashboard(int id) {
-            if (_authorizer.Authorize(reportManager.GetDashboardPermissions()[id]) == false) {
-                return new HttpUnauthorizedResult(T("Not authorized to execute this dashboard").ToString());
+            if (_authorizer.Authorize(reportManager.GetDashboardPermissions()[id]) == false || _authorizer.Authorize(Security.Permissions.DownloadDashboardData) == false) {
+                return new HttpUnauthorizedResult(T("Not authorized").ToString());
             }
             // recupera l'elenco dei report e lo aggiunge al model
             var ciDashboard = services.ContentManager.Get(id);

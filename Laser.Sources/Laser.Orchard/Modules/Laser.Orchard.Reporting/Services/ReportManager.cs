@@ -327,7 +327,7 @@ namespace Laser.Orchard.Reporting.Services {
             var sb = new StringBuilder();
             var text = "";
             if (rows.Count > 0) {
-                if (string.IsNullOrWhiteSpace(rows[0].Label)) {
+                if (string.IsNullOrWhiteSpace(rows[0].Label) && rows[0].Other != null) {
                     // multi column hql report
                     foreach (var row in rows) {
                         foreach (var col in (object[])(row.Other)) {
