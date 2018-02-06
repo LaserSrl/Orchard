@@ -125,7 +125,7 @@ namespace Laser.Orchard.HID.Controllers {
                     if (_HIDAdminService.GetSiteSettings().PreventMoreThanOneDevice
                         && hidUser.CredentialContainers.Any()) {
 
-                        eCode = HIDErrorCode.GenericError;
+                        eCode = HIDErrorCode.CannotConfigureAdditionalContainer;
                         rAction = HIDResolutionAction.NoAction;
                         message = T("The user has already registered a Credential Container and is not allowed to have more. Id: {0}; UserName: {1}; Email: {2}", caller.Id, caller.UserName, caller.Email).Text;
                     } else {
@@ -276,8 +276,10 @@ namespace Laser.Orchard.HID.Controllers {
         NoError = 0, GenericError = 1,
         AuthenticationFailed = 5001,
         HIDServerError = 5002,
-        UserDoesNotExist = 5003, UserNotUnique = 5004,
-        InvalidSearchParameters = 5005
+        UserDoesNotExist = 5003,
+        UserNotUnique = 5004,
+        InvalidSearchParameters = 5005,
+        CannotConfigureAdditionalContainer = 5006
     }
     public enum HIDResolutionAction {
         NoAction = 0,
