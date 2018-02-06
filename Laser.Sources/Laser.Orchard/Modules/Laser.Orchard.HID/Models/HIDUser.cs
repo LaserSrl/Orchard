@@ -186,7 +186,7 @@ namespace Laser.Orchard.HID.Models {
         }
 
         public static HIDUser CreateUser(IHIDAdminService hidService, int id, string familyName, string givenName, string email) {
-            return CreateUser(hidService, GenerateExternalId(id), familyName, givenName, email);
+            return CreateUser(hidService, string.Format(hidService.ExternalIdFormat, id.ToString()), familyName, givenName, email);
         }
 
         public static HIDUser CreateUser(IHIDAdminService hidService, string extId, string familyName, string givenName, string email) {

@@ -109,5 +109,13 @@ namespace Laser.Orchard.HID.Services {
         public string UsersEndpoint {
             get { return String.Format(HIDAPIEndpoints.UsersEndpointFormat, BaseEndpoint); }
         }
+
+        public string ExternalIdFormat {
+            get {
+                return "Laser."
+                    + _shellSetting.Name
+                    + ".{0}";
+            }
+        }
     }
 }
