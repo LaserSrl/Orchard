@@ -133,7 +133,7 @@ namespace Laser.Orchard.HID.Services {
                     }
                 }
             } else {
-                // issue credentials to the latest credentail container normally
+                // issue credentials to the latest credential container normally
                 return IssueCredentials(hidUser, partNumbers);
             }
             return hidUser;
