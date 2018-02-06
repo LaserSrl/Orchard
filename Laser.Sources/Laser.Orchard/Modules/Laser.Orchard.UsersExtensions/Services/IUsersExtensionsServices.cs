@@ -54,12 +54,25 @@ namespace Laser.Orchard.UsersExtensions.Services {
         private readonly IShapeFactory _shapeFactory;
         private ISmsServices _smsServices;
         private readonly ICultureManager _cultureManager;
+        private readonly IAccountValidationService _accountValidationService;
 
         private static readonly TimeSpan DelayToResetPassword = new TimeSpan(1, 0, 0, 0); // 24 hours to reset password
         private readonly IRepository<CultureRecord> _repositoryCultures;
 
 
-        public UsersExtensionsServices(IOrchardServices orchardServices, IPolicyServices policySerivces, IMembershipService membershipService, IUtilsServices utilsServices, IAuthenticationService authenticationService, IUserService userService, IUserEventHandler userEventHandler, IShapeFactory shapeFactory, ICultureManager cultureManager, IRepository<CultureRecord> repositoryCultures) {
+        public UsersExtensionsServices(
+            IOrchardServices orchardServices, 
+            IPolicyServices policySerivces, 
+            IMembershipService membershipService, 
+            IUtilsServices utilsServices, 
+            IAuthenticationService authenticationService, 
+            IUserService userService, 
+            IUserEventHandler userEventHandler, 
+            IShapeFactory shapeFactory, 
+            ICultureManager cultureManager, 
+            IRepository<CultureRecord> repositoryCultures,
+            IAccountValidationService accountValidationService) {
+
             T = NullLocalizer.Instance;
             Log = NullLogger.Instance;
             _policySerivces = policySerivces;
@@ -72,6 +85,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
             _shapeFactory = shapeFactory;
             _cultureManager = cultureManager;
             _repositoryCultures = repositoryCultures;
+            _accountValidationService = accountValidationService;
         }
 
         public Localizer T { get; set; }
@@ -252,28 +266,23 @@ namespace Laser.Orchard.UsersExtensions.Services {
         }
 
         public bool ValidateRegistration(string userName, string email, string password, string confirmPassword, out List<string> errors) {
-            bool validate = true;
+            
             errors = new List<string>();
-            if (String.IsNullOrEmpty(userName)) {
-                errors.Add(T("You must specify a username.").Text);
-                validate = false;
-            } else {
-                if (userName.Length >= 255) {
-                    errors.Add(T("The username you provided is too long.").Text);
-                    validate = false;
+
+            IDictionary<string, LocalizedString> validationErrors;
+
+            var validate = _accountValidationService.ValidateUserName(userName, out validationErrors);
+            if (!validate) {
+                foreach (var error in validationErrors) {
+                    errors.Add(string.Format("{0}: {1}", error.Key, error.Value.Text));
                 }
             }
 
-            if (String.IsNullOrEmpty(email)) {
-                errors.Add(T("You must specify an email address.").Text);
-                validate = false;
-            } else if (email.Length >= 255) {
-                errors.Add(T("The email address you provided is too long.").Text);
-                validate = false;
-            } else if (!Regex.IsMatch(email, UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
-                // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx    
-                errors.Add(T("You must specify a valid email address.").Text);
-                validate = false;
+            validate &= _accountValidationService.ValidateEmail(email, out validationErrors);
+            if (!validate) {
+                foreach (var error in validationErrors) {
+                    errors.Add(string.Format("{0}: {1}", error.Key, error.Value.Text));
+                }
             }
 
             if (!validate)
@@ -282,9 +291,13 @@ namespace Laser.Orchard.UsersExtensions.Services {
             if (!_userService.VerifyUserUnicity(userName, email)) {
                 errors.Add(T("User with that username and/or email already exists.").Text);
             }
-            if (password == null || password.Length < MinPasswordLength) {
-                errors.Add(T("You must specify a password of {0} or more characters.", MinPasswordLength).Text);
+
+            if (!_accountValidationService.ValidatePassword(password, out validationErrors)) {
+                foreach (var error in validationErrors) {
+                    errors.Add(string.Format("{0}: {1}", error.Key, error.Value.Text));
+                }
             }
+            
             if (!String.Equals(password, confirmPassword, StringComparison.Ordinal)) {
                 errors.Add(T("The new password and confirmation password do not match.").Text);
             }
