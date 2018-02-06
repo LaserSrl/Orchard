@@ -1,7 +1,9 @@
 ﻿.hidden {
     visibility: collapse;
 }
-
+div.content-picker-message { 
+    display: none !important; 
+}
 .default-chart {
     width: 400px;
     height: 300px;
@@ -17,4 +19,13 @@
 
 .chart-container {
     padding: 5px;
+}
+table.simple-data > thead > tr > th {
+    border-bottom: 1px solid red !important;
+}
+div.fixed-table-toolbar button {
+    border-color: red;
+}
+div.fixed-table-toolbar button > i {
+    color: red;
 }

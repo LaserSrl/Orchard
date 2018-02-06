@@ -96,6 +96,7 @@
     <None Include="Sites\MyVEC\Code\CheckTarga.cshtml" />
     <None Include="Sites\MyVEC\Code\GenerazioneCarta.cshtml" />
     <None Include="Sites\MyVEC\Code\GestioneRichiestaCamerino.cshtml" />
+    <None Include="Sites\MyVEC\Code\ImpostaSurvey.cshtml" />
     <None Include="Sites\MyVEC\Code\InserimentoRichiestaCamerino.cshtml" />
     <None Include="Sites\MyVEC\Code\NightReport.cshtml" />
     <None Include="Sites\MyVEC\Code\NotificaInviata.cshtml" />

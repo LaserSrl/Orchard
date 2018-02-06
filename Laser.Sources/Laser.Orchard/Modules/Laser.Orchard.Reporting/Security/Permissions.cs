@@ -5,14 +5,15 @@ using Orchard.Localization;
 using Orchard.ContentManagement;
 using Laser.Orchard.Reporting.Models;
 using Orchard.Core.Title.Models;
-using Orchard.Data;
 
 namespace Laser.Orchard.Reporting.Security {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ShowDataReports = new Permission { Description = "Show Data Reports on back-end menu", Name = "ShowDataReports" };
-        public static readonly Permission ShowDataDashboard = new Permission { Description = "Show Dashboards on back-end menu", Name = "ShowDataDashboard" };
         public static readonly Permission ShowAllDataReports = new Permission { Description = "Show All Data Reports on back-end menu", Name = "ShowAllDataReports" };
         public static readonly Permission ShowAllDataDashboard = new Permission { Description = "Show All Dashboards on back-end menu", Name = "ShowAllDataDashboard" };
+        public static readonly Permission DownloadReportData = new Permission { Description = "Download report data", Name = "DownloadReportData" };
+        public static readonly Permission DownloadDashboardData = new Permission { Description = "Download dashboard data", Name = "DownloadDashboardData" };
+        public static readonly Permission ShowDataReports = new Permission { Description = "Show Data Reports on back-end menu", Name = "ShowDataReports", ImpliedBy = new[] { ShowAllDataReports, DownloadReportData } };
+        public static readonly Permission ShowDataDashboard = new Permission { Description = "Show Dashboards on back-end menu", Name = "ShowDataDashboard", ImpliedBy = new[] { ShowAllDataDashboard, DownloadDashboardData } };
         private readonly IContentManager _contentManager;
         public Localizer T;
         public Feature Feature { get; set; }
@@ -24,7 +25,7 @@ namespace Laser.Orchard.Reporting.Security {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] { ShowAllDataReports, ShowAllDataDashboard }
+                    Permissions = new[] { ShowAllDataReports, ShowAllDataDashboard, DownloadReportData, DownloadDashboardData }
                 },
                 new PermissionStereotype {
                     Name = "Editor",
@@ -46,11 +47,12 @@ namespace Laser.Orchard.Reporting.Security {
             var reportPermissions = GetReportPermissions();
             result.Add(ShowDataReports);
             result.Add(ShowAllDataReports);
+            result.Add(DownloadReportData);
             result.AddRange(reportPermissions.Values);
             var dashboardPermissions = GetDashboardPermissions();
-            ShowDataDashboard.ImpliedBy = dashboardPermissions.Values;
             result.Add(ShowDataDashboard);
             result.Add(ShowAllDataDashboard);
+            result.Add(DownloadDashboardData);
             result.AddRange(dashboardPermissions.Values);
             return result;
         }

@@ -1,12 +1,6 @@
-﻿using Orchard.UI.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.ObjectModel;
 
-namespace Laser.Orchard.Reporting.ViewModels
-{
+namespace Laser.Orchard.Reporting.ViewModels {
     public class ReportListViewModel
     {
         private Collection<ReportViewModel> reports = new Collection<ReportViewModel>();

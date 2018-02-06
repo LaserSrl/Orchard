@@ -20,6 +20,10 @@ using Orchard;
 using Orchard.Themes;
 using Orchard.ContentPicker.Fields;
 using Orchard.Security;
+using System.Text;
+using System.IO;
+using Laser.Orchard.Commons.Services;
+using System.Collections.Generic;
 
 namespace Laser.Orchard.Reporting.Controllers {
     [ValidateInput(false), Admin]
@@ -373,6 +377,53 @@ namespace Laser.Orchard.Reporting.Controllers {
             var model = services.ContentManager.New("DataReportEmptyType");
             model.Weld(viewerPart);
             return View(model);
+        }
+        [Themed(Enabled = false)]
+        public ActionResult DownloadChart(int id) {
+            if (_authorizer.Authorize(reportManager.GetReportPermissions()[id]) == false || _authorizer.Authorize(Security.Permissions.DownloadReportData) == false) {
+                return new HttpUnauthorizedResult(T("Not authorized").ToString());
+            }
+            var ci = services.ContentManager.Get(id);
+            if (ci.Has<DataReportViewerPart>() == false) {
+                throw new ArgumentException(string.Format(CultureInfo.CurrentUICulture, "{0}={1}", T("There is no report with the Id"), id));
+            }
+            var viewerPart = ci.As<DataReportViewerPart>();
+            var q = reportManager.GetCsv(viewerPart);
+            return new FileContentResult(Encoding.UTF8.GetBytes(q), "application/csv") {
+                FileDownloadName = new CommonUtils().NormalizeFileName(viewerPart.Record.Report.Title, "chart") + ".csv"
+            };
+        }
+        [Themed(Enabled = false)]
+        public ActionResult DownloadDashboard(int id) {
+            if (_authorizer.Authorize(reportManager.GetDashboardPermissions()[id]) == false || _authorizer.Authorize(Security.Permissions.DownloadDashboardData) == false) {
+                return new HttpUnauthorizedResult(T("Not authorized").ToString());
+            }
+            // recupera l'elenco dei report e lo aggiunge al model
+            var ciDashboard = services.ContentManager.Get(id);
+            var dashboard = ciDashboard.Parts.FirstOrDefault(x => x.PartDefinition.Name == "DataReportDashboardPart");
+            if (dashboard == null) {
+                throw new ArgumentException(string.Format(CultureInfo.CurrentUICulture, "{0}={1}", T("There is no dashboard with the Id"), id));
+            }
+            var cpf = dashboard.Fields.FirstOrDefault(x => x.Name == "ReportIds") as ContentPickerField;
+            var reports = services.ContentManager.GetMany<ContentItem>(cpf.Ids, VersionOptions.Published, QueryHints.Empty);
+            var csvContents = new List<string>();
+            var titles = new List<string>();
+            var commonUtils = new CommonUtils();
+            foreach (var rep in reports) {
+                var viewerPart = rep.As<DataReportViewerPart>();
+                var csv = reportManager.GetCsv(viewerPart);
+                csvContents.Add(csv);
+                titles.Add(viewerPart.Record.Report.Title);
+            }
+            var zip = commonUtils.CreateZipArchive(csvContents, titles, "csv");
+            var dashboardTitle = "dashboard";
+            var titlePart = ciDashboard.As<TitlePart>();
+            if(titlePart != null) {
+                dashboardTitle = commonUtils.NormalizeFileName(titlePart.Title, dashboardTitle);
+            }
+            return new FileContentResult(zip, "application/zip") {
+                FileDownloadName = dashboardTitle + ".zip"
+            };
         }
         public ActionResult ShowReports(ShowReportsViewModel model) {
             var list = reportManager.GetReportListForCurrentUser(model.TitleFilter);

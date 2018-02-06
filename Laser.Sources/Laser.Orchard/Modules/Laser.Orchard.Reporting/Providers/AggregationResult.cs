@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Laser.Orchard.Reporting.Providers
-{
+﻿namespace Laser.Orchard.Reporting.Providers {
     public class AggregationResult
     {
         public string Label { get; set; }

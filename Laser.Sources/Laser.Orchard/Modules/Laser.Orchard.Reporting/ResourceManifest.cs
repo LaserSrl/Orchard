@@ -1,11 +1,6 @@
 ﻿using Orchard.UI.Resources;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace Laser.Orchard.Reporting
-{
+namespace Laser.Orchard.Reporting {
     public class ResourceManifest : IResourceManifestProvider
     {
         public void BuildManifests(ResourceManifestBuilder builder)
@@ -18,6 +13,7 @@ namespace Laser.Orchard.Reporting
             builder.Add().DefineScript("donutRendererjqplot").SetUrl("plugins/jqplot.donutRenderer.js").SetDependencies("jqplot");
             builder.Add().DefineScript("canvasAxisTickjqplot").SetUrl("plugins/jqplot.canvasAxisTickRenderer.js").SetDependencies("jqplot");
             builder.Add().DefineScript("canvasTextjqplot").SetUrl("plugins/jqplot.canvasTextRenderer.js").SetDependencies("jqplot");
+            builder.Add().DefineScript("bootstrap-table").SetUrl("//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js").SetDependencies("bootstrap");
         }
     }
 }

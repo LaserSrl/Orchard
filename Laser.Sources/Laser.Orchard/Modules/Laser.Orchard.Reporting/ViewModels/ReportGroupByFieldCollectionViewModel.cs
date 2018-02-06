@@ -1,12 +1,7 @@
 ﻿using Orchard.Localization;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Web;
 
-namespace Laser.Orchard.Reporting.ViewModels
-{
+namespace Laser.Orchard.Reporting.ViewModels {
     public class ReportGroupByFieldCollectionViewModel
     {
         private Collection<ReportGroupByFieldViewModel> groupByFields = new Collection<ReportGroupByFieldViewModel>();
