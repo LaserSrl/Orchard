@@ -28,5 +28,10 @@ namespace Laser.Orchard.HID.Services {
         string BaseEndpoint { get; }
 
         string UsersEndpoint { get; }
+
+        /// <summary>
+        /// Used to compute an HIDUser's externalId
+        /// </summary>
+        string ExternalIdFormat { get; }
     }
 }
