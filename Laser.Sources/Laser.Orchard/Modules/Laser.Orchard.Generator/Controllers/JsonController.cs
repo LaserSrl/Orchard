@@ -76,6 +76,7 @@ namespace Laser.Orchard.Generator.Controllers {
             _authenticationService = authenticationService;
         }
 
+        [AlwaysAccessible]
         public ContentResult GetByAlias(string displayAlias, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour = "") {
             //   Logger.Error("inizio"+DateTime.Now.ToString());
             IContent item = null;
@@ -198,7 +199,8 @@ namespace Laser.Orchard.Generator.Controllers {
                 sb.Append("}");
             }
             else { // Se l'oggetto NON ha delle pending policies allora posso servire l'oggetto stesso
-                shape = _orchardServices.ContentManager.BuildDisplay(content);
+                shape = null;// _orchardServices.ContentManager.BuildDisplay(content);
+                content = _orchardServices.ContentManager.Get(content.Id, VersionOptions.Published);
                 if (sourceType == SourceTypes.ContentItem) {
                     dump = dumper.Dump(content, "Model");
                 }
@@ -219,7 +221,7 @@ namespace Laser.Orchard.Generator.Controllers {
                 #region [ProjectionPart ]
 
                 try {
-                    part = shape.ContentItem.ProjectionPart;
+                    part = content.ContentItem.Parts.FirstOrDefault(pa => pa.PartDefinition.Name == "ProjectionPart");//shape.ContentItem.ProjectionPart;
                 }
                 catch {
                     part = null;
@@ -258,7 +260,7 @@ namespace Laser.Orchard.Generator.Controllers {
                 #region [CalendarPart ]
 
                 try {
-                    part = shape.ContentItem.CalendarPart;
+                    part = content.ContentItem.Parts.FirstOrDefault(pa => pa.PartDefinition.Name == "ProjectionPart");// shape.ContentItem.CalendarPart;
                 }
                 catch {
                     part = null;
