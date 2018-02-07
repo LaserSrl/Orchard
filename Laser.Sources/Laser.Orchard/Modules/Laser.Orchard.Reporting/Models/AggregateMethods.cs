@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Laser.Orchard.Reporting.Models
-{
+﻿namespace Laser.Orchard.Reporting.Models {
     public enum AggregateMethods
     {
         None = 0,

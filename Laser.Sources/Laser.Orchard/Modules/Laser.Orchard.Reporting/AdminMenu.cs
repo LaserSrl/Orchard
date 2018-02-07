@@ -21,26 +21,6 @@ namespace Laser.Orchard.Reporting {
                     .Action("Index", "Report", new { area = "Laser.Orchard.Reporting" })
                     .Permission(Permissions.ManageQueries));
 
-                //var reports = _contentManager.GetContentTypeDefinitions().Where(x => x.Parts.Any(y => y.PartDefinition.Name == "DataReportViewerPart") && x.Settings.Any(z => z.Key == "Stereotype" && z.Value == "Widget") == false);
-                //foreach (var report in reports) {
-                //    menu.Add(sub4 => sub4.Caption(T(" - " + report.DisplayName))
-                //        .Action("List", "Admin", new RouteValueDictionary {
-                //                {"area", "Laser.Orchard.AdvancedSearch"},
-                //                {"model.Id", report.Name}
-                //        }));
-                //}
-
-                //var dashboardType = _contentManager.GetContentTypeDefinitions().Where(x => x.Name == "DataReportDashboard").FirstOrDefault();
-                //menu.Add(T("Dashboard Definitions"), "3.0", sub3 => sub3
-                //    .Action("List", "Admin",
-                //        new RouteValueDictionary {
-                //                {"area", "Laser.Orchard.AdvancedSearch"},
-                //                {"model.Id", dashboardType.Name}
-                //        })
-                //    .Permission(OrchardCoreContents.DynamicPermissions.CreateDynamicPermission(
-                //        OrchardCoreContents.DynamicPermissions.PermissionTemplates["EditOwnContent"],
-                //        dashboardType)));
-
                 menu.Add(sub51 => sub51.Caption(T("Charts"))
                     .Permission(Security.Permissions.ShowDataReports)
                     .Action("ShowReports", "Report", new { area = "Laser.Orchard.Reporting" })

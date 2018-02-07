@@ -6,15 +6,12 @@ using Orchard.ContentManagement.ViewModels;
 using Orchard.Data;
 using Laser.Orchard.Reporting.Models;
 using Laser.Orchard.Reporting.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
-namespace Laser.Orchard.Reporting.Settings
-{
+namespace Laser.Orchard.Reporting.Settings {
     public class DataReportViewerSettingsEvents : ContentDefinitionEditorEventsBase
     {
         private IRepository<ReportRecord> reportRepository;

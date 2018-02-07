@@ -1,13 +1,8 @@
 ﻿using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Laser.Orchard.Reporting.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace Laser.Orchard.Reporting.Handlers
-{
+namespace Laser.Orchard.Reporting.Handlers {
     public class DataReportViewerHandler : ContentHandler
     {
         public DataReportViewerHandler(IRepository<DataReportViewerPartRecord> repository)

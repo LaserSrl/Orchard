@@ -1,10 +1,4 @@
-﻿using Laser.Orchard.Reporting.Models;
-using Orchard.ContentManagement;
-using Orchard.DisplayManagement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Orchard.ContentManagement;
 
 namespace Laser.Orchard.Reporting.ViewModels {
     public class ReportDisplayViewModel {

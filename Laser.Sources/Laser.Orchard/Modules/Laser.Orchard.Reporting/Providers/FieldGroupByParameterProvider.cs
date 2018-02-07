@@ -1,24 +1,18 @@
-﻿using NHibernate.Transform;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Drivers;
+﻿using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
-using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Projections.FieldTypeEditors;
 using Laser.Orchard.Reporting.Models;
 using Laser.Orchard.Reporting.Services;
 using Orchard.Utility.Extensions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 
-namespace Laser.Orchard.Reporting.Providers
-{
+namespace Laser.Orchard.Reporting.Providers {
     public class FieldGroupByParameterProvider : IGroupByParameterProvider
     {
         private readonly IContentDefinitionManager _contentDefinitionManager;

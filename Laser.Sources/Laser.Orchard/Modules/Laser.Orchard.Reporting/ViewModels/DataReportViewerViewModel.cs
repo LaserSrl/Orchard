@@ -1,11 +1,7 @@
 ﻿using Laser.Orchard.Reporting.Providers;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace Laser.Orchard.Reporting.ViewModels
-{
+namespace Laser.Orchard.Reporting.ViewModels {
     public class DataReportViewerViewModel
     {
         public int TotalCount { get; set; }

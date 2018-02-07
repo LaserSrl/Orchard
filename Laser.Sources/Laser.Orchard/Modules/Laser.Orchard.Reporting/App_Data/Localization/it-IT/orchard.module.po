@@ -153,6 +153,10 @@ msgid "Name"
 msgstr "Nome"
 
 msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Report/Display.cshtml"
+msgid "Download"
+msgstr "Download"
+
+msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Report/Display.cshtml"
 msgid "Execute report"
 msgstr "Esegui Report"
 
@@ -261,6 +265,10 @@ msgid "Remove"
 msgstr "Elimina"
 
 msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Report/ShowDashboard.cshtml"
+msgid "Download"
+msgstr "Download"
+
+msgctxt "~/Modules/Laser.Orchard.Reporting/Views/Report/ShowDashboard.cshtml"
 msgid "Filters"
 msgstr "Filtri"
 
@@ -355,6 +363,10 @@ msgstr "Massimo"
 msgctxt "Laser.Orchard.Reporting.Controllers.ReportController"
 msgid "Minimum"
 msgstr "Minimo"
+
+msgctxt "Laser.Orchard.Reporting.Controllers.ReportController"
+msgid "Not authorized"
+msgstr "Non autorizzato"
 
 msgctxt "Laser.Orchard.Reporting.Controllers.ReportController"
 msgid "Not authorized to execute this dashboard"

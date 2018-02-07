@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Laser.Orchard.Reporting.Providers;
@@ -19,8 +18,7 @@ using Orchard.ContentManagement.Handlers;
 using System.Xml.Linq;
 using Orchard.Projections.Models;
 
-namespace Laser.Orchard.Reporting.Drivers
-{
+namespace Laser.Orchard.Reporting.Drivers {
     public class DataReportViewerDriver : ContentPartDriver<DataReportViewerPart>
     {
         private readonly IReportManager reportManger;

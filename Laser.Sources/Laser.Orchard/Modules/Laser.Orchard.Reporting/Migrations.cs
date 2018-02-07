@@ -1,14 +1,9 @@
 ﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
-using Orchard.Data;
 using Orchard.Data.Migration;
 using Orchard.Data.Migration.Schema;
-using System;
-using System.Linq;
-using System.Data;
 
-namespace Laser.Orchard.Reporting
-{
+namespace Laser.Orchard.Reporting {
     public class Migrations : DataMigrationImpl
     {
         public int Create()
