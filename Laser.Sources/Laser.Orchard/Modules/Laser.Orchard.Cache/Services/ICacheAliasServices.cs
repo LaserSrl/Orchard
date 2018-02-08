@@ -23,7 +23,7 @@ namespace Laser.Orchard.Cache.Services {
 
         public void RefreshCachedRouteConfig(IRepository<CacheUrlRecord> _cacheUrlRepository) {
             var defaultMaxAge = _orchardServices.WorkContext.CurrentSite.As<CacheSettingsPart>().DefaultMaxAge;
-            CachedRouteConfig = _cacheUrlRepository.Fetch(x => x.Id > 0).OrderByDescending(y => y.Priority).Select(w => new CacheRouteConfig {
+            CachedRouteConfig = _cacheUrlRepository.Table.OrderByDescending(y => y.Priority).Select(w => new CacheRouteConfig {
                 Duration = w.CacheDuration,
                 GraceTime = w.CacheGraceTime,
                 Priority = w.Priority,

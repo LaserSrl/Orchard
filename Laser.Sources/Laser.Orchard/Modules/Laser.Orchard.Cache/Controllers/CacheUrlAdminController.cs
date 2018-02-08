@@ -15,7 +15,6 @@ namespace Laser.Orchard.Cache.Controllers {
     public class CacheURLAdminController : Controller {
         private readonly IOrchardServices _orchardServices;
         private readonly IContentManager _contentManager;
-        private const string contentType = "CacheURL";
         private readonly ICacheAliasServices _cacheAliasServices;
         private IRepository<CacheUrlRecord> _cacheUrlRepository;
 
@@ -37,7 +36,7 @@ namespace Laser.Orchard.Cache.Controllers {
             if (!_orchardServices.Authorizer.Authorize(Permissions.UrlCache)) {
                 return new HttpUnauthorizedResult();
             }
-            var records = _cacheUrlRepository.Fetch(x => true).OrderBy(x => x.Priority).ToList();
+            var records = _cacheUrlRepository.Table.OrderByDescending(x => x.Priority).ToList();
             return View("Index", new CacheUrlVM { Cached = records });
         }
 
@@ -56,8 +55,7 @@ namespace Laser.Orchard.Cache.Controllers {
                 }
                 else {
                     if (string.IsNullOrEmpty(x.CacheURL)) {
-                        var old = _cacheUrlRepository.Get(x.Id);
-                        _cacheUrlRepository.Delete(old);
+                        _cacheUrlRepository.Delete(_cacheUrlRepository.Get(r=>r.Id==x.Id));
                     }
                     else {
                         x.CacheURL = x.CacheURL.ToLower();
