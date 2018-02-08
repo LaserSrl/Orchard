@@ -328,7 +328,9 @@ namespace Laser.Orchard.Generator.Controllers {
 
                 part = null;
                 if (content.ContentItem.ContentType.EndsWith("Term")
-                    || !String.IsNullOrWhiteSpace(content.ContentItem.TypeDefinition.Settings["Taxonomy"])) {
+                    || (
+                        content.ContentItem.TypeDefinition.Settings.ContainsKey("Taxonomy")
+                        && !String.IsNullOrWhiteSpace(content.ContentItem.TypeDefinition.Settings["Taxonomy"]))) {
                     part = content.ContentItem.Parts.FirstOrDefault(pa => pa.PartDefinition.Name == "TermPart");
                 }
                 if (part != null) {
