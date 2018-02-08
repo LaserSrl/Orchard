@@ -42,18 +42,22 @@ namespace Laser.Orchard.HID.Controllers {
         /// <summary>
         /// Call this method to request for credentials to be issued to the credential container with the id passed.
         /// call to API/Laser.Orchard.HID/HIDAPI/IssueCredentials
-        /// Eventually passing a value for endpointId in QueryString
+        /// With the following body:
+        /// {
+        ///     "endpointId":"123456"
+        /// }
         /// </summary>
-        /// <param name="endpointId">The Id of the credential container to which we should try to issue credentials.</param>
+        /// <param name="endpointInfo">The object containing the Id of the credential container to which we should try to issue credentials.</param>
         /// <returns></returns>
         [System.Web.Mvc.HttpPost, ActionName("IssueCredentials")]
         [Authorize]
         [System.Web.Mvc.OutputCache(NoStore = true)]
-        public Response IssueCredentials(int? endpointId = null) {
+        public Response IssueCredentials(EndpointInfo endpoint) {
             string message = "";
             HIDErrorCode eCode = HIDErrorCode.GenericError;
             HIDResolutionAction rAction = HIDResolutionAction.NoAction;
             bool success = false;
+            var endpointId = endpoint.endpointId;
 
             // given the authenticated user, get the hidUser
             IUser caller = _orchardServices.WorkContext.CurrentUser;
@@ -67,6 +71,11 @@ namespace Laser.Orchard.HID.Controllers {
                             success = true;
                             eCode = HIDErrorCode.NoError;
                             message = T("Credentials issued. Synchronize your device with the TSM.").Text;
+                        } else if (hidUser.Error == UserErrors.InvalidParameters) {
+                            success = false;
+                            eCode = HIDErrorCode.UserHasNoCredentialContainers;
+                            rAction = HIDResolutionAction.NoAction;
+                            message = T("There was an error with the parameters passed: endpoint ID not valid for the user. EndpointId: {0}; UserName: {1}; Email: {2}", endpoint.endpointId, caller.UserName, caller.Email).Text;
                         } else {
                             HandleHIDUserError(hidUser, caller, out eCode, out rAction, out message);
                         }
@@ -93,6 +102,11 @@ namespace Laser.Orchard.HID.Controllers {
             return (Response)response;
         }
 
+        public class EndpointInfo {
+            public int endpointId { get; set; }
+        }
+
+
         /// <summary>
         /// Call to this method to try and create a new invitation code for the authenticated user making the call.
         /// </summary>
@@ -116,7 +130,7 @@ namespace Laser.Orchard.HID.Controllers {
                     if (_HIDAdminService.GetSiteSettings().PreventMoreThanOneDevice
                         && hidUser.CredentialContainers.Any()) {
 
-                        eCode = HIDErrorCode.GenericError;
+                        eCode = HIDErrorCode.CannotConfigureAdditionalContainer;
                         rAction = HIDResolutionAction.NoAction;
                         message = T("The user has already registered a Credential Container and is not allowed to have more. Id: {0}; UserName: {1}; Email: {2}", caller.Id, caller.UserName, caller.Email).Text;
                     } else {
@@ -230,6 +244,11 @@ namespace Laser.Orchard.HID.Controllers {
                     rAction = HIDResolutionAction.NoAction;
                     message = T("Unknown error while searching for user on HID server. Id: {0}; UserName: {1}; Email: {2}", caller.Id, caller.UserName, caller.Email).Text;
                     break;
+                case UserErrors.DoesNotHaveDevices:
+                    eCode = HIDErrorCode.UserHasNoCredentialContainers;
+                    rAction = HIDResolutionAction.NoAction;
+                    message = T("No valid credential container has been registered for the user. Id: {0}; UserName: {1}; Email: {2}", caller.Id, caller.UserName, caller.Email).Text;
+                    break;
                 default:
                     eCode = HIDErrorCode.GenericError;
                     rAction = HIDResolutionAction.NoAction;
@@ -267,8 +286,11 @@ namespace Laser.Orchard.HID.Controllers {
         NoError = 0, GenericError = 1,
         AuthenticationFailed = 5001,
         HIDServerError = 5002,
-        UserDoesNotExist = 5003, UserNotUnique = 5004,
-        InvalidSearchParameters = 5005
+        UserDoesNotExist = 5003,
+        UserNotUnique = 5004,
+        InvalidSearchParameters = 5005,
+        CannotConfigureAdditionalContainer = 5006,
+        UserHasNoCredentialContainers = 5007
     }
     public enum HIDResolutionAction {
         NoAction = 0,
