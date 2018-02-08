@@ -13,7 +13,7 @@
     IOrchardServices _orchardServices;
     ITransactionManager _transactionManager;
 
-    private string SaveCsv(string csv, string titoloVisita) {
+    private string SaveCsv(string csv, string titoloVisita, int id) {
         // create csv file in temp directory
         var temp = Path.GetTempPath();
         var dir = Path.Combine(temp, Guid.NewGuid().ToString());
@@ -22,7 +22,7 @@
         foreach(var ch in Path.GetInvalidFileNameChars()) {
             titolo = titolo.Replace(ch, '-');
         }
-        var path = Path.Combine(dir, string.Format("report {0}.csv", titolo));
+        var path = Path.Combine(dir, string.Format("report {0} {1}.csv", id, titolo));
         Directory.CreateDirectory(dir);
         File.WriteAllText(path, csv);
         return path;
@@ -118,7 +118,7 @@
         foreach (dynamic ci in records) {
             var csv = GetCsv(ci.Id);
             var titolo = ci.TitlePart == null ? "" : ci.TitlePart.Title;
-            attachments.Add(SaveCsv(csv, titolo));
+            attachments.Add(SaveCsv(csv, titolo, ci.Id));
         }
         wfContext.SetState("Attachments", string.Join(",", attachments));
         if(attachments.Count > 0) {
