@@ -109,7 +109,7 @@ namespace Laser.Orchard.Cache.Filters {
 
             #region Added
             var cachedUrl = _cacheAliasServices.GetByUrl(filterContext.RequestContext.HttpContext.Request.RawUrl);
-            string keyToAdd = "";
+            var keyToAdd = "";
             if (cachedUrl != null) {
                 if (_cacheRouteConfig == null) {
                     keyToAdd= _tokenizer.Replace(cachedUrl.Url, new Dictionary<string, object>());// { { "Content", part.ContentItem } };)
@@ -253,7 +253,7 @@ namespace Laser.Orchard.Cache.Filters {
                             return;
                         }
                         using (var scope = _workContextAccessor.CreateWorkContextScope()) {
-                            var cacheItem = new CacheItem() {
+                            var cacheItem = new CacheItem {
                                 CachedOnUtc = _now,
                                 Duration = cacheDuration,
                                 GraceTime = cacheGraceTime,

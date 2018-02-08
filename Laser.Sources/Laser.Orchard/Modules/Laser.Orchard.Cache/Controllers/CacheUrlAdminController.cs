@@ -16,7 +16,7 @@ namespace Laser.Orchard.Cache.Controllers {
         private readonly IOrchardServices _orchardServices;
         private readonly IContentManager _contentManager;
         private readonly ICacheAliasServices _cacheAliasServices;
-        private IRepository<CacheUrlRecord> _cacheUrlRepository;
+        private readonly IRepository<CacheUrlRecord> _cacheUrlRepository;
 
         public CacheURLAdminController(
             IContentManager contentManager,

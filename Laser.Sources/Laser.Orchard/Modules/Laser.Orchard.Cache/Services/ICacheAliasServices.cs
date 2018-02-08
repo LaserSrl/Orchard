@@ -19,7 +19,7 @@ namespace Laser.Orchard.Cache.Services {
 
     public class CacheAliasServices : ICacheAliasServices {
         public static List<CacheRouteConfig> CachedRouteConfig;
-        private IRepository<CacheUrlRecord> _cacheUrlRepository;
+        private readonly IRepository<CacheUrlRecord> _cacheUrlRepository;
 
         public void RefreshCachedRouteConfig(IRepository<CacheUrlRecord> _cacheUrlRepository) {
             var defaultMaxAge = _orchardServices.WorkContext.CurrentSite.As<CacheSettingsPart>().DefaultMaxAge;
