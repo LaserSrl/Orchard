@@ -82,35 +82,13 @@ namespace Laser.Orchard.Generator.Controllers {
             IContent item = null;
 
             if (displayAlias.ToLower() == "user+info" || displayAlias.ToLower() == "user info") {
-
-                #region richiesta dati di uno user
-
-                //  var currentUser = _authenticationService.GetAuthenticatedUser();
-                //if (currentUser == null) {
-                //    //  return Content((Json(_utilsServices.GetResponse(ResponseType.InvalidUser))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
-                //    var result = new ContentResult { ContentType = "application/json" };
-                //    result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidUser));
-                //    return result;
-                //}
-                //else
-                //if (!_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
-                //    var result = new ContentResult { ContentType = "application/json" };
-                //    result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidXSRF));
-                //    return result;
-                //    //   Content((Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
-                //}
-                //else {
-
-                #region utente validato
-
-                //         item = currentUser.ContentItem;
+                // The call to this generator method is generally anonymous, but we still want to send out the json reflecting the structure of a user
+                // so it can be mapped.
+                // We are sending out the admin user, but this may end up being a security concern in some cases so:
+                // TODO: figure out a way to not be sending out admin information here, since this call is anonymous.
+                
                 item = _orchardServices.ContentManager.Get(2);
-
-                #endregion utente validato
-
-                //                 }
-
-                #endregion richiesta dati di uno user
+                
             } else {
                 var autoroutePart = _orchardServices.ContentManager.Query<AutoroutePart, AutoroutePartRecord>()
                     .ForVersion(VersionOptions.Published)
@@ -194,6 +172,8 @@ namespace Laser.Orchard.Generator.Controllers {
                 sb.Append("]"); // l : [
                 sb.Append("}");
             } else { // Se l'oggetto NON ha delle pending policies allora posso servire l'oggetto stesso
+                // Doing a IContentManager.Get here should ensure that the handlers that populate lazyfields
+                // are executed, and all data in ContentParts and ContentField is initialized as it should.
                 content = _orchardServices.ContentManager.Get(content.Id, VersionOptions.Published);
 
                 dump = dumper.Dump(content, "Model");
@@ -205,6 +185,9 @@ namespace Laser.Orchard.Generator.Controllers {
                 dynamic part = null;
                 var firstList = true;
                 var listDumpedContentIds = new List<int>();
+
+                // Everything from the regions below this point should really belong in the implementations of an IDependency
+                // dedicated to adding stuff to the json.
 
                 #region [ProjectionPart ]
 
