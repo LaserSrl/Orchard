@@ -1,0 +1,25 @@
+﻿@model Laser.Orchard.Cache.Models.CacheUrlRecord
+<div class="singleCacheUrl">
+    <fieldset>
+        <label>@T("Url Scrap")</label>
+        @Html.TextBoxFor(m => m.CacheURL, new { @class = "text large" })
+        @Html.HiddenFor(m => m.Id)
+        <div style="float:left">
+            <label>@T("Duration")</label>
+            @Html.TextBoxFor(m => m.CacheDuration, new { @class = "text small" })
+        </div>
+        <div style="float:left">
+            <label>@T("Grace Time")</label>
+            @Html.TextBoxFor(m => m.CacheGraceTime, new { @class = "text small" })
+        </div>
+        <div>
+            <label>@T("Priority")</label>
+            @Html.TextBoxFor(m => m.Priority, new { @class = "text small" })
+        </div>
+        <div>
+            <label>@T("User Tokens")</label>
+            @Html.TextBoxFor(m => m.CacheToken, new { @class = "text large tokenized" })
+        </div>
+        @Display.TokenHint()
+    </fieldset>
+</div>
