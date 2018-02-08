@@ -49,11 +49,11 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
             var userData = (Build(clientConfiguration) as OpenAuthVodafoneOAuth2Client).GetUserDataDictionary(userAccessToken);
             //Logger.Error("user data count: {0}", userData.Count);
             if (!userData.ContainsKey("email")) { // email non presente
-                Logger.Error(string.Format("OpenAuth Utente Vodafone: il token {0} é valido ma login non accettata, nessuna email restituita dal servizio Vodafone", userAccessToken));
+                Logger.Error(string.Format("OpenAuth Vodafone User: token {0} is valid but login was not accepted: no email returned by Vodafone service", userAccessToken));
                 return AuthenticationResult.Failed;
             }
-            if (!userData.ContainsKey("userid")) { // email non presente
-                Logger.Error(string.Format("OpenAuth Utente Vodafone: il token {0} é valido ma login non accettata, nessun id restituito dal servizio Vodafone", userAccessToken));
+            if (!userData.ContainsKey("userid")) { // userid non presente
+                Logger.Error(string.Format("OpenAuth Vodafone User: token {0} is valid but login was not accepted: no userid returned by Vodafone service", userAccessToken));
                 return AuthenticationResult.Failed;
             }
             if (userData.ContainsKey("mobile"))
