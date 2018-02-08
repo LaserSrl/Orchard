@@ -75,6 +75,9 @@
     <None Include="Sites\Hkt00\Mobile\AME_PROD.p12" />
     <None Include="Sites\Hkt00\Mobile\KrakeSampleDev.p12" />
     <None Include="Sites\Hkt00\Mobile\KrakeSampleProd.p12" />
+    <None Include="Sites\IAmVodafone\Code\LoginVodafone.cshtml" />
+    <None Include="Sites\IAmVodafone\Code\OAuthVodafoneUserCreated.cshtml" />
+    <None Include="Sites\IAmVodafone\Config\Sites.IAmVodafone.config" />
     <None Include="Sites\IvreaTerritorio\Mobile\pushVisitami.p12" />
     <None Include="Sites\IvreaTerritorio\WebServices\CalendarEvent.cshtml" />
     <None Include="Sites\IvreaTerritorio\WebServices\CalendarEvent1.cshtml" />
