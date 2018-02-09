@@ -55,14 +55,14 @@ namespace Laser.Orchard.OpenAuthentication.Services.Clients {
                     using (var responseStream = response.GetResponseStream()) {
                         twitterUserData = (TwitterUserData)twitterUserSerializer.ReadObject(responseStream);
                         if (String.IsNullOrWhiteSpace(twitterUserData.Screen_Name)) {
-                            Logger.Error("Twitter: screen_name mancante");
+                            Logger.Error("Twitter: missing screen_name");
                             return AuthenticationResult.Failed;
                         }
                     }
                 }
             }
             catch (Exception ex) {
-                Logger.Error(ex, "Chiamata Twitter verify_credentials");
+                Logger.Error(ex, "Twitter verify_credentials");
                 return AuthenticationResult.Failed;
             }
 

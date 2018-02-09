@@ -98,6 +98,10 @@
     <Reference Include="Orchard.Users">
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Users\bin\Orchard.Users.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Workflows, Version=1.10.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Workflows\bin\Orchard.Workflows.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -266,12 +270,16 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\OpenAuthUserActivity.cs" />
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\OpenIdController.cs" />
     <Compile Include="Drivers\UserProviderDisplayPartDriver.cs" />
     <Compile Include="Drivers\UserProvidersPartDriver.cs" />
+    <Compile Include="Events\BaseOpenAuthUserContext.cs" />
+    <Compile Include="Events\CreatedOpenAuthUserContext.cs" />
+    <Compile Include="Events\CreatingOpenAuthUserContext.cs" />
     <Compile Include="Events\IOpenAuthUserEventHandler.cs" />
     <Compile Include="Events\OpenAuthUserEventHandler.cs" />
     <Compile Include="Events\UserAppDirectEvent.cs" />
@@ -279,12 +287,15 @@
     <Compile Include="Extensions\DictionaryExtension.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
+    <Compile Include="Handlers\OpenAuthUserEventHandler.cs" />
+    <Compile Include="Handlers\OpenAuthUserEventWorkflowTriggersHandler.cs" />
     <Compile Include="Models\UserAccountLogin.cs" />
     <Compile Include="Models\UserProviderDisplayPart.cs" />
     <Compile Include="Services\Clients\GoogleAuthenticationClient.cs" />
     <Compile Include="Services\Clients\InstagramAuthenticationClient.cs" />
     <Compile Include="Services\Clients\PinterestAuthenticationClient.cs" />
     <Compile Include="Services\Clients\PinterestUserData.cs" />
+    <Compile Include="Services\Clients\VodafoneAuthenticationClient.cs" />
     <Compile Include="Services\Clients\YahooAuthenticationClient.cs" />
     <Compile Include="Services\OpenAuthFacebookOAuth2.cs" />
     <Compile Include="Services\OpenAuthGoogleOAuth2.cs" />
@@ -292,6 +303,7 @@
     <Compile Include="Services\OpenAuthLinkedlnOAuth2Client.cs" />
     <Compile Include="Services\OpenAuthPinterestOAuth2Client.cs" />
     <Compile Include="Services\OpenAuthTwitterOAuth.cs" />
+    <Compile Include="Services\OpenAuthVodafoneOAuth2Client.cs" />
     <Compile Include="Services\ServiceUtility.cs" />
     <Compile Include="Services\UserExtensionService.cs" />
     <Compile Include="Handlers\OpenAuthenticationSettingsPartHandler.cs" />
@@ -325,6 +337,7 @@
     <Compile Include="Shapes.cs" />
     <Compile Include="ViewModels\CreateProviderViewModel.cs" />
     <Compile Include="ViewModels\IndexViewModel.cs" />
+    <Compile Include="ViewModels\OpenAuthTemporaryUser.cs" />
     <Compile Include="ViewModels\UserProviderDisplayViewModel.cs" />
     <Compile Include="ViewModels\UserProvidersViewModel.cs" />
   </ItemGroup>

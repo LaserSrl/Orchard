@@ -179,6 +179,12 @@ namespace Laser.Orchard.OpenAuthentication {
             SchemaBuilder.AlterTable("OpenAuthenticationSettingsPartRecord", t => t.AddColumn<string>("AppDirectBaseUrl"));
             return 13;
         }
+        public int UpdateFrom13() {
+            SchemaBuilder.AlterTable("OpenAuthenticationSettingsPartRecord", t => t.AddColumn<bool>("AutoMergeNewUsersEnabled"));
+            return 14;
+        }
+
         
+
     }
 }

@@ -66,5 +66,10 @@ namespace Laser.Orchard.HID.ViewModels {
             get { return SettingsPart.PreventMoreThanOneDevice; }
             set { SettingsPart.PreventMoreThanOneDevice = value; }
         }
+
+        public bool PreventDefaultPartNumber {
+            get { return SettingsPart.PreventDefaultPartNumber; }
+            set { SettingsPart.PreventDefaultPartNumber = value; }
+        }
     }
 }
