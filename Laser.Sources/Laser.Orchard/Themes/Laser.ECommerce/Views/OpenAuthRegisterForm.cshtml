@@ -5,7 +5,7 @@
     var userName = Request.QueryString["UserName"];
     var externalLoginData = Request.QueryString["ExternalLoginData"];
     var _membershipService = WorkContext.Resolve<IMembershipService>();
-    var passwordLength = _membershipService.GetSettings().MinRequiredPasswordLength;
+    var passwordLength = _membershipService.GetSettings().GetMinimumPasswordLength();
 
     var returnUrl = Request.QueryString["ReturnUrl"];
 
