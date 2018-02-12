@@ -11,6 +11,7 @@
     "{Site.BaseUrl}{Content.Fields.BlogPost.Gallery.Url}"
    ],
   "datePublished": "{Content.Date}",
+  "dateModified": "{Content.DateModified}",
   "author": {{
     "@type": "Person",
     "name": "{Content.Fields.CommonPart.Creator}"
@@ -20,7 +21,7 @@
     "name": "{Content.Fields.CommonPart.Creator}",
     "logo": {{
       "@type": "ImageObject",
-      "url": "http://pre-ivreaterritorio.laser-group.com/Themes/AnfiteatroMorenico/styles/images/logo.png"
+      "url": "URL-LOGO"
     }}
   }},
   "description": "{Content.Body.StripHtml}"

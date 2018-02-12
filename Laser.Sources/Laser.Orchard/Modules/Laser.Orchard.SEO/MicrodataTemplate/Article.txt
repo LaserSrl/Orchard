@@ -11,7 +11,7 @@
     "{Site.BaseUrl}{Content.Fields.CONTENTNAME.GALLERY.Url}"
    ],
   "datePublished": "{Content.Date}",
-  "dateModified": "2015-02-05T09:20:00+08:00",
+  "dateModified": "{Content.DateModified}",
   "author": {{
     "@type": "Person",
     "name": "{Content.Fields.CommonPart.Creator}"
@@ -21,7 +21,7 @@
     "name": "{Content.Fields.CommonPart.Creator}",
     "logo": {{
       "@type": "ImageObject",
-      "url": "DA SOSITUIRE CONIL LOGO"
+      "url": "URL-LOGO"
     }}
   }},
   "description": "{Content.Body.StripHtml}"
