@@ -76,50 +76,27 @@ namespace Laser.Orchard.Generator.Controllers {
             _authenticationService = authenticationService;
         }
 
+        [AlwaysAccessible]
         public ContentResult GetByAlias(string displayAlias, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour = "") {
             //   Logger.Error("inizio"+DateTime.Now.ToString());
             IContent item = null;
 
             if (displayAlias.ToLower() == "user+info" || displayAlias.ToLower() == "user info") {
-
-                #region richiesta dati di uno user
-
-                //  var currentUser = _authenticationService.GetAuthenticatedUser();
-                //if (currentUser == null) {
-                //    //  return Content((Json(_utilsServices.GetResponse(ResponseType.InvalidUser))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
-                //    var result = new ContentResult { ContentType = "application/json" };
-                //    result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidUser));
-                //    return result;
-                //}
-                //else
-                //if (!_csrfTokenHelper.DoesCsrfTokenMatchAuthToken()) {
-                //    var result = new ContentResult { ContentType = "application/json" };
-                //    result.Content = Newtonsoft.Json.JsonConvert.SerializeObject(_utilsServices.GetResponse(ResponseType.InvalidXSRF));
-                //    return result;
-                //    //   Content((Json(_utilsServices.GetResponse(ResponseType.InvalidXSRF))).ToString(), "application/json");// { Message = "Error: No current User", Success = false,ErrorCode=ErrorCode.InvalidUser,ResolutionAction=ResolutionAction.Login });
-                //}
-                //else {
-
-                #region utente validato
-
-                //         item = currentUser.ContentItem;
+                // The call to this generator method is generally anonymous, but we still want to send out the json reflecting the structure of a user
+                // so it can be mapped.
+                // We are sending out the admin user, but this may end up being a security concern in some cases so:
+                // TODO: figure out a way to not be sending out admin information here, since this call is anonymous.
+                
                 item = _orchardServices.ContentManager.Get(2);
-
-                #endregion utente validato
-
-                //                 }
-
-                #endregion richiesta dati di uno user
-            }
-            else {
+                
+            } else {
                 var autoroutePart = _orchardServices.ContentManager.Query<AutoroutePart, AutoroutePartRecord>()
                     .ForVersion(VersionOptions.Published)
                     .Where(w => w.DisplayAlias == displayAlias).List().SingleOrDefault();
 
                 if (autoroutePart != null && autoroutePart.ContentItem != null) {
                     item = autoroutePart.ContentItem;
-                }
-                else {
+                } else {
                     new HttpException(404, ("Not found"));
                     return null;
                 }
@@ -142,7 +119,6 @@ namespace Laser.Orchard.Generator.Controllers {
             XElement projectionDump = null;
             // il dump dell'oggetto principale non filtra per field
             ObjectDumper dumper = new ObjectDumper(deeplevel, null, false, tinyResponse, complexBehaviour);
-            dynamic shape;
             var sb = new StringBuilder();
             List<XElement> listContent = new List<XElement>();
 
@@ -153,8 +129,7 @@ namespace Laser.Orchard.Generator.Controllers {
                     if (policy.HasPendingPolicies ?? false) { // se ha delle pending policies deve restituire le policy text, legate al contenuto, qui ndi non deve mai servire cache
                         var redirectUrl = String.Format("{0}{1}v={2}", _orchardServices.WorkContext.HttpContext.Request.RawUrl, (_orchardServices.WorkContext.HttpContext.Request.RawUrl.Contains("?") ? "&" : "?"), Guid.NewGuid());
                         _orchardServices.WorkContext.HttpContext.Response.Redirect(redirectUrl, true);
-                    }
-                    else {// se NON ha delle pending policies deve restituire un url non cacheato (quindi aggiungo v=),
+                    } else {// se NON ha delle pending policies deve restituire un url non cacheato (quindi aggiungo v=),
                         var redirectUrl = String.Format("{0}{1}v={2}", _orchardServices.WorkContext.HttpContext.Request.RawUrl, (_orchardServices.WorkContext.HttpContext.Request.RawUrl.Contains("?") ? "&" : "?"), "cached-content");
                         _orchardServices.WorkContext.HttpContext.Response.Redirect(redirectUrl, true);
                         //_orchardServices.WorkContext.HttpContext.Response.Redirect(redirectUrl, true);
@@ -196,18 +171,13 @@ namespace Laser.Orchard.Generator.Controllers {
 
                 sb.Append("]"); // l : [
                 sb.Append("}");
-            }
-            else { // Se l'oggetto NON ha delle pending policies allora posso servire l'oggetto stesso
-                shape = _orchardServices.ContentManager.BuildDisplay(content);
-                if (sourceType == SourceTypes.ContentItem) {
-                    dump = dumper.Dump(content, "Model");
-                }
-                else {
-                    dump = dumper.Dump(shape, "Model");
-                }
-                //dump.XPathSelectElements("");
-                //var filteredDump = dump.Descendants();
-                //ConvertToJSon(dump, sb);
+            } else { // Se l'oggetto NON ha delle pending policies allora posso servire l'oggetto stesso
+                // Doing a IContentManager.Get here should ensure that the handlers that populate lazyfields
+                // are executed, and all data in ContentParts and ContentField is initialized as it should.
+                content = _orchardServices.ContentManager.Get(content.Id, VersionOptions.Published);
+
+                dump = dumper.Dump(content, "Model");
+
                 JsonConverter.ConvertToJSon(dump, sb, minified, realformat);
                 sb.Insert(0, "{");
                 sb.Append(", \"l\":[");
@@ -216,14 +186,12 @@ namespace Laser.Orchard.Generator.Controllers {
                 var firstList = true;
                 var listDumpedContentIds = new List<int>();
 
+                // Everything from the regions below this point should really belong in the implementations of an IDependency
+                // dedicated to adding stuff to the json.
+
                 #region [ProjectionPart ]
 
-                try {
-                    part = shape.ContentItem.ProjectionPart;
-                }
-                catch {
-                    part = null;
-                }
+                part = content.ContentItem.Parts.FirstOrDefault(pa => pa.PartDefinition.Name == "ProjectionPart");
                 if (part != null) {
                     if (!firstList) {
                         sb.Append(",");
@@ -257,17 +225,17 @@ namespace Laser.Orchard.Generator.Controllers {
 
                 #region [CalendarPart ]
 
-                try {
-                    part = shape.ContentItem.CalendarPart;
-                }
-                catch {
-                    part = null;
-                }
+                part = content.ContentItem.Parts.FirstOrDefault(pa => pa.PartDefinition.Name == "CalendarPart");
                 if (part != null) {
                     if (!firstList) {
                         sb.Append(",");
                     }
                     firstList = false;
+                    // On principle, if the item has a CalendarPart, our Laser.Orchard.Events feature should be enabled, so
+                    // the next check may actually not be required. On the other hand, the clean way to do this would be to
+                    // have services morph the json we are working on here, so that specific checks are only done in their
+                    // own place. This is similar to what has been done with the computation of cache keys and the CacheKeyGenerated
+                    // methods in the ICachingEventHandler implementations, with the added requirement of proper formatting.
                     if (_orchardServices.WorkContext.TryResolve<IEventsService>(out _eventsService)) { // non sempre questo modulo è attivo quindi se non riesce a risolvere il servizio, bypassa la chiamata
                         var queryItems = _eventsService.GetAggregatedList(part, page, pageSize);
                         int i = 0;
@@ -298,7 +266,7 @@ namespace Laser.Orchard.Generator.Controllers {
                 #region [ExernalField]
 
                 var ExtertalFields = (dynamic)
-                     (from parte in ((ContentItem)shape.ContentItem).Parts
+                     (from parte in content.ContentItem.Parts
                       from field in parte.Fields
                       where (field.GetType().Name == "FieldExternal" && ((dynamic)field).Setting.GenerateL)
                       select field).FirstOrDefault();
@@ -307,19 +275,15 @@ namespace Laser.Orchard.Generator.Controllers {
                         sb.Append(",");
                     }
                     firstList = false;
-                    //sb.Append("{");
-                    //sb.AppendFormat("\"n\": \"{0}\"", "ExternalContent");
-                    //sb.AppendFormat(", \"v\": \"{0}\"", "ExternalContent");
-                    //sb.Append(", \"m\": [");
 
                     sb.Append("{");
                     dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
-                    //nameDynamicJsonArray = "List<generic>";
+
                     if (ExtertalFields.ContentObject != null) {
                         projectionDump = dumper.Dump(cleanobj(ExtertalFields.ContentObject), ExtertalFields.Name, "List<generic>");
                         JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
                     }
-                    //    sb.Append("}]}");
+
                     sb.Append("}");
                 }
 
@@ -327,15 +291,10 @@ namespace Laser.Orchard.Generator.Controllers {
 
                 #region [ WidgetsContainerPart ]
 
-                try {
-                    part = shape.ContentItem.WidgetsContainerPart;
-                }
-                catch {
-                    part = null;
-                }
+                part = content.ContentItem.Parts.FirstOrDefault(pa => pa.PartDefinition.Name == "WidgetsContainerPart");
                 if (part != null) {
-                    //var queryId = part.Record.QueryPartRecord.Id;
-                    if (_orchardServices.WorkContext.TryResolve<IWidgetManager>(out _widgetManager)) { // non semepre questo modulo è attivo quindi se non riesce a risolvere il servizio, bypassa la chiamata
+                    // See the comment above for the CalendarPart
+                    if (_orchardServices.WorkContext.TryResolve<IWidgetManager>(out _widgetManager)) { // non sempre questo modulo è attivo quindi se non riesce a risolvere il servizio, bypassa la chiamata
                         if (!firstList) {
                             sb.Append(",");
                         }
@@ -368,13 +327,11 @@ namespace Laser.Orchard.Generator.Controllers {
                 #region [ Taxonomy/TermsPart ]
 
                 part = null;
-                try {
-                    if (shape.ContentItem.ContentType.EndsWith("Term") || !String.IsNullOrWhiteSpace(shape.ContentItem.TypeDefinition.Settings["Taxonomy"])) {
-                        part = shape.ContentItem.TermPart;
-                    }
-                }
-                catch {
-                    part = null;
+                if (content.ContentItem.ContentType.EndsWith("Term")
+                    || (
+                        content.ContentItem.TypeDefinition.Settings.ContainsKey("Taxonomy")
+                        && !String.IsNullOrWhiteSpace(content.ContentItem.TypeDefinition.Settings["Taxonomy"]))) {
+                    part = content.ContentItem.Parts.FirstOrDefault(pa => pa.PartDefinition.Name == "TermPart");
                 }
                 if (part != null) {
                     if (!firstList) {
@@ -384,11 +341,9 @@ namespace Laser.Orchard.Generator.Controllers {
                     dynamic termContentItems;
                     if (resultTarget == ResultTarget.Terms) {
                         termContentItems = _taxonomyService.GetChildren(part, true);
-                    }
-                    else if (resultTarget == ResultTarget.SubTerms) {
+                    } else if (resultTarget == ResultTarget.SubTerms) {
                         termContentItems = _taxonomyService.GetChildren(part, false);
-                    }
-                    else {
+                    } else {
                         termContentItems = _taxonomyService.GetContentItems(part, (page - 1) * pageSize, pageSize);
                     }
 
@@ -397,8 +352,7 @@ namespace Laser.Orchard.Generator.Controllers {
                     if (resultTarget == ResultTarget.Contents) {
                         sb.AppendFormat("\"n\": \"{0}\"", "TaxonomyTermList");
                         sb.AppendFormat(", \"v\": \"{0}\"", "ContentItem[]");
-                    }
-                    else {
+                    } else {
                         sb.AppendFormat("\"n\": \"{0}\"", "TermPartList");
                         sb.AppendFormat(", \"v\": \"{0}\"", "TermPart[]");
                     }
@@ -413,8 +367,7 @@ namespace Laser.Orchard.Generator.Controllers {
                         if (resultTarget == ResultTarget.Contents) {
                             projectionDump = dumper.Dump(item.ContentItem, String.Format("[{0}]", i));
                             JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
-                        }
-                        else {
+                        } else {
                             var dumperForPart = new ObjectDumper(deeplevel, _filterContentFieldsParts, true, tinyResponse, complexBehaviour);
                             projectionDump = dumperForPart.Dump(item, "TermPart");
                             JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
