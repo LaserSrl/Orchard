@@ -1,0 +1,21 @@
+﻿@model Laser.Orchard.Cache.ViewModels.CacheUrlVM
+@using Laser.Orchard.Commons.Helpers;
+@{
+    Script.Require("jQuery_NestedModels").AtHead();
+}
+
+<h2>Cache Url</h2>
+<span class="hint">@T("Empty 'Url Scrap' to delete row")</span>
+
+@using (Html.BeginFormAntiForgeryPost()) {
+    <div id="master">
+        @Html.EditorFor(x => x.Cached)
+    </div>
+    <p style="margin: 10px 0px 10px 0px;">
+        <i class="fa fa-plus" style="color: green; margin-right:5px;"></i>
+        @Html.LinkToAddNestedForm(x => x.Cached, T("Add Cache Url").Text, "#master", ".singleCacheUrl")
+    </p>
+    <div class="box-footer align-right padding-right-35">
+        <button id="saveSettings" type="submit" name="submit.SaveSettings" value="yes please">@T("Save")</button>
+    </div>
+}
