@@ -340,6 +340,7 @@
     <Compile Include="Services\MaintenanceService.cs" />
     <Compile Include="TaxonomiesExtensions\Services\TaxonomyServiceExtension.cs" />
     <Compile Include="Tokens\AdditionalDateTokens.cs" />
+    <Compile Include="Tokens\ContentDateModified.cs" />
     <Compile Include="Tokens\OwnerEmailToken.cs" />
     <Compile Include="Tokens\ParameterToken.cs" />
     <Compile Include="Tokens\RazorCodeExecutionToken.cs" />
