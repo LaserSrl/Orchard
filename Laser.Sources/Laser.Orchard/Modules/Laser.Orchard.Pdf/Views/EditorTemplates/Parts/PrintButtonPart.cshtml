@@ -1,0 +1,2 @@
+﻿@model Laser.Orchard.Pdf.ViewModels.PrintButtonPartVM
+<button type="button" name="pdfPrintButton" value="PdfPrintButton" onclick="window.location.href='@Url.Action("Generate", "Pdf", new { @area = "Laser.Orchard.Pdf" })?tid=@Model.TemplateId&cid=@Model.ContentId';">@T("Print PDF")</button>

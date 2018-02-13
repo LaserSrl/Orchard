@@ -1,0 +1,9 @@
+﻿@model Laser.Orchard.Pdf.Models.PrintButtonPartSettings
+<fieldset>
+    <legend></legend>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.TemplateId)">@T("Template ID")</label>
+        @Html.TextBoxFor(m => m.TemplateId, new { @class = "text" })
+        <span class="hint">@T("Template to be used to generate a printable version of the content.")</span>
+    </div>
+</fieldset>
