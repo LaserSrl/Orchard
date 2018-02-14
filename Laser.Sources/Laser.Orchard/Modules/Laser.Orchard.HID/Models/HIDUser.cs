@@ -413,7 +413,7 @@ namespace Laser.Orchard.HID.Models {
                 case CredentialErrors.AuthorizationFailed:
                     // Authentication could have expired while this method was running
                     if (_HIDService.Authenticate() == AuthenticationErrors.NoError) {
-                        return IssueCredential(partNumber);
+                        return IssueCredential(partNumber, endpointId);
                     }
                     Error = UserErrors.AuthorizationFailed;
                     break;
