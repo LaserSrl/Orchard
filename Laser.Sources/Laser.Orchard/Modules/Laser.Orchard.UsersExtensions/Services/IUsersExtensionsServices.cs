@@ -54,12 +54,25 @@ namespace Laser.Orchard.UsersExtensions.Services {
         private readonly IShapeFactory _shapeFactory;
         private ISmsServices _smsServices;
         private readonly ICultureManager _cultureManager;
+        private readonly IAccountValidationService _accountValidationService;
 
         private static readonly TimeSpan DelayToResetPassword = new TimeSpan(1, 0, 0, 0); // 24 hours to reset password
         private readonly IRepository<CultureRecord> _repositoryCultures;
 
 
-        public UsersExtensionsServices(IOrchardServices orchardServices, IPolicyServices policySerivces, IMembershipService membershipService, IUtilsServices utilsServices, IAuthenticationService authenticationService, IUserService userService, IUserEventHandler userEventHandler, IShapeFactory shapeFactory, ICultureManager cultureManager, IRepository<CultureRecord> repositoryCultures) {
+        public UsersExtensionsServices(
+            IOrchardServices orchardServices, 
+            IPolicyServices policySerivces, 
+            IMembershipService membershipService, 
+            IUtilsServices utilsServices, 
+            IAuthenticationService authenticationService, 
+            IUserService userService, 
+            IUserEventHandler userEventHandler, 
+            IShapeFactory shapeFactory, 
+            ICultureManager cultureManager, 
+            IRepository<CultureRecord> repositoryCultures,
+            IAccountValidationService accountValidationService) {
+
             T = NullLocalizer.Instance;
             Log = NullLogger.Instance;
             _policySerivces = policySerivces;
@@ -72,6 +85,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
             _shapeFactory = shapeFactory;
             _cultureManager = cultureManager;
             _repositoryCultures = repositoryCultures;
+            _accountValidationService = accountValidationService;
         }
 
         public Localizer T { get; set; }
@@ -80,14 +94,15 @@ namespace Laser.Orchard.UsersExtensions.Services {
 
         int MinPasswordLength {
             get {
-                return _membershipService.GetSettings().MinRequiredPasswordLength;
+                return _membershipService.GetSettings().GetMinimumPasswordLength();
             }
         }
 
         public void Register(UserRegistration userRegistrationParams) {
             if (RegistrationSettings.UsersCanRegister) {
                 var policyAnswers = new List<PolicyForUserViewModel>();
-                if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy") && UserRegistrationExtensionsSettings.IncludePendingPolicy == Policy.IncludePendingPolicyOptions.Yes) {
+                if (_utilsServices.FeatureIsEnabled("Laser.Orchard.Policy") 
+                    && UserRegistrationExtensionsSettings.IncludePendingPolicy == Policy.IncludePendingPolicyOptions.Yes) {
                     IEnumerable<PolicyTextInfoPart> policies = GetUserLinkedPolicies(userRegistrationParams.Culture);
                     // controllo che tutte le policy abbiano una risposta e che le policy obbligatorie siano accettate 
                     var allRight = true;
@@ -117,7 +132,9 @@ namespace Laser.Orchard.UsersExtensions.Services {
                     }
                 }
                 var registrationErrors = new List<string>();
-                if (ValidateRegistration(userRegistrationParams.Username, userRegistrationParams.Email, userRegistrationParams.Password, userRegistrationParams.ConfirmPassword, out registrationErrors)) {
+                if (ValidateRegistration(userRegistrationParams.Username, userRegistrationParams.Email, 
+                    userRegistrationParams.Password, userRegistrationParams.ConfirmPassword, out registrationErrors)) {
+
                     var createdUser = _membershipService.CreateUser(new CreateUserParams(
                         userRegistrationParams.Username,
                         userRegistrationParams.Password,
@@ -126,6 +143,12 @@ namespace Laser.Orchard.UsersExtensions.Services {
                         userRegistrationParams.PasswordAnswer,
                         (RegistrationSettings.UsersAreModerated == false) && (RegistrationSettings.UsersMustValidateEmail == false)
                         ));
+                    // _membershipService.CreateUser may return null and tell nothing about why it failed to create the user
+                    // if the Creating user event handlers set the flag to cancel user creation.
+                    if (createdUser == null) {
+                        throw new SecurityException(T("User registration failed.").Text);
+                    }
+                    // here user was created
                     var favCulture = createdUser.As<FavoriteCulturePart>();
                     if (favCulture != null) {
                         var culture = _repositoryCultures.Fetch(x => x.Culture.Equals(userRegistrationParams.Culture)).SingleOrDefault();
@@ -138,8 +161,8 @@ namespace Laser.Orchard.UsersExtensions.Services {
                         }
                     }
                     if ((RegistrationSettings.UsersAreModerated == false) && (RegistrationSettings.UsersMustValidateEmail == false)) {
+                        _userEventHandler.LoggingIn(userRegistrationParams.Username, userRegistrationParams.Password);
                         _authenticationService.SignIn(createdUser, true);
-
                         // solleva l'evento LoggedIn sull'utente
                         _userEventHandler.LoggedIn(createdUser);
                     }
@@ -170,6 +193,7 @@ namespace Laser.Orchard.UsersExtensions.Services {
         public void SignIn(UserLogin userLoginParams) {
             var user = _membershipService.ValidateUser(userLoginParams.Username, userLoginParams.Password);
             if (user != null) {
+                _userEventHandler.LoggingIn(userLoginParams.Username, userLoginParams.Password);
                 _authenticationService.SignIn(user, true);
                 _userEventHandler.LoggedIn(user);
             } else {
@@ -179,6 +203,11 @@ namespace Laser.Orchard.UsersExtensions.Services {
 
         public void SignOut() {
             _authenticationService.SignOut();
+
+            var loggedUser = _authenticationService.GetAuthenticatedUser();
+            if (loggedUser != null) {
+                _userEventHandler.LoggedOut(loggedUser);
+            }
         }
 
         public string SendLostPasswordSms(string internationalPrefix, string phoneNumber, Func<string, string> createUrl) {
@@ -237,28 +266,23 @@ namespace Laser.Orchard.UsersExtensions.Services {
         }
 
         public bool ValidateRegistration(string userName, string email, string password, string confirmPassword, out List<string> errors) {
-            bool validate = true;
+            
             errors = new List<string>();
-            if (String.IsNullOrEmpty(userName)) {
-                errors.Add(T("You must specify a username.").Text);
-                validate = false;
-            } else {
-                if (userName.Length >= 255) {
-                    errors.Add(T("The username you provided is too long.").Text);
-                    validate = false;
+
+            IDictionary<string, LocalizedString> validationErrors;
+
+            var validate = _accountValidationService.ValidateUserName(userName, out validationErrors);
+            if (!validate) {
+                foreach (var error in validationErrors) {
+                    errors.Add(string.Format("{0}: {1}", error.Key, error.Value.Text));
                 }
             }
 
-            if (String.IsNullOrEmpty(email)) {
-                errors.Add(T("You must specify an email address.").Text);
-                validate = false;
-            } else if (email.Length >= 255) {
-                errors.Add(T("The email address you provided is too long.").Text);
-                validate = false;
-            } else if (!Regex.IsMatch(email, UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
-                // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx    
-                errors.Add(T("You must specify a valid email address.").Text);
-                validate = false;
+            validate &= _accountValidationService.ValidateEmail(email, out validationErrors);
+            if (!validate) {
+                foreach (var error in validationErrors) {
+                    errors.Add(string.Format("{0}: {1}", error.Key, error.Value.Text));
+                }
             }
 
             if (!validate)
@@ -267,9 +291,13 @@ namespace Laser.Orchard.UsersExtensions.Services {
             if (!_userService.VerifyUserUnicity(userName, email)) {
                 errors.Add(T("User with that username and/or email already exists.").Text);
             }
-            if (password == null || password.Length < MinPasswordLength) {
-                errors.Add(T("You must specify a password of {0} or more characters.", MinPasswordLength).Text);
+
+            if (!_accountValidationService.ValidatePassword(password, out validationErrors)) {
+                foreach (var error in validationErrors) {
+                    errors.Add(string.Format("{0}: {1}", error.Key, error.Value.Text));
+                }
             }
+            
             if (!String.Equals(password, confirmPassword, StringComparison.Ordinal)) {
                 errors.Add(T("The new password and confirmation password do not match.").Text);
             }

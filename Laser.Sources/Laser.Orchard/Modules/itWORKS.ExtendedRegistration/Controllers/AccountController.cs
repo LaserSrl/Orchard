@@ -25,11 +25,12 @@ namespace itWORKS.ExtendedRegistration.Controllers {
         private readonly IMembershipService _membershipService;
         private readonly IUserService _userService;
         private readonly IOrchardServices _orchardServices;
-        private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
         //private readonly IShapeFactory shapeFactory;
         private readonly IContentManager _contentManager;
         private readonly IFrontEndProfileService _frontEndProfileService;
         private readonly ShellSettings _shellSettings;
+        private readonly IUserEventHandler _userEventHandler;
+        private readonly IAccountValidationService _accountValidationService;
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
@@ -37,7 +38,7 @@ namespace itWORKS.ExtendedRegistration.Controllers {
 
         int MinPasswordLength {
             get {
-                return _membershipService.GetSettings().MinRequiredPasswordLength;
+                return _membershipService.GetSettings().GetMinimumPasswordLength();
             }
         }
 
@@ -48,21 +49,23 @@ namespace itWORKS.ExtendedRegistration.Controllers {
           IOrchardServices orchardServices,
           IShapeFactory shapeFactory,
           IContentManager contentManager,
-          IEnumerable<IUserEventHandler> userEventHandlers,
           IFrontEndProfileService frontEndProfileService,
-          ShellSettings shellSetting) {
+          ShellSettings shellSetting,
+            IUserEventHandler userEventHandler,
+            IAccountValidationService accountValidationService) {
 
             _authenticationService = authenticationService;
             _membershipService = membershipService;
             _userService = userService;
             _orchardServices = orchardServices;
-            _userEventHandlers = userEventHandlers;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
             _contentManager = contentManager;
             _frontEndProfileService = frontEndProfileService;
             _shellSettings = shellSetting;
+            _userEventHandler = userEventHandler;
+            _accountValidationService = accountValidationService;
         }
 
         public ActionResult Register() {
@@ -131,10 +134,8 @@ namespace itWORKS.ExtendedRegistration.Controllers {
                     var userPart2 = user.As<UserPart>();
                     if (user.As<UserPart>().EmailStatus == UserStatus.Pending) {
                         _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce })));
-
-                        foreach (var userEventHandler in _userEventHandlers) {
-                            userEventHandler.SentChallengeEmail(user);
-                        }
+                        
+                        _userEventHandler.SentChallengeEmail(user);
                         return RedirectToAction("ChallengeEmailSent", "Account", new { area = "Orchard.Users" });
                     }
 
@@ -142,8 +143,9 @@ namespace itWORKS.ExtendedRegistration.Controllers {
                         return RedirectToAction("RegistrationPending", "Account", new { area = "Orchard.Users" });
                     }
 
+                    _userEventHandler.LoggingIn(userName, password);
                     _authenticationService.SignIn(user, false /* createPersistentCookie */);
-
+                    _userEventHandler.LoggedIn(user);
 
                     if (!string.IsNullOrEmpty(returnUrl)) {
                         return this.RedirectLocal(returnUrl);
@@ -163,20 +165,21 @@ namespace itWORKS.ExtendedRegistration.Controllers {
         }
 
         private bool ValidateRegistration(string userName, string email, string password, string confirmPassword) {
-            bool validate = true;
 
-            if (String.IsNullOrEmpty(userName)) {
-                ModelState.AddModelError("username", T("You must specify a username."));
-                validate = false;
+            IDictionary<string, LocalizedString> validationErrors;
+
+            var validate = _accountValidationService.ValidateUserName(userName, out validationErrors);
+            if (!validate) {
+                foreach (var error in validationErrors) {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
             }
 
-            if (String.IsNullOrEmpty(email)) {
-                ModelState.AddModelError("email", T("You must specify an email address."));
-                validate = false;
-            } else if (!Regex.IsMatch(email, UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
-                // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx    
-                ModelState.AddModelError("email", T("You must specify a valid email address."));
-                validate = false;
+            validate &= _accountValidationService.ValidateEmail(email, out validationErrors);
+            if (!validate) {
+                foreach (var error in validationErrors) {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
             }
 
             if (!validate)
@@ -185,13 +188,24 @@ namespace itWORKS.ExtendedRegistration.Controllers {
             if (!_userService.VerifyUserUnicity(userName, email)) {
                 ModelState.AddModelError("userExists", T("User with that username and/or email already exists."));
             }
-            if (password == null || password.Length < MinPasswordLength) {
-                ModelState.AddModelError("password", T("You must specify a password of {0} or more characters.", MinPasswordLength));
-            }
+
+            ValidatePassword(password);
+
             if (!String.Equals(password, confirmPassword, StringComparison.Ordinal)) {
                 ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
             }
             return ModelState.IsValid;
+        }
+
+        private void ValidatePassword(string password) {
+            IDictionary<string, LocalizedString> validationErrors;
+
+            if (!_accountValidationService.ValidatePassword(password, out validationErrors)) {
+                foreach (var error in validationErrors) {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
+            }
+
         }
 
         private static string ErrorCodeToString(MembershipCreateStatus createStatus) {

@@ -359,5 +359,19 @@ namespace Laser.Orchard.Mobile {
             );
             return 37;
         }
+
+        /// <summary>
+        /// This update is due to the introduction of LastDeviceUserDataProvider to allow
+        /// unique authentication cookie for each of a user's device.
+        /// </summary>
+        /// <returns></returns>
+        public int UpdateFrom37() {
+            SchemaBuilder.CreateTable("LatestUUIDForUserRecord", table => table
+                .Column<int>("Id", column => column.PrimaryKey().Identity())
+                .Column<int>("UserPartRecord_Id")
+                .Column<string>("UUID", column => column.WithLength(400)));
+
+            return 38;
+        }
     }
 }
