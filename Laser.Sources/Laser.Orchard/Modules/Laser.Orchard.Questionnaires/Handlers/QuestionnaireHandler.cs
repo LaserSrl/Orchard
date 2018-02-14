@@ -21,7 +21,9 @@ namespace Laser.Orchard.Questionnaires.Handlers {
         protected void InitializeQuestionsToDisplay(QuestionnairePart part) {
             // Pre load some stuff in the QuestionsToDisplay property. This way, when we do _contentManager.Get(id)
             // of an item that has the QuestionnairePart, that property has a value already. We will want to set it
-            // back to null when building an editor sape, because we edit the List of QuestionRecords
+            // back to null when building an editor shape, because we edit the List of QuestionRecords
+            // We are going to set the QuestionsToDisplay property to null in the QuestionnairesServices called in the
+            // driver, because the BuildEditorShape handler is called after the Editor method from the driver.
             var qNumber = part.Settings
                 .GetModel<QuestionnairesPartSettingVM>()
                 .QuestionsSortedRandomlyNumber;
@@ -46,16 +48,7 @@ namespace Laser.Orchard.Questionnaires.Handlers {
                 }
             }
         }
-
-        protected override void BuildEditorShape(BuildEditorContext context) {
-            var part = context.Content.As<QuestionnairePart>();
-            if (part != null) {
-                part.QuestionsToDisplay = null;
-            }
-
-            base.BuildEditorShape(context);
-
-        }
+        
 
         protected override void BuildDisplayShape(BuildDisplayContext context) {
             base.BuildDisplayShape(context);
