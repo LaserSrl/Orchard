@@ -24,6 +24,7 @@ namespace Laser.Orchard.Pdf.Settings {
 
             // carica ogni campo dei settings
             builder.WithSetting("PrintButtonPartSettings.TemplateId", model.TemplateId.ToString());
+            builder.WithSetting("PrintButtonPartSettings.FileNameWithoutExtension", model.FileNameWithoutExtension);
 
             yield return DefinitionTemplate(model);
         }

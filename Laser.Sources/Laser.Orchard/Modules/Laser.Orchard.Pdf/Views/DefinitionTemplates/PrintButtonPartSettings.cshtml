@@ -1,9 +1,25 @@
 ﻿@model Laser.Orchard.Pdf.Models.PrintButtonPartSettings
+@using Laser.Orchard.TemplateManagement.Models;
+@{ 
+    List<SelectListItem> templateList = new List<SelectListItem>();
+    Laser.Orchard.TemplateManagement.Services.ITemplateService _templateService = null;
+    if(WorkContext.TryResolve<Laser.Orchard.TemplateManagement.Services.ITemplateService>(out _templateService)) {
+        foreach(TemplatePart tp in _templateService.GetTemplates()) {
+            templateList.Add(new SelectListItem { Text = tp.Title, Value = tp.Id.ToString(), Selected = (tp.Id == Model.TemplateId) });
+        }
+    }
+}
 <fieldset>
     <legend></legend>
     <div>
         <label for="@Html.FieldIdFor(m => m.TemplateId)">@T("Template ID")</label>
-        @Html.TextBoxFor(m => m.TemplateId, new { @class = "text" })
+        @Html.DropDownListFor(m => m.TemplateId, templateList)
         <span class="hint">@T("Template to be used to generate a printable version of the content.")</span>
     </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.FileNameWithoutExtension)">@T("File Name without extension")</label>
+        @Html.TextBoxFor(m => m.FileNameWithoutExtension, new { @class = "text large tokenized" })
+        <span class="hint">@T("Name of the file as downloaded by users. Extension pdf is added at the end of this name by the system.")</span>
+    </div>
 </fieldset>
+@Display.TokenHint()

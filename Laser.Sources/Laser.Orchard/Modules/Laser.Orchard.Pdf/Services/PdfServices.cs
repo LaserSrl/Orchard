@@ -16,7 +16,7 @@ namespace Laser.Orchard.Pdf.Services {
         public byte[] PdfFromHtml(string html) {
             byte[] buffer = null;
             using (var memoryStream = new MemoryStream()) {
-                using (var document = new Document(PageSize.A4, 50, 50, 60, 60)) {
+                using (var document = new Document(PageSize.A4, 50, 50, 10, 10)) {
                     using (var writer = PdfWriter.GetInstance(document, memoryStream)) {
                         using (var sr = new StringReader(html)) {
                             document.Open();
