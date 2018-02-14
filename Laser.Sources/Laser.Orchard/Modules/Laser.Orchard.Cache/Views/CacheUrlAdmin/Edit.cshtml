@@ -1,8 +1,15 @@
 ﻿@model Laser.Orchard.Cache.Models.CacheUrlRecord
+@using (Html.BeginForm("Edit", "CacheUrlAdmin", FormMethod.Post)) {
+    @Html.AntiForgeryToken()
+    <div style="float:right;">
+        <button type="submit" class="button primaryAction">@T("Save")</button>
+        @*<a class="button primaryAction" href="@Url.Action("Edit", "CacheUrlAdmin", new { area = "Laser.Orchard.Cache", id = 0 })" title="@T("Save")">@T("Save")</a>*@
+    </div>
 <div class="singleCacheUrl">
     <fieldset>
         <label>@T("Url Scrap")</label>
         @Html.TextBoxFor(m => m.CacheURL, new { @class = "text large" })
+        <span class="hint">@T("Empty 'Url Scrap' to delete row")</span>
         @Html.HiddenFor(m => m.Id)
         <div style="float:left">
             <label>@T("Duration")</label>
@@ -23,3 +30,4 @@
         @Display.TokenHint()
     </fieldset>
 </div>
+}
