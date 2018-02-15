@@ -175,7 +175,7 @@ namespace Laser.Orchard.HID.Controllers {
                     break;
                 case SearchErrors.AuthorizationFailed:
                     eCode = HIDErrorCode.AuthenticationFailed;
-                    rAction = HIDResolutionAction.TryAgain;
+                    rAction = HIDResolutionAction.NoAction;
                     message = T("There was an error while authenticating to the HID servers. This may be a temporary condition. Please try again.").Text;
                     break;
                 case SearchErrors.InternalServerError:
@@ -221,7 +221,7 @@ namespace Laser.Orchard.HID.Controllers {
                     break;
                 case UserErrors.AuthorizationFailed:
                     eCode = HIDErrorCode.AuthenticationFailed;
-                    rAction = HIDResolutionAction.TryAgain;
+                    rAction = HIDResolutionAction.NoAction;
                     message = T("There was an error while authenticating to the HID servers. This may be a temporary condition. Please try again.").Text;
                     break;
                 case UserErrors.InternalServerError:
@@ -268,7 +268,7 @@ namespace Laser.Orchard.HID.Controllers {
                     break;
                 case CredentialErrors.AuthorizationFailed:
                     eCode = HIDErrorCode.AuthenticationFailed;
-                    rAction = HIDResolutionAction.TryAgain;
+                    rAction = HIDResolutionAction.NoAction;
                     message = T("There was an error while authenticating to the HID servers. This may be a temporary condition. Please try again.").Text;
                     break;
                 default:
