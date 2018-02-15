@@ -27,7 +27,9 @@ namespace Laser.Orchard.Pdf.Controllers {
             editModel.Add("Content", ci);
             templateCtx.Model = editModel;
             var html = _templateService.ParseTemplate(template, templateCtx);
-            var buffer = _pdfServices.PdfFromHtml(html);
+            var headerFooter = _pdfServices.GetHtmlHeaderFooterPageEvent("<img src=\"http://localhost/Laser.Orchard/Media/AppRetailTest/menu/titolo.png\" style=\"width:300px;padding-top:20px\" />", 
+                "<img src=\"http://localhost/Laser.Orchard/Media/AppRetailTest/menu/gallery.png\" />");
+            var buffer = _pdfServices.PdfFromHtml(html, "A4", 50, 50, 100, 200, false, headerFooter);
             var fileName = string.Format("{0}.pdf", (fn ?? "page"));
             return File(buffer, "application/pdf", fileName);
         }

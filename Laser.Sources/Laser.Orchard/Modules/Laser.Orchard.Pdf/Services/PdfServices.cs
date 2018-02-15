@@ -21,7 +21,7 @@ namespace Laser.Orchard.Pdf.Services {
         /// <param name="marginBottom">Default 10.</param>
         /// <param name="landscape">Default false.</param>
         /// <returns></returns>
-        byte[] PdfFromHtml(string html, string pageSize = "A4", int marginLeft = 50, int marginRight = 50, int marginTop = 10, int marginBottom = 10, bool landscape = false);
+        byte[] PdfFromHtml(string html, string pageSize = "A4", int marginLeft = 50, int marginRight = 50, int marginTop = 10, int marginBottom = 10, bool landscape = false, IPdfPageEvent pdfPageEvent = null);
         /// <summary>
         /// 
         /// </summary>
@@ -33,10 +33,11 @@ namespace Laser.Orchard.Pdf.Services {
         /// <param name="marginTop">Default 10.</param>
         /// <param name="marginBottom">Default 10.</param>
         /// <returns></returns>
-        byte[] PdfFromHtml(string html, float width, float height, int marginLeft = 50, int marginRight = 50, int marginTop = 10, int marginBottom = 10);
+        byte[] PdfFromHtml(string html, float width, float height, int marginLeft = 50, int marginRight = 50, int marginTop = 10, int marginBottom = 10, IPdfPageEvent pdfPageEvent = null);
+        IPdfPageEvent GetHtmlHeaderFooterPageEvent(string header, string footer);
     }
     public class PdfServices : IPdfServices {
-        public byte[] PdfFromHtml(string html, string pageSize = "A4", int marginLeft = 50, int marginRight = 50, int marginTop = 10, int marginBottom = 10, bool landscape = false) {
+        public byte[] PdfFromHtml(string html, string pageSize = "A4", int marginLeft = 50, int marginRight = 50, int marginTop = 10, int marginBottom = 10, bool landscape = false, IPdfPageEvent pdfPageEvent = null) {
             var effectivePageSize = PageSize.A4;
             switch (pageSize.ToUpper()) {
                 case "A5":
@@ -61,14 +62,15 @@ namespace Laser.Orchard.Pdf.Services {
             if (landscape) {
                 effectivePageSize = effectivePageSize.Rotate();
             }
-            return PdfFromHtml(html, effectivePageSize.Width, effectivePageSize.Height, marginLeft, marginRight, marginTop, marginBottom);
+            return PdfFromHtml(html, effectivePageSize.Width, effectivePageSize.Height, marginLeft, marginRight, marginTop, marginBottom, pdfPageEvent);
         }
-        public byte[] PdfFromHtml(string html, float width, float height, int marginLeft = 50, int marginRight = 50, int marginTop = 10, int marginBottom = 10) {
+        public byte[] PdfFromHtml(string html, float width, float height, int marginLeft = 50, int marginRight = 50, int marginTop = 50, int marginBottom = 10, IPdfPageEvent pdfPageEvent = null) {
             var effectivePageSize = new Rectangle(width, height);
             byte[] buffer = null;
             using (var memoryStream = new MemoryStream()) {
-                using (var document = new Document(effectivePageSize, 50, 50, 10, 10)) {
+                using (var document = new Document(effectivePageSize, marginLeft, marginRight, marginTop, marginBottom)) {
                     using (var writer = PdfWriter.GetInstance(document, memoryStream)) {
+                        writer.PageEvent = pdfPageEvent;
                         using (var sr = new StringReader(html)) {
                             document.Open();
                             XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, sr);
@@ -79,6 +81,36 @@ namespace Laser.Orchard.Pdf.Services {
                 }
             }
             return buffer;
+        }
+        public IPdfPageEvent GetHtmlHeaderFooterPageEvent(string header, string footer) {
+            return new HtmlHeaderFooterPageEvent(header, footer);
+        }
+    }
+    class HtmlHeaderFooterPageEvent : PdfPageEventHelper {
+        private ElementList header;
+        private ElementList footer;
+        public HtmlHeaderFooterPageEvent(string htmlHeader = "", string htmlFooter = "") {
+            header = XMLWorkerHelper.ParseToElementList(htmlHeader ?? "", null);
+            footer = XMLWorkerHelper.ParseToElementList(htmlFooter ?? "", null);
+        }
+        public override void OnEndPage(PdfWriter writer, Document document) {
+            var ct = new ColumnText(writer.DirectContent);
+            if(header.Count > 0) {
+                ct.SetSimpleColumn(document.LeftMargin, document.Top, document.Right, document.Top + document.TopMargin);
+                ct.Alignment = Element.ALIGN_BOTTOM;
+                foreach (var el in header) {
+                    ct.AddElement(el);
+                }
+                ct.Go();
+            }
+            if (footer.Count > 0) {
+                ct.SetSimpleColumn(document.LeftMargin, document.Bottom - document.BottomMargin, document.Right, document.BottomMargin);
+                ct.Alignment = Element.ALIGN_TOP;
+                foreach (var el in footer) {
+                    ct.AddElement(el);
+                }
+                ct.Go();
+            }
         }
     }
 }
