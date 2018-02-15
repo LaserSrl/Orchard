@@ -66,19 +66,32 @@ namespace Laser.Orchard.HID.Controllers {
                 if (searchResult.Error == SearchErrors.NoError) {
                     var hidUser = searchResult.User;
                     if (hidUser.Error == UserErrors.NoError) {
-                        hidUser = _HIDCredentialsService.IssueCredentials(hidUser, _HIDPartNumbersService.GetPartNumbersForUser(caller), endpointId);
-                        if (hidUser.Error == UserErrors.NoError) {
-                            success = true;
-                            eCode = HIDErrorCode.NoError;
-                            message = T("Credentials issued. Synchronize your device with the TSM.").Text;
-                        } else if (hidUser.Error == UserErrors.InvalidParameters) {
-                            success = false;
-                            eCode = HIDErrorCode.UserHasNoCredentialContainers;
-                            rAction = HIDResolutionAction.NoAction;
-                            message = T("There was an error with the parameters passed: endpoint ID not valid for the user. EndpointId: {0}; UserName: {1}; Email: {2}", endpoint.endpointId, caller.UserName, caller.Email).Text;
-                        } else {
-                            HandleHIDUserError(hidUser, caller, out eCode, out rAction, out message);
-                        }
+                        // Handle the cases where no credential should be issued:
+                        // 1. The configuration is such that the user has no right to any part number, not even the default one
+                        // 2. The user already has all the credentials, so we issue none here
+                        var partNumbers = _HIDPartNumbersService.GetPartNumbersForUser(caller);
+                        //if (partNumbers.Any() || !_HIDAdminService.GetSiteSettings().PreventDefaultPartNumber) {
+                        //    // the caller has rights to some part numbers
+
+                            hidUser = _HIDCredentialsService.IssueCredentials(hidUser, partNumbers, endpointId);
+                            if (hidUser.Error == UserErrors.NoError) {
+                                // We either issued the required credentials, or those had been issued before
+                                success = true;
+                                eCode = HIDErrorCode.NoError;
+                                message = T("Credentials issued. Synchronize your device with the TSM.").Text;
+                            } else if (hidUser.Error == UserErrors.InvalidParameters) {
+                                success = false;
+                                eCode = HIDErrorCode.UserHasNoCredentialContainers;
+                                rAction = HIDResolutionAction.NoAction;
+                                message = T("There was an error with the parameters passed: endpoint ID not valid for the user. EndpointId: {0}; UserName: {1}; Email: {2}", endpoint.endpointId, caller.UserName, caller.Email).Text;
+                            } else {
+                                HandleHIDUserError(hidUser, caller, out eCode, out rAction, out message);
+                            }
+                        //} else {
+                        //    // The caller has no rights to any part number. Revoking credentials should be handled elsewhere. Here we
+                        //    // should be safe in the assumption that there is no need for us to revoke any credential.
+                        //}
+
                     } else {
                         HandleHIDUserError(hidUser, caller, out eCode, out rAction, out message);
                     }
