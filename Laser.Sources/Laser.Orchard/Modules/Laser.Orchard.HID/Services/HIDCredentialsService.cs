@@ -58,11 +58,14 @@ namespace Laser.Orchard.HID.Services {
                 var oldCredentials = CredentialsFromUser(hidUser);
                 hidUser = hidUser.IssueCredential(""); //this assigns the default part number for the customer
                 if (hidUser.Error == UserErrors.NoError || hidUser.Error == UserErrors.PreconditionFailed) {
-                    // trigger events on success
-                    _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") {
-                        User = user,
-                        AffectedCredentials = AffectedCredentials(hidUser, oldCredentials)
-                    });
+                    // trigger events on success if something actually changed
+                    var effect = AffectedCredentials(hidUser, oldCredentials);
+                    if (effect.Any()) {
+                        _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") {
+                            User = user,
+                            AffectedCredentials = effect
+                        });
+                    }
                 }
             } else {
                 foreach (var pn in partNumbers) {
@@ -76,11 +79,14 @@ namespace Laser.Orchard.HID.Services {
                         break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential having been
                                 //assigned already, which is fine
                     }
-                    // trigger events on success
-                    _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, pn) {
-                        User = user,
-                        AffectedCredentials = AffectedCredentials(hidUser, oldCredentials)
-                    });
+                    // trigger events on success if something actually changed
+                    var effect = AffectedCredentials(hidUser, oldCredentials);
+                    if (effect.Any()) {
+                        _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, pn) {
+                            User = user,
+                            AffectedCredentials = effect
+                        });
+                    }
                 }
             }
             return hidUser;
@@ -107,11 +113,14 @@ namespace Laser.Orchard.HID.Services {
                     var oldCredentials = CredentialsFromUser(hidUser);
                     hidUser = hidUser.IssueCredential("", endpointId.Value);
                     if (hidUser.Error == UserErrors.NoError || hidUser.Error == UserErrors.PreconditionFailed) {
-                        // trigger events on success
-                        _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") {
-                            User = user,
-                            AffectedCredentials = AffectedCredentials(hidUser, oldCredentials)
-                        });
+                        // trigger events on success if something actually changed
+                        var effect = AffectedCredentials(hidUser, oldCredentials);
+                        if (effect.Any()) {
+                            _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, "") {
+                                User = user,
+                                AffectedCredentials = effect
+                            });
+                        }
                     }
                 } else {
                     foreach (var pn in partNumbers) {
@@ -125,11 +134,14 @@ namespace Laser.Orchard.HID.Services {
                             break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential having been
                                     //assigned already, which is fine.
                         }
-                        // trigger events on success
-                        _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, pn) {
-                            User = user,
-                            AffectedCredentials = AffectedCredentials(hidUser, oldCredentials)
-                        });
+                        // trigger events on success if something actually changed
+                        var effect = AffectedCredentials(hidUser, oldCredentials);
+                        if (effect.Any()) {
+                            _HIDEventHandlers.HIDCredentialIssued(new HIDCredentialEventContext(hidUser, pn) {
+                                User = user,
+                                AffectedCredentials = effect
+                            });
+                        }
                     }
                 }
             } else {
@@ -148,11 +160,14 @@ namespace Laser.Orchard.HID.Services {
                 var oldCredentials = CredentialsFromUser(hidUser);
                 hidUser = hidUser.RevokeCredential();
                 if (hidUser.Error == UserErrors.NoError || hidUser.Error == UserErrors.PreconditionFailed) {
-                    // trigger events on success
-                    _HIDEventHandlers.HIDCredentialRevoked(new HIDCredentialEventContext(hidUser, "") {
-                        User = user,
-                        AffectedCredentials = AffectedCredentials(hidUser, oldCredentials)
-                    });
+                    // trigger events on success if something actually changed
+                    var effect = AffectedCredentials(hidUser, oldCredentials);
+                    if (effect.Any()) {
+                        _HIDEventHandlers.HIDCredentialRevoked(new HIDCredentialEventContext(hidUser, "") {
+                            User = user,
+                            AffectedCredentials = effect
+                        });
+                    }
                 }
             } else {
                 foreach (var pn in partNumbers) {
@@ -166,11 +181,14 @@ namespace Laser.Orchard.HID.Services {
                         break;  //break on error, but not on PreconditionFailed, because that may be caused by the credential being
                         //revoked right now
                     }
-                    // trigger events on success
-                    _HIDEventHandlers.HIDCredentialRevoked(new HIDCredentialEventContext(hidUser, pn) {
-                        User = user,
-                        AffectedCredentials = AffectedCredentials(hidUser, oldCredentials)
-                    });
+                    // trigger events on success if something actually changed
+                    var effect = AffectedCredentials(hidUser, oldCredentials);
+                    if (effect.Any()) {
+                        _HIDEventHandlers.HIDCredentialRevoked(new HIDCredentialEventContext(hidUser, pn) {
+                            User = user,
+                            AffectedCredentials = effect
+                        });
+                    }
                 }
             }
             return hidUser;
