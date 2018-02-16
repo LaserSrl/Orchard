@@ -1,3 +1,3 @@
 ﻿@model Laser.Orchard.Pdf.ViewModels.PrintButtonPartVM
-<button type="button" name="previewButton" value="PreviewButton" onclick="window.open('@Url.Action("Preview", "Pdf", new { @area = "Laser.Orchard.Pdf" })?tid=@Model.TemplateId&cid=@Model.ContentId');">@T("Print Preview")</button>
-<button type="button" name="pdfPrintButton" value="PdfPrintButton" onclick="window.location.href='@Url.Action("Generate", "Pdf", new { @area = "Laser.Orchard.Pdf" })?tid=@Model.TemplateId&cid=@Model.ContentId&fn=@Url.Encode(Model.FileNameWithoutExtension)';">@T("Print PDF")</button>
+<button type="button" name="previewButton" value="PreviewButton" onclick="window.open('@Url.Action("Preview", "Pdf", new { @area = "Laser.Orchard.Pdf" })?cid=@Model.ContentId');">@T("Print Preview")</button>
+<button type="button" name="pdfPrintButton" value="PdfPrintButton" onclick="window.location.href='@Url.Action("Generate", "Pdf", new { @area = "Laser.Orchard.Pdf" })?cid=@Model.ContentId';">@T("Print PDF")</button>

@@ -7,6 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.IO;
+using Orchard.Tokens;
+using Orchard.Logging;
+using Orchard.Localization;
+using Laser.Orchard.Pdf.Services.PageEvents;
 
 namespace Laser.Orchard.Pdf.Services {
     public interface IPdfServices : IDependency {
@@ -37,6 +41,12 @@ namespace Laser.Orchard.Pdf.Services {
         IPdfPageEvent GetHtmlHeaderFooterPageEvent(string header, string footer);
     }
     public class PdfServices : IPdfServices {
+        public ILogger Logger { get; set; }
+        public Localizer T { get; set; }
+        public PdfServices() {
+            Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
+        }
         public byte[] PdfFromHtml(string html, string pageSize = "A4", int marginLeft = 50, int marginRight = 50, int marginTop = 10, int marginBottom = 10, bool landscape = false, IPdfPageEvent pdfPageEvent = null) {
             var effectivePageSize = PageSize.A4;
             switch (pageSize.ToUpper()) {
@@ -83,34 +93,7 @@ namespace Laser.Orchard.Pdf.Services {
             return buffer;
         }
         public IPdfPageEvent GetHtmlHeaderFooterPageEvent(string header, string footer) {
-            return new HtmlHeaderFooterPageEvent(header, footer);
-        }
-    }
-    class HtmlHeaderFooterPageEvent : PdfPageEventHelper {
-        private ElementList header;
-        private ElementList footer;
-        public HtmlHeaderFooterPageEvent(string htmlHeader = "", string htmlFooter = "") {
-            header = XMLWorkerHelper.ParseToElementList(htmlHeader ?? "", null);
-            footer = XMLWorkerHelper.ParseToElementList(htmlFooter ?? "", null);
-        }
-        public override void OnEndPage(PdfWriter writer, Document document) {
-            var ct = new ColumnText(writer.DirectContent);
-            if(header.Count > 0) {
-                ct.SetSimpleColumn(document.LeftMargin, document.Top, document.Right, document.Top + document.TopMargin);
-                ct.Alignment = Element.ALIGN_BOTTOM;
-                foreach (var el in header) {
-                    ct.AddElement(el);
-                }
-                ct.Go();
-            }
-            if (footer.Count > 0) {
-                ct.SetSimpleColumn(document.LeftMargin, document.Bottom - document.BottomMargin, document.Right, document.BottomMargin);
-                ct.Alignment = Element.ALIGN_TOP;
-                foreach (var el in footer) {
-                    ct.AddElement(el);
-                }
-                ct.Go();
-            }
+            return new HtmlHeaderFooter(header, footer);
         }
     }
 }

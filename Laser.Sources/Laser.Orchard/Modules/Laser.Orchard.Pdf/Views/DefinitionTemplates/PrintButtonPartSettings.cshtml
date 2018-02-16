@@ -21,5 +21,15 @@
         @Html.TextBoxFor(m => m.FileNameWithoutExtension, new { @class = "text large tokenized" })
         <span class="hint">@T("Name of the file as downloaded by users. Extension pdf is added at the end of this name by the system.")</span>
     </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Header)">@T("Header")</label>
+        @Html.TextBoxFor(m => m.Header, new { @class = "text large tokenized" })
+        <span class="hint">@T("Header of each page in PDF document. Leave blank for no header.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Footer)">@T("Footer")</label>
+        @Html.TextBoxFor(m => m.Footer, new { @class = "text large tokenized" })
+        <span class="hint">@T("Footer of each page in PDF document. Leave blank for no footer.")</span>
+    </div>
 </fieldset>
 @Display.TokenHint()

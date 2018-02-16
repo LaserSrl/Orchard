@@ -92,6 +92,7 @@
     <Compile Include="Models\PrintButtonPart.cs" />
     <Compile Include="Models\PrintButtonPartSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\PageEvents\HtmlHeaderFooter.cs" />
     <Compile Include="Services\PdfServices.cs" />
     <Compile Include="Settings\PrintButtonPartSettingsHooks.cs" />
     <Compile Include="ViewModels\PrintButtonPartVM.cs" />

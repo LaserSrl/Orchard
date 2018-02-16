@@ -1,15 +1,10 @@
 ﻿using Laser.Orchard.Pdf.Models;
 using Laser.Orchard.Pdf.ViewModels;
-using Laser.Orchard.TemplateManagement.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Laser.Orchard.Pdf.Drivers {
     public class PrintButtonPartDriver : ContentPartDriver<PrintButtonPart> {
@@ -28,10 +23,7 @@ namespace Laser.Orchard.Pdf.Drivers {
             return Editor(part, shapeHelper);
         }
         protected override DriverResult Editor(PrintButtonPart part, dynamic shapeHelper) {
-            var settings = part.Settings.GetModel<PrintButtonPartSettings>();
-            var ctx = new Dictionary<string, object>() { { "Content", part.ContentItem } };
-            var fileName = _tokenizer.Replace(settings.FileNameWithoutExtension, ctx);
-            var model = new PrintButtonPartVM { TemplateId = settings.TemplateId, ContentId = part.Id, FileNameWithoutExtension = fileName };
+            var model = new PrintButtonPartVM { ContentId = part.Id };
             return ContentShape("Parts_PrintButtonPart", () => 
                 shapeHelper.EditorTemplate(TemplateName: "Parts/PrintButtonPart", Model: model, Prefix: Prefix));
         }
