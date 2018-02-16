@@ -81,6 +81,8 @@ namespace Laser.Orchard.HID.Controllers {
                                 rAction = HIDResolutionAction.NoAction;
                                 message = T("There was an error with the parameters passed: endpoint ID not valid for the user. EndpointId: {0}; UserName: {1}; Email: {2}", endpoint.endpointId, caller.UserName, caller.Email).Text;
                             } else {
+                                // To know whether new credentials will be issued, we need to get here the list of credentials in the desired container
+                                // and later compare it to the same list after the call has returned with no errors.
                                 hidUser = _HIDCredentialsService.IssueCredentials(hidUser, partNumbers, endpointId);
                                 if (hidUser.Error == UserErrors.NoError) {
                                     // We either issued the required credentials, or those had been issued before
