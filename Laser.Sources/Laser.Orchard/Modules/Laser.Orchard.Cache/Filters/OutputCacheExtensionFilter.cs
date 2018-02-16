@@ -112,12 +112,12 @@ namespace Laser.Orchard.Cache.Filters {
             var keyToAdd = "";
             if (cachedUrl != null) {
                 if (_cacheRouteConfig == null) {
-                    keyToAdd= _tokenizer.Replace(cachedUrl.Url, new Dictionary<string, object>());// { { "Content", part.ContentItem } };)
+                    keyToAdd="CacheUrl="+ _tokenizer.Replace(cachedUrl.Url, new Dictionary<string, object>())+";";// { { "Content", part.ContentItem } };)
                     _cacheRouteConfig = cachedUrl;
                 }
                 else
                     if (cachedUrl.Priority >= _cacheRouteConfig.Priority) {
-                    keyToAdd=_tokenizer.Replace(cachedUrl.Url, new Dictionary<string, object>());
+                    keyToAdd= "CacheUrl=" + _tokenizer.Replace(cachedUrl.Url, new Dictionary<string, object>()) + ";";
                     _cacheRouteConfig = cachedUrl;
                 }
             }

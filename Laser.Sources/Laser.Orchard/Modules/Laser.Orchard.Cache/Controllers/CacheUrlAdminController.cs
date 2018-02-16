@@ -63,6 +63,7 @@ namespace Laser.Orchard.Cache.Controllers {
             if (record.Id == 0) {
                 if (!string.IsNullOrEmpty(record.CacheURL)) {
                     record.CacheURL = record.CacheURL.ToLower();
+                    record.CacheToken = record.CacheToken.Replace("}{", "}||{");
                     _cacheUrlRepository.Create(record);
                 }
             }
@@ -72,11 +73,12 @@ namespace Laser.Orchard.Cache.Controllers {
                 }
                 else {
                     record.CacheURL = record.CacheURL.ToLower();
+                    record.CacheToken = record.CacheToken.Replace("}{", "}||{");
                     _cacheUrlRepository.Update(record);
                 }
             }
             _cacheUrlRepository.Flush();
-            _cacheAliasServices.RefreshCachedRouteConfig(_cacheUrlRepository);
+            _cacheAliasServices.RefreshCachedRouteConfig();// _cacheUrlRepository);         
             return RedirectToAction("Index");
         }
     }
