@@ -14,7 +14,6 @@ namespace Laser.Orchard.Pdf.Services.PageEvents {
             var ct = new ColumnText(writer.DirectContent);
             if (header.Count > 0) {
                 ct.SetSimpleColumn(document.LeftMargin, document.Top, document.Right, document.Top + document.TopMargin);
-                ct.Alignment = Element.ALIGN_BOTTOM;
                 foreach (var el in header) {
                     ct.AddElement(el);
                 }
@@ -22,7 +21,6 @@ namespace Laser.Orchard.Pdf.Services.PageEvents {
             }
             if (footer.Count > 0) {
                 ct.SetSimpleColumn(document.LeftMargin, document.Bottom - document.BottomMargin, document.Right, document.BottomMargin);
-                ct.Alignment = Element.ALIGN_BOTTOM;
                 foreach (var el in footer) {
                     ct.AddElement(el);
                 }

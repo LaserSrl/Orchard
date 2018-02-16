@@ -47,10 +47,10 @@ namespace Laser.Orchard.Pdf.Controllers {
                     var footer = _tokenizer.Replace(settings.Footer, editModel);
                     byte[] buffer = null;
                     if (string.IsNullOrWhiteSpace(header) && string.IsNullOrWhiteSpace(footer)) {
-                        buffer = _pdfServices.PdfFromHtml(html, "A4", 50, 50, 10, 10, false);
+                        buffer = _pdfServices.PdfFromHtml(html, "A4", 50, 50, settings.HeaderHeight, settings.FooterHeight, false);
                     } else {
                         var headerFooter = _pdfServices.GetHtmlHeaderFooterPageEvent(header, footer);
-                        buffer = _pdfServices.PdfFromHtml(html, "A4", 50, 50, 100, 200, false, headerFooter);
+                        buffer = _pdfServices.PdfFromHtml(html, "A4", 50, 50, settings.HeaderHeight, settings.FooterHeight, false, headerFooter);
                     }
                     var fileName = _tokenizer.Replace(settings.FileNameWithoutExtension, editModel);
                     fileName = string.Format("{0}.pdf", (string.IsNullOrWhiteSpace(fileName)? "page" : fileName.Trim()));

@@ -23,13 +23,23 @@
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.Header)">@T("Header")</label>
-        @Html.TextBoxFor(m => m.Header, new { @class = "text large tokenized" })
+        @Html.TextAreaFor(m => m.Header, new { @class = "text large tokenized" })
         <span class="hint">@T("Header of each page in PDF document. Leave blank for no header.")</span>
     </div>
     <div>
+        <label for="@Html.FieldIdFor(m => m.HeaderHeight)">@T("Header Height")</label>
+        @Html.TextBoxFor(m => m.HeaderHeight, new { @class = "text medium tokenized", @type = "number" })
+        <span class="hint">@T("Top margin of the page in PDF document. Default 10.")</span>
+    </div>
+    <div>
         <label for="@Html.FieldIdFor(m => m.Footer)">@T("Footer")</label>
-        @Html.TextBoxFor(m => m.Footer, new { @class = "text large tokenized" })
+        @Html.TextAreaFor(m => m.Footer, new { @class = "text large tokenized" })
         <span class="hint">@T("Footer of each page in PDF document. Leave blank for no footer.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.FooterHeight)">@T("Footer Height")</label>
+        @Html.TextBoxFor(m => m.FooterHeight, new { @class = "text medium tokenized", @type = "number" })
+        <span class="hint">@T("Bottom margin of the page in PDF document. Default 10.")</span>
     </div>
 </fieldset>
 @Display.TokenHint()

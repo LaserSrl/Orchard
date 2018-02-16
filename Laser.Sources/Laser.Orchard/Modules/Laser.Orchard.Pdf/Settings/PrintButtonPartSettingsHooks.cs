@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Globalization;
 
 namespace Laser.Orchard.Pdf.Settings {
     public class PrintButtonPartSettingsHooks : ContentDefinitionEditorEventsBase {
@@ -27,6 +28,8 @@ namespace Laser.Orchard.Pdf.Settings {
             builder.WithSetting("PrintButtonPartSettings.FileNameWithoutExtension", model.FileNameWithoutExtension);
             builder.WithSetting("PrintButtonPartSettings.Header", model.Header);
             builder.WithSetting("PrintButtonPartSettings.Footer", model.Footer);
+            builder.WithSetting("PrintButtonPartSettings.HeaderHeight", model.HeaderHeight.ToString(CultureInfo.InvariantCulture));
+            builder.WithSetting("PrintButtonPartSettings.FooterHeight", model.FooterHeight.ToString(CultureInfo.InvariantCulture));
 
             yield return DefinitionTemplate(model);
         }

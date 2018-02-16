@@ -2,12 +2,7 @@
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.IO;
-using Orchard.Tokens;
 using Orchard.Logging;
 using Orchard.Localization;
 using Laser.Orchard.Pdf.Services.PageEvents;
@@ -25,7 +20,7 @@ namespace Laser.Orchard.Pdf.Services {
         /// <param name="marginBottom">Default 10.</param>
         /// <param name="landscape">Default false.</param>
         /// <returns></returns>
-        byte[] PdfFromHtml(string html, string pageSize = "A4", int marginLeft = 50, int marginRight = 50, int marginTop = 10, int marginBottom = 10, bool landscape = false, IPdfPageEvent pdfPageEvent = null);
+        byte[] PdfFromHtml(string html, string pageSize = "A4", float marginLeft = 50, float marginRight = 50, float marginTop = 10, float marginBottom = 10, bool landscape = false, IPdfPageEvent pdfPageEvent = null);
         /// <summary>
         /// 
         /// </summary>
@@ -37,7 +32,7 @@ namespace Laser.Orchard.Pdf.Services {
         /// <param name="marginTop">Default 10.</param>
         /// <param name="marginBottom">Default 10.</param>
         /// <returns></returns>
-        byte[] PdfFromHtml(string html, float width, float height, int marginLeft = 50, int marginRight = 50, int marginTop = 10, int marginBottom = 10, IPdfPageEvent pdfPageEvent = null);
+        byte[] PdfFromHtml(string html, float width, float height, float marginLeft = 50, float marginRight = 50, float marginTop = 10, float marginBottom = 10, IPdfPageEvent pdfPageEvent = null);
         IPdfPageEvent GetHtmlHeaderFooterPageEvent(string header, string footer);
     }
     public class PdfServices : IPdfServices {
@@ -47,7 +42,7 @@ namespace Laser.Orchard.Pdf.Services {
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
-        public byte[] PdfFromHtml(string html, string pageSize = "A4", int marginLeft = 50, int marginRight = 50, int marginTop = 10, int marginBottom = 10, bool landscape = false, IPdfPageEvent pdfPageEvent = null) {
+        public byte[] PdfFromHtml(string html, string pageSize = "A4", float marginLeft = 50, float marginRight = 50, float marginTop = 10, float marginBottom = 10, bool landscape = false, IPdfPageEvent pdfPageEvent = null) {
             var effectivePageSize = PageSize.A4;
             switch (pageSize.ToUpper()) {
                 case "A5":
@@ -74,7 +69,7 @@ namespace Laser.Orchard.Pdf.Services {
             }
             return PdfFromHtml(html, effectivePageSize.Width, effectivePageSize.Height, marginLeft, marginRight, marginTop, marginBottom, pdfPageEvent);
         }
-        public byte[] PdfFromHtml(string html, float width, float height, int marginLeft = 50, int marginRight = 50, int marginTop = 50, int marginBottom = 10, IPdfPageEvent pdfPageEvent = null) {
+        public byte[] PdfFromHtml(string html, float width, float height, float marginLeft = 50, float marginRight = 50, float marginTop = 10, float marginBottom = 10, IPdfPageEvent pdfPageEvent = null) {
             var effectivePageSize = new Rectangle(width, height);
             byte[] buffer = null;
             using (var memoryStream = new MemoryStream()) {
