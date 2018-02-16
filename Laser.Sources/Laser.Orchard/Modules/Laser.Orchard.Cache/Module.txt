@@ -8,4 +8,4 @@ Description: Description for the module
 Features:
     Laser.Orchard.Cache:
         Description: Description for feature Laser.Orchard.Cache.
-		Dependencies: Orchard.OutputCache,Orchard.Tokens,Laser.Orchard.jQueryPlugins
+		Dependencies: Orchard.OutputCache,Orchard.Tokens

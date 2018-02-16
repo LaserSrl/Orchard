@@ -112,8 +112,6 @@
     <Compile Include="ViewModels\SearchIndexVM.cs" />
     <Compile Include="ViewModels\SearchVM.cs" />
     <Content Include="Placement.info" />
-    <Content Include="Views\CacheUrlAdmin\index.cshtml" />
-    <Content Include="Views\EditorTemplates\CacheUrlRecord.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\Styles.css" />
@@ -125,14 +123,10 @@
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
-      <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
-      <Name>Laser.Orchard.Commons</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Laser.Orchard.jQueryPlugins\Laser.Orchard.jQueryPlugins.csproj">
-      <Project>{7a05758d-761e-4b5d-8a64-b93be5da3c93}</Project>
-      <Name>Laser.Orchard.jQueryPlugins</Name>
-    </ProjectReference>
+    <Content Include="Views\CacheUrlAdmin\index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CacheUrlAdmin\Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

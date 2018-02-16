@@ -32,42 +32,54 @@ namespace Laser.Orchard.Cache.Controllers {
 
         [HttpGet]
         [Admin]
-        public ActionResult Index() {
+        public ActionResult Index(int? page, int? pageSize, SearchVM search) {
             if (!_orchardServices.Authorizer.Authorize(Permissions.UrlCache)) {
                 return new HttpUnauthorizedResult();
             }
-            var records = _cacheUrlRepository.Table.OrderByDescending(x => x.Priority).ToList();
-            return View("Index", new CacheUrlVM { Cached = records });
+            IEnumerable<CacheUrlRecord> records;
+            IEnumerable<CacheUrlRecord> searchrecords;
+            int totItems = 0;
+            Pager pager = new Pager(_orchardServices.WorkContext.CurrentSite, page, pageSize);
+            var expression = search.Expression?.ToLower();
+            searchrecords = string.IsNullOrEmpty(expression) ? (IEnumerable<CacheUrlRecord>)_cacheUrlRepository.Fetch(x => true).OrderBy(x => x.CacheURL) : (IEnumerable<CacheUrlRecord>)_cacheUrlRepository.Fetch(x => x.CacheToken.Contains(expression) || x.CacheURL.Contains(expression)).OrderBy(x => x.CacheURL);
+            totItems = searchrecords.Count();
+            records = searchrecords.Skip(pager.GetStartIndex()).Take(pager.PageSize);
+            var pagerShape = _orchardServices.New.Pager(pager).TotalItemCount(totItems);
+            return View("Index", new SearchIndexVM(records, search, pagerShape, null));
+        }
+
+        [HttpGet]
+        [Admin]
+        public ActionResult Edit(int id) {
+            var model = new CacheUrlRecord();
+            if (id != 0)
+                model = _cacheUrlRepository.Get(x => x.Id == id);
+            return View("Edit", model);
         }
 
         [HttpPost]
         [Admin]
-        public ActionResult Index(CacheUrlVM vm) {
-            if (!_orchardServices.Authorizer.Authorize(Permissions.UrlCache)) {
-                return new HttpUnauthorizedResult();
+        public ActionResult Edit(CacheUrlRecord record) {
+            if (record.Id == 0) {
+                if (!string.IsNullOrEmpty(record.CacheURL)) {
+                    record.CacheURL = record.CacheURL.ToLower();
+                    record.CacheToken = record.CacheToken.Replace("}{", "}||{");
+                    _cacheUrlRepository.Create(record);
+                }
             }
-            foreach (var x in vm.Cached) {
-                if (x.Id == 0) {
-                    if (!string.IsNullOrEmpty(x.CacheURL)) {
-                        x.CacheURL = x.CacheURL.ToLower();
-                        _cacheUrlRepository.Create(x);
-                    }
+            else {
+                if (string.IsNullOrEmpty(record.CacheURL)) {
+                    _cacheUrlRepository.Delete(_cacheUrlRepository.Get(r => r.Id == record.Id));
                 }
                 else {
-                    if (string.IsNullOrEmpty(x.CacheURL)) {
-                        _cacheUrlRepository.Delete(_cacheUrlRepository.Get(r=>r.Id==x.Id));
-                    }
-                    else {
-                        x.CacheURL = x.CacheURL.ToLower();
-                        _cacheUrlRepository.Update(x);
-                    }
+                    record.CacheURL = record.CacheURL.ToLower();
+                    record.CacheToken = record.CacheToken.Replace("}{", "}||{");
+                    _cacheUrlRepository.Update(record);
                 }
-                _cacheUrlRepository.Flush();
             }
-            _cacheAliasServices.RefreshCachedRouteConfig(_cacheUrlRepository);
+            _cacheUrlRepository.Flush();
+            _cacheAliasServices.RefreshCachedRouteConfig();// _cacheUrlRepository);         
             return RedirectToAction("Index");
         }
-
-
     }
 }
