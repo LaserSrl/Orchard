@@ -1,5 +1,5 @@
 ﻿namespace Laser.Orchard.Pdf.ViewModels {
-    public class PrintButtonPartVM {
+    public class PdfButtonPartVM {
         public int ContentId { get; set; }
     }
 }

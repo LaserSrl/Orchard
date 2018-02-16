@@ -1,0 +1,3 @@
+﻿@model Laser.Orchard.Pdf.ViewModels.PdfButtonPartVM
+<button type="button" name="previewButton" value="PreviewButton" onclick="window.open('@Url.Action("Preview", "Pdf", new { @area = "Laser.Orchard.Pdf" })?cid=@Model.ContentId');">@T("Content Preview")</button>
+<button type="button" name="pdfButton" value="PdfButton" onclick="window.location.href='@Url.Action("Generate", "Pdf", new { @area = "Laser.Orchard.Pdf" })?cid=@Model.ContentId';">@T("PDF")</button>

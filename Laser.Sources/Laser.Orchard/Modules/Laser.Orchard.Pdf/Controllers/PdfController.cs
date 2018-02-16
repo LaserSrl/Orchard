@@ -34,9 +34,9 @@ namespace Laser.Orchard.Pdf.Controllers {
             ContentPart part = null;
             var ci = _orchardServices.ContentManager.Get(cid, VersionOptions.Latest);
             if(ci != null) {
-                part = ci.Parts.FirstOrDefault(x => x.PartDefinition.Name == typeof(PrintButtonPart).Name);
+                part = ci.Parts.FirstOrDefault(x => x.PartDefinition.Name == typeof(PdfButtonPart).Name);
                 if (part != null) {
-                    var settings = part.Settings.GetModel<PrintButtonPartSettings>();
+                    var settings = part.Settings.GetModel<PdfButtonPartSettings>();
                     ParseTemplateContext templateCtx = new ParseTemplateContext();
                     var template = _templateService.GetTemplate(settings.TemplateId);
                     var editModel = new Dictionary<string, object>();
@@ -65,9 +65,9 @@ namespace Laser.Orchard.Pdf.Controllers {
             ContentPart part = null;
             var ci = _orchardServices.ContentManager.Get(cid, VersionOptions.Latest);
             if(ci != null) {
-                part = ci.Parts.FirstOrDefault(x => x.PartDefinition.Name == typeof(PrintButtonPart).Name);
+                part = ci.Parts.FirstOrDefault(x => x.PartDefinition.Name == typeof(PdfButtonPart).Name);
                 if(part != null) {
-                    var settings = part.Settings.GetModel<PrintButtonPartSettings>();
+                    var settings = part.Settings.GetModel<PdfButtonPartSettings>();
                     ParseTemplateContext templateCtx = new ParseTemplateContext();
                     var template = _templateService.GetTemplate(settings.TemplateId);
                     var editModel = new Dictionary<string, object>();

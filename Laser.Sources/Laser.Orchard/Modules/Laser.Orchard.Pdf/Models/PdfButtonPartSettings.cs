@@ -1,5 +1,5 @@
 ﻿namespace Laser.Orchard.Pdf.Models {
-    public class PrintButtonPartSettings {
+    public class PdfButtonPartSettings {
         private float _headerHeight = 10f; // default value
         private float _footerHeight = 10f; // default value
         public int TemplateId { get; set; }
