@@ -54,6 +54,8 @@
     <None Include="Sites\AutoMotoEpoca\Mobile\AME_DEV.p12" />
     <None Include="Sites\AutoMotoEpoca\Mobile\AME_PROD.p12" />
     <None Include="Sites\common.cshtml" />
+    <None Include="Sites\DemoT\Mobile\DevDemoT.p12" />
+    <None Include="Sites\DemoT\Mobile\ProdDemoT.p12" />
     <None Include="Sites\ExpertMallardo\Code\UpdatePuntiVendita.cshtml" />
     <None Include="Sites\ExpertMallardo\Mobile\devExpert.p12" />
     <None Include="Sites\ExpertMallardo\Mobile\prodExpert.p12" />
@@ -87,7 +89,17 @@
     <None Include="Sites\IvreaTerritorio\WebServices\Itinerario1.cshtml" />
     <None Include="Sites\IvreaTerritorio\WebServices\POI.cshtml" />
     <None Include="Sites\IvreaTerritorio\WebServices\POI1.cshtml" />
+    <None Include="Sites\Loriblu\CreaUtenzaKrake.cshtml" />
+    <None Include="Sites\Loriblu\GetCredenziali.cshtml" />
+    <None Include="Sites\Loriblu\PopolaContatto.cshtml" />
+    <None Include="Sites\Loriblu\Validation\CommunicationContact.cshtml" />
+    <None Include="Sites\MiscelaRockFestival\Mobile\DevMRF.p12" />
+    <None Include="Sites\MiscelaRockFestival\Mobile\ProdMRF.p12" />
     <None Include="Sites\Montevarchi\XSLT\eventi.cshtml" />
+    <None Include="Sites\MyTerni\Code\ChangeCreator.cshtml" />
+    <None Include="Sites\MyTerni\Code\ImportAttrattori.cshtml" />
+    <None Include="Sites\MyTerni\Code\ImportEvents.cshtml" />
+    <None Include="Sites\MyTerni\Code\ImportItinerari.cshtml" />
     <None Include="Sites\MyVEC\Code\AccessoInStore.cshtml" />
     <None Include="Sites\MyVEC\Code\AppDownloaded.cshtml" />
     <None Include="Sites\MyVEC\Code\AssociazioneVisitaContatto.cshtml" />
@@ -130,6 +142,8 @@
     <None Include="Sites\Quincinetto\Mobile\dev_4_2018.p12" />
     <None Include="Sites\Quincinetto\Mobile\prod_3_2017.p12" />
     <None Include="Sites\Quincinetto\Mobile\prod_4_2018.p12" />
+    <None Include="Sites\RetwinsRetail\Mobile\DevRetwins.p12" />
+    <None Include="Sites\RetwinsRetail\Mobile\ProdRetwins.p12" />
     <None Include="Sites\RomaMunicipioII\Code\ImportOsp.cshtml" />
     <None Include="Sites\SSC\Mobile\BolognaDev.p12" />
     <None Include="Sites\SSC\Mobile\BolognaProd.p12" />
@@ -143,6 +157,7 @@
     <None Include="Sites\Tff\Xslt\getsponsor.cshtml" />
     <None Include="Sites\Tff\Xslt\LuoghiFestival - Copia.cshtml" />
     <None Include="Sites\Tff\Xslt\LuoghiFestival.cshtml" />
+    <None Include="Sites\Tickets\SelezionaMenu.cshtml" />
     <None Include="Sites\TorinoCampidoglio\Code\ElaboraSchedaPartecipazione.cshtml" />
     <None Include="Sites\TorinoCampidoglio\Xslt\torinolivinglabnews.cshtml" />
     <None Include="Sites\TurismoTorino\Mobile\ttdev.p12" />
