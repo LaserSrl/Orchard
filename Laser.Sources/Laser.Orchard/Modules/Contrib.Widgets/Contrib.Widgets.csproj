@@ -169,6 +169,7 @@
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\IWidgetManager.cs" />
     <Compile Include="Services\ILayerManager.cs" />
+    <Compile Include="Services\WidgetContainerPartDumperService.cs" />
     <Compile Include="Services\WidgetManager.cs" />
     <Compile Include="Settings\WidgetsContainerEvents.cs" />
     <Compile Include="Settings\WidgetsContainerSettings.cs" />
@@ -207,7 +208,12 @@
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
+      <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
+      <Name>Laser.Orchard.Commons</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\DefinitionTemplates\WidgetsContainerSettingsViewModel.cshtml" />
   </ItemGroup>
