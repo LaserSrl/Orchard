@@ -264,28 +264,39 @@ namespace Laser.Orchard.Generator.Controllers {
                 #endregion [CalendarPart ]
 
                 #region [ExernalField]
+                if (content.ContentItem.Parts.SelectMany(pa => pa.Fields)
+                    .Any(fi => fi.GetType().Name== "FieldExternal" && ((dynamic)fi).Setting.GenerateL)) {
 
-                var ExtertalFields = (dynamic)
-                     (from parte in content.ContentItem.Parts
+                    // In case We are handling ExternaFields, we will call BuildDisplay, because that kind of field
+                    // is populated only in its BuildDisplayShape handler.
+                    dynamic shape = _orchardServices.ContentManager.BuildDisplay(content);
+                    // TODO: Get rid of the BuildDisplay. We can do this by moving this entire section of the generator
+                    // to the services we should create to handle this
+
+                    var ExtertalFields = (dynamic)
+                     (from parte in ((ContentItem)shape.ContentItem).Parts
                       from field in parte.Fields
                       where (field.GetType().Name == "FieldExternal" && ((dynamic)field).Setting.GenerateL)
                       select field).FirstOrDefault();
-                if (ExtertalFields != null) {
-                    if (!firstList) {
-                        sb.Append(",");
+                    if (ExtertalFields != null) {
+                        if (!firstList) {
+                            sb.Append(",");
+                        }
+                        firstList = false;
+
+
+                        sb.Append("{");
+                        dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
+
+                        if (ExtertalFields.ContentObject != null) {
+                            projectionDump = dumper.Dump(cleanobj(ExtertalFields.ContentObject), ExtertalFields.Name, "List<generic>");
+                            JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
+                        }
+
+                        sb.Append("}");
                     }
-                    firstList = false;
-
-                    sb.Append("{");
-                    dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
-
-                    if (ExtertalFields.ContentObject != null) {
-                        projectionDump = dumper.Dump(cleanobj(ExtertalFields.ContentObject), ExtertalFields.Name, "List<generic>");
-                        JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
-                    }
-
-                    sb.Append("}");
                 }
+                
 
                 #endregion [ExernalField]
 
