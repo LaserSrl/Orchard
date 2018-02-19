@@ -97,6 +97,10 @@ namespace Laser.Orchard.HID.Controllers {
                             // The caller has no rights to any part number. Revoking credentials should be handled elsewhere. Here we
                             // should be safe in the assumption that there is no need for us to revoke any credential. We just
                             // need to warn that there was nothing to issue.
+                            success = false;
+                            eCode = HIDErrorCode.UserCannotHavePartNumbers;
+                            rAction = HIDResolutionAction.NoAction;
+                            message = T("The user has no configured part number. Id: {0}; UserName: {1}; Email: {2}", caller.Id, caller.UserName, caller.Email).Text;
                         }
 
                     } else {
@@ -310,7 +314,8 @@ namespace Laser.Orchard.HID.Controllers {
         UserNotUnique = 5004,
         InvalidSearchParameters = 5005,
         CannotConfigureAdditionalContainer = 5006,
-        UserHasNoCredentialContainers = 5007
+        UserHasNoCredentialContainers = 5007,
+        UserCannotHavePartNumbers = 5008
     }
     public enum HIDResolutionAction {
         NoAction = 0,
