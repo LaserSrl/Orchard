@@ -21,11 +21,6 @@ namespace Laser.Orchard.Cache.Services {
         public static List<CacheRouteConfig> CachedRouteConfig;
 
         public void RefreshCachedRouteConfig() {
-
-            /// Questa classe non utilizza la dependency injection per IRepository<CacheUrlRecord>
-            /// in quanto questa classe e la classe di gestione della cache (il controller CacheUrlAdminController) non vengono
-            /// richiamate nella stessa pipeline.
-
             var defaultMaxAge = _orchardServices.WorkContext.CurrentSite.As<CacheSettingsPart>().DefaultMaxAge;
             IRepository<CacheUrlRecord> _tmpcacheUrlRepository;
             _orchardServices.WorkContext.TryResolve<IRepository<CacheUrlRecord>>(out _tmpcacheUrlRepository);
@@ -55,14 +50,17 @@ namespace Laser.Orchard.Cache.Services {
                 Priority = w.Priority,
                 FeatureName = "CacheUrl",
                 MaxAge = defaultMaxAge,
-                RouteKey = w.CacheURL,
-                Url =  w.CacheToken
+                RouteKey = w.CacheURL??"",
+                Url =  w.CacheToken??""
             }).ToList();
         }
 
         public IOrchardServices _orchardServices { get; set; }
 
         public CacheAliasServices(OrchardServices orchardServices) {
+            /// Important  this class and CacheURLAdminController class 
+            /// are not on same pipeline 
+            /// so don't use dependency injection for IRepository<CacheUrlRecord>
             _orchardServices = orchardServices;
             RefreshCachedRouteConfig();
         }
