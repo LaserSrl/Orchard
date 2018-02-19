@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using Laser.Orchard.Commons.Enums;
+using Orchard.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,25 +21,32 @@ namespace Laser.Orchard.Commons.Services {
 
         public Func<ObjectDumper> GetDumper { get; set; }
 
-        public bool Minified { get; set; }
-        public bool RealFormat { get; set; }
+        public Action<XElement, StringBuilder> ConvertToJson { get; set; }
+
+        public ResultTarget ResultTarget { get; set; }
+
+        /// <summary>
+        /// Parameters for pagination of lists.
+        /// </summary>
+        public int Page { get; set; }
+        public int PageSize { get; set; }
 
         public DumperServiceContext(
             IContent content,
-            Func<ObjectDumper> dumperConstructor, 
-            bool minified,
-            bool realformat) {
+            Func<ObjectDumper> dumperConstructor,
+            Action<XElement, StringBuilder> convertToJson,
+            ResultTarget resultTarget,
+            int page = 1,
+            int pageSize = 10) {
 
             Content = content;
             GetDumper = dumperConstructor;
-            Minified = minified;
-            RealFormat = realformat;
+            ConvertToJson = convertToJson;
+            Page = page;
+            PageSize = pageSize;
 
             ContentLists = new List<string>();
         }
-
-        public void ConvertToJson(XElement x, StringBuilder sb) {
-            JsonConverter.ConvertToJSon(x, sb, Minified, RealFormat);
-        }
+        
     }
 }

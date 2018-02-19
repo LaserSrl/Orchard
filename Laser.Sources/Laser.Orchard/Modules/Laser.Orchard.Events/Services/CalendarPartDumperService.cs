@@ -1,43 +1,45 @@
 ﻿using Laser.Orchard.Commons.Services;
+using Laser.Orchard.Events.Models;
+using Orchard.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
 
-namespace Contrib.Widgets.Services {
-    public class WidgetContainerPartDumperService : IDumperService {
+namespace Laser.Orchard.Events.Services {
+    public class CalendarPartDumperService : IDumperService {
+        
+        private readonly IEventsService _eventsService;
 
-        private readonly IWidgetManager _widgetManager;
+        public CalendarPartDumperService(
+            IEventsService eventsService) {
 
-        public WidgetContainerPartDumperService(
-            IWidgetManager widgetManager) {
-
-            _widgetManager = widgetManager;
+            _eventsService = eventsService;
         }
 
         public void DumpList(DumperServiceContext context) {
             var part = context.Content
                 .ContentItem
-                .Parts
-                .FirstOrDefault(pa => pa.PartDefinition.Name == "WidgetsContainerPart");
+                .As<CalendarPart>();
 
             if (part != null) {
                 var mainSb = new StringBuilder();
                 mainSb.Append("{");
-                mainSb.AppendFormat("\"n\": \"{0}\"", "WidgetList");
+                mainSb.AppendFormat("\"n\": \"{0}\"", "EventList");
                 mainSb.AppendFormat(", \"v\": \"{0}\"", "ContentItem[]");
                 mainSb.Append(", \"m\": [");
 
-                var queryItems = _widgetManager.GetWidgets(part.Id);
+                var queryItems = _eventsService
+                    .GetAggregatedList(part, context.Page, context.PageSize);
                 if (queryItems.Any()) {
                     mainSb.Append(
                         string.Join(",", queryItems
-                            .Select((wep, index) => {
+                            .Select((aevm, index) => {
                                 var sb = new StringBuilder();
                                 sb.Append("{");
                                 var dump = context.GetDumper()
-                                    .Dump(wep, string.Format("[{0}]", index));
+                                    .Dump(aevm, string.Format("[{0}]", index));
                                 context.ConvertToJson(dump, sb);
                                 sb.Append("}");
                                 return sb.ToString();
@@ -47,10 +49,12 @@ namespace Contrib.Widgets.Services {
 
                 mainSb.Append("]");
                 mainSb.Append("}");
-                
+
                 // Add the serialization to the results
                 context.ContentLists.Add(mainSb.ToString());
             }
         }
+
     }
+
 }

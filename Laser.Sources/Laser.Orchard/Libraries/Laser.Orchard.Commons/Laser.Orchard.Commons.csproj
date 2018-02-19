@@ -103,6 +103,7 @@
     <Compile Include="Core\MigrationExtentionHelpers.cs" />
     <Compile Include="Enums\BodyPartFlavor.cs" />
     <Compile Include="Enums\TextFieldFlavor.cs" />
+    <Compile Include="Enums\WebServicesEnums.cs" />
     <Compile Include="Extensions\Expando.cs" />
     <Compile Include="Helpers\CypheringHelper.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
