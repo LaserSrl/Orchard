@@ -1,6 +1,6 @@
 ﻿@model Laser.Orchard.Cache.ViewModels.SearchIndexVM
 <h2>Cache Url</h2>
-<span class="hint">@T("Empty 'Url Scrap' to delete row")</span>
+
 @using (Html.BeginForm("Index", "CacheUrlAdmin", FormMethod.Get)) {
     @Html.AntiForgeryToken()
     <div style="float:right;">
@@ -16,9 +16,9 @@
 <table class="items">
     <thead>
         <tr>
-            <th scope="col" style="width:100%;">Cache Url</th>
-            <th scope="col">Duration</th>
-            <th scope="col">GraceTime</th>
+            <th scope="col" style="width:100%;">@T("Url Scrap")</th>
+            <th scope="col">@T("Duration")</th>
+            <th scope="col">@T("GraceTime")</th>
         </tr>
     </thead>
     <tbody>
