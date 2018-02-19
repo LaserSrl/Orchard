@@ -30,6 +30,10 @@ namespace Laser.Orchard.Pdf.Settings {
             builder.WithSetting("PdfButtonPartSettings.Footer", model.Footer);
             builder.WithSetting("PdfButtonPartSettings.HeaderHeight", model.HeaderHeight.ToString(CultureInfo.InvariantCulture));
             builder.WithSetting("PdfButtonPartSettings.FooterHeight", model.FooterHeight.ToString(CultureInfo.InvariantCulture));
+            builder.WithSetting("PdfButtonPartSettings.LeftMargin", model.LeftMargin.ToString(CultureInfo.InvariantCulture));
+            builder.WithSetting("PdfButtonPartSettings.RightMargin", model.RightMargin.ToString(CultureInfo.InvariantCulture));
+            builder.WithSetting("PdfButtonPartSettings.PageWidth", model.PageWidth.ToString(CultureInfo.InvariantCulture));
+            builder.WithSetting("PdfButtonPartSettings.PageHeight", model.PageHeight.ToString(CultureInfo.InvariantCulture));
 
             yield return DefinitionTemplate(model);
         }

@@ -5,6 +5,7 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Core.Contents;
 using Orchard.Tokens;
 using System;
 using System.Collections.Generic;
@@ -34,27 +35,31 @@ namespace Laser.Orchard.Pdf.Controllers {
             ContentPart part = null;
             var ci = _orchardServices.ContentManager.Get(cid, VersionOptions.Latest);
             if(ci != null) {
-                part = ci.Parts.FirstOrDefault(x => x.PartDefinition.Name == typeof(PdfButtonPart).Name);
-                if (part != null) {
-                    var settings = part.Settings.GetModel<PdfButtonPartSettings>();
-                    ParseTemplateContext templateCtx = new ParseTemplateContext();
-                    var template = _templateService.GetTemplate(settings.TemplateId);
-                    var editModel = new Dictionary<string, object>();
-                    editModel.Add("Content", ci);
-                    templateCtx.Model = editModel;
-                    var html = _templateService.ParseTemplate(template, templateCtx);
-                    var header = _tokenizer.Replace(settings.Header, editModel);
-                    var footer = _tokenizer.Replace(settings.Footer, editModel);
-                    byte[] buffer = null;
-                    if (string.IsNullOrWhiteSpace(header) && string.IsNullOrWhiteSpace(footer)) {
-                        buffer = _pdfServices.PdfFromHtml(html, "A4", 50, 50, settings.HeaderHeight, settings.FooterHeight, false);
-                    } else {
-                        var headerFooter = _pdfServices.GetHtmlHeaderFooterPageEvent(header, footer);
-                        buffer = _pdfServices.PdfFromHtml(html, "A4", 50, 50, settings.HeaderHeight, settings.FooterHeight, false, headerFooter);
+                if (_orchardServices.Authorizer.Authorize(Permissions.ViewContent, ci)) {
+                    part = ci.Parts.FirstOrDefault(x => x.PartDefinition.Name == typeof(PdfButtonPart).Name);
+                    if (part != null) {
+                        var settings = part.Settings.GetModel<PdfButtonPartSettings>();
+                        ParseTemplateContext templateCtx = new ParseTemplateContext();
+                        var template = _templateService.GetTemplate(settings.TemplateId);
+                        var editModel = new Dictionary<string, object>();
+                        editModel.Add("Content", ci);
+                        templateCtx.Model = editModel;
+                        var html = _templateService.ParseTemplate(template, templateCtx);
+                        var header = _tokenizer.Replace(settings.Header, editModel);
+                        var footer = _tokenizer.Replace(settings.Footer, editModel);
+                        byte[] buffer = null;
+                        if (string.IsNullOrWhiteSpace(header) && string.IsNullOrWhiteSpace(footer)) {
+                            buffer = _pdfServices.PdfFromHtml(html, settings.PageWidth, settings.PageHeight, settings.LeftMargin, settings.RightMargin, settings.HeaderHeight, settings.FooterHeight);
+                        } else {
+                            var headerFooter = _pdfServices.GetHtmlHeaderFooterPageEvent(header, footer);
+                            buffer = _pdfServices.PdfFromHtml(html, settings.PageWidth, settings.PageHeight, settings.LeftMargin, settings.RightMargin, settings.HeaderHeight, settings.FooterHeight, headerFooter);
+                        }
+                        var fileName = _tokenizer.Replace(settings.FileNameWithoutExtension, editModel);
+                        fileName = string.Format("{0}.pdf", (string.IsNullOrWhiteSpace(fileName) ? "page" : fileName.Trim()));
+                        return File(buffer, "application/pdf", fileName);
                     }
-                    var fileName = _tokenizer.Replace(settings.FileNameWithoutExtension, editModel);
-                    fileName = string.Format("{0}.pdf", (string.IsNullOrWhiteSpace(fileName)? "page" : fileName.Trim()));
-                    return File(buffer, "application/pdf", fileName);
+                } else {
+                    return new HttpUnauthorizedResult();
                 }
             }
             // fallback
@@ -65,16 +70,20 @@ namespace Laser.Orchard.Pdf.Controllers {
             ContentPart part = null;
             var ci = _orchardServices.ContentManager.Get(cid, VersionOptions.Latest);
             if(ci != null) {
-                part = ci.Parts.FirstOrDefault(x => x.PartDefinition.Name == typeof(PdfButtonPart).Name);
-                if(part != null) {
-                    var settings = part.Settings.GetModel<PdfButtonPartSettings>();
-                    ParseTemplateContext templateCtx = new ParseTemplateContext();
-                    var template = _templateService.GetTemplate(settings.TemplateId);
-                    var editModel = new Dictionary<string, object>();
-                    editModel.Add("Content", ci);
-                    templateCtx.Model = editModel;
-                    var html = _templateService.ParseTemplate(template, templateCtx);
-                    return Content(html, "text/html", Encoding.UTF8);
+                if(_orchardServices.Authorizer.Authorize(Permissions.ViewContent, ci)) {
+                    part = ci.Parts.FirstOrDefault(x => x.PartDefinition.Name == typeof(PdfButtonPart).Name);
+                    if (part != null) {
+                        var settings = part.Settings.GetModel<PdfButtonPartSettings>();
+                        ParseTemplateContext templateCtx = new ParseTemplateContext();
+                        var template = _templateService.GetTemplate(settings.TemplateId);
+                        var editModel = new Dictionary<string, object>();
+                        editModel.Add("Content", ci);
+                        templateCtx.Model = editModel;
+                        var html = _templateService.ParseTemplate(template, templateCtx);
+                        return Content(html, "text/html", Encoding.UTF8);
+                    }
+                } else {
+                    return new HttpUnauthorizedResult();
                 }
             }
             // fallback

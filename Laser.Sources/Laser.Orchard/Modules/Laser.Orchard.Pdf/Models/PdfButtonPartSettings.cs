@@ -2,6 +2,10 @@
     public class PdfButtonPartSettings {
         private float _headerHeight = 10f; // default value
         private float _footerHeight = 10f; // default value
+        private float _leftMargin = 50f; // default value
+        private float _rightMargin = 50f; // default value
+        private float _pageWidth = 210f; // default value (A4)
+        private float _pageHeight = 297f; // default value (A4)
         public int TemplateId { get; set; }
         public string FileNameWithoutExtension { get; set; }
         public string Header { get; set; }
@@ -20,6 +24,38 @@
             }
             set {
                 _footerHeight = (value > 0) ? value : _footerHeight;
+            }
+        }
+        public float LeftMargin {
+            get {
+                return _leftMargin;
+            }
+            set {
+                _leftMargin = (value > 0) ? value : _leftMargin;
+            }
+        }
+        public float RightMargin {
+            get {
+                return _rightMargin;
+            }
+            set {
+                _rightMargin = (value > 0) ? value : _rightMargin;
+            }
+        }
+        public float PageWidth {
+            get {
+                return _pageWidth;
+            }
+            set {
+                _pageWidth = (value > 0) ? value : _pageWidth;
+            }
+        }
+        public float PageHeight {
+            get {
+                return _pageHeight;
+            }
+            set {
+                _pageHeight = (value > 0) ? value : _pageHeight;
             }
         }
     }
