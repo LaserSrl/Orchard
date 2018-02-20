@@ -271,6 +271,7 @@ namespace Laser.Orchard.WebServices.Controllers {
         // Attributes:
         // displayAlias: url di ingresso Es: displayAlias=produttore-hermes
         // filterSubItemsParts: elennco csv delle parti da estrarre in presenza di array di ContentItems Es: filterSubItemsParts=TitlePart,AutoroutePart,MapPart
+        [AlwaysAccessible]
         public ActionResult GetByAlias(string displayAlias, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour = "") {
             //   Logger.Error("inizio"+DateTime.Now.ToString());
             IContent item = null;
