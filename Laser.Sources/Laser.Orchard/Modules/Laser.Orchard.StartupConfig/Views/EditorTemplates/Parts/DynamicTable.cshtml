@@ -1,0 +1,9 @@
+﻿@model Laser.Orchard.StartupConfig.Models.DynamicTablePart
+<fieldset>
+    <legend>@T("Dynamic Table")</legend>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.TableData)">@T("TableData")</label>
+        @Html.TextAreaFor(m => m.TableData, new { @class = "text large" })
+        <span class="hint">@T("TableData.")</span>
+    </div>
+</fieldset>
