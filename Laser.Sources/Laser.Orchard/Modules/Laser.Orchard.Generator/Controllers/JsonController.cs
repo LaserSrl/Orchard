@@ -1,4 +1,5 @@
 ﻿using Contrib.Widgets.Services;
+using Laser.Orchard.Commons.Enums;
 using Laser.Orchard.Commons.Services;
 using Laser.Orchard.Events.Services;
 
@@ -48,36 +49,48 @@ namespace Laser.Orchard.Generator.Controllers {
     public class JsonController : Controller {
         private readonly IOrchardServices _orchardServices;
         private readonly IProjectionManager _projectionManager;
-        private readonly ITaxonomyService _taxonomyService;
-
         private readonly ShellSettings _shellSetting;
         private readonly IUtilsServices _utilsServices;
-        private IWidgetManager _widgetManager;
-        private IEventsService _eventsService;
         private readonly ICsrfTokenHelper _csrfTokenHelper;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IEnumerable<IDumperService> _dumperServices;
+
         public ILogger Logger { get; set; }
 
         public JsonController(IOrchardServices orchardServices,
-    IProjectionManager projectionManager,
-    ITaxonomyService taxonomyService,
-    ShellSettings shellSetting,
-    IUtilsServices utilsServices,
-    ICsrfTokenHelper csrfTokenHelper,
-    IAuthenticationService authenticationService
-    ) {
+            IProjectionManager projectionManager,
+            ShellSettings shellSetting,
+            IUtilsServices utilsServices,
+            ICsrfTokenHelper csrfTokenHelper,
+            IAuthenticationService authenticationService,
+            IEnumerable<IDumperService> dumperServices) {
+
             _orchardServices = orchardServices;
             _projectionManager = projectionManager;
-            _taxonomyService = taxonomyService;
             _shellSetting = shellSetting;
-            Logger = NullLogger.Instance;
             _utilsServices = utilsServices;
             _csrfTokenHelper = csrfTokenHelper;
             _authenticationService = authenticationService;
+            _dumperServices = dumperServices;
+
+            Logger = NullLogger.Instance;
         }
 
         [AlwaysAccessible]
-        public ContentResult GetByAlias(string displayAlias, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string complexBehaviour = "") {
+        [OutputCache(NoStore = true, Duration = 0)] // do not cache generator calls
+        public ContentResult GetByAlias(
+            string displayAlias, 
+            SourceTypes sourceType = SourceTypes.ContentItem, 
+            ResultTarget resultTarget = ResultTarget.Contents, 
+            string mfilter = "", 
+            int page = 1, 
+            int pageSize = 10, 
+            bool tinyResponse = true, 
+            bool minified = false, 
+            bool realformat = false, 
+            int deeplevel = 10,
+            string complexBehaviour = "") {
+
             //   Logger.Error("inizio"+DateTime.Now.ToString());
             IContent item = null;
 
@@ -86,9 +99,9 @@ namespace Laser.Orchard.Generator.Controllers {
                 // so it can be mapped.
                 // We are sending out the admin user, but this may end up being a security concern in some cases so:
                 // TODO: figure out a way to not be sending out admin information here, since this call is anonymous.
-                
+
                 item = _orchardServices.ContentManager.Get(2);
-                
+
             } else {
                 var autoroutePart = _orchardServices.ContentManager.Query<AutoroutePart, AutoroutePartRecord>()
                     .ForVersion(VersionOptions.Published)
@@ -110,7 +123,19 @@ namespace Laser.Orchard.Generator.Controllers {
             return cr;
         }
 
-        private ActionResult GetContent(IContent content, SourceTypes sourceType = SourceTypes.ContentItem, ResultTarget resultTarget = ResultTarget.Contents, string fieldspartsFilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string[] complexBehaviour = null) {
+        private ActionResult GetContent(
+            IContent content,
+            SourceTypes sourceType = SourceTypes.ContentItem,
+            ResultTarget resultTarget = ResultTarget.Contents,
+            string fieldspartsFilter = "",
+            int page = 1,
+            int pageSize = 10,
+            bool tinyResponse = true,
+            bool minified = false,
+            bool realformat = false,
+            int deeplevel = 10,
+            string[] complexBehaviour = null) {
+
             var result = new ContentResult { ContentType = "application/json" };
             var jsonString = "{}";
 
@@ -120,13 +145,12 @@ namespace Laser.Orchard.Generator.Controllers {
             // il dump dell'oggetto principale non filtra per field
             ObjectDumper dumper = new ObjectDumper(deeplevel, null, false, tinyResponse, complexBehaviour);
             var sb = new StringBuilder();
-            List<XElement> listContent = new List<XElement>();
 
             // verifico se l'oggetto è soggetto all'accettazione delle policies
             var policy = content.As<Policy.Models.PolicyPart>();
             if (policy != null) {
                 if ((String.IsNullOrWhiteSpace(_orchardServices.WorkContext.HttpContext.Request.QueryString["v"]))) {// E' soggetto a privacy, quindi faccio sempre il redirect se manca il parametro in querystring v=
-                    if (policy.HasPendingPolicies ?? false) { // se ha delle pending policies deve restituire le policy text, legate al contenuto, qui ndi non deve mai servire cache
+                    if (policy.HasPendingPolicies ?? false) { // se ha delle pending policies deve restituire le policy text, legate al contenuto, quindi non deve mai servire cache
                         var redirectUrl = String.Format("{0}{1}v={2}", _orchardServices.WorkContext.HttpContext.Request.RawUrl, (_orchardServices.WorkContext.HttpContext.Request.RawUrl.Contains("?") ? "&" : "?"), Guid.NewGuid());
                         _orchardServices.WorkContext.HttpContext.Response.Redirect(redirectUrl, true);
                     } else {// se NON ha delle pending policies deve restituire un url non cacheato (quindi aggiungo v=),
@@ -182,216 +206,19 @@ namespace Laser.Orchard.Generator.Controllers {
                 sb.Insert(0, "{");
                 sb.Append(", \"l\":[");
                 // Dopo avere convertito il contentItem in JSON aggiungo i Json delle eventuali liste
-                dynamic part = null;
-                var firstList = true;
-                var listDumpedContentIds = new List<int>();
-
-                // Everything from the regions below this point should really belong in the implementations of an IDependency
-                // dedicated to adding stuff to the json.
-
-                #region [ProjectionPart ]
-
-                part = content.ContentItem.Parts.FirstOrDefault(pa => pa.PartDefinition.Name == "ProjectionPart");
-                if (part != null) {
-                    if (!firstList) {
-                        sb.Append(",");
-                    }
-                    firstList = false;
-                    var queryId = part.Record.QueryPartRecord.Id;
-                    var queryItems = _projectionManager.GetContentItems(queryId, (page - 1) * pageSize, pageSize);
-                    int i = 0;
-                    sb.Append("{");
-                    sb.AppendFormat("\"n\": \"{0}\"", "ProjectionList");
-                    sb.AppendFormat(", \"v\": \"{0}\"", "ContentItem[]");
-                    sb.Append(", \"m\": [");
-
-                    foreach (var item in queryItems) {
-                        if (i > 0) {
-                            sb.Append(",");
-                        }
-                        sb.Append("{");
-                        dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
-                        projectionDump = dumper.Dump(item, String.Format("[{0}]", i));
-                        JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
-                        sb.Append("}");
-                        i++;
-                    }
-                    sb.Append("]");
-                    sb.Append("}");
-                }
-                part = null;
-
-                #endregion [ProjectionPart ]
-
-                #region [CalendarPart ]
-
-                part = content.ContentItem.Parts.FirstOrDefault(pa => pa.PartDefinition.Name == "CalendarPart");
-                if (part != null) {
-                    if (!firstList) {
-                        sb.Append(",");
-                    }
-                    firstList = false;
-                    // On principle, if the item has a CalendarPart, our Laser.Orchard.Events feature should be enabled, so
-                    // the next check may actually not be required. On the other hand, the clean way to do this would be to
-                    // have services morph the json we are working on here, so that specific checks are only done in their
-                    // own place. This is similar to what has been done with the computation of cache keys and the CacheKeyGenerated
-                    // methods in the ICachingEventHandler implementations, with the added requirement of proper formatting.
-                    if (_orchardServices.WorkContext.TryResolve<IEventsService>(out _eventsService)) { // non sempre questo modulo è attivo quindi se non riesce a risolvere il servizio, bypassa la chiamata
-                        var queryItems = _eventsService.GetAggregatedList(part, page, pageSize);
-                        int i = 0;
-                        sb.Append("{");
-                        sb.AppendFormat("\"n\": \"{0}\"", "EventList");
-                        sb.AppendFormat(", \"v\": \"{0}\"", "ContentItem[]");
-                        sb.Append(", \"m\": [");
-
-                        foreach (var item in queryItems) {
-                            if (i > 0) {
-                                sb.Append(",");
-                            }
-                            sb.Append("{");
-                            dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
-                            projectionDump = dumper.Dump(item, String.Format("[{0}]", i));
-                            JsonConverter.ConvertToJSon(projectionDump, sb);
-                            sb.Append("}");
-                            i++;
-                        }
-                        sb.Append("]");
-                        sb.Append("}");
-                    }
-                }
-                part = null;
-
-                #endregion [CalendarPart ]
-
-                #region [ExernalField]
-                if (content.ContentItem.Parts.SelectMany(pa => pa.Fields)
-                    .Any(fi => fi.GetType().Name== "FieldExternal" && ((dynamic)fi).Setting.GenerateL)) {
-
-                    // In case We are handling ExternaFields, we will call BuildDisplay, because that kind of field
-                    // is populated only in its BuildDisplayShape handler.
-                    dynamic shape = _orchardServices.ContentManager.BuildDisplay(content);
-                    // TODO: Get rid of the BuildDisplay. We can do this by moving this entire section of the generator
-                    // to the services we should create to handle this
-
-                    var ExtertalFields = (dynamic)
-                     (from parte in ((ContentItem)shape.ContentItem).Parts
-                      from field in parte.Fields
-                      where (field.GetType().Name == "FieldExternal" && ((dynamic)field).Setting.GenerateL)
-                      select field).FirstOrDefault();
-                    if (ExtertalFields != null) {
-                        if (!firstList) {
-                            sb.Append(",");
-                        }
-                        firstList = false;
-
-
-                        sb.Append("{");
-                        dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
-
-                        if (ExtertalFields.ContentObject != null) {
-                            projectionDump = dumper.Dump(cleanobj(ExtertalFields.ContentObject), ExtertalFields.Name, "List<generic>");
-                            JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
-                        }
-
-                        sb.Append("}");
-                    }
-                }
                 
-
-                #endregion [ExernalField]
-
-                #region [ WidgetsContainerPart ]
-
-                part = content.ContentItem.Parts.FirstOrDefault(pa => pa.PartDefinition.Name == "WidgetsContainerPart");
-                if (part != null) {
-                    // See the comment above for the CalendarPart
-                    if (_orchardServices.WorkContext.TryResolve<IWidgetManager>(out _widgetManager)) { // non sempre questo modulo è attivo quindi se non riesce a risolvere il servizio, bypassa la chiamata
-                        if (!firstList) {
-                            sb.Append(",");
-                        }
-                        firstList = false;
-                        var queryItems = _widgetManager.GetWidgets(part.Id);
-                        int i = 0;
-                        sb.Append("{");
-                        sb.AppendFormat("\"n\": \"{0}\"", "WidgetList");
-                        sb.AppendFormat(", \"v\": \"{0}\"", "ContentItem[]");
-                        sb.Append(", \"m\": [");
-
-                        foreach (var item in queryItems) {
-                            if (i > 0) {
-                                sb.Append(",");
-                            }
-                            sb.Append("{");
-                            dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
-                            projectionDump = dumper.Dump(item, String.Format("[{0}]", i));
-                            JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
-                            sb.Append("}");
-                            i++;
-                        }
-                        sb.Append("]");
-                        sb.Append("}");
-                    }
+                var dumperContext = new DumperServiceContext(
+                    content,
+                    () => 
+                        new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour),
+                    (_xElement, _stringBuilder) => 
+                        JsonConverter.ConvertToJSon(_xElement, _stringBuilder, minified, realformat),
+                    resultTarget,
+                    page, pageSize);
+                foreach (var dumperService in _dumperServices) {
+                    dumperService.DumpList(dumperContext);
                 }
-
-                #endregion [ WidgetsContainerPart ]
-
-                #region [ Taxonomy/TermsPart ]
-
-                part = null;
-                if (content.ContentItem.ContentType.EndsWith("Term")
-                    || (
-                        content.ContentItem.TypeDefinition.Settings.ContainsKey("Taxonomy")
-                        && !String.IsNullOrWhiteSpace(content.ContentItem.TypeDefinition.Settings["Taxonomy"]))) {
-                    part = content.ContentItem.Parts.FirstOrDefault(pa => pa.PartDefinition.Name == "TermPart");
-                }
-                if (part != null) {
-                    if (!firstList) {
-                        sb.Append(",");
-                    }
-                    firstList = false;
-                    dynamic termContentItems;
-                    if (resultTarget == ResultTarget.Terms) {
-                        termContentItems = _taxonomyService.GetChildren(part, true);
-                    } else if (resultTarget == ResultTarget.SubTerms) {
-                        termContentItems = _taxonomyService.GetChildren(part, false);
-                    } else {
-                        termContentItems = _taxonomyService.GetContentItems(part, (page - 1) * pageSize, pageSize);
-                    }
-
-                    int i = 0;
-                    sb.Append("{");
-                    if (resultTarget == ResultTarget.Contents) {
-                        sb.AppendFormat("\"n\": \"{0}\"", "TaxonomyTermList");
-                        sb.AppendFormat(", \"v\": \"{0}\"", "ContentItem[]");
-                    } else {
-                        sb.AppendFormat("\"n\": \"{0}\"", "TermPartList");
-                        sb.AppendFormat(", \"v\": \"{0}\"", "TermPart[]");
-                    }
-                    sb.Append(", \"m\": [");
-
-                    foreach (var item in termContentItems) {
-                        if (i > 0) {
-                            sb.Append(",");
-                        }
-                        sb.Append("{");
-                        dumper = new ObjectDumper(deeplevel, _filterContentFieldsParts, false, tinyResponse, complexBehaviour);
-                        if (resultTarget == ResultTarget.Contents) {
-                            projectionDump = dumper.Dump(item.ContentItem, String.Format("[{0}]", i));
-                            JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
-                        } else {
-                            var dumperForPart = new ObjectDumper(deeplevel, _filterContentFieldsParts, true, tinyResponse, complexBehaviour);
-                            projectionDump = dumperForPart.Dump(item, "TermPart");
-                            JsonConverter.ConvertToJSon(projectionDump, sb, minified, realformat);
-                        }
-                        sb.Append("}");
-                        i++;
-                    }
-                    sb.Append("]");
-                    sb.Append("}");
-                }
-                part = null;
-
-                #endregion [ Taxonomy/TermsPart ]
+                sb.Append(string.Join(",", dumperContext.ContentLists));
 
                 sb.Append("]"); // l : [
                 sb.Append("}");
