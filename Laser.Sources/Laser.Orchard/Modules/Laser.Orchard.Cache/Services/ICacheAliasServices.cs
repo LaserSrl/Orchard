@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using Laser.Orchard.Cache.Models;
 using Orchard;
 using Orchard.ContentManagement;
@@ -67,6 +68,7 @@ namespace Laser.Orchard.Cache.Services {
 
         public CacheRouteConfig GetByUrl(string url) {
             if (CachedRouteConfig != null) {
+                url = HttpUtility.UrlDecode(url);
                 return CachedRouteConfig.Where(x => url.ToLower().Contains(x.RouteKey)).OrderByDescending(w => w.Priority).FirstOrDefault();
             }
             return null;
