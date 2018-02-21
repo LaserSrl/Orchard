@@ -166,8 +166,12 @@ namespace Laser.Orchard.TemplateManagement.Services {
         }
 
         public string RitornaParsingTemplate(dynamic contentModel, int templateId, Dictionary<string, object> viewBag = null) {
-            if (contentModel != null && contentModel.Id != null && contentModel.Id > 0)
-                _tagForCache.Add(contentModel.Id);
+            try {
+                if (contentModel != null && contentModel.Id != null && contentModel.Id > 0) {
+                    _tagForCache.Add(contentModel.Id);
+                }
+            }
+            catch (Exception ex) { }
             if (templateId > 0)
                 _tagForCache.Add(templateId);
             ParseTemplateContext templatectx = new ParseTemplateContext();
