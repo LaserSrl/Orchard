@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using Orchard.UI.Notify;
 using Orchard.Environment.Configuration;
 using Laser.Orchard.TemplateManagement.ViewModels;
+using Laser.Orchard.StartupConfig.Services;
 
 namespace Laser.Orchard.TemplateManagement.Services {
 
@@ -52,9 +53,11 @@ namespace Laser.Orchard.TemplateManagement.Services {
         private readonly IJobsQueueService _jobsQueueService;
         private readonly INotifier _notifier;
         private readonly ShellSettings _shellSettings;
+        private readonly ITagForCache _tagForCache;
 
-        public TemplateService(INotifier notifier, IEnumerable<IParserEngine> parsers, IOrchardServices services, IMessageService messageService, IJobsQueueService jobsQueueService, ShellSettings shellSettings) {
+        public TemplateService(ITagForCache tagForCache,Notifier notifier, IEnumerable<IParserEngine> parsers, IOrchardServices services, IMessageService messageService, IJobsQueueService jobsQueueService, ShellSettings shellSettings) {
             _contentManager = services.ContentManager;
+            _tagForCache = tagForCache;
             _parsers = parsers;
             _services = services;
             _messageService = messageService;
@@ -163,6 +166,10 @@ namespace Laser.Orchard.TemplateManagement.Services {
         }
 
         public string RitornaParsingTemplate(dynamic contentModel, int templateId, Dictionary<string, object> viewBag = null) {
+            if (contentModel != null && contentModel.Id != null && contentModel.Id > 0)
+                _tagForCache.Add(contentModel.Id);
+            if (templateId > 0)
+                _tagForCache.Add(templateId);
             ParseTemplateContext templatectx = new ParseTemplateContext();
             var template = GetTemplate(templateId);
 
