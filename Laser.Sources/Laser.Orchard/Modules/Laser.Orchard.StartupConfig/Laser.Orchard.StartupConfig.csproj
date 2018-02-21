@@ -286,6 +286,7 @@
     <Compile Include="RazorBase\Services\IRazorBaseService.cs" />
     <Compile Include="Services\IApiKeySettingService.cs" />
     <Compile Include="Services\FavoriteCultureDefaultFrontEndSettingsProvider.cs" />
+    <Compile Include="Services\TagForCache.cs" />
     <Compile Include="Settings\DisplayTextPartSettingsHooks.cs" />
     <Compile Include="Settings\IdentityPartOnEveryTypeDefinitionHooks.cs" />
     <Compile Include="TaxonomiesExtensions\Drivers\TaxonomyExtensionPartDriver.cs" />
