@@ -1,9 +1,62 @@
 ﻿@model Laser.Orchard.StartupConfig.Models.DynamicTablePart
+@using Laser.Orchard.StartupConfig.Models;
+@{ 
+    Style.Include("bootstrap-table.min.css");
+    Script.Require("bootstrap-table").AtHead();
+    Script.Require("bootstrap-editabletable").AtHead();
+    Script.Require("bootstrap-contextmenu").AtHead();
+    var settings = Model.Settings.GetModel<DynamicTablePartSettings>();
+}
 <fieldset>
-    <legend>@T("Dynamic Table")</legend>
+    <legend></legend>
     <div>
-        <label for="@Html.FieldIdFor(m => m.TableData)">@T("TableData")</label>
-        @Html.TextAreaFor(m => m.TableData, new { @class = "text large" })
-        <span class="hint">@T("TableData.")</span>
+        @Html.HiddenFor(m => m.TableData)
+        <button type="button" id="btnAddTop">@T("Add to begin")</button>
+        <table id="table-@Model.Id"></table>
+        <ul id="context-menu" class="dropdown-menu">
+            <li data-item="remove">
+                <a>Remove</a>
+            </li>
+        </ul>
+        <button type="button" id="btnAddBottom">@T("Add to end")</button>
+        <script>
+            $(function () {
+                var $table = $("#table-@Model.Id");
+                var $hidden = $("#@Html.FieldIdFor(m => m.TableData)");
+                function updateHidden(){
+                    var newVal = JSON.stringify($table.bootstrapTable('getData', false));
+                    $hidden.val(newVal);
+                }
+                $table.bootstrapTable({
+                    columns: @Html.Raw(settings.ColumnsDefinition),
+                    uniqueId: "@Html.Raw(settings.UniqueId)",
+                    sortStable: true,
+                    undefinedText: '&nbsp;',
+                    cardView: @((settings.CardView)? "true" : "false"),
+                    contextMenu: "#context-menu",
+                    onContextMenuItem: function(row, $el) {
+                        if($el.data("item") == "remove") {
+                            $table.bootstrapTable('removeByUniqueId', row.@Html.Raw(settings.UniqueId));
+                            updateHidden();
+                        };
+                    },
+                    onPostBody: function () {
+                        $table.editableTableWidget({editor: $('<textarea>')});
+                    },
+                    data: @Html.Raw(Model.TableData)
+                });
+                $table.on('change', function(evt, newValue){
+                    var row = evt.target.parentNode;
+                    $table.bootstrapTable('updateCell', {index: row.dataset.index, field: row.parentNode.parentNode.firstChild.firstChild.childNodes[evt.target.cellIndex].dataset.field, value: newValue})
+                    updateHidden();
+                });
+                $("#btnAddTop").click(function(){
+                    $table.bootstrapTable('prepend', {});
+                });
+                $("#btnAddBottom").click(function(){
+                    $table.bootstrapTable('append', {});
+                });
+            });
+        </script>
     </div>
 </fieldset>
