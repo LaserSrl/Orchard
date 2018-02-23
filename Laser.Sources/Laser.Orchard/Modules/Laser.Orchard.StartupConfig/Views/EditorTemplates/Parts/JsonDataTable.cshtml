@@ -1,11 +1,11 @@
-﻿@model Laser.Orchard.StartupConfig.Models.DynamicTablePart
+﻿@model Laser.Orchard.StartupConfig.Models.JsonDataTablePart
 @using Laser.Orchard.StartupConfig.Models;
 @{ 
     Style.Include("bootstrap-table.min.css");
     Script.Require("bootstrap-table").AtHead();
     Script.Require("bootstrap-editabletable").AtHead();
     Script.Require("bootstrap-contextmenu").AtHead();
-    var settings = Model.Settings.GetModel<DynamicTablePartSettings>();
+    var settings = Model.Settings.GetModel<JsonDataTablePartSettings>();
 }
 <fieldset>
     <legend></legend>

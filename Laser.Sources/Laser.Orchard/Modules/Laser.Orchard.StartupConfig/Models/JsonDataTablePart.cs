@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Web.Helpers;
 
 namespace Laser.Orchard.StartupConfig.Models {
-    [OrchardFeature("Laser.Orchard.StartupConfig.DynamicTablePart")]
-    public class DynamicTablePart : ContentPart<DynamicTablePartRecord> {
+    [OrchardFeature("Laser.Orchard.StartupConfig.JsonDataTablePart")]
+    public class JsonDataTablePart : ContentPart<JsonDataTablePartRecord> {
         public string TableData {
             get {
                 var aux = Retrieve(r => r.TableData);
@@ -36,8 +36,8 @@ namespace Laser.Orchard.StartupConfig.Models {
             }
         }
     }
-    [OrchardFeature("Laser.Orchard.StartupConfig.DynamicTablePart")]
-    public class DynamicTablePartRecord : ContentPartVersionRecord {
+    [OrchardFeature("Laser.Orchard.StartupConfig.JsonDataTablePart")]
+    public class JsonDataTablePartRecord : ContentPartVersionRecord {
         private string _tableData = "[]"; // default value
         public virtual string TableData {
             get {

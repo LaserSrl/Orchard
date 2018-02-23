@@ -7,17 +7,17 @@ using System.Linq;
 using System.Web;
 
 namespace Laser.Orchard.StartupConfig.Drivers {
-    public class DynamicTablePartDriver : ContentPartDriver<DynamicTablePart> {
+    public class JsonDataTablePartDriver : ContentPartDriver<JsonDataTablePart> {
         protected override DriverResult Editor(
-        DynamicTablePart part, dynamic shapeHelper) {
-            return ContentShape("Parts_DynamicTable_Edit",
+        JsonDataTablePart part, dynamic shapeHelper) {
+            return ContentShape("Parts_JsonDataTable_Edit",
             () => shapeHelper.EditorTemplate(
-            TemplateName: "Parts/DynamicTable",
+            TemplateName: "Parts/JsonDataTable",
             Model: part,
             Prefix: Prefix));
         }
         protected override DriverResult Editor(
-        DynamicTablePart part, IUpdateModel updater, dynamic shapeHelper) {
+        JsonDataTablePart part, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(part, Prefix, null, null);
             return Editor(part, shapeHelper);
         }

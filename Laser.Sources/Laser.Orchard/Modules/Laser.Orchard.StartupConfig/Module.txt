@@ -53,8 +53,8 @@ Features:
 		Description: Enable feature to protect WebApi Call
 		Category: Security
 		Dependencies: Laser.Orchard.StartupConfig, Orchard.OutputCache, Orchard.Caching
-	Laser.Orchard.StartupConfig.DynamicTablePart
-		Name: Laser DynamicTable Part
-		Description: Part to show and edit a data table
+	Laser.Orchard.StartupConfig.JsonDataTablePart
+		Name: Laser JsonDataTable Part
+		Description: Part to show and edit a data table in json format
 		Category: Content
 		Dependencies: Laser.Orchard.StartupConfig
