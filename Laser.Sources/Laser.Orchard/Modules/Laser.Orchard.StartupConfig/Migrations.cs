@@ -155,4 +155,21 @@ namespace Laser.Orchard.StartupConfig {
             return 1;
         }
     }
+    [OrchardFeature("Laser.Orchard.StartupConfig.DynamicTablePart")]
+    public class MigrationDynamicTable : DataMigrationImpl {
+        public int Create() {
+            SchemaBuilder.CreateTable("DynamicTablePartRecord", table => table
+                .ContentPartVersionRecord()
+            );
+            ContentDefinitionManager.AlterPartDefinition("DynamicTablePart", b => b
+                .Attachable(true));
+            return 1;
+        }
+        public int UpdateFrom1() {
+            SchemaBuilder.AlterTable("DynamicTablePartRecord", table => table
+                .AddColumn<string>("TableData", c => c.Nullable().Unlimited())
+            );
+            return 2;
+        }
+    }
 }
