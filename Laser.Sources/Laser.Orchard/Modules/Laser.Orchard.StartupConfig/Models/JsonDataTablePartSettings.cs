@@ -1,5 +1,5 @@
 ﻿namespace Laser.Orchard.StartupConfig.Models {
-    public class DynamicTablePartSettings {
+    public class JsonDataTablePartSettings {
         private string _columnsDefinition = "[{field:'name',title:'Name'},{field:'description',title:'Description'}]"; // default value
         private string _uniqueId = "id"; // default value
         public string ColumnsDefinition {

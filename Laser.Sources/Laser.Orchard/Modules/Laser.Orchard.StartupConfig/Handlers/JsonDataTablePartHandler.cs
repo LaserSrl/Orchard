@@ -4,9 +4,9 @@ using Orchard.Data;
 using Orchard.Environment.Extensions;
 
 namespace Laser.Orchard.StartupConfig.Handlers {
-    [OrchardFeature("Laser.Orchard.StartupConfig.DynamicTablePart")]
-    public class DynamicTablePartHandler : ContentHandler {
-        public DynamicTablePartHandler(IRepository<DynamicTablePartRecord> repository) {
+    [OrchardFeature("Laser.Orchard.StartupConfig.JsonDataTablePart")]
+    public class JsonDataTablePartHandler : ContentHandler {
+        public JsonDataTablePartHandler(IRepository<JsonDataTablePartRecord> repository) {
             Filters.Add(StorageFilter.For(repository));
         }
     }
