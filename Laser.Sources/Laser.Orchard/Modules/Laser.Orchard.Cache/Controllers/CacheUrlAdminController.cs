@@ -5,33 +5,36 @@ using Laser.Orchard.Cache.Models;
 using Laser.Orchard.Cache.Services;
 using Laser.Orchard.Cache.ViewModels;
 using Orchard;
-using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Localization;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
+using Orchard.UI.Notify;
 
 namespace Laser.Orchard.Cache.Controllers {
 
     public class CacheURLAdminController : Controller {
         private readonly IOrchardServices _orchardServices;
-        private readonly IContentManager _contentManager;
         private readonly ICacheAliasServices _cacheAliasServices;
         private readonly IRepository<CacheUrlRecord> _cacheUrlRepository;
-
+        private readonly INotifier _notifier;
+        public Localizer T { get; set; }
         public CacheURLAdminController(
-            IContentManager contentManager,
             IRepository<CacheUrlRecord> cacheUrlRepository,
             IOrchardServices orchardServices,
-            ICacheAliasServices cacheAliasServices
+            ICacheAliasServices cacheAliasServices,
+            INotifier notifier
             ) {
+            _notifier = notifier;
             _orchardServices = orchardServices;
-            _contentManager = contentManager;
             _cacheUrlRepository = cacheUrlRepository;
             _cacheAliasServices = cacheAliasServices;
+            T = NullLocalizer.Instance;
         }
 
         [HttpGet]
         [Admin]
+        [OutputCache(NoStore = true, Duration = 0)]
         public ActionResult Index(int? page, int? pageSize, SearchVM search) {
             if (!_orchardServices.Authorizer.Authorize(Permissions.UrlCache)) {
                 return new HttpUnauthorizedResult();
@@ -50,6 +53,7 @@ namespace Laser.Orchard.Cache.Controllers {
 
         [HttpGet]
         [Admin]
+        [OutputCache(NoStore = true, Duration = 0)]
         public ActionResult Edit(int id) {
             var model = new CacheUrlRecord();
             if (id != 0)
@@ -60,23 +64,34 @@ namespace Laser.Orchard.Cache.Controllers {
         [HttpPost]
         [Admin]
         public ActionResult Edit(CacheUrlRecord record) {
+            var save = (_orchardServices.WorkContext.HttpContext.Request.Form["btnSave"] == "Save");
+            var delete = (_orchardServices.WorkContext.HttpContext.Request.Form["btnDelete"] == "Delete");
+
             if (record.Id == 0) {
-                if (!string.IsNullOrEmpty(record.CacheURL)) {
-                    record.CacheURL = record.CacheURL.ToLower();
+                if (save) {
+                    record.CacheURL = record.CacheURL?.ToLower();
+                    record.CacheToken = record.CacheToken?.Replace("}{", "}||{");
                     _cacheUrlRepository.Create(record);
+                    _notifier.Add(NotifyType.Information, T("Cache Url added: {0}", record.CacheURL));
                 }
             }
             else {
-                if (string.IsNullOrEmpty(record.CacheURL)) {
+                if (delete) {
+                    var oldUrl = record.CacheURL;
                     _cacheUrlRepository.Delete(_cacheUrlRepository.Get(r => r.Id == record.Id));
+                    _notifier.Add(NotifyType.Information, T("Cache Url removed: {0}", oldUrl));
                 }
                 else {
-                    record.CacheURL = record.CacheURL.ToLower();
-                    _cacheUrlRepository.Update(record);
+                    if (save) {
+                        record.CacheURL = record.CacheURL?.ToLower();
+                        record.CacheToken = record.CacheToken?.Replace("}{", "}||{");
+                        _cacheUrlRepository.Update(record);
+                        _notifier.Add(NotifyType.Information, T("Cache Url updated: {0}", record.CacheURL));
+                    }
                 }
             }
             _cacheUrlRepository.Flush();
-            _cacheAliasServices.RefreshCachedRouteConfig(_cacheUrlRepository);
+            _cacheAliasServices.RefreshCachedRouteConfig();
             return RedirectToAction("Index");
         }
     }

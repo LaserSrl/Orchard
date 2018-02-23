@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.UI;
 using Laser.Orchard.Cache.Services;
+using Laser.Orchard.StartupConfig.Services;
 using Orchard;
 using Orchard.Caching;
 using Orchard.ContentManagement;
@@ -51,15 +52,18 @@ namespace Laser.Orchard.Cache.Filters {
         private bool _isDisposed = false;
         private readonly ICacheAliasServices _cacheAliasServices; //Added
         private readonly ITokenizer _tokenizer;//Added
+        private readonly ITagForCache _tagForCache;//Added
 
         public ILogger Logger { get; set; }
 
         public OutputCacheExtensionFilter(
             ICacheAliasServices cacheAliasServices, //Added
             ITokenizer tokenizer, //Added
+            ITagForCache tagForCache, //Added
         ICacheManager cacheManager, IOutputCacheStorageProvider cacheStorageProvider, ITagCache tagCache, IDisplayedContentItemHandler displayedContentItemHandler, IWorkContextAccessor workContextAccessor, IThemeManager themeManager, IClock clock, ICacheService cacheService, ISignals signals, ShellSettings shellSettings, ICachingEventHandler cachingEvents) : base(cacheManager, cacheStorageProvider, tagCache, displayedContentItemHandler, workContextAccessor, themeManager, clock, cacheService, signals, shellSettings, cachingEvents) {
             _cacheAliasServices = cacheAliasServices; //Added
             _tokenizer = tokenizer; //Added
+            _tagForCache = tagForCache; //Added
             _cacheManager = cacheManager;
             _cacheStorageProvider = cacheStorageProvider;
             _tagCache = tagCache;
@@ -112,12 +116,12 @@ namespace Laser.Orchard.Cache.Filters {
             var keyToAdd = "";
             if (cachedUrl != null) {
                 if (_cacheRouteConfig == null) {
-                    keyToAdd= _tokenizer.Replace(cachedUrl.Url, new Dictionary<string, object>());// { { "Content", part.ContentItem } };)
+                    keyToAdd="CacheUrl="+ _tokenizer.Replace(cachedUrl.Url, new Dictionary<string, object>())+";";// { { "Content", part.ContentItem } };)
                     _cacheRouteConfig = cachedUrl;
                 }
                 else
                     if (cachedUrl.Priority >= _cacheRouteConfig.Priority) {
-                    keyToAdd=_tokenizer.Replace(cachedUrl.Url, new Dictionary<string, object>());
+                    keyToAdd= "CacheUrl=" + _tokenizer.Replace(cachedUrl.Url, new Dictionary<string, object>()) + ";";
                     _cacheRouteConfig = cachedUrl;
                 }
             }
@@ -225,9 +229,8 @@ namespace Laser.Orchard.Cache.Filters {
                 var cacheGraceTime = _cacheRouteConfig != null && _cacheRouteConfig.GraceTime.HasValue ? _cacheRouteConfig.GraceTime.Value : CacheSettings.DefaultCacheGraceTime;
 
                 // Include each content item ID as tags for the cache entry.
-                var contentItemIds = _displayedContentItemHandler.GetDisplayed().Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
-
-                // Capture the response output using a custom filter stream.
+                var contentItemIds = _displayedContentItemHandler.GetDisplayed().Select(x => x.ToString(CultureInfo.InvariantCulture)).Concat(_tagForCache.Get().Select(x => x.ToString(CultureInfo.InvariantCulture))).ToArray(); /// added Modified
+                   // Capture the response output using a custom filter stream.
                 var response = filterContext.HttpContext.Response;
                 var captureStream = new CaptureStream(response.Filter);
                 response.Filter = captureStream;
