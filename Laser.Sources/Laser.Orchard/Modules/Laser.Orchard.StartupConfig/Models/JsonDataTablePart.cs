@@ -32,7 +32,7 @@ namespace Laser.Orchard.StartupConfig.Models {
                     arr.Add(new DynamicJsonObject(a1));
                 }
                 var jsonObj = new Dictionary<string, object>();
-                jsonObj.Add(string.Format("Rows", ContentItem.ContentType), arr.ToArray());
+                jsonObj.Add(string.Format("{0}Rows", ContentItem.ContentType), arr.ToArray());
                 return new DynamicJsonObject(jsonObj);
             }
         }
