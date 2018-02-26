@@ -19,8 +19,8 @@
     var pageTitle = T("Manage Content");
     var createLinkText = T("Create New Content");
     if (!string.IsNullOrWhiteSpace(typeDisplayName)) {
-        pageTitle = T("Manage {0} Content", typeDisplayName);
-        createLinkText = T("Create New {0}", typeDisplayName);
+        pageTitle = T("Manage {0} Content", Html.Raw(typeDisplayName));
+        createLinkText = T("Create New {0}", Html.Raw(typeDisplayName));
     }
     Layout.Title = pageTitle;
 }
@@ -217,7 +217,7 @@
                         @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" })
                     </div>
                     <div class="col-sm-6">
-                        <label class="col-sm-3 align-right gray-label">@T("Builk actions:")</label>
+                        <label class="col-sm-3 align-right gray-label">@T("Bulk actions:")</label>
                         <div class="col-sm-9">
                             <select id="publishActions" name="Options.BulkAction">
                                 @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
