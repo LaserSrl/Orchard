@@ -11,14 +11,16 @@
     <legend></legend>
     <div>
         @Html.HiddenFor(m => m.TableData)
-        <button type="button" id="btnAddTop">@T("Add to begin")</button>
+        <div class="btn-group" role="group" aria-label="Basic example" id="toolbar-@Model.Id">
+            <button type="button" class="btn btn-secondary" id="btnAddTop" style="margin-right:10px">@T("Add to begin")</button>
+            <button type="button" class="btn btn-secondary" id="btnAddBottom" style="margin-right:10px">@T("Add to end")</button>
+        </div>
         <table id="table-@Model.Id"></table>
         <ul id="context-menu" class="dropdown-menu">
             <li data-item="remove">
                 <a>Remove</a>
             </li>
         </ul>
-        <button type="button" id="btnAddBottom">@T("Add to end")</button>
         <script>
             $(function () {
                 var $table = $("#table-@Model.Id");
@@ -34,6 +36,7 @@
                     undefinedText: '&nbsp;',
                     cardView: @((settings.CardView)? "true" : "false"),
                     contextMenu: "#context-menu",
+                    toolbar: "#toolbar-@Model.Id",
                     onContextMenuItem: function(row, $el) {
                         if($el.data("item") == "remove") {
                             $table.bootstrapTable('removeByUniqueId', row.@Html.Raw(settings.UniqueId));
