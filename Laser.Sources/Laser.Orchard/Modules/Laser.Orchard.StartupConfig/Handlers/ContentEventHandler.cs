@@ -19,10 +19,9 @@ namespace Laser.Orchard.StartupConfig.Handlers {
                 if (context.ContentItem.As<CommonPart>() != null && _orchardServices.WorkContext!=null) {
                     var currentUser = _orchardServices.WorkContext.CurrentUser;
                     if (currentUser != null) {
-                        ((dynamic)context.ContentItem.As<CommonPart>()).LastModifier.Value = currentUser.Id;
+                        ((dynamic)context.ContentItem.As<CommonPart>()).LastModifier.Value = Convert.ToDecimal((decimal)currentUser.Id);
                         if (((dynamic)context.ContentItem.As<CommonPart>()).Creator.Value == null)
-                            //  ((NumericField) CommonPart.Fields.Where(x=>x.Name=="Creator").FirstOrDefault()).Value = currentUser.Id;
-                            ((dynamic)context.ContentItem.As<CommonPart>()).Creator.Value = currentUser.Id;
+                            ((dynamic)context.ContentItem.As<CommonPart>()).Creator.Value = Convert.ToDecimal((decimal)currentUser.Id);
                     }
                 }
 
@@ -32,24 +31,13 @@ namespace Laser.Orchard.StartupConfig.Handlers {
                     var currentUser = _orchardServices.WorkContext.CurrentUser;
                     if (currentUser != null)
                         if (((dynamic)context.ContentItem.As<CommonPart>()).Creator.Value == null)
-                            //  ((NumericField) CommonPart.Fields.Where(x=>x.Name=="Creator").FirstOrDefault()).Value = currentUser.Id;
-                            ((dynamic)context.ContentItem.As<CommonPart>()).Creator.Value = currentUser.Id;
+                            ((dynamic)context.ContentItem.As<CommonPart>()).Creator.Value = Convert.ToDecimal((decimal)currentUser.Id);
 
                 }
 
             });
-            //OnCreated<CommonPart>((context, CommonPart) => {
-            //    if (context.ContentItem.As<CommonPart>() != null) {
-            //        ((dynamic)context.ContentItem.As<CommonPart>()).Creator.Value = ((dynamic)context.ContentItem.As<CommonPart>()).Owner.Id;
 
-            //    }
-            //});
 
         }
-        //protected override void Created(CreateContentContext context) {
-        //    if (context.ContentItem.As<CommonPart>() != null) {
-        //     }
-        //}
-
     }
 }

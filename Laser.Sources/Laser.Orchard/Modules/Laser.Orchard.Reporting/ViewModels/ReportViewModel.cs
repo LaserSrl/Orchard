@@ -1,15 +1,8 @@
-﻿using Orchard.Projections.Descriptors;
-using Laser.Orchard.Reporting.Providers;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
-namespace Laser.Orchard.Reporting.ViewModels
-{
+namespace Laser.Orchard.Reporting.ViewModels {
     public class ReportViewModel
     {
         private Collection<SelectListItem> queries = new Collection<SelectListItem>();

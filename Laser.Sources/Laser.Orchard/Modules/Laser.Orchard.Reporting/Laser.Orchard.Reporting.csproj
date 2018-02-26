@@ -85,6 +85,9 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.IO.Compression">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -121,10 +124,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\chosen\chosen.jquery.js" />
-    <Content Include="Scripts\chosen\chosen.jquery.min.js" />
-    <Content Include="Scripts\chosen\chosen.proto.js" />
-    <Content Include="Scripts\chosen\chosen.proto.min.js" />
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
@@ -142,71 +141,37 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\mustache.js" />
     <Content Include="Scripts\plugins\jqplot.barRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.barRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.BezierCurveRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.BezierCurveRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.blockRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.blockRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.bubbleRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.bubbleRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.canvasAxisLabelRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.canvasAxisLabelRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.canvasAxisTickRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.canvasAxisTickRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.canvasOverlay.js" />
-    <Content Include="Scripts\plugins\jqplot.canvasOverlay.min.js" />
     <Content Include="Scripts\plugins\jqplot.canvasTextRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.canvasTextRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.categoryAxisRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.categoryAxisRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.ciParser.js" />
-    <Content Include="Scripts\plugins\jqplot.ciParser.min.js" />
     <Content Include="Scripts\plugins\jqplot.cursor.js" />
-    <Content Include="Scripts\plugins\jqplot.cursor.min.js" />
     <Content Include="Scripts\plugins\jqplot.dateAxisRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.dateAxisRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.donutRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.donutRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.dragable.js" />
-    <Content Include="Scripts\plugins\jqplot.dragable.min.js" />
     <Content Include="Scripts\plugins\jqplot.enhancedLegendRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.enhancedLegendRenderer.min.js" />
+    <Content Include="Scripts\plugins\jqplot.enhancedPieLegendRenderer.js" />
     <Content Include="Scripts\plugins\jqplot.funnelRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.funnelRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.highlighter.js" />
-    <Content Include="Scripts\plugins\jqplot.highlighter.min.js" />
     <Content Include="Scripts\plugins\jqplot.json2.js" />
-    <Content Include="Scripts\plugins\jqplot.json2.min.js" />
     <Content Include="Scripts\plugins\jqplot.logAxisRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.logAxisRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.mekkoAxisRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.mekkoAxisRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.mekkoRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.mekkoRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.meterGaugeRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.meterGaugeRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.mobile.js" />
-    <Content Include="Scripts\plugins\jqplot.mobile.min.js" />
     <Content Include="Scripts\plugins\jqplot.ohlcRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.ohlcRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.pieRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.pieRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.pointLabels.js" />
-    <Content Include="Scripts\plugins\jqplot.pointLabels.min.js" />
     <Content Include="Scripts\plugins\jqplot.pyramidAxisRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.pyramidAxisRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.pyramidGridRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.pyramidGridRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.pyramidRenderer.js" />
-    <Content Include="Scripts\plugins\jqplot.pyramidRenderer.min.js" />
     <Content Include="Scripts\plugins\jqplot.trendline.js" />
-    <Content Include="Scripts\plugins\jqplot.trendline.min.js" />
-    <Content Include="Scripts\Reporting.js" />
-    <Content Include="Styles\Chosen\chosen-sprite.png" />
-    <Content Include="Styles\Chosen\chosen.css" />
-    <Content Include="Styles\Chosen\chosen.min.css" />
     <Content Include="Styles\jquery.jqplot.css" />
     <Content Include="Styles\jquery.jqplot.min.css" />
     <Content Include="Styles\report.print.css" />
@@ -233,6 +198,7 @@
     <Content Include="Views\Parts\DataReportViewer.Donut.cshtml" />
     <Content Include="Views\Report\DashboardList.cshtml" />
     <Content Include="Views\Parts\DataReportViewer.HorizontalBars.cshtml" />
+    <Content Include="Views\Parts\DataReportViewer.SimpleTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
@@ -274,7 +240,12 @@
     <Compile Include="ViewModels\ShowDashboardViewModel.cs" />
     <Compile Include="ViewModels\ShowReportsViewModel.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
+      <Project>{9D49DF40-AE74-4CCE-B628-A1B26E99B2D4}</Project>
+      <Name>Laser.Orchard.Commons</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Report\Index.cshtml" />
   </ItemGroup>

@@ -18,5 +18,6 @@ namespace Laser.Orchard.Reporting.Services {
         IEnumerable<DataReportViewerPart> GetReports();
         Dictionary<int, Permission> GetReportPermissions();
         Dictionary<int, Permission> GetDashboardPermissions();
+        string GetCsv(DataReportViewerPart part);
     }
 }

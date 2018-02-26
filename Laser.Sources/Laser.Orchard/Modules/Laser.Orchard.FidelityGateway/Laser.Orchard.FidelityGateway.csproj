@@ -156,6 +156,7 @@
     <Compile Include="Permissions.cs" />
     <Compile Include="Routes\Routes.cs" />
     <Compile Include="Services\FidelityBaseServices.cs" />
+    <Compile Include="Services\FidelityIdentityProvider.cs" />
     <Compile Include="Services\IFidelityServices.cs" />
     <Compile Include="Services\ISendService.cs" />
     <Compile Include="Services\NotificatorService.cs" />

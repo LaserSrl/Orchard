@@ -1,0 +1,12 @@
+﻿Name: Laser.Orchard.Caligoo
+AntiForgery: enabled
+Author: Laser s.r.l.
+Website: http://www.laser-group.com
+Version: 1.0
+OrchardVersion: 1.0
+Description: Module for Caligoo-Krake integration.
+Features:
+    Laser.Orchard.Caligoo:
+        Description: Caligoo-Krake integration.
+		Category: Content
+		Dependencies: Laser.Orchard.StartupConfig,Orchard.Workflows,Orchard.Forms,Orchard.Projections,Laser.Orchard.CommunicationGateway

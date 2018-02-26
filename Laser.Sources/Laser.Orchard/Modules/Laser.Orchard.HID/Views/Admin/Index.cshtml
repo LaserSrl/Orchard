@@ -1,6 +1,19 @@
-﻿@using Laser.Orchard.HID.Models;
+﻿@using Laser.Orchard.Commons.Helpers;
+@using Laser.Orchard.HID.ViewModels;
 
-@model HIDSiteSettingsPart
+@model HIDSiteSettingsViewModel
+
+<style>
+    div#building div:nth-child(odd) {
+        background-color: #f1efef;
+    }
+</style>
+
+@{ 
+    Script.Require("jQuery_NestedModels").AtHead();
+}
+
+@Html.ValidationSummary()
 
 @using (Html.BeginFormAntiForgeryPost()) {
     <fieldset id="CustomerID">
@@ -22,10 +35,26 @@
         @Html.PasswordFor(m => m.ClientSecret, new { @class = "medium text"})
         <span class="hint">@T("This is the password for the account responsible for managing Mobile Access.")</span>
     </fieldset>
+    <fieldset id="SettingsForUsers">
+        <legend>@T("Settings for the users of the system")</legend>
+        @Html.CheckBoxFor(m => m.PreventMoreThanOneDevice)
+        <label for="@Html.FieldIdFor(m => m.PreventMoreThanOneDevice)" class="forcheckbox">@T("Prevent multiple containers.")</label>
+        <span class="hint">@T("Selecting this checkbox will mean that the users are not allowed to register multiple credential containers, and as such cannot receive invitations to register new ones as long as they have another active endpoint.")</span>
+        @Html.CheckBoxFor(m => m.PreventDefaultPartNumber)
+        <label for="@Html.FieldIdFor(m => m.PreventDefaultPartNumber)" class="forcheckbox">@T("Prevent issueing default part numbers.")</label>
+        <span class="hint">@T("Selecting this checkbox will mean that the users are not allowed to receive credentials unless we specified some in our systems, even though on HID's systems there may be configured default Part Numbers.")</span>
+    </fieldset>
     <fieldset id="PartNumbers">
         <legend>@T("Input your HID Part Numbers")</legend>
-        @Html.TextAreaFor(m => m.SerializedPartNumbers, new {@cols = "80"})
-        <span class="hint">@T("Input the Part Numbers you want to be able to manage automatically, one per line.")</span>
+        <span class="hint">@T("Updating part numbers may take a long time in case credentials must be issued/revoked as a consequence.")</span>
+
+        <div id="building">
+            @Html.EditorFor(x => x.PartNumberSets)
+        </div>
+
+        <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(x => x.PartNumberSets, T("Add Building").Text, "#building", ".j_building")
+        @*@Html.TextAreaFor(m => m.SerializedPartNumbers, new {@cols = "80"})
+        <span class="hint">@T("Input the Part Numbers you want to be able to manage automatically, one per line.")</span>*@
     </fieldset>
     <fieldset id="AppVersionStrings">
         <legend>@T("Input your HID App Version Strings")</legend>

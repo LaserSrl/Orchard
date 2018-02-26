@@ -1,0 +1,43 @@
+@using Orchard.ContentManagement;
+@using Orchard.Core.Common.Models;
+@using Orchard.Localization.Models;
+@{ 
+    // possible outcomes: Error,Ok
+    var retString = "Error";
+    Orchard.Workflows.Models.WorkflowContext wfCtx = null;
+    IContentManager _contentManager;
+    try {
+        wfCtx = Model.Tokens["Workflow"];
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        dynamic item = Model.ContentItem;
+        // imposta il default solo se la visita è appena stata creata
+        if(item.VersionRecord.Number == 1) {
+            // valorizzazione questionario di default se necessario
+            var cpfSurvey = item.Visita.Questionario;
+            if (cpfSurvey.Ids.Length == 0) {
+                int cultureId = item.LocalizationPart.Culture.Id;
+                var qry = _contentManager.Query("Questionnaire").OrderByDescending<CommonPartVersionRecord>(x => x.PublishedUtc);
+                var qryLocalization = _contentManager.Query("Questionnaire").Where<LocalizationPartRecord>(x => x.CultureId == cultureId).OrderByDescending<CommonPartVersionRecord>(x => x.PublishedUtc);
+                var survey = qryLocalization.List().FirstOrDefault();
+                if (survey != null) {
+                    cpfSurvey.Ids = new int[] { survey.Id };
+                } else {
+                    survey = qry.List().FirstOrDefault();
+                    if (survey != null) {
+                        cpfSurvey.Ids = new int[] { survey.Id };
+                    }
+                }
+            }
+            var dtSurvey = item.Visita.DataPush;
+            if(dtSurvey.DateTime == DateTime.MinValue) {
+                dtSurvey.DateTime = item.ActivityPart.DateTimeEnd.AddHours(2);
+            }
+            item.VersionRecord.Published = false;
+            item.ContentManager.Publish(item);
+        }
+        retString = "Ok";
+    }
+catch (Exception ex) {
+        wfCtx.SetState("ErrorMessage", ex.Message);
+    }
+}@retString

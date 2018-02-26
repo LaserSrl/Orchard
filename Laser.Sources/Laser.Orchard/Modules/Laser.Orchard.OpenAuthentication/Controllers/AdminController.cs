@@ -44,6 +44,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
             var viewModel = new IndexViewModel {
                 AutoRegistrationEnabled = settings.AutoRegistrationEnabled,
+                AutoMergeNewUsersEnabled = settings.AutoMergeNewUsersEnabled,
                 CurrentProviders = currentProviders,
                 ShowAppDirectSetting = _utilServices.FeatureIsEnabled("Laser.Orchard.OpenAuthentication.AppDirect"),
                 AppDirectBaseUrl = settings.AppDirectBaseUrl
@@ -59,6 +60,8 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
             var settings = _orchardServices.WorkContext.CurrentSite.As<OpenAuthenticationSettingsPart>();
             settings.AutoRegistrationEnabled = viewModel.AutoRegistrationEnabled;
+            settings.AutoMergeNewUsersEnabled = viewModel.AutoMergeNewUsersEnabled;
+
             settings.AppDirectBaseUrl = viewModel.AppDirectBaseUrl;
             return RedirectToAction("Index");
         }

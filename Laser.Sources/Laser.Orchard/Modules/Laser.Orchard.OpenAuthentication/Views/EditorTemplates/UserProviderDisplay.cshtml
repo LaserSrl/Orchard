@@ -1,5 +1,5 @@
 ﻿@model Laser.Orchard.OpenAuthentication.ViewModels.UserProviderDisplayViewModel
 <fieldset>
     <legend>User Provider</legend>
-    @Model.Provider
+    @string.Join(", ",Model.Providers)
 </fieldset>

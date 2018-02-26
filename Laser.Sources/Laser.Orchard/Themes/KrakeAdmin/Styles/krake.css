@@ -620,6 +620,10 @@ legend {
     border-radius: 5px;
 }
 
+input.tokenized {
+    padding-right: 30px;
+}
+
 .tokenized-popup {
     background: rgba(0, 0, 0, 0) url("images/list-arrow.png") no-repeat scroll 0 0;
     cursor: pointer;
@@ -710,7 +714,7 @@ input[type="number"]:focus {
 }
 
 #media-library-main-navigation {
-    height: 100%;
+    min-height: 100%;
 }
 
 #media-library-main-selection-actions button {

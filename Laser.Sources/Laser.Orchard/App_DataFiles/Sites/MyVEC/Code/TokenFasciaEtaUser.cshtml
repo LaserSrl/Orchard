@@ -1,0 +1,35 @@
+@using Orchard.ContentManagement;
+@functions{
+    IContentManager _contentManager;
+    string retString = "31-40"; //default result
+}
+@{
+    try {
+        // resolve services
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        // get fascia di età for current user
+        var user = Model.OrchardServices.WorkContext.CurrentUser;
+        DateTime dtNascita = ((dynamic)user).ContentItem.ProfilePart.DatadiNascita.DateTime;
+        var currendDate = DateTime.UtcNow;
+        var years = currendDate.Year - dtNascita.Year;
+        if (currendDate.Month < dtNascita.Month) {
+            years--;
+        }
+        // don't make any adjustment on the day because currentDate isn't probably the visit date so we'd make an error anyway
+        if (years < 19) {
+            retString = "0-18";
+        } else if (years < 31) {
+            retString = "19-30";
+        } else if (years < 41) {
+            retString = "31-40";
+        } else if (years < 51) {
+            retString = "41-50";
+        } else if (years < 61) {
+            retString = "51-60";
+        } else {
+            retString = "over 60";
+        }
+    } catch (Exception ex) {
+        Model.OrchardServices.TransactionManager.Logger.Log(Orchard.Logging.LogLevel.Error, ex, "Error in TokenFasciaEtaUser.cshtml", null);
+    }
+}@retString

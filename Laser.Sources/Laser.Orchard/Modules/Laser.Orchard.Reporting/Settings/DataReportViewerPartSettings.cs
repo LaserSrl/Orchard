@@ -1,11 +1,6 @@
 ﻿using Orchard.ContentManagement.MetaData.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace Laser.Orchard.Reporting.Settings
-{
+namespace Laser.Orchard.Reporting.Settings {
     public class DataReportViewerPartSettings
     {
         public int? DefaultReportId { get; set; }

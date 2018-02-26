@@ -223,7 +223,11 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="packages.config" />
+    <Content Include="Scripts\bootstrap-table-contextmenu.js" />
+    <Content Include="Scripts\bootstrap-table.min.js" />
+    <Content Include="Scripts\mindmup-editabletable.js" />
     <Content Include="Scripts\spectrum.js" />
+    <Content Include="Styles\bootstrap-table.min.css" />
     <Content Include="Styles\font-awesome\css\font-awesome.css" />
     <Content Include="Styles\font-awesome\css\font-awesome.min.css" />
     <Content Include="Styles\font-awesome\fonts\fontawesome-webfont.svg" />
@@ -262,6 +266,13 @@
     <Compile Include="Controllers\UsersAutocompleteController.cs" />
     <Compile Include="CultureCommands\CultureCommandsExtension.cs" />
     <Compile Include="Drivers\AuthenticationRequiredPartDriver.cs" />
+    <Compile Include="Drivers\JsonDataTablePartDriver.cs" />
+    <Compile Include="Handlers\JsonDataTablePartHandler.cs" />
+    <Compile Include="IdentityProvider\IIdentityProvider.cs" />
+    <Compile Include="IdentityProvider\RolesIdentityProvider.cs" />
+    <Compile Include="IdentityProvider\UserIdentityProvider.cs" />
+    <Compile Include="Models\JsonDataTablePart.cs" />
+    <Compile Include="Models\JsonDataTablePartSettings.cs" />
     <Compile Include="RazorBase\Drivers\EnvironmentVariablesSettingsPartDriver.cs" />
     <Compile Include="Drivers\FavoriteCulturePartDriver.cs" />
     <Compile Include="Drivers\MaintenancePartDriver.cs" />
@@ -283,7 +294,9 @@
     <Compile Include="RazorBase\Services\IRazorBaseService.cs" />
     <Compile Include="Services\IApiKeySettingService.cs" />
     <Compile Include="Services\FavoriteCultureDefaultFrontEndSettingsProvider.cs" />
+    <Compile Include="Services\TagForCache.cs" />
     <Compile Include="Settings\DisplayTextPartSettingsHooks.cs" />
+    <Compile Include="Settings\JsonDataTablePartSettingsHooks.cs" />
     <Compile Include="Settings\IdentityPartOnEveryTypeDefinitionHooks.cs" />
     <Compile Include="TaxonomiesExtensions\Drivers\TaxonomyExtensionPartDriver.cs" />
     <Compile Include="Controllers\UsersGroupsSettingsController.cs" />
@@ -337,6 +350,7 @@
     <Compile Include="Services\MaintenanceService.cs" />
     <Compile Include="TaxonomiesExtensions\Services\TaxonomyServiceExtension.cs" />
     <Compile Include="Tokens\AdditionalDateTokens.cs" />
+    <Compile Include="Tokens\ContentDateModified.cs" />
     <Compile Include="Tokens\OwnerEmailToken.cs" />
     <Compile Include="Tokens\ParameterToken.cs" />
     <Compile Include="Tokens\RazorCodeExecutionToken.cs" />
@@ -464,6 +478,8 @@
     <Content Include="Styles\font-awesome\scss\_variables.scss" />
     <Content Include="Views\DefinitionTemplates\ColorPickerFieldSettings.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\EnvironmentVariablesSettings.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\JsonDataTable.cshtml" />
+    <Content Include="Views\DefinitionTemplates\JsonDataTablePartSettings.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

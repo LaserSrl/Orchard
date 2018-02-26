@@ -37,7 +37,9 @@ namespace Pubblicazione {
         public Deploy() {
             InitializeComponent();
             additionalFiles = new string[] {
-                "*System.Net.FtpClient.dll"
+                "*System.Net.FtpClient.dll",
+                "*System.IdentityModel.Tokens.Jwt.dll",
+                "*System.IO.Compression.dll"
             };
         }
         private void btnFullDeploy_Click(object sender, EventArgs e) {

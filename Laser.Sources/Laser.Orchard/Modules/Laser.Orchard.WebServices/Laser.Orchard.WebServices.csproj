@@ -172,7 +172,6 @@
     <Compile Include="Controllers\TermsController.cs" />
     <Compile Include="Controllers\WebApiController.cs" />
     <Compile Include="Drivers\WebServiceSettingsPartDriver.cs" />
-    <Compile Include="Enums.cs" />
     <Compile Include="Handlers\WebServiceSettingsHandler.cs" />
     <Compile Include="Models\WebServiceSettingsPart.cs" />
     <Compile Include="Routes\Routes.cs" />

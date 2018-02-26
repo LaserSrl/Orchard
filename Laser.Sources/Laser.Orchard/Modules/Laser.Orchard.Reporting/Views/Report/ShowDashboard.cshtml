@@ -11,10 +11,11 @@
     Script.Require("barjqplot").AtHead();
     Script.Require("categoryAxisjqplot").AtHead();
     Script.Require("pointLabelsjqplot").AtHead();
+    Script.Require("canvasTextjqplot").AtHead();
+    Script.Require("canvasAxisTickjqplot").AtHead();
     Script.Require("piejqplot").AtHead();
     Script.Require("donutRendererjqplot").AtHead();
-    Script.Require("Chosen").AtHead();
-    Script.Require("Reporting").AtHead();
+    Script.Require("bootstrap-table").AtHead();
     IContentManager contentManager = null;
     WorkContext.TryResolve<IContentManager>(out contentManager);
 }
@@ -27,6 +28,9 @@
                 @Display(contentManager.BuildEditor(Model.Filters))
                 <button class="primaryAction" type="button" value="Refresh" id="btnRefresh">@T("Refresh")</button>
                 <button class="primaryAction" type="button" value="Print" id="btnPrint">@T("Print")</button>
+                @if (AuthorizedFor(Laser.Orchard.Reporting.Security.Permissions.DownloadDashboardData)) {
+                    <button class="primaryAction" type="submit" formaction="@Url.Action("DownloadDashboard", new { id = Model.Id })" value="Download" id="btnDownload">@T("Download")</button>
+                }
             </div>
         </fieldset>
     }
@@ -52,8 +56,20 @@
         });
     </script>
 } else {
-    <button class="primaryAction" type="button" value="Print" id="btnPrint" onclick="window.print();">@T("Print")</button>
+    <button class="primaryAction" type="button" value="Print" id="btnPrint">@T("Print")</button>
+    if (AuthorizedFor(Laser.Orchard.Reporting.Security.Permissions.DownloadDashboardData)) {
+        <button class="primaryAction" type="button" value="Download" id="btnDownload">@T("Download")</button>
+    }
     foreach (var rep in Model.Reports) {
         @Display(BuildDisplay(rep, "Detail"))
     }
+    <script type="text/javascript">
+        $(function () {
+            $("#btnPrint").click(function () { window.print(); });
+            var theForm = $("#reportFilters").parent();
+            $("#btnDownload").click(function () {
+                window.location.href = "@Url.Action("DownloadDashboard", new { id = Model.Id })";
+            });
+        });
+    </script>
 }

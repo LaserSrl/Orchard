@@ -7,10 +7,10 @@ Features:
     Laser.Orchard.OpenAuthentication:
 		Name: Laser OpenAuthentication
 		Description: Provides OAuth functionality to orchard Site
-		Dependencies: Laser.Orchard.StartupConfig
+		Dependencies: Laser.Orchard.StartupConfig, Orchard.Users
 		Category:Content
 	Laser.Orchard.OpenAuthentication.AppDirect:
 		Name: Laser OpenAuthentication AppDirect
 		Description: Provides OpenId SSO AppDirect functionality to orchard Site
-		Dependencies: Laser.Orchard.StartupConfig, Laser.Orchard.OpenAuthentication
+		Dependencies: Laser.Orchard.StartupConfig, Laser.Orchard.OpenAuthentication, Orchard.Users
 		Category:Content

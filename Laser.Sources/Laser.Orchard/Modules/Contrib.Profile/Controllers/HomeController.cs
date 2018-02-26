@@ -30,6 +30,7 @@ namespace Contrib.Profile.Controllers {
         private IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
+        [OutputCache(NoStore = true, Duration = 0)]
         public ActionResult Index(string username) {
             IUser user = _membershipService.GetUser(username);
 
@@ -47,6 +48,7 @@ namespace Contrib.Profile.Controllers {
             return View((object)shape);
         }
 
+        [OutputCache(NoStore = true, Duration = 0)]
         public ActionResult Edit() {
             IUser user = Services.WorkContext.CurrentUser;
 

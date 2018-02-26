@@ -7,6 +7,7 @@
         Histogram = 3,
         LineChart = 4,
         Donut = 5,
-        HorizontalBars = 6
+        HorizontalBars = 6,
+        SimpleTable = 7
     }
 }

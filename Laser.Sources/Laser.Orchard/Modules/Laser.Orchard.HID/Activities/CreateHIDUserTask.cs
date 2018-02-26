@@ -7,10 +7,8 @@ using Orchard.Security;
 using Orchard.Users.Models;
 using Orchard.Workflows.Models;
 using Orchard.Workflows.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace Laser.Orchard.HID.Activities {
     public class CreateHIDUserTask : Task {

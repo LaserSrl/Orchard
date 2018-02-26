@@ -3,12 +3,15 @@
 @using Orchard.ContentManagement;
 @using Orchard.ContentManagement.Records;
 @using Orchard.Data;
+@using Orchard.Localization.Services;
 @using System.Linq;
+@using Newtonsoft.Json.Linq;
 @functions{
     string retString = "Error"; //possible outcomes: "Error","OK"
     IContentManager _contentManager = null;
     IEncryptionService _encryptionService = null;
     IMembershipService _membershipService = null;
+    ILocalizationService _localizationService = null;
     Orchard.Workflows.Models.WorkflowContext wfContext = null;
 }
 @{
@@ -18,8 +21,9 @@
         _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
         _encryptionService = Model.OrchardServices.WorkContext.Resolve<IEncryptionService>();
         _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
-    
-        Orchard.ContentManagement.ContentItem ciUsr = _contentManager.Get((int)(@Model.ContentItem.CommonPart.Creator.Value));
+        _localizationService = Model.OrchardServices.WorkContext.Resolve<ILocalizationService>();
+
+        ContentItem ciUsr = _contentManager.Get((int)(@Model.ContentItem.CommonPart.Creator.Value));
         dynamic usr = (dynamic)ciUsr;
         string userName = usr.UserPart.UserName;
         string pwd = "";
@@ -35,6 +39,20 @@
         // save informations in workflow State
         wfContext.SetState("UserName", userName);
         wfContext.SetState("Password", pwd);
+        // calculate custom template id relaying on the fact that this workflow contains only one activity of type SendTemplatedEmail
+        var customTemplateId = "";
+        var activity = wfContext.Record.WorkflowDefinitionRecord.ActivityRecords.FirstOrDefault(x => x.Name == "SendTemplatedEmail"
+            && x.State.Contains("\"RecipientOther\":\"{Content.CreatorEmail}\"")
+            && x.State.Contains("\"Recipient\":\"other\""));
+        if (activity != null) {
+            var state = JObject.Parse(activity.State);
+            var templateId = Convert.ToInt32(state["EmailTemplate"]);
+            var templateCi = _contentManager.Get(templateId);
+            var localizationPart = _localizationService.GetLocalizedContentItem(templateCi, usr.FavoriteCulturePart.Culture);
+            customTemplateId = Convert.ToString(localizationPart.Id);
+        }
+        wfContext.SetState("CustomTemplateId", customTemplateId);
+        wfContext.SetState("Email", usr.UserPart.Email);
         retString = "OK";
     }
     catch (Exception ex) {

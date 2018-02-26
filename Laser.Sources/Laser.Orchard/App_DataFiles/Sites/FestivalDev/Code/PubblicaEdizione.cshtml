@@ -1,0 +1,46 @@
+@using System;
+@using System.Linq;
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Projections.Models;
+@using Laser.Orchard.Events.Models;
+@{
+    string retString = "Error"; //possile outcomes: Ok,Error
+    string eMsg = String.Empty;
+    try {
+        IContentManager _contentManager;
+        IOrchardServices _orchardServices;
+
+        //Resolve services.
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _orchardServices = Model.OrchardServices;
+        // Objects
+        ContentItem item = Model.ContentItem; // Edizione
+        dynamic itemDyn = Model.ContentItem;  // Edizione
+        var edizioneId = item.Id;
+        var publishedCalendarEvents = 0;
+        var publishingEvents= _contentManager.Query().ForType("CalendarEvent").ForVersion(VersionOptions.Latest)
+            .Join<FieldIndexPartRecord>()
+                    .Where(fip =>
+                        fip.StringFieldIndexRecords
+                            .Any(sfi =>
+                                sfi.PropertyName.Equals("CalendarEvent.Edizione.")
+                                && sfi.LatestValue.Contains("{" + edizioneId + "}")
+                            )
+                    ).List();
+
+        foreach (dynamic itemEvento in publishingEvents) {
+            var edizioneIds = itemEvento.CalendarEvent.Edizione.Ids as int[];
+            if (edizioneIds.Contains(edizioneId) && !((ContentItem)itemEvento).IsPublished()) {
+                _contentManager.Publish((ContentItem)itemEvento);
+                publishedCalendarEvents++;
+            }
+        }
+        Model.Tokens["Workflow"].SetState("InformationMessage", string.Format("Sono stati pubblicati {0} eventi.", publishedCalendarEvents));
+
+        retString = "OK";
+    } catch (Exception ex) {
+        eMsg += string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    }
+}@retString

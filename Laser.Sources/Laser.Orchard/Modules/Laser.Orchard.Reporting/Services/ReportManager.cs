@@ -19,6 +19,9 @@ using Orchard.Core.Title.Models;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Security.Permissions;
+using Orchard.Logging;
+using System.Text;
+using System.Globalization;
 
 namespace Laser.Orchard.Reporting.Services {
     public class ReportManager : IReportManager
@@ -32,10 +35,13 @@ namespace Laser.Orchard.Reporting.Services {
         private readonly IAuthorizer _authorizer;
         private Dictionary<int, Permission> _reportPermissions;
         private Dictionary<int, Permission> _dashboardPermissions;
+        private readonly IRepository<ReportRecord> _reportRepository;
         public Localizer T { get; set; }
+        public ILogger Log { get; set; }
 
         public ReportManager(
             IRepository<QueryPartRecord> queryRepository,
+            IRepository<ReportRecord> reportRepository,
             IProjectionManager projectionManager,
             IEnumerable<IGroupByParameterProvider> groupByProviders,
             IContentManager contentManager,
@@ -44,6 +50,7 @@ namespace Laser.Orchard.Reporting.Services {
             IAuthorizer authorizer)
         {
             this.queryRepository = queryRepository;
+            _reportRepository = reportRepository;
             this.projectionManager = projectionManager;
             _tokenizer = tokenizer;
             this.contentManager = contentManager;
@@ -51,6 +58,7 @@ namespace Laser.Orchard.Reporting.Services {
             _transactionManager = transactionManager;
             _authorizer = authorizer;
             T = NullLocalizer.Instance;
+            Log = NullLogger.Instance;
         }
 
         public IEnumerable<TypeDescriptor<GroupByDescriptor>> DescribeGroupByFields()
@@ -155,23 +163,51 @@ namespace Laser.Orchard.Reporting.Services {
                     throw new ArgumentOutOfRangeException("HQL query not valid: please specify select clause with at least 2 columns (the first for labels, the second for values).");
                 }
                 result = hql.SetResultTransformer(Transformers.AliasToEntityMap).Enumerable();
-            } catch {
-                result = new object[0];
+            } catch (Exception ex) {
+                Log.Error(ex, "RunHqlReport error - query: " + query);
+                throw new ArgumentOutOfRangeException("HQL query not valid: please specify select clause with at least 2 columns (the first for labels, the second for values).");
             }
 
-            foreach(var record in result) {
-                var ht = record as Hashtable;
-                string key = Convert.ToString(ht[hql.ReturnAliases[0]]);
-                if (returnValue.ContainsKey(key)) {
-                    var previousItem = returnValue[key];
-                    previousItem.AggregationValue += Convert.ToDouble(ht[hql.ReturnAliases[1]]);
-                    returnValue[key] = previousItem;
-                } else {
-                    returnValue[key] = new AggregationResult {
-                        AggregationValue = Convert.ToDouble(ht[hql.ReturnAliases[1]]),
-                        Label = key,
-                        GroupingField = hql.ReturnAliases[0]
-                    };
+            if (hql.ReturnAliases.Count() > 2) {
+                returnValue.Add("0", new AggregationResult {
+                    AggregationValue = 0,
+                    Label = "",
+                    GroupingField = "",
+                    Other = hql.ReturnAliases
+                });
+                int rownum = 0;
+                foreach (var record in result) {
+                    var row = new List<object>();
+                    var ht = record as Hashtable;
+                    foreach(var alias in hql.ReturnAliases) {
+                        row.Add(ht[alias]);
+                    }
+                    rownum++;
+                    returnValue.Add(rownum.ToString(), new AggregationResult {
+                        AggregationValue = 0,
+                        Label = "",
+                        GroupingField = "",
+                        Other = row.ToArray()
+                    });
+                }
+            } else {
+                foreach (var record in result) {
+                    var ht = record as Hashtable;
+                    string key = Convert.ToString(ht[hql.ReturnAliases[0]]);
+                    double value = 0;
+                    double.TryParse(Convert.ToString(ht[hql.ReturnAliases[1]]), out value);
+                    if (returnValue.ContainsKey(key)) {
+                        var previousItem = returnValue[key];
+                        previousItem.AggregationValue += value;
+                        returnValue[key] = previousItem;
+                    } else {
+                        returnValue[key] = new AggregationResult {
+                            AggregationValue = value,
+                            Label = key,
+                            GroupingField = hql.ReturnAliases[0],
+                            Other = null
+                        };
+                    }
                 }
             }
             return returnValue.Values;
@@ -276,6 +312,61 @@ namespace Laser.Orchard.Reporting.Services {
                 _dashboardPermissions = new Security.Permissions(contentManager).GetDashboardPermissions();
             }
             return _dashboardPermissions;
+        }
+        public string GetCsv(DataReportViewerPart part) {
+            var report = _reportRepository.Table.FirstOrDefault(c => c.Id == part.Record.Report.Id);
+            if (report == null) {
+                return null;
+            }
+            IEnumerable<AggregationResult> reportData = null;
+            if (string.IsNullOrWhiteSpace(report.GroupByCategory)) {
+                reportData = RunHqlReport(report, part.ContentItem);
+            } else {
+                reportData = RunReport(report, part.ContentItem);
+            }
+            var rows = reportData.ToList();
+            var sb = new StringBuilder();
+            var text = "";
+            if (rows.Count > 0) {
+                if (string.IsNullOrWhiteSpace(report.GroupByCategory) && rows[0].Other != null) {
+                    // multi column hql report
+                    foreach (var row in rows) {
+                        foreach (var col in (object[])(row.Other)) {
+                            if(col != null) {
+                                switch (col.GetType().Name) {
+                                    case "DateTime":
+                                        sb.AppendFormat("{0:yyyy-MM-dd HH:mm:ss}", col);
+                                        break;
+                                    case "Decimal":
+                                    case "Double":
+                                    case "Float":
+                                        sb.Append(Convert.ToString(col, CultureInfo.InvariantCulture).Replace('.', ','));
+                                        break;
+                                    default:
+                                        text = Convert.ToString(col);
+                                        if (text.Contains(';')) {
+                                            text = string.Format("\"{0}\"", text);
+                                        }
+                                        sb.Append(text);
+                                        break;
+                                }
+                            }
+                            sb.Append(";"); // terminatore di campo
+                        }
+                        sb.Append("\r\n"); // terminatore di riga
+                    }
+                } else {
+                    // standard report
+                    foreach (var row in rows) {
+                        text = Convert.ToString(row.Label);
+                        if (text.Contains(';')) {
+                            text = string.Format("\"{0}\"", text);
+                        }
+                        sb.AppendFormat("{0};{1}\r\n", text, row.AggregationValue);
+                    }
+                }
+            }
+            return sb.ToString();
         }
     }
 }

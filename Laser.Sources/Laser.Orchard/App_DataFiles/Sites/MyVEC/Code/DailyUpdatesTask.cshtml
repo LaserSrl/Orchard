@@ -655,7 +655,7 @@
                     dynamic scheda = ((dynamic)Model.OrchardServices.ContentManager.Get(siId));
                     if (scheda != null) { //item may have been deleted
                         //mark all HID operations that we have to perform for each user
-                        if (scheda.SchedaInvito.AbilitaTornelli.Value == null || scheda.SchedaInvito.AbilitaTornelli.Value == true) {
+                        if (scheda.SchedaInvito.AbilitaTornelli.Value == true) {
                             int userId = (int)(scheda.CommonPart.Creator.Value);
                             List<KeyValuePair<int, int>> actions = null;
                             KeyValuePair<int, int> action = new KeyValuePair<int, int>(credentialAction, siId);
