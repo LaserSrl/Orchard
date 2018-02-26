@@ -53,9 +53,7 @@ namespace Laser.Orchard.OpenAuthentication.Services {
 
         public bool CanRegister() {
             var openAuthenticationSettings = _orchardServices.WorkContext.CurrentSite.As<OpenAuthenticationSettingsPart>();
-            var orchardUsersSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
-
-            return orchardUsersSettings.UsersCanRegister && openAuthenticationSettings.AutoRegistrationEnabled;
+            return openAuthenticationSettings.AutoRegistrationEnabled;
         }
 
         public IUser CreateUser(OpenAuthCreateUserParams createUserParams) {
