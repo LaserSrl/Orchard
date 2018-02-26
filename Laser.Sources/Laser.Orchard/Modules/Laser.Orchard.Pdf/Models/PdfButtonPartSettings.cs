@@ -4,8 +4,8 @@
         private float _footerHeight = 10f; // default value
         private float _leftMargin = 50f; // default value
         private float _rightMargin = 50f; // default value
-        private float _pageWidth = 210f; // default value (A4)
-        private float _pageHeight = 297f; // default value (A4)
+        private float _pageWidth = 595f; // default value (A4)
+        private float _pageHeight = 842f; // default value (A4)
         public int TemplateId { get; set; }
         public string FileNameWithoutExtension { get; set; }
         public string Header { get; set; }
