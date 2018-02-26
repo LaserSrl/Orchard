@@ -7,12 +7,9 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Core.Contents;
 using Orchard.Tokens;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web;
 using System.Web.Mvc;
 
 
@@ -34,31 +31,25 @@ namespace Laser.Orchard.Pdf.Controllers {
             T = NullLocalizer.Instance;
         }
 
-        private ActionResult GeneratePdf(ContentItem ci) {
+        private ActionResult GeneratePdf(ContentItem ci, int pid) {
             if (ci != null) {
                 if (_orchardServices.Authorizer.Authorize(Permissions.ViewContent, ci)) {
                    var part = ci.Parts.FirstOrDefault(x => x.PartDefinition.Name == typeof(PdfButtonPart).Name);
                     if (part != null) {
-                        //var settings = part.Settings.GetModel<PdfButtonPartSettings>();
-                        //ParseTemplateContext templateCtx = new ParseTemplateContext();
-                        //var template = _templateService.GetTemplate(settings.TemplateId);
-                        //var editModel = new Dictionary<string, object>();
-                        //editModel.Add("Content", ci);
-                        //templateCtx.Model = editModel;
-                        //var html = _templateService.ParseTemplate(template, templateCtx);
                         var settings = part.Settings.GetModel<PdfButtonPartSettings>();
-                        var html = _templateService.RitornaParsingTemplate(ci, settings.TemplateId);
+                        var buttonSettings = settings.PdfButtons.ElementAt(pid);
+                        var html = _templateService.RitornaParsingTemplate(ci, buttonSettings.TemplateId);
                         var editModel = new Dictionary<string, object>();
                         editModel.Add("Content", ci);
-                        var header = _tokenizer.Replace(settings.Header, editModel);
-                        var footer = _tokenizer.Replace(settings.Footer, editModel);
+                        var header = _tokenizer.Replace(buttonSettings.Header, editModel);
+                        var footer = _tokenizer.Replace(buttonSettings.Footer, editModel);
                         byte[] buffer = null;
                         if (string.IsNullOrWhiteSpace(header) && string.IsNullOrWhiteSpace(footer)) {
-                            buffer = _pdfServices.PdfFromHtml(html, settings.PageWidth, settings.PageHeight, settings.LeftMargin, settings.RightMargin, settings.HeaderHeight, settings.FooterHeight);
+                            buffer = _pdfServices.PdfFromHtml(html, buttonSettings.PageWidth, buttonSettings.PageHeight, buttonSettings.LeftMargin, buttonSettings.RightMargin, buttonSettings.HeaderHeight, buttonSettings.FooterHeight);
                         }
                         else {
                             var headerFooter = _pdfServices.GetHtmlHeaderFooterPageEvent(header, footer);
-                            buffer = _pdfServices.PdfFromHtml(html, settings.PageWidth, settings.PageHeight, settings.LeftMargin, settings.RightMargin, settings.HeaderHeight, settings.FooterHeight, headerFooter);
+                            buffer = _pdfServices.PdfFromHtml(html, buttonSettings.PageWidth, buttonSettings.PageHeight, buttonSettings.LeftMargin, buttonSettings.RightMargin, buttonSettings.HeaderHeight, buttonSettings.FooterHeight, headerFooter);
                         }
                         var fileName = _tokenizer.Replace(settings.FileNameWithoutExtension, editModel);
                         fileName = string.Format("{0}.pdf", (string.IsNullOrWhiteSpace(fileName) ? "page" : fileName.Trim()));
@@ -75,15 +66,15 @@ namespace Laser.Orchard.Pdf.Controllers {
         }
 
 
-        public ActionResult Generate(int id) {
-            var ci = _orchardServices.ContentManager.Get(id, VersionOptions.Published);
-            return GeneratePdf(ci);
+        public ActionResult Generate(int cid, int pid) {
+            var ci = _orchardServices.ContentManager.Get(cid, VersionOptions.Published);
+            return GeneratePdf(ci, pid);
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
-        public ActionResult Preview(int id) {
+        public ActionResult Preview(int id, int pid) {
             var ci = _orchardServices.ContentManager.Get(id, VersionOptions.Latest);
-            return GeneratePdf(ci);
+            return GeneratePdf(ci, pid);
         }
 
         //public ActionResult Preview(int id) {
