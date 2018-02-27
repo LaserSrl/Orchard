@@ -6,7 +6,19 @@
         private float _rightMargin = 50f; // default value
         private float _pageWidth = 595f; // default value (A4)
         private float _pageHeight = 842f; // default value (A4)
+        private string _label = "PDF"; // default value
+        public string Label {
+            get {
+                return _label;
+            }
+            set {
+                _label = string.IsNullOrWhiteSpace(value) ? _label : value;
+            }
+        }
+        public int Position { get; set; }
+        public bool Delete { get; set; }
         public int TemplateId { get; set; }
+        public string FileNameWithoutExtension { get; set; }
         public string Header { get; set; }
         public string Footer { get; set; }
         public float HeaderHeight {

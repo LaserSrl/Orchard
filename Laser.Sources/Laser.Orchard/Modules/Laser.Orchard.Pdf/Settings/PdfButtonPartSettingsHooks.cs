@@ -24,7 +24,6 @@ namespace Laser.Orchard.Pdf.Settings {
             updateModel.TryUpdateModel(model, "PdfButtonPartSettings", null, null);
 
             // carica ogni campo dei settings
-            builder.WithSetting("PdfButtonPartSettings.FileNameWithoutExtension", model.FileNameWithoutExtension);
             builder.WithSetting("PdfButtonPartSettings.PdfButtons", model.ParseListToString());
 
             yield return DefinitionTemplate(model);

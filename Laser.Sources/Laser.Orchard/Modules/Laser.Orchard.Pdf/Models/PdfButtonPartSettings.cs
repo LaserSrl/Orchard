@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Laser.Orchard.Pdf.Models {
     public class PdfButtonPartSettings {
-        public string FileNameWithoutExtension { get; set; }
         public IEnumerable<PdfButtonSettings> PdfButtons { get; set; }
         public PdfButtonPartSettings() {
             var defaultButton= new List<PdfButtonSettings>();
@@ -20,6 +20,7 @@ namespace Laser.Orchard.Pdf.Models {
             foreach(var el in json) {
                 list.Add(el.ToObject<PdfButtonSettings>());
             }
+            PdfButtons = list.OrderBy(x => x.Position);
         }
     }
 }

@@ -1,67 +1,78 @@
 ﻿@model Laser.Orchard.Pdf.Models.PdfButtonPartSettings
 @using Laser.Orchard.TemplateManagement.Models;
-@{ 
+@using Laser.Orchard.Commons.Helpers;
+@{
+    Script.Require("jQueryUI_Sortable").AtHead();
+    Script.Require("jQuery_NestedModels").AtHead();
+    Style.Require("FontAwesome430").AtHead();
+    Style.Require("jQuery_UI_Multiselect_Widget").AtHead();
     List<SelectListItem> templateList = new List<SelectListItem>();
     Laser.Orchard.TemplateManagement.Services.ITemplateService _templateService = null;
-    if(WorkContext.TryResolve<Laser.Orchard.TemplateManagement.Services.ITemplateService>(out _templateService)) {
-        foreach(TemplatePart tp in _templateService.GetTemplates()) {
-            templateList.Add(new SelectListItem { Text = tp.Title, Value = tp.Id.ToString(), Selected = (tp.Id == Model.TemplateId) });
+    if (WorkContext.TryResolve<Laser.Orchard.TemplateManagement.Services.ITemplateService>(out _templateService)) {
+        foreach (TemplatePart tp in _templateService.GetTemplates()) {
+            templateList.Add(new SelectListItem { Text = tp.Title, Value = tp.Id.ToString() });
         }
     }
 }
+@using (Script.Head()) {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var tabs = $("#buttonstabs").tabs();
+            tabs.find(".ui-tabs-nav").sortable({
+                axis: "x",
+                stop: function () {
+                    tabs.tabs("refresh");
+                },
+                start: function (event, ui) {
+                    ui.item.startPos = ui.item.index();
+                },
+                update: function (event, ui) {
+                    var numberOfItems = ui.item.context.parentElement.children.length;
+                    laquestion = ui.item.find("a").attr("href");
+                    $(laquestion).find('.position-field').val(ui.item.index());
+                    for (var i = 0; i < numberOfItems; i++) {
+                        var element = $(ui.item.context.parentElement.children[i]).find("a").attr("href");
+                        var positionField = $(element).find('.position-field');
+                        if (positionField != null) {
+                            positionField.val(i);
+                        }
+                    }
+                }
+            });
+            ScriviMenuTab();
+        });
+
+        function ScriviMenuTab() {
+            var menutab = "";
+            var numdom = 0;
+            $('div.j_settings').each(function () {
+                if ($(this).find("input.mark-for-delete").val() == "False") {
+                    numdom++;
+                    var idsettings = $(this).find(".j_idsettings").val();
+                    menutab += "<li><a href='#" + idsettings + "'>" + numdom + "</a></li>";
+                    $(this).find("input.position-field").val(numdom);
+                }
+            });
+
+            $("#j_menusettings").html(menutab);
+            var tabs = $("#buttonstabs").tabs();
+            tabs.tabs("refresh");
+            if (numdom > 0) {
+                tabs = $("#buttonstabs").tabs("option", "active", numdom - 1);
+            }
+            tabs.tabs("refresh");
+        }
+    </script>
+}
 <fieldset>
     <legend></legend>
-    <div>
-        <label for="@Html.FieldIdFor(m => m.FileNameWithoutExtension)">@T("File Name without extension")</label>
-        @Html.TextBoxFor(m => m.FileNameWithoutExtension, new { @class = "text large tokenized" })
-        <span class="hint">@T("Name of the file as downloaded by users. Extension pdf is added at the end of this name by the system.")</span>
-    </div>
-    <div>
-        <div>
-            <label for="@Html.FieldIdFor(m => m.TemplateId)">@T("Template ID")</label>
-            @Html.DropDownListFor(m => m.TemplateId, templateList)
-            <span class="hint">@T("Template to be used to generate a printable version of the content.")</span>
-        </div>
-        <div>
-            <label for="@Html.FieldIdFor(m => m.Header)">@T("Header")</label>
-            @Html.TextAreaFor(m => m.Header, new { @class = "text large tokenized" })
-            <span class="hint">@T("Header of each page in PDF document. Leave blank for no header.")</span>
-        </div>
-        <div>
-            <label for="@Html.FieldIdFor(m => m.HeaderHeight)">@T("Header Height")</label>
-            @Html.TextBoxFor(m => m.HeaderHeight, new { @class = "text medium tokenized", @type = "number" })
-            <span class="hint">@T("Top margin of the page in PDF document. Default 10. To get the right value use: (inch * 72) or (mm * 720 / 254).")</span>
-        </div>
-        <div>
-            <label for="@Html.FieldIdFor(m => m.Footer)">@T("Footer")</label>
-            @Html.TextAreaFor(m => m.Footer, new { @class = "text large tokenized" })
-            <span class="hint">@T("Footer of each page in PDF document. Leave blank for no footer.")</span>
-        </div>
-        <div>
-            <label for="@Html.FieldIdFor(m => m.FooterHeight)">@T("Footer Height")</label>
-            @Html.TextBoxFor(m => m.FooterHeight, new { @class = "text medium tokenized", @type = "number" })
-            <span class="hint">@T("Bottom margin of the page in PDF document. Default 10. To get the right value use: (inch * 72) or (mm * 720 / 254).")</span>
-        </div>
-        <div>
-            <label for="@Html.FieldIdFor(m => m.LeftMargin)">@T("Left Margin")</label>
-            @Html.TextBoxFor(m => m.LeftMargin, new { @class = "text medium tokenized", @type = "number" })
-            <span class="hint">@T("Left margin of the page in PDF document. Default 50. To get the right value use: (inch * 72) or (mm * 720 / 254).")</span>
-        </div>
-        <div>
-            <label for="@Html.FieldIdFor(m => m.RightMargin)">@T("Right Margin")</label>
-            @Html.TextBoxFor(m => m.RightMargin, new { @class = "text medium tokenized", @type = "number" })
-            <span class="hint">@T("Right margin of the page in PDF document. Default 50. To get the right value use: (inch * 72) or (mm * 720 / 254).")</span>
-        </div>
-        <div>
-            <label for="@Html.FieldIdFor(m => m.PageWidth)">@T("Page Width")</label>
-            @Html.TextBoxFor(m => m.PageWidth, new { @class = "text medium tokenized", @type = "number" })
-            <span class="hint">@T("Default value: 595 (A4). To get the right value use: (inch * 72) or (mm * 720 / 254).")</span>
-        </div>
-        <div>
-            <label for="@Html.FieldIdFor(m => m.PageHeight)">@T("Page Height")</label>
-            @Html.TextBoxFor(m => m.PageHeight, new { @class = "text medium tokenized", @type = "number" })
-            <span class="hint">@T("Default value: 842 (A4). To get the right value use: (inch * 72) or (mm * 720 / 254).")</span>
-        </div>
+    <p id="AddButton">
+        <i class="fa fa-plus" style="color: green"></i>@Html.LinkToAddNestedForm(m => m.PdfButtons, T("Add Button").Text, "#buttonstabs", ".j_settings", null, null, "ScriviMenuTab();")
+    </p>
+    <div id="buttonstabs">
+        <ul id="j_menusettings" class="ui-tabs-nav">
+        </ul>
+        @Html.EditorFor(m => m.PdfButtons)
     </div>
 </fieldset>
 @Display.TokenHint()

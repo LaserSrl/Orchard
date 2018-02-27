@@ -37,6 +37,10 @@ namespace Laser.Orchard.Pdf.Controllers {
                    var part = ci.Parts.FirstOrDefault(x => x.PartDefinition.Name == typeof(PdfButtonPart).Name);
                     if (part != null) {
                         var settings = part.Settings.GetModel<PdfButtonPartSettings>();
+                        string toParse = "";
+                        if (part.Settings.TryGetValue("PdfButtonPartSettings.PdfButtons", out toParse)) {
+                            settings.LoadStringToList(toParse);
+                        }
                         var buttonSettings = settings.PdfButtons.ElementAt(pid);
                         var html = _templateService.RitornaParsingTemplate(ci, buttonSettings.TemplateId);
                         var editModel = new Dictionary<string, object>();
@@ -51,7 +55,7 @@ namespace Laser.Orchard.Pdf.Controllers {
                             var headerFooter = _pdfServices.GetHtmlHeaderFooterPageEvent(header, footer);
                             buffer = _pdfServices.PdfFromHtml(html, buttonSettings.PageWidth, buttonSettings.PageHeight, buttonSettings.LeftMargin, buttonSettings.RightMargin, buttonSettings.HeaderHeight, buttonSettings.FooterHeight, headerFooter);
                         }
-                        var fileName = _tokenizer.Replace(settings.FileNameWithoutExtension, editModel);
+                        var fileName = _tokenizer.Replace(buttonSettings.FileNameWithoutExtension, editModel);
                         fileName = string.Format("{0}.pdf", (string.IsNullOrWhiteSpace(fileName) ? "page" : fileName.Trim()));
                         return File(buffer, "application/pdf", fileName);
                     }
@@ -66,8 +70,8 @@ namespace Laser.Orchard.Pdf.Controllers {
         }
 
 
-        public ActionResult Generate(int cid, int pid) {
-            var ci = _orchardServices.ContentManager.Get(cid, VersionOptions.Published);
+        public ActionResult Generate(int id, int pid) {
+            var ci = _orchardServices.ContentManager.Get(id, VersionOptions.Published);
             return GeneratePdf(ci, pid);
         }
 

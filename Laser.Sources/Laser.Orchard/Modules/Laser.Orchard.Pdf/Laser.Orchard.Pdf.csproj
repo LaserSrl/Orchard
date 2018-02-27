@@ -119,7 +119,9 @@
       <Name>Laser.Orchard.TemplateManagement</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\PdfButtonSettings.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\PdfButtonPart.cshtml" />
   </ItemGroup>
