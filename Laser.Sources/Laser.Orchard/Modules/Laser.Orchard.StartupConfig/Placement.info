@@ -5,6 +5,7 @@
   Place  aaFields_Numeric__CommonPart-Creator="-"/>
   Place  aaFields_Numeric__CommonPart-LastModifier="-"/>
   -->
+  <Place Parts_JsonDataTable_Edit="Content:2"/>
   <Place Parts_FavoriteCulturePart_Edit="Content:2" />
   
   <Place Fields_Numeric__CommonPart-Creator="-"/>
