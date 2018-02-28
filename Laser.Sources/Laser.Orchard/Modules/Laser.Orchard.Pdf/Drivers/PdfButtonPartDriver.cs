@@ -1,5 +1,6 @@
 ﻿using Laser.Orchard.Pdf.Models;
 using Laser.Orchard.Pdf.ViewModels;
+using Newtonsoft.Json.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
@@ -23,7 +24,12 @@ namespace Laser.Orchard.Pdf.Drivers {
             return Editor(part, shapeHelper);
         }
         protected override DriverResult Editor(PdfButtonPart part, dynamic shapeHelper) {
-            var model = new PdfButtonPartVM { ContentId = part.Id };
+            var settings = part.Settings.GetModel<PdfButtonPartSettings>();
+            string toParse = "";
+            if (part.Settings.TryGetValue("PdfButtonPartSettings.PdfButtons", out toParse)) {
+                settings.LoadStringToList(toParse);
+            }
+            var model = new PdfButtonPartVM { ContentId = part.Id, ButtonsSettings = settings };
             return ContentShape("Parts_PdfButtonPart", () => 
                 shapeHelper.EditorTemplate(TemplateName: "Parts/PdfButtonPart", Model: model, Prefix: Prefix));
         }
