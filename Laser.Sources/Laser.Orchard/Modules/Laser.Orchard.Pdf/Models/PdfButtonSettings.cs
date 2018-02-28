@@ -18,6 +18,7 @@
         public int Position { get; set; }
         public bool Delete { get; set; }
         public int TemplateId { get; set; }
+        public bool PublishedVersionOfContent { get; set; }
         public string FileNameWithoutExtension { get; set; }
         public string Header { get; set; }
         public string Footer { get; set; }

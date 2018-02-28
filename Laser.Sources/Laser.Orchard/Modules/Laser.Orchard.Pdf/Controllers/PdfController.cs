@@ -41,7 +41,7 @@ namespace Laser.Orchard.Pdf.Controllers {
                         if (part.Settings.TryGetValue("PdfButtonPartSettings.PdfButtons", out toParse)) {
                             settings.LoadStringToList(toParse);
                         }
-                        var buttonSettings = settings.PdfButtons.ElementAt(pid);
+                        var buttonSettings = settings.PdfButtons.First(x => x.Position == pid);
                         var html = _templateService.RitornaParsingTemplate(ci, buttonSettings.TemplateId);
                         var editModel = new Dictionary<string, object>();
                         editModel.Add("Content", ci);

@@ -18,7 +18,10 @@ namespace Laser.Orchard.Pdf.Models {
             var list = new List<PdfButtonSettings>();
             var json = JToken.Parse(toParse);
             foreach(var el in json) {
-                list.Add(el.ToObject<PdfButtonSettings>());
+                var button = el.ToObject<PdfButtonSettings>();
+                if(button.Delete == false) {
+                    list.Add(button);
+                }
             }
             PdfButtons = list.OrderBy(x => x.Position);
         }
