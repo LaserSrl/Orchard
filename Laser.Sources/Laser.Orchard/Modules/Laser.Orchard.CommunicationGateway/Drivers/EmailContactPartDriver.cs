@@ -10,6 +10,7 @@ using Orchard.Localization;
 using Orchard.UI.Admin;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Xml.Linq;
@@ -176,11 +177,11 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
 
                     var DataInserimento = rec.Attribute("DataInserimento");
                     if (DataInserimento != null)
-                        recMail.DataInserimento = Convert.ToDateTime(DataInserimento.Value);
+                        recMail.DataInserimento = Convert.ToDateTime(DataInserimento.Value, CultureInfo.InvariantCulture);
 
                     var DataModifica = rec.Attribute("DataModifica");
                     if (DataModifica != null)
-                        recMail.DataModifica = Convert.ToDateTime(DataModifica.Value);
+                        recMail.DataModifica = Convert.ToDateTime(DataModifica.Value, CultureInfo.InvariantCulture);
 
                     var Produzione = rec.Attribute("Produzione");
                     if (Produzione != null)
@@ -200,7 +201,7 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
 
                     var DataUnsubscribe = rec.Attribute("DataUnsubscribe");
                     if (DataUnsubscribe != null)
-                        recMail.DataUnsubscribe = Convert.ToDateTime(DataUnsubscribe.Value);
+                        recMail.DataUnsubscribe = Convert.ToDateTime(DataUnsubscribe.Value, CultureInfo.InvariantCulture);
                 }
                 _repoEmail.Flush();
             }
@@ -213,14 +214,16 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     XElement emailText = new XElement("EmailRecord");
                     emailText.SetAttributeValue("Language", rec.Language);
                     emailText.SetAttributeValue("Validated", rec.Validated);
-                    emailText.SetAttributeValue("DataInserimento", rec.DataInserimento);
-                    emailText.SetAttributeValue("DataModifica", rec.DataModifica);
+                    emailText.SetAttributeValue("DataInserimento", rec.DataInserimento.ToString(CultureInfo.InvariantCulture));
+                    emailText.SetAttributeValue("DataModifica", rec.DataModifica.ToString(CultureInfo.InvariantCulture));
                     emailText.SetAttributeValue("Email", rec.Email);
                     emailText.SetAttributeValue("Produzione", rec.Produzione);
                     emailText.SetAttributeValue("AccettatoUsoCommerciale", rec.AccettatoUsoCommerciale);
                     emailText.SetAttributeValue("AutorizzatoTerzeParti", rec.AutorizzatoTerzeParti);
                     emailText.SetAttributeValue("KeyUnsubscribe", rec.KeyUnsubscribe);
-                    emailText.SetAttributeValue("DataUnsubscribe", rec.DataUnsubscribe);
+                    if (rec.DataUnsubscribe.HasValue) {
+                        emailText.SetAttributeValue("DataUnsubscribe", rec.DataUnsubscribe.Value.ToString(CultureInfo.InvariantCulture));
+                    }
                     root.Add(emailText);
                 }
             }
