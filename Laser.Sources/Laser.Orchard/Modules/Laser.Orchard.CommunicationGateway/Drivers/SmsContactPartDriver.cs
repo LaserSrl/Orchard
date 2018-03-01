@@ -10,6 +10,7 @@ using Orchard.Localization;
 using Orchard.UI.Admin;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Xml.Linq;
@@ -181,11 +182,11 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
 
                     var DataModifica = sms.Attribute("DataModifica");
                     if (DataModifica != null)
-                        comSms.DataModifica = Convert.ToDateTime(DataModifica.Value);
+                        comSms.DataModifica = Convert.ToDateTime(DataModifica.Value, CultureInfo.InvariantCulture);
 
                     var DataInserimento = sms.Attribute("DataInserimento");
                     if (DataInserimento != null)
-                        comSms.DataInserimento = Convert.ToDateTime(DataInserimento.Value);
+                        comSms.DataInserimento = Convert.ToDateTime(DataInserimento.Value, CultureInfo.InvariantCulture);
 
                     var Produzione = sms.Attribute("Produzione");
                     if (Produzione != null)
@@ -210,8 +211,8 @@ namespace Laser.Orchard.CommunicationGateway.Drivers {
                     XElement smsText = new XElement("SmsRecord");
                     smsText.SetAttributeValue("Language", rec.Language);
                     smsText.SetAttributeValue("Validated", rec.Validated);
-                    smsText.SetAttributeValue("DataInserimento", rec.DataInserimento);
-                    smsText.SetAttributeValue("DataModifica", rec.DataModifica);
+                    smsText.SetAttributeValue("DataInserimento", rec.DataInserimento.ToString(CultureInfo.InvariantCulture));
+                    smsText.SetAttributeValue("DataModifica", rec.DataModifica.ToString(CultureInfo.InvariantCulture));
                     smsText.SetAttributeValue("Sms", rec.Sms);
                     smsText.SetAttributeValue("Prefix", rec.Prefix);
                     smsText.SetAttributeValue("Produzione", rec.Produzione);
