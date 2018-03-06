@@ -26,7 +26,8 @@ namespace Laser.Orchard.Caligoo.Services {
         ContentItem GetContact(string caligooUserId);
         ContentItem CreateContact(LoginLogoutEventMessage caligooUserEvent);
         UserMessage GetUserDetails(string caligooUserId);
-        List<string> GetFilteredCaligooUsers(CaligooUsersFilterValue filters);
+        List<UserMessage> GetFilteredCaligooUsers(CaligooUsersFilterValue filters);
+        List<string> GetFilteredCaligooUsersIds(CaligooUsersFilterValue filters);
         List<LocationMessage> GetLocations();
         void UpdateLocation(LocationMessage messsage);
     }
@@ -127,17 +128,20 @@ namespace Laser.Orchard.Caligoo.Services {
             }
             return null;
         }
-        public List<string> GetFilteredCaligooUsers(CaligooUsersFilterValue filters) {
-            var result = new List<string>();
+        public List<UserMessage> GetFilteredCaligooUsers(CaligooUsersFilterValue filters) {
+            var result = new List<UserMessage>();
             var response = ResultFromCaligooApiGet(_caligooSettings.UsersPath, filters.GetQueryString());
             if (response.Success) {
                 var jUsers = JObject.Parse(response.Body);
                 var userList = jUsers.ToObject<UserListMessage>();
                 foreach (var usr in userList.Data) {
-                    result.Add(usr.CaligooUserId);
+                    result.Add(new UserMessage { CaligooUserId = usr.CaligooUserId, CaligooUserName = usr.CaligooUserName });
                 }
             }
             return result;
+        }
+        public List<string> GetFilteredCaligooUsersIds(CaligooUsersFilterValue filters) {
+            return GetFilteredCaligooUsers(filters).Select(x => x.CaligooUserId).ToList();
         }
         public List<LocationMessage> GetLocations() {
             var result = new List<LocationMessage>();
