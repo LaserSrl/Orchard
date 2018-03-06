@@ -478,6 +478,7 @@
     <Content Include="Views\EditorTemplates\Parts\EnvironmentVariablesSettings.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\JsonDataTable.cshtml" />
     <Content Include="Views\DefinitionTemplates\JsonDataTablePartSettings.cshtml" />
+    <Content Include="Views\Parts\JsonDataTable.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

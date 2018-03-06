@@ -7,14 +7,9 @@
         <span class="hint">@T("Columns definition of the bootstrap-table as a json array. Example: [{field:'name',title:'Name'},{field:'description',title:'Description'}]")</span>
     </div>
     <div>
-        <label for="@Html.FieldIdFor(m => m.UniqueId)">@T("Row ID field")</label>
-        @Html.TextBoxFor(m => m.UniqueId, new { @class = "text large tokenized" })
-        <span class="hint">@T("Name of row ID field. Default: id.")</span>
-    </div>
-    <div>
-        <label for="@Html.FieldIdFor(m => m.CardView)">@T("Card View")</label>
-        @Html.CheckBoxFor(m => m.CardView)
-        <span class="hint">@T("Check to set card view as default view. Otherwise table view will be used.")</span>
+        <label for="@Html.FieldIdFor(m => m.MaxRows)">@T("Max Number of Rows")</label>
+        @Html.TextBoxFor(m => m.MaxRows, new { @class = "text large tokenized number" })
+        <span class="hint">@T("Limit number of rows in the table. 0 means no limit.")</span>
     </div>
 </fieldset>
 @Display.TokenHint()
