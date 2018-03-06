@@ -155,4 +155,16 @@ namespace Laser.Orchard.StartupConfig {
             return 1;
         }
     }
+    [OrchardFeature("Laser.Orchard.StartupConfig.JsonDataTablePart")]
+    public class MigrationJsonDataTable : DataMigrationImpl {
+        public int Create() {
+            SchemaBuilder.CreateTable("JsonDataTablePartRecord", table => table
+                .ContentPartVersionRecord()
+                .Column<string>("TableData", c => c.Nullable().Unlimited())
+            );
+            ContentDefinitionManager.AlterPartDefinition("JsonDataTablePart", b => b
+                .Attachable(true));
+            return 1;
+        }
+    }
 }
