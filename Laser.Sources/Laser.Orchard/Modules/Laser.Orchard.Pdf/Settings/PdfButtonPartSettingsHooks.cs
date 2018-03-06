@@ -4,17 +4,17 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Globalization;
 
 namespace Laser.Orchard.Pdf.Settings {
     public class PdfButtonPartSettingsHooks : ContentDefinitionEditorEventsBase {
         public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypePartDefinition definition) {
             if (definition.PartDefinition.Name != "PdfButtonPart") yield break;
             var model = definition.Settings.GetModel<PdfButtonPartSettings>();
+            string toParse = "";
+            if (definition.Settings.TryGetValue("PdfButtonPartSettings.PdfButtons", out toParse)) {
+                model.LoadStringToList(toParse);
+            }
             yield return DefinitionTemplate(model);
         }
 
@@ -24,16 +24,7 @@ namespace Laser.Orchard.Pdf.Settings {
             updateModel.TryUpdateModel(model, "PdfButtonPartSettings", null, null);
 
             // carica ogni campo dei settings
-            builder.WithSetting("PdfButtonPartSettings.TemplateId", model.TemplateId.ToString());
-            builder.WithSetting("PdfButtonPartSettings.FileNameWithoutExtension", model.FileNameWithoutExtension);
-            builder.WithSetting("PdfButtonPartSettings.Header", model.Header);
-            builder.WithSetting("PdfButtonPartSettings.Footer", model.Footer);
-            builder.WithSetting("PdfButtonPartSettings.HeaderHeight", model.HeaderHeight.ToString(CultureInfo.InvariantCulture));
-            builder.WithSetting("PdfButtonPartSettings.FooterHeight", model.FooterHeight.ToString(CultureInfo.InvariantCulture));
-            builder.WithSetting("PdfButtonPartSettings.LeftMargin", model.LeftMargin.ToString(CultureInfo.InvariantCulture));
-            builder.WithSetting("PdfButtonPartSettings.RightMargin", model.RightMargin.ToString(CultureInfo.InvariantCulture));
-            builder.WithSetting("PdfButtonPartSettings.PageWidth", model.PageWidth.ToString(CultureInfo.InvariantCulture));
-            builder.WithSetting("PdfButtonPartSettings.PageHeight", model.PageHeight.ToString(CultureInfo.InvariantCulture));
+            builder.WithSetting("PdfButtonPartSettings.PdfButtons", model.ParseListToString());
 
             yield return DefinitionTemplate(model);
         }

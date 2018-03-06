@@ -282,11 +282,11 @@ namespace Laser.Orchard.Events.Drivers {
             }
             var DateTimeEnd = root.Attribute("DateTimeEnd");
             if (DateTimeEnd != null) {
-                part.DateTimeEnd = Convert.ToDateTime(DateTimeEnd.Value);
+                part.DateTimeEnd = Convert.ToDateTime(DateTimeEnd.Value, CultureInfo.InvariantCulture);
             }
             var DateTimeStart = root.Attribute("DateTimeStart");
             if (DateTimeStart != null) {
-                part.DateTimeStart = Convert.ToDateTime(DateTimeStart.Value);
+                part.DateTimeStart = Convert.ToDateTime(DateTimeStart.Value, CultureInfo.InvariantCulture);
             }
             var Repeat = root.Attribute("Repeat");
             if (Repeat != null) {
@@ -302,7 +302,7 @@ namespace Laser.Orchard.Events.Drivers {
             }
             var RepeatEndDate = root.Attribute("RepeatEndDate");
             if (RepeatEndDate != null) {
-                part.RepeatEndDate = Convert.ToDateTime(RepeatEndDate.Value);
+                part.RepeatEndDate = Convert.ToDateTime(RepeatEndDate.Value, CultureInfo.InvariantCulture);
             }
             var RepeatType = root.Attribute("RepeatType");
             if (RepeatType != null) {

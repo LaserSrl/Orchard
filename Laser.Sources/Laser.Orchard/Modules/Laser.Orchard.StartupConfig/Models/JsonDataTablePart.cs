@@ -23,16 +23,17 @@ namespace Laser.Orchard.StartupConfig.Models {
                 }
             }
         }
-        public DynamicJsonArray DataList {
+        public DynamicJsonObject DataList {
             get {
-                DynamicJsonObject djo = null;
                 var arr = new List<object>();
                 var aux = JArray.Parse(TableData);
-                foreach(var el in aux) {
+                foreach (var el in aux) {
                     var a1 = el.ToObject<Dictionary<string, object>>();
                     arr.Add(new DynamicJsonObject(a1));
                 }
-                return new DynamicJsonArray(arr.ToArray());
+                var jsonObj = new Dictionary<string, object>();
+                jsonObj.Add(string.Format("{0}Rows", ContentItem.ContentType), arr.ToArray());
+                return new DynamicJsonObject(jsonObj);
             }
         }
     }

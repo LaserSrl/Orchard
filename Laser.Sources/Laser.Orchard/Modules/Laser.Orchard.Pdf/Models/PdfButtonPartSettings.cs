@@ -1,62 +1,29 @@
-﻿namespace Laser.Orchard.Pdf.Models {
+﻿using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Laser.Orchard.Pdf.Models {
     public class PdfButtonPartSettings {
-        private float _headerHeight = 10f; // default value
-        private float _footerHeight = 10f; // default value
-        private float _leftMargin = 50f; // default value
-        private float _rightMargin = 50f; // default value
-        private float _pageWidth = 210f; // default value (A4)
-        private float _pageHeight = 297f; // default value (A4)
-        public int TemplateId { get; set; }
-        public string FileNameWithoutExtension { get; set; }
-        public string Header { get; set; }
-        public string Footer { get; set; }
-        public float HeaderHeight {
-            get {
-                return _headerHeight;
-            }
-            set {
-                _headerHeight = (value > 0) ? value : _headerHeight;
-            }
+        public IEnumerable<PdfButtonSettings> PdfButtons { get; set; }
+        public PdfButtonPartSettings() {
+            var defaultButton= new List<PdfButtonSettings>();
+            defaultButton.Add(new PdfButtonSettings());
+            PdfButtons = defaultButton;
         }
-        public float FooterHeight {
-            get {
-                return _footerHeight;
-            }
-            set {
-                _footerHeight = (value > 0) ? value : _footerHeight;
-            }
+        public string ParseListToString() {
+            var json = JToken.FromObject(PdfButtons);
+            return json.ToString();
         }
-        public float LeftMargin {
-            get {
-                return _leftMargin;
+        public void LoadStringToList(string toParse) {
+            var list = new List<PdfButtonSettings>();
+            var json = JToken.Parse(toParse);
+            foreach(var el in json) {
+                var button = el.ToObject<PdfButtonSettings>();
+                if(button.Delete == false) {
+                    list.Add(button);
+                }
             }
-            set {
-                _leftMargin = (value > 0) ? value : _leftMargin;
-            }
-        }
-        public float RightMargin {
-            get {
-                return _rightMargin;
-            }
-            set {
-                _rightMargin = (value > 0) ? value : _rightMargin;
-            }
-        }
-        public float PageWidth {
-            get {
-                return _pageWidth;
-            }
-            set {
-                _pageWidth = (value > 0) ? value : _pageWidth;
-            }
-        }
-        public float PageHeight {
-            get {
-                return _pageHeight;
-            }
-            set {
-                _pageHeight = (value > 0) ? value : _pageHeight;
-            }
+            PdfButtons = list.OrderBy(x => x.Position);
         }
     }
 }
