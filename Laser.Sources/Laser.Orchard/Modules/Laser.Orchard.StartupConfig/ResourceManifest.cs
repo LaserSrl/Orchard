@@ -12,12 +12,8 @@ namespace Laser.Orchard.StartupConfig {
 
             // color picker
             builder.Add().DefineScript("spectrum").SetUrl("spectrum.js").SetDependencies("jQuery");
-            // js table
-            builder.Add().DefineScript("bootstrap-table").SetUrl("bootstrap-table.min.js").SetDependencies("bootstrap");
-            builder.Add().DefineScript("bootstrap-editabletable").SetUrl("mindmup-editabletable.js").SetDependencies("bootstrap-table");
-            builder.Add().DefineScript("bootstrap-contextmenu").SetUrl("bootstrap-table-contextmenu.js").SetDependencies("bootstrap-table");
-            builder.Add().DefineScript("bootstrap-editable").SetUrl("bootstrap-editable.js").SetDependencies("bootstrap");
-            builder.Add().DefineScript("bootstrap-table-editable").SetUrl("bootstrap-table-editable.js").SetDependencies("bootstrap-table");
+            // tabulator
+            builder.Add().DefineScript("tabulator").SetUrl("tabulator.min.js").SetDependencies("jQueryUI");
         }
     }
 }
