@@ -31,6 +31,7 @@
   <!-- Display terms in content item details -->
   <Match DisplayType="Detail">
     <Place Fields_TaxonomyField="Content:5"/>
+    <Place Parts_JsonDataTable="Content:5" />
   </Match>
 
   <!-- Display terms in admin summaries -->

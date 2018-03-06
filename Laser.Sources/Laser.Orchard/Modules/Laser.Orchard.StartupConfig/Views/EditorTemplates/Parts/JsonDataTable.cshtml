@@ -33,10 +33,22 @@
                     data: @Html.Raw(Model.TableData)
                 });
                 $("#btnAddTop").click(function(){
-                    $table.tabulator('addRow', {}, true);
+                    var rows = $table.tabulator("getRows");
+                    if(@(settings.MaxRows) > 0 && rows.length >= @(settings.MaxRows)) {
+                        alert("@T("Max number of rows reached.")");
+                    }
+                    else {
+                        $table.tabulator('addRow', {}, true);
+                    }
                 });
                 $("#btnAddBottom").click(function(){
-                    $table.tabulator('addRow', {}, false);
+                    var rows = $table.tabulator("getRows");
+                    if(@(settings.MaxRows) > 0 && rows.length >= @(settings.MaxRows)) {
+                        alert("@T("Max number of rows reached.")");
+                    }
+                    else {
+                        $table.tabulator('addRow', {}, false);
+                    }
                 });
             });
         </script>
