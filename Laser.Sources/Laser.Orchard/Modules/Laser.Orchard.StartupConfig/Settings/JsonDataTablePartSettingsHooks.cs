@@ -4,6 +4,7 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -20,8 +21,7 @@ namespace Laser.Orchard.StartupConfig.Settings {
             updateModel.TryUpdateModel(model, "JsonDataTablePartSettings", null, null);
             // carica ogni campo dei settings
             builder.WithSetting("JsonDataTablePartSettings.ColumnsDefinition", model.ColumnsDefinition);
-            builder.WithSetting("JsonDataTablePartSettings.UniqueId", model.UniqueId);
-            builder.WithSetting("JsonDataTablePartSettings.CardView", model.CardView.ToString(CultureInfo.InvariantCulture));
+            builder.WithSetting("JsonDataTablePartSettings.MaxRows", Convert.ToString(model.MaxRows));
             yield return DefinitionTemplate(model);
         }
     }

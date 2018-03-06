@@ -9,6 +9,14 @@ using System.Web;
 
 namespace Laser.Orchard.StartupConfig.Drivers {
     public class JsonDataTablePartDriver : ContentPartDriver<JsonDataTablePart> {
+        protected override DriverResult Display(JsonDataTablePart part, string displayType, dynamic shapeHelper) {
+            if(displayType == "Detail") {
+                var settings = part.Settings.GetModel<JsonDataTablePartSettings>();
+                return ContentShape("Parts_JsonDataTable", () => shapeHelper.Parts_JsonDataTable(Table: part, Settings: settings));
+            } else {
+                return null;
+            }
+        }
         protected override DriverResult Editor(
         JsonDataTablePart part, dynamic shapeHelper) {
             return ContentShape("Parts_JsonDataTable_Edit",
