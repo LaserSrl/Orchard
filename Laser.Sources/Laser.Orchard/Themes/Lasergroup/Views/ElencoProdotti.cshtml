@@ -65,7 +65,7 @@
         jQuery.ajax({
             url: jQuery('#load_showcase').attr('href'),
             dataType: 'json',
-            data: 'alias=vetrina-prodotti&page=' + contPage + '&pageSize=@pageSize' + filter,
+            data: 'alias=vetrina-prodotti&page=' + contPage + '&pageSize=@pageSize' + filter + '&lang=@WorkContext.CurrentCulture',
             success: function (response) {
 
                 jQuery('#load_posts_loader').removeClass('active');
