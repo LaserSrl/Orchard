@@ -71,7 +71,7 @@ namespace Laser.Orchard.Caligoo.Projections {
             var util = new CaligooUtils();
             Action<IHqlExpressionFactory> expr = null;
             while (loop) {
-                var caligooUserIds = _caligooService.GetFilteredCaligooUsers(filter);
+                var caligooUserIds = _caligooService.GetFilteredCaligooUsersIds(filter);
                 if (caligooUserIds.Count == 0 && filter.Page == 1) {
                     // this condition is always false because there isn't any Caligoo user who match the criteria
                     expr = x => x.Eq("Id", 0);

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Orchard.UI.Resources;
-namespace Laser.Orchard.StartupConfig
-{
+﻿using Orchard.UI.Resources;
+namespace Laser.Orchard.StartupConfig {
     public class ResourceManifest : IResourceManifestProvider {
 
         public void BuildManifests(ResourceManifestBuilder builder) {
@@ -22,6 +16,8 @@ namespace Laser.Orchard.StartupConfig
             builder.Add().DefineScript("bootstrap-table").SetUrl("bootstrap-table.min.js").SetDependencies("bootstrap");
             builder.Add().DefineScript("bootstrap-editabletable").SetUrl("mindmup-editabletable.js").SetDependencies("bootstrap-table");
             builder.Add().DefineScript("bootstrap-contextmenu").SetUrl("bootstrap-table-contextmenu.js").SetDependencies("bootstrap-table");
+            builder.Add().DefineScript("bootstrap-editable").SetUrl("bootstrap-editable.js").SetDependencies("bootstrap");
+            builder.Add().DefineScript("bootstrap-table-editable").SetUrl("bootstrap-table-editable.js").SetDependencies("bootstrap-table");
         }
     }
 }

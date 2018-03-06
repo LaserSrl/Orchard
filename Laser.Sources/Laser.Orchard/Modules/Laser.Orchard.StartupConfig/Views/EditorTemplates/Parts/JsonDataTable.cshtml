@@ -1,12 +1,26 @@
 ﻿@model Laser.Orchard.StartupConfig.Models.JsonDataTablePart
 @using Laser.Orchard.StartupConfig.Models;
 @{ 
+    Style.Include("bootstrap-editable.css");
     Style.Include("bootstrap-table.min.css");
     Script.Require("bootstrap-table").AtHead();
-    Script.Require("bootstrap-editabletable").AtHead();
+    //Script.Require("bootstrap-editabletable").AtHead();
     Script.Require("bootstrap-contextmenu").AtHead();
+    Script.Require("bootstrap-editable").AtHead();
+    Script.Require("bootstrap-table-editable").AtHead();
     var settings = Model.Settings.GetModel<JsonDataTablePartSettings>();
 }
+@using (Script.Head()) {
+    <style type="text/css">
+        button.editable-submit {
+            background-color: #de625e;
+        }
+        button.editable-cancel {
+            background-color: #de625e;
+        }
+    </style>
+}
+
 <fieldset>
     <legend></legend>
     <div>
@@ -15,7 +29,7 @@
             <button type="button" class="btn btn-secondary" id="btnAddTop" style="margin-right:10px">@T("Add to begin")</button>
             <button type="button" class="btn btn-secondary" id="btnAddBottom" style="margin-right:10px">@T("Add to end")</button>
         </div>
-        <table id="table-@Model.Id"></table>
+        <table id="table-@Model.Id" class="json-data-table"></table>
         <ul id="context-menu" class="dropdown-menu">
             <li data-item="remove">
                 <a>Remove</a>
@@ -32,6 +46,7 @@
                 $table.bootstrapTable({
                     columns: @Html.Raw(settings.ColumnsDefinition),
                     uniqueId: "@Html.Raw(settings.UniqueId)",
+                    idField: "@Html.Raw(settings.UniqueId)",
                     sortStable: true,
                     undefinedText: '&nbsp;',
                     cardView: @((settings.CardView)? "true" : "false"),
@@ -43,15 +58,28 @@
                             updateHidden();
                         };
                     },
-                    onPostBody: function () {
-                        $table.editableTableWidget({editor: $('<textarea>')});
-                    },
+                    //onPostBody: function () {
+                    //    $table.editableTableWidget({editor: $('<input>')});
+                    //},
                     data: @Html.Raw(Model.TableData)
                 });
-                $table.on('change', function(evt, newValue){
-                    var row = evt.target.parentNode;
-                    $table.bootstrapTable('updateCell', {index: row.dataset.index, field: row.parentNode.parentNode.firstChild.firstChild.childNodes[evt.target.cellIndex].dataset.field, value: newValue})
+                //$table.on('change', function(evt, newValue){
+                //    var row = evt.target.parentNode;
+                //    $table.bootstrapTable('updateCell', {index: row.dataset.index, field: row.parentNode.parentNode.firstChild.firstChild.childNodes[evt.target.cellIndex].dataset.field, value: newValue})
+                //    updateHidden();
+
+                //    var $els = $table.find('.editable');
+                //    var next = $els[1];
+
+                //});
+                $table.on('editable-save.bs.table', function (e, field, row, old, $el) {
                     updateHidden();
+                    var $els = $table.find('.editable'),
+                    next = $els.index($el) + 1;
+                    if (next >= $els.length) {
+                        return;
+                    }
+                    $els.eq(next).editable('show');
                 });
                 $("#btnAddTop").click(function(){
                     $table.bootstrapTable('prepend', {});
