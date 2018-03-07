@@ -1,6 +1,7 @@
 ﻿using Laser.Orchard.Caligoo.Utils;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Laser.Orchard.Caligoo.Models {
     public class CaligooUsersFilterValue {
@@ -38,7 +39,7 @@ namespace Laser.Orchard.Caligoo.Models {
                 pars.Add(string.Format("type={0}", Type.Trim()));
             }
             if (Online.HasValue) {
-                pars.Add(string.Format("online={0}", Online.Value));
+                pars.Add(string.Format("online={0}", Online.Value.ToString(CultureInfo.InvariantCulture).ToLower()));
             }
             if(SinceTimestamp.HasValue) {
                 pars.Add(string.Format("since={0}", SinceTimestamp.Value));
@@ -47,16 +48,16 @@ namespace Laser.Orchard.Caligoo.Models {
                 pars.Add(string.Format("until={0}", UntilTimestamp.Value));
             }
             if (WifiSessionDurationMin.HasValue) {
-                pars.Add(string.Format("wifi_session_duration_min={0}", WifiSessionDurationMin));
+                pars.Add(string.Format("wifi_session_duration_min={0}", WifiSessionDurationMin.Value));
             }
             if (WifiSessionDurationMax.HasValue) {
-                pars.Add(string.Format("wifi_session_duration_max={0}", WifiSessionDurationMax));
+                pars.Add(string.Format("wifi_session_duration_max={0}", WifiSessionDurationMax.Value));
             }
             if (VisitDurationMin.HasValue) {
-                pars.Add(string.Format("visit_duration_min={0}", VisitDurationMin));
+                pars.Add(string.Format("visit_duration_min={0}", VisitDurationMin.Value));
             }
             if (VisitDurationMax.HasValue) {
-                pars.Add(string.Format("visit_duration_max={0}", VisitDurationMax));
+                pars.Add(string.Format("visit_duration_max={0}", VisitDurationMax.Value));
             }
             if (string.IsNullOrWhiteSpace(LocationList) == false) {
                 var list = LocationList.Trim().Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
