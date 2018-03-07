@@ -7,6 +7,7 @@ using Laser.Orchard.StartupConfig.Handlers;
 using Laser.Orchard.StartupConfig.IdentityProvider;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Newtonsoft.Json.Linq;
 using Orchard;
 using Orchard.Localization;
@@ -198,11 +199,15 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
+        [AlwaysAccessible]
+        [WebApiKeyFilterForControllers(true)]
         public ContentResult ExternalTokenLogOn(string __provider__, string token, string secret = "") {
             return ExternalTokenLogOnLogic(__provider__, token, secret);
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
+        [AlwaysAccessible]
+        [WebApiKeyFilterForControllers(true)]
         public ContentResult ExternalTokenLogOnSsl(string __provider__, string token, string secret = "") {
             return ExternalTokenLogOnLogic(__provider__, token, secret);
         }
