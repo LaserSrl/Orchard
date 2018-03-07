@@ -1,0 +1,163 @@
+@using Orchard;
+@using Orchard.ContentManagement;
+@using Orchard.Projections.Services;
+@using Orchard.Security;
+@using Orchard.Data;
+@using Orchard.Users.Models;
+@using Orchard.Users.Services;
+@using Orchard.Roles.Models;
+@using Orchard.Roles.Services;
+@using System.Text.RegularExpressions;
+@using System.Web.Security;
+@using System.Text;
+@using System.Globalization;
+@using System.Collections.Generic;
+@using Laser.Orchard.StartupConfig.Handlers;
+@using Laser.Orchard.CommunicationGateway.Services;
+
+
+@functions{
+    string retString = "Error"; //possile outcomes: OK, Error
+    string eMsg = String.Empty;
+
+    //services
+    IUserService _userService;
+    IMembershipService _membershipService;
+    IContentManager _contentManager;
+    //    IFieldIndexService _fieldIndexService;
+    IEncryptionService _encryptionService;
+    //   IContactRelatedEventHandler _contactEventHandler;
+    ICommunicationService _communicationService;
+
+    IRoleService _roleService;
+    IRepository<UserRolesPartRecord> _userRolesRepository;
+
+
+    int MinPasswordLength {
+        get {
+            // return 8;
+            return _membershipService.GetSettings().MinimumPasswordLength;
+        }
+    }
+    //this does the same validation that Orchard does in Orchard.Users/Controllers/AccountController
+    private bool ValidateRegistration(string userName, string email, string password) {
+        bool validate = true;
+
+        if (String.IsNullOrEmpty(userName)) {
+            validate = false;
+        } else {
+            if (userName.Length >= 255) {
+                validate = false;
+            }
+        }
+
+        if (String.IsNullOrEmpty(email)) {
+            validate = false;
+        } else if (email.Length >= 255) {
+            validate = false;
+        } else if (!Regex.IsMatch(email, UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
+            // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx
+            validate = false;
+        }
+
+        if (validate) {
+            if (!_userService.VerifyUserUnicity(userName, email)) {
+                //ModelState.AddModelError("userExists", T("User with that username and/or email already exists."));
+                validate = false;
+            }
+            if (password == null || password.Length < MinPasswordLength) {
+                //ModelState.AddModelError("password", T("You must specify a password of {0} or more characters.", MinPasswordLength));
+                validate = false;
+            }
+        }
+
+        return validate;
+    }
+
+    private string GeneratePassword() {
+        return Membership.GeneratePassword(MinPasswordLength, 0);
+    }
+    private string Encrypt(string text) {
+        return Convert.ToBase64String(_encryptionService.Encode(System.Text.Encoding.Unicode.GetBytes(text)));
+    }
+        }
+@{
+    try {
+        //Resolve services.
+        _userService = Model.OrchardServices.WorkContext.Resolve<IUserService>();
+        _membershipService = Model.OrchardServices.WorkContext.Resolve<IMembershipService>();
+        _communicationService = Model.OrchardServices.WorkContext.Resolve<ICommunicationService>();
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        //        _fieldIndexService = Model.OrchardServices.WorkContext.Resolve<IFieldIndexService>();
+        _encryptionService = Model.OrchardServices.WorkContext.Resolve<IEncryptionService>();
+
+        _roleService = Model.OrchardServices.WorkContext.Resolve<IRoleService>();
+        _userRolesRepository = Model.OrchardServices.WorkContext.Resolve<IRepository<UserRolesPartRecord>>();
+
+        //Get the value of the email field out of the SchedaInvito.
+        dynamic item = Model.ContentItem;
+        dynamic user;
+        string email = item.Utente.Email.Value;
+        string name = item.TitlePart.Title;
+        //Check whether there is already a Krake user with that email. If not, create it and store the password we used.
+        IUser kUser = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.Email == email).List().FirstOrDefault();
+        if (kUser == null) {
+            //Generate valid Username
+            string uName = email;
+            //Generate valid password
+            string password = GeneratePassword(); //We are going to use the password in the email we send to the guest.
+            //Create user
+            if (ValidateRegistration(uName, email, password)) {
+                kUser = _membershipService.CreateUser(new CreateUserParams(uName, password, email, null, null, true));
+                string encryptedPwd = Encrypt(password);
+                user = kUser.ContentItem;
+
+                var role = _roleService.GetRoleByName("UtenteApp");
+                if (role != null) {
+                    _userRolesRepository.Create(new UserRolesPartRecord {
+                        UserId = user.Id,
+                        Role = role
+                    });
+                }
+                //item.CommonPart.Owner = user.UserPart;
+
+                user.ProfilePart.Nome.Value = item.Utente.Nome.Value;
+                user.ProfilePart.Cognome.Value = item.Utente.Cognome.Value;
+                user.ProfilePart.TipoUtente.Value = item.Utente.TipoUtente.Value;
+                user.ProfilePart.PushPranzo.Value = true;
+                user.ProfilePart.PushCena.Value = true;
+                user.ProfilePart.ProfilazioneEffettuata.Value = false;
+
+                _contentManager.Publish(user);
+            }
+            else {
+                if (Model.Tokens["Workflow"].GetState("ErrorMessage") != null) {
+                    eMsg = Model.Tokens["Workflow"].GetState("ErrorMessage") + Environment.NewLine;
+                }
+                eMsg += string.Format("Non è stato possibile creare l'utente Krake {0} con indirizzo email {1}.", uName, email);
+                Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+                throw new Exception();
+            }
+            Model.Tokens["Workflow"].SetState("Password", password);
+            retString = "OK";
+        }
+        else
+        {
+            user = _contentManager.Get(kUser.ContentItem.Id, VersionOptions.Published);
+            user.VersionRecord.Published = false;
+            _contentManager.Publish(user);
+            retString = "DUP";
+        }
+        Model.Tokens["Workflow"].SetState("UserName", name);
+        Model.Tokens["Workflow"].SetState("UserEmail", email);
+
+        _communicationService.UserToContact((IUser)user.UserPart);
+
+        item.VersionRecord.Published = false;
+        _contentManager.Publish(item);
+
+    } catch (Exception ex) {
+        eMsg += string.Format("\r\n{0}", ex.Message);
+        Model.Tokens["Workflow"].SetState("ErrorMessage", eMsg);
+    }
+}@retString

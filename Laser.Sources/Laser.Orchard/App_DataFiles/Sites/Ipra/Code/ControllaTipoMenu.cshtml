@@ -1,0 +1,26 @@
+@using System.Linq
+@using Orchard
+@using Orchard.Services
+@using Orchard.ContentManagement
+@using Orchard.ContentManagement.Records
+@using Orchard.Users.Models
+@using Orchard.Users.Services
+@using Orchard.Security
+@using Orchard.Data
+@functions{
+    string retString = "No";
+    //services
+    IOrchardServices _orchardServices;
+}
+@{
+    //Resolve services.
+    _orchardServices = Model.OrchardServices.WorkContext.Resolve<IOrchardServices>();
+
+    IUser user = _orchardServices.WorkContext.CurrentUser;
+
+    dynamic ci = user.ContentItem;
+
+    if (ci.ProfilePart.RestrizioniAlimentari.Terms.Count != 0) {
+        retString = "Si";
+    }
+}@retString

@@ -1,0 +1,72 @@
+@using Orchard
+@using Orchard.ContentManagement
+@using Orchard.ContentManagement.Records
+@using Orchard.Core.Common.Models
+@using Orchard.Data;
+@using Orchard.Roles.Models
+@using Orchard.Roles.Services
+@using Orchard.Security
+@using Orchard.Services
+@using Orchard.Users.Models
+@using System.Linq
+
+@functions{
+    IContentManager _contentManager;
+    IOrchardServices _orchardServices;
+    IRoleService _roleService;
+
+    Orchard.Workflows.Models.WorkflowContext wfCtx = null;
+
+    string output = "OK";
+}
+
+@{
+    try {
+        List<string> studentiSenzaPranzo = new List<string>();
+        List<string> studentiSenzaCena = new List<string>();
+        wfCtx = Model.Tokens["Workflow"];
+
+        bool dayToPush = (DateTime.Today.DayOfWeek != DayOfWeek.Friday) && (DateTime.Today.DayOfWeek != DayOfWeek.Saturday);
+
+        if (dayToPush) {
+            //Resolve services.
+            _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+            _orchardServices = Model.OrchardServices.WorkContext.Resolve<IOrchardServices>();
+            _roleService = Model.OrchardServices.WorkContext.Resolve<IRoleService>();
+
+            IContentQuery<ContentItem> prenotazioni = _contentManager.Query().ForType("Prenotazione");
+
+            var userList = _contentManager.Query<UserPart, UserPartRecord>().List();
+            RoleRecord role = _roleService.GetRoleByName("UtenteApp");
+
+            foreach (var user in userList) {
+                if (user.As<IUserRoles>().Roles.Contains("UtenteApp")) {
+                    if (((dynamic)user).ProfilePart.PushPranzo.Value) {
+                        var prenotazionePranzoDomani = prenotazioni.List().Where(w => w.As<CommonPart>().Owner.Id == user.Id
+                                                                       && ((dynamic)w).Prenotazione.Pasto.Value.Equals("Pranzo")
+                                                                       && ((dynamic)w).Prenotazione.DataPrenotazione.DateTime == DateTime.Today.AddDays(1)).FirstOrDefault();
+                        if (prenotazionePranzoDomani == null) {
+                            studentiSenzaPranzo.Add(user.Id.ToString());
+                        }
+                    }
+
+                    if (((dynamic)user).ProfilePart.PushCena.Value) {
+                        var prenotazioneCenaDomani = prenotazioni.List().Where(w => w.As<CommonPart>().Owner.Id == user.Id
+                                                                       && ((dynamic)w).Prenotazione.Pasto.Value.Equals("Cena")
+                                                                       && ((dynamic)w).Prenotazione.DataPrenotazione.DateTime == DateTime.Today.AddDays(1)).FirstOrDefault();
+                        if (prenotazioneCenaDomani == null) {
+                            studentiSenzaCena.Add(user.Id.ToString());
+                        }
+                    }
+                }
+            }
+        }
+
+        wfCtx.SetState("UtentiSenzaPrenotazionePranzo", string.Join(",", studentiSenzaPranzo));
+        wfCtx.SetState("UtentiSenzaPrenotazioneCena", string.Join(",", studentiSenzaCena));
+    } catch (Exception ex) {
+        wfCtx.SetState("ErrorMessage", ex.Message);
+        output = "Error";
+    }
+}
+@output
