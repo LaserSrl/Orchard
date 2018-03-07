@@ -8,7 +8,7 @@
     </div>
     <div>
         <label for="@Html.FieldIdFor(m => m.MaxRows)">@T("Max Number of Rows")</label>
-        @Html.TextBoxFor(m => m.MaxRows, new { @class = "text large tokenized number" })
+        @Html.TextBoxFor(m => m.MaxRows, new { @class = "text large tokenized", @type = "number" })
         <span class="hint">@T("Limit number of rows in the table. 0 means no limit.")</span>
     </div>
 </fieldset>
