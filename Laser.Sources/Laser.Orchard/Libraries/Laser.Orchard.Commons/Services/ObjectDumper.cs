@@ -64,7 +64,7 @@ namespace Laser.Orchard.Commons.Services {
                 "InfosetPart","FieldIndexPart","IdentityPart","UserPart","UserRolesPart", "AdminMenuPart", "MenuPart"};
             }
             _skipMembers = new string[]{
-               "*/Storage", "*/Settings","*/Zones","LocalizationPart/CultureField","LocalizationPart/MasterContentItemField","DisplayName"/*,"LocalizationPart/MasterContentItem"*/
+               "*/Storage", "*/Settings","*/Zones","LocalizationPart/CultureField","LocalizationPart/MasterContentItemField","DisplayName","TableData"/*,"LocalizationPart/MasterContentItem"*/
             };
             _keepOnlyTheeseMembers = new string[]{
                 "MasterContentItem/Id"
@@ -92,6 +92,10 @@ namespace Laser.Orchard.Commons.Services {
                 return null;
             }
             if (o != null){
+                if(string.Equals(name, "JsonDataTablePart", StringComparison.InvariantCulture)) {
+                    name = string.Format("{0}{1}", (o as ContentPart).ContentItem.ContentType, name);
+                    nameDynamicJsonArray = name;
+                }
                 if (FormatType(o) == "FieldExternal") {
                     // testo il caso in cui non ho un contentobject ma un content url
                     if (((dynamic)o).ContentObject != null) {

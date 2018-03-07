@@ -36,7 +36,8 @@ namespace Laser.Orchard.HID.Drivers {
                 Sets = allSets.Select(pns => new PartNumberSetsUserPartEditEntry {
                         Name = pns.Name,
                         IsSelected = part.PartNumberSets.Any(set => set.Id == pns.Id),
-                        Id = pns.Id
+                        Id = pns.Id,
+                        IssueCredentialsAutomatically = pns.IssueCredentialsAutomatically
                     }).ToList()
             };
 

@@ -1,0 +1,44 @@
+﻿@using Newtonsoft.Json.Linq;
+@{ 
+    var tableData = Model.Table;
+    JArray arr = JArray.Parse(tableData.TableData);
+    JArray settings = JArray.Parse(Model.Settings.ColumnsDefinition);
+    var headers = new List<string>();
+    var fields = new List<string>();
+    foreach (var header in settings) {
+        headers.Add(header.Value<string>("title"));
+        fields.Add(header.Value<string>("field"));
+    }
+}
+@using (Script.Head()) {
+    <style>
+        .json-data-table td, .json-data-table th {
+            padding: 5px;
+        }
+        .json-data-table-header {
+            border-bottom: 1px solid red;
+        }
+    </style>
+}
+<table class="json-data-table">
+    <thead>
+        <tr class="json-data-table-header">
+            @foreach (var header in headers) {
+                <th>
+                    @(header)
+                </th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var obj in arr) {
+            <tr>
+                @foreach (var field in fields) {
+                    <td>
+                        @(obj.Value<string>(field))
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
