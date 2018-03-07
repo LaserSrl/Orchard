@@ -17,8 +17,7 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.WebServices.Controllers {
-
-    [WebApiKeyFilterForControllers(true)]
+    
     public class WebApiController : Controller, IWebApiService {
         private readonly IOrchardServices _orchardServices;
         private readonly IProjectionManager _projectionManager;
