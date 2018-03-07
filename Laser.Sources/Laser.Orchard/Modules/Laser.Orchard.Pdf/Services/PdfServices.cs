@@ -7,6 +7,7 @@ using Orchard.Logging;
 using Orchard.Localization;
 using Laser.Orchard.Pdf.Services.PageEvents;
 using System.Text;
+using System;
 
 namespace Laser.Orchard.Pdf.Services {
     public interface IPdfServices : IDependency {
@@ -77,12 +78,7 @@ namespace Laser.Orchard.Pdf.Services {
                 using (var document = new Document(effectivePageSize, marginLeft, marginRight, marginTop, marginBottom)) {
                     using (var writer = PdfWriter.GetInstance(document, memoryStream)) {
                         writer.PageEvent = pdfPageEvent;
-                        int totalfonts = FontFactory.RegisterDirectory("%windir%\\Fonts");
-                        StringBuilder sb = new StringBuilder();
-                        foreach (string fontname in FontFactory.RegisteredFonts) {
-                            sb.Append(fontname + "\n");
-                        }
-                        writer.Add(new Paragraph("All Fonts:\n" + sb.ToString()));
+                        int totalfonts = FontFactory.RegisterDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Fonts));
                         using (var sr = new StringReader(html)) {
                             document.Open();
                             XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, sr);
