@@ -23,6 +23,7 @@ namespace Laser.Orchard.Mobile.WorkFlows {
         private readonly IPushGatewayService _pushGatewayService;
         private readonly IRepository<UserDeviceRecord> _userDeviceRecord;
         private readonly IScheduledTaskManager _taskManager;
+
         public ILogger Logger { get; set; }
 
         public PushTask(
@@ -64,7 +65,10 @@ namespace Laser.Orchard.Mobile.WorkFlows {
         }
 
         public override IEnumerable<LocalizedString> Execute(WorkflowContext workflowContext, ActivityContext activityContext) {
-            ContentItem contentItem = workflowContext.Content.ContentItem;
+            ContentItem contentItem = null;
+            if (workflowContext != null && workflowContext.Content != null) 
+                contentItem = workflowContext.Content.ContentItem;
+
             var device = activityContext.GetState<string>("allDevice");
             var PushMessage = activityContext.GetState<string>("PushMessage");
             bool produzione = activityContext.GetState<string>("Produzione") == "Produzione";
@@ -101,61 +105,69 @@ namespace Laser.Orchard.Mobile.WorkFlows {
             
             int idRelated = 0;
             string stateIdRelated = activityContext.GetState<string>("idRelated");
-            if (stateIdRelated == "idRelated") { //caso necessario per il pregresso
+            if (stateIdRelated == "idRelated" && contentItem != null) { //caso necessario per il pregresso
                 idRelated = contentItem.Id;
             } else {
                 int.TryParse(stateIdRelated, out idRelated);
             }
             string language = activityContext.GetState<string>("allLanguage");
             string querydevice = "";
-            if (device == "ContentOwner") {
-                querydevice = " SELECT  distinct P.* " +
-                                    " FROM  Laser_Orchard_Mobile_PushNotificationRecord AS P " +
-                                    " LEFT OUTER JOIN Laser_Orchard_Mobile_UserDeviceRecord AS U ON P.UUIdentifier = U.UUIdentifier " +
-                                    " Where U.UserPartRecord_Id=" + contentItem.As<CommonPart>().Owner.Id.ToString();
-                device = "All";
-            }
-            if (device == "ContentCreator") {
-                querydevice = " SELECT  distinct P.* " +
-                                    " FROM  Laser_Orchard_Mobile_PushNotificationRecord AS P " +
-                                    " LEFT OUTER JOIN Laser_Orchard_Mobile_UserDeviceRecord AS U ON P.UUIdentifier = U.UUIdentifier " +
-                                    " Where U.UserPartRecord_Id=" + ((dynamic)contentItem.As<CommonPart>()).Creator.Value.ToString();
 
-                device = "All";
-            }
-            if (device == "ContentLastModifier") {
+            if (contentItem == null && (device == "ContentOwner" || device == "ContentCreator" || device == "ContentLastModifier")) {
                 querydevice = " SELECT  distinct P.* " +
                                     " FROM  Laser_Orchard_Mobile_PushNotificationRecord AS P " +
-                                    " LEFT OUTER JOIN Laser_Orchard_Mobile_UserDeviceRecord AS U ON P.UUIdentifier = U.UUIdentifier " +
-                                    " Where U.UserPartRecord_Id=" + ((dynamic)contentItem.As<CommonPart>()).LastModifier.Value.ToString();
-
+                                    " Where 0 = 1"; //necessario per non spedire le push a tutti
                 device = "All";
-            }
-            if (device == "UserId") {
-                querydevice = " SELECT  distinct P.* " +
-                                    " FROM  Laser_Orchard_Mobile_PushNotificationRecord AS P " +
-                                    " LEFT OUTER JOIN Laser_Orchard_Mobile_UserDeviceRecord AS U ON P.UUIdentifier = U.UUIdentifier " +
-                                    " Where U.UserPartRecord_Id in (" + users + ")";
+            } else {
+                if (device == "ContentOwner") {
+                    querydevice = " SELECT  distinct P.* " +
+                                        " FROM  Laser_Orchard_Mobile_PushNotificationRecord AS P " +
+                                        " LEFT OUTER JOIN Laser_Orchard_Mobile_UserDeviceRecord AS U ON P.UUIdentifier = U.UUIdentifier " +
+                                        " Where U.UserPartRecord_Id=" + contentItem.As<CommonPart>().Owner.Id.ToString();
+                    device = "All";
+                }
+                if (device == "ContentCreator") {
+                    querydevice = " SELECT  distinct P.* " +
+                                        " FROM  Laser_Orchard_Mobile_PushNotificationRecord AS P " +
+                                        " LEFT OUTER JOIN Laser_Orchard_Mobile_UserDeviceRecord AS U ON P.UUIdentifier = U.UUIdentifier " +
+                                        " Where U.UserPartRecord_Id=" + ((dynamic)contentItem.As<CommonPart>()).Creator.Value.ToString();
 
-                device = "All";
-            }
-            if (device == "UserEmail") {
-                querydevice = " SELECT  distinct P.* " +
-                                    " FROM  Laser_Orchard_Mobile_PushNotificationRecord AS P " +
-                                    " LEFT OUTER JOIN Laser_Orchard_Mobile_UserDeviceRecord AS U ON P.UUIdentifier = U.UUIdentifier " +
-                                    " INNER JOIN Orchard_Users_UserPartRecord AS Ou ON Ou.Id = U.UserPartRecord_Id " +
-                                    " Where Ou.Email in (" + users + ")";
+                    device = "All";
+                }
+                if (device == "ContentLastModifier") {
+                    querydevice = " SELECT  distinct P.* " +
+                                        " FROM  Laser_Orchard_Mobile_PushNotificationRecord AS P " +
+                                        " LEFT OUTER JOIN Laser_Orchard_Mobile_UserDeviceRecord AS U ON P.UUIdentifier = U.UUIdentifier " +
+                                        " Where U.UserPartRecord_Id=" + ((dynamic)contentItem.As<CommonPart>()).LastModifier.Value.ToString();
 
-                device = "All";
-            }
-            if (device == "UserName") {
-                querydevice = " SELECT  distinct P.* " +
-                                    " FROM  Laser_Orchard_Mobile_PushNotificationRecord AS P " +
-                                    " LEFT OUTER JOIN Laser_Orchard_Mobile_UserDeviceRecord AS U ON P.UUIdentifier = U.UUIdentifier " +
-                                    " INNER JOIN Orchard_Users_UserPartRecord AS Ou ON Ou.Id = U.UserPartRecord_Id " +
-                                    " Where Ou.UserName in (" + users + ")";
+                    device = "All";
+                }
+                if (device == "UserId") {
+                    querydevice = " SELECT  distinct P.* " +
+                                        " FROM  Laser_Orchard_Mobile_PushNotificationRecord AS P " +
+                                        " LEFT OUTER JOIN Laser_Orchard_Mobile_UserDeviceRecord AS U ON P.UUIdentifier = U.UUIdentifier " +
+                                        " Where U.UserPartRecord_Id in (" + users + ")";
 
-                device = "All";
+                    device = "All";
+                }
+                if (device == "UserEmail") {
+                    querydevice = " SELECT  distinct P.* " +
+                                        " FROM  Laser_Orchard_Mobile_PushNotificationRecord AS P " +
+                                        " LEFT OUTER JOIN Laser_Orchard_Mobile_UserDeviceRecord AS U ON P.UUIdentifier = U.UUIdentifier " +
+                                        " INNER JOIN Orchard_Users_UserPartRecord AS Ou ON Ou.Id = U.UserPartRecord_Id " +
+                                        " Where Ou.Email in (" + users + ")";
+
+                    device = "All";
+                }
+                if (device == "UserName") {
+                    querydevice = " SELECT  distinct P.* " +
+                                        " FROM  Laser_Orchard_Mobile_PushNotificationRecord AS P " +
+                                        " LEFT OUTER JOIN Laser_Orchard_Mobile_UserDeviceRecord AS U ON P.UUIdentifier = U.UUIdentifier " +
+                                        " INNER JOIN Orchard_Users_UserPartRecord AS Ou ON Ou.Id = U.UserPartRecord_Id " +
+                                        " Where Ou.UserName in (" + users + ")";
+
+                    device = "All";
+                }
             }
 
             // schedule the sending of the push notification
