@@ -23,6 +23,7 @@ namespace Laser.Orchard.StartupConfig.ColorPicker {
             }
             if (updateModel.TryUpdateModel(model, "ColorPickerFieldSettings", null, null)) {
                 builder.WithSetting("ColorPickerFieldSettings.Hint", model.Hint);
+                builder.WithSetting("ColorPickerFieldSettings.Options", model.Options);
             }
             yield return DefinitionTemplate(model);
         }

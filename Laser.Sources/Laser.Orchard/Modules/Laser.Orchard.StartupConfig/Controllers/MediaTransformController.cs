@@ -6,6 +6,7 @@ using Orchard.Forms.Services;
 using Orchard.MediaLibrary.Models;
 using Orchard.MediaProcessing.Models;
 using Orchard.MediaProcessing.Services;
+using Orchard.Security;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -24,6 +25,7 @@ namespace Laser.Orchard.StartupConfig.Controllers {
             _orchardServices = orchardServices;
         }
 
+        [AlwaysAccessible]
         public RedirectResult Image(string Path, int Width, int Height, string Mode, string Alignment, string PadColor) {
             int n = 0;
             bool isNumeric = int.TryParse(Path, out n);
