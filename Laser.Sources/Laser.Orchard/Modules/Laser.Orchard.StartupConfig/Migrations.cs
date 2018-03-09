@@ -75,101 +75,101 @@ namespace Laser.Orchard.StartupConfig {
             ContentDefinitionManager.AlterTypeDefinition("AuthenticatedProjection", type => type.Listable());
             return 7;
         }
+    }
 
-        [OrchardFeature("Laser.Orchard.StartupConfig.PermissionExtension")]
-        public class MigrationsUsersGroups : DataMigrationImpl {
+    [OrchardFeature("Laser.Orchard.StartupConfig.PermissionExtension")]
+    public class MigrationsUsersGroups : DataMigrationImpl {
 
-            public int Create() {
-                return 1;
-            }
-
-            public int UpdateFrom1() {
-                //ContentDefinitionManager.AlterPartDefinition("UsersGroupsPart", part => part.Attachable());
-                ContentDefinitionManager.AlterTypeDefinition("User",
-                    cfg => cfg
-                        .WithPart(typeof(UsersGroupsPart).Name)
-                    );
-                //SchemaBuilder.CreateTable("UsersGroupsSettingsPartRecord", table => table
-                //           .ContentPartRecord()
-                //           .Column<string>("GroupSerialized")
-                //);
-
-                SchemaBuilder.CreateTable("UsersGroupsPartRecord", table => table
-                           .ContentPartRecord()
-                           .Column<string>("theUserGroup")
-               );
-
-                SchemaBuilder.CreateTable("ExtendedUsersGroupsRecord",
-            table =>
-
-                    table
-                    .Column<int>("Id", column => column.PrimaryKey().Identity())
-                    .Column<string>("GroupName", column => column.WithLength(50))
-                    );
-                return 2;
-            }
-
-            public int UpdateFrom2() {
-                SchemaBuilder.AlterTable("ExtendedUsersGroupsRecord", table => table.AlterColumn("GroupName", col => col.WithType(System.Data.DbType.String).WithLength(150)));
-                return 3;
-            }
+        public int Create() {
+            return 1;
         }
 
-        /// <summary>
-        /// Estendo le taxonomy con una informazione in grado di modificare l'ordinamento dei risultati
-        /// </summary>
-        [OrchardFeature("Laser.Orchard.StartupConfig.TaxonomiesExtensions")]
-        public class MigrationTaxonomies : DataMigrationImpl {
-
-            public int Create() {
-                ContentDefinitionManager.AlterTypeDefinition("Taxonomy",
+        public int UpdateFrom1() {
+            //ContentDefinitionManager.AlterPartDefinition("UsersGroupsPart", part => part.Attachable());
+            ContentDefinitionManager.AlterTypeDefinition("User",
                 cfg => cfg
-                    .WithPart(typeof(TaxonomyExtensionPart).Name)
+                    .WithPart(typeof(UsersGroupsPart).Name)
                 );
-                return 1;
-            }
+            //SchemaBuilder.CreateTable("UsersGroupsSettingsPartRecord", table => table
+            //           .ContentPartRecord()
+            //           .Column<string>("GroupSerialized")
+            //);
+
+            SchemaBuilder.CreateTable("UsersGroupsPartRecord", table => table
+                       .ContentPartRecord()
+                       .Column<string>("theUserGroup")
+           );
+
+            SchemaBuilder.CreateTable("ExtendedUsersGroupsRecord",
+        table =>
+
+                table
+                .Column<int>("Id", column => column.PrimaryKey().Identity())
+                .Column<string>("GroupName", column => column.WithLength(50))
+                );
+            return 2;
         }
 
-        [OrchardFeature("Laser.Orchard.StartupConfig.Maintenance")]
-        public class MigrationMaintenance : DataMigrationImpl {
-            private readonly IUtilsServices _utilsServices;
-
-            public MigrationMaintenance(IUtilsServices utilsServices) {
-                _utilsServices = utilsServices;
-            }
-
-            public int Create() {
-                _utilsServices.EnableFeature("Orchard.PublishLater");
-                ContentDefinitionManager.AlterPartDefinition("MaintenancePart", b => b
-                    .Attachable(false));
-                ContentDefinitionManager.AlterTypeDefinition("Maintenance", cfg => cfg
-                    .WithPart("CommonPart")
-                    .WithPart(typeof(MaintenancePart).Name)
-                    .WithPart("PublishLaterPart")
-                    .Creatable(false)
-                    .Draftable()
-                    );
-                SchemaBuilder.CreateTable("MaintenancePartRecord", table => table
-                    .ContentPartVersionRecord()
-                    .Column<string>("MaintenanceNotifyType")
-                    .Column<string>("MaintenanceNotify")
-                );
-                SchemaBuilder.AlterTable("MaintenancePartRecord", table => table
-                .AddColumn("Selected_Tenant", DbType.String));
-                return 1;
-            }
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("ExtendedUsersGroupsRecord", table => table.AlterColumn("GroupName", col => col.WithType(System.Data.DbType.String).WithLength(150)));
+            return 3;
         }
-        [OrchardFeature("Laser.Orchard.StartupConfig.JsonDataTablePart")]
-        public class MigrationJsonDataTable : DataMigrationImpl {
-            public int Create() {
-                SchemaBuilder.CreateTable("JsonDataTablePartRecord", table => table
-                    .ContentPartVersionRecord()
-                    .Column<string>("TableData", c => c.Nullable().Unlimited())
+    }
+
+    /// <summary>
+    /// Estendo le taxonomy con una informazione in grado di modificare l'ordinamento dei risultati
+    /// </summary>
+    [OrchardFeature("Laser.Orchard.StartupConfig.TaxonomiesExtensions")]
+    public class MigrationTaxonomies : DataMigrationImpl {
+
+        public int Create() {
+            ContentDefinitionManager.AlterTypeDefinition("Taxonomy",
+            cfg => cfg
+                .WithPart(typeof(TaxonomyExtensionPart).Name)
+            );
+            return 1;
+        }
+    }
+
+    [OrchardFeature("Laser.Orchard.StartupConfig.Maintenance")]
+    public class MigrationMaintenance : DataMigrationImpl {
+        private readonly IUtilsServices _utilsServices;
+
+        public MigrationMaintenance(IUtilsServices utilsServices) {
+            _utilsServices = utilsServices;
+        }
+
+        public int Create() {
+            _utilsServices.EnableFeature("Orchard.PublishLater");
+            ContentDefinitionManager.AlterPartDefinition("MaintenancePart", b => b
+                .Attachable(false));
+            ContentDefinitionManager.AlterTypeDefinition("Maintenance", cfg => cfg
+                .WithPart("CommonPart")
+                .WithPart(typeof(MaintenancePart).Name)
+                .WithPart("PublishLaterPart")
+                .Creatable(false)
+                .Draftable()
                 );
-                ContentDefinitionManager.AlterPartDefinition("JsonDataTablePart", b => b
-                    .Attachable(true));
-                return 1;
-            }
+            SchemaBuilder.CreateTable("MaintenancePartRecord", table => table
+                .ContentPartVersionRecord()
+                .Column<string>("MaintenanceNotifyType")
+                .Column<string>("MaintenanceNotify")
+            );
+            SchemaBuilder.AlterTable("MaintenancePartRecord", table => table
+            .AddColumn("Selected_Tenant", DbType.String));
+            return 1;
+        }
+    }
+    [OrchardFeature("Laser.Orchard.StartupConfig.JsonDataTablePart")]
+    public class MigrationJsonDataTable : DataMigrationImpl {
+        public int Create() {
+            SchemaBuilder.CreateTable("JsonDataTablePartRecord", table => table
+                .ContentPartVersionRecord()
+                .Column<string>("TableData", c => c.Nullable().Unlimited())
+            );
+            ContentDefinitionManager.AlterPartDefinition("JsonDataTablePart", b => b
+                .Attachable(true));
+            return 1;
         }
     }
 }
