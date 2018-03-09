@@ -75,6 +75,7 @@ namespace Laser.Orchard.StartupConfig {
             ContentDefinitionManager.AlterTypeDefinition("AuthenticatedProjection", type => type.Listable());
             return 7;
         }
+    }
 
     [OrchardFeature("Laser.Orchard.StartupConfig.PermissionExtension")]
     public class MigrationsUsersGroups : DataMigrationImpl {
@@ -159,6 +160,7 @@ namespace Laser.Orchard.StartupConfig {
             return 1;
         }
     }
+
     [OrchardFeature("Laser.Orchard.StartupConfig.JsonDataTablePart")]
     public class MigrationJsonDataTable : DataMigrationImpl {
         public int Create() {
