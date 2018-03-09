@@ -75,7 +75,7 @@
         <AutoroutePart />
         <MenuPart />
       </Page>
-    <InfoPage ContentTypeSettings.Creatable="True" ContentTypeSettings.Draftable="True" DisplayName="Info Page" TypeIndexing.Indexes="Search">
+    <InfoPage ContentTypeSettings.Creatable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Draftable="True" DisplayName="Info Page" TypeIndexing.Indexes="Search">
         <CommonPart DateEditorSettings.ShowDateEditor="False" OwnerEditorSettings.ShowOwnerEditor="True" />
         <AutoroutePart AutorouteSettings.PerItemConfiguration="False" AutorouteSettings.AllowCustomPattern="True" AutorouteSettings.AutomaticAdjustmentOnEdit="False" AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;infopage&quot;,&quot;Pattern&quot;:&quot;infos/{Content.Slug}&quot;,&quot;Description&quot;:&quot;infos/my-title&quot;}]" AutorouteSettings.DefaultPatternIndex="0" />
         <BodyPart BodyTypePartSettings.Flavor="html" />
