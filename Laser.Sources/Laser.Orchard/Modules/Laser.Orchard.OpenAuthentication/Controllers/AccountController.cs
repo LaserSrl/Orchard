@@ -200,14 +200,12 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
         [OutputCache(NoStore = true, Duration = 0)]
         [AlwaysAccessible]
-        [WebApiKeyFilterForControllers(true)]
         public ContentResult ExternalTokenLogOn(string __provider__, string token, string secret = "") {
             return ExternalTokenLogOnLogic(__provider__, token, secret);
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
         [AlwaysAccessible]
-        [WebApiKeyFilterForControllers(true)]
         public ContentResult ExternalTokenLogOnSsl(string __provider__, string token, string secret = "") {
             return ExternalTokenLogOnLogic(__provider__, token, secret);
         }
