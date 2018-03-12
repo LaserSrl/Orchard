@@ -75,5 +75,7 @@ namespace Laser.Orchard.Events.ViewModels {
 
         public bool RepeatByDayNumber { get; set; }
         public ActivityPartSettings Settings { get; set; }
+
+        public string DateFormat { get; set; }
     }
 }
