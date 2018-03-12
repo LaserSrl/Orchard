@@ -130,8 +130,14 @@ namespace Laser.Orchard.Cache.Filters {
             if (!RequestIsCacheable(filterContext))
                 return;
 
-            // Computing the cache key after we know that the request is cacheable means that we are only performing this calculation on requests that require it
-            _cacheKey = keyToAdd+ String.Intern(ComputeCacheKey(filterContext, GetCacheKeyParameters(filterContext)));
+            // filtro temporaneo per archiviare il log delle chiamate autenticate loggate e non gestite dalla cache laser.
+            if (_workContext.CurrentUser != null && CacheSettings.CacheAuthenticatedRequests && keyToAdd =="") {
+                Logger.Error("Cache con chiave bloccata => {0}", String.Intern(ComputeCacheKey(filterContext, GetCacheKeyParameters(filterContext))));
+                return;
+            }
+
+                // Computing the cache key after we know that the request is cacheable means that we are only performing this calculation on requests that require it
+                _cacheKey = keyToAdd+ String.Intern(ComputeCacheKey(filterContext, GetCacheKeyParameters(filterContext)));
             _invariantCacheKey = ComputeCacheKey(filterContext, null);
 
             Logger.Debug("Cache key '{0}' was created.", _cacheKey);
