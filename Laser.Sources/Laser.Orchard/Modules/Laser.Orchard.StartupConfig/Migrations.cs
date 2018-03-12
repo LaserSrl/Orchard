@@ -70,6 +70,11 @@ namespace Laser.Orchard.StartupConfig {
             ContentDefinitionManager.AlterPartDefinition("DisplayTextPart", p => p.Attachable(true));
             return 6;
         }
+
+        public int UpdateFrom6() {
+            ContentDefinitionManager.AlterTypeDefinition("AuthenticatedProjection", type => type.Listable());
+            return 7;
+        }
     }
 
     [OrchardFeature("Laser.Orchard.StartupConfig.PermissionExtension")]
