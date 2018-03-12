@@ -39,13 +39,6 @@ namespace Laser.Orchard.Pdf.Controllers {
                 if (_orchardServices.Authorizer.Authorize(Permissions.ViewContent, ci)) {
                    var part = ci.Parts.FirstOrDefault(x => x.PartDefinition.Name == typeof(PdfButtonPart).Name);
                     if (part != null) {
-                        //var settings = part.Settings.GetModel<PdfButtonPartSettings>();
-                        //ParseTemplateContext templateCtx = new ParseTemplateContext();
-                        //var template = _templateService.GetTemplate(settings.TemplateId);
-                        //var editModel = new Dictionary<string, object>();
-                        //editModel.Add("Content", ci);
-                        //templateCtx.Model = editModel;
-                        //var html = _templateService.ParseTemplate(template, templateCtx);
                         var settings = part.Settings.GetModel<PdfButtonPartSettings>();
                         var html = _templateService.RitornaParsingTemplate(ci, settings.TemplateId);
                         var editModel = new Dictionary<string, object>();
@@ -57,7 +50,7 @@ namespace Laser.Orchard.Pdf.Controllers {
                             buffer = _pdfServices.PdfFromHtml(html, settings.PageWidth, settings.PageHeight, settings.LeftMargin, settings.RightMargin, settings.HeaderHeight, settings.FooterHeight);
                         }
                         else {
-                            var headerFooter = _pdfServices.GetHtmlHeaderFooterPageEvent(header, footer);
+                            var headerFooter = _pdfServices.GetHtmlHeaderFooterPageEvent(HttpUtility.HtmlDecode(header), HttpUtility.HtmlDecode(footer));
                             buffer = _pdfServices.PdfFromHtml(html, settings.PageWidth, settings.PageHeight, settings.LeftMargin, settings.RightMargin, settings.HeaderHeight, settings.FooterHeight, headerFooter);
                         }
                         var fileName = _tokenizer.Replace(settings.FileNameWithoutExtension, editModel);
