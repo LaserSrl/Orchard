@@ -1578,3 +1578,8 @@ div#appliedFilters {
 #templateArea{
     height:auto;
 }
+
+.is-calendarsPicker, .is-timeEntry {
+    min-width: 85px;
+    width: 85px;
+}
