@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
-
+using System.Web;
 
 namespace Laser.Orchard.Pdf.Controllers {
     public class PdfController : Controller {
@@ -52,7 +52,7 @@ namespace Laser.Orchard.Pdf.Controllers {
                             buffer = _pdfServices.PdfFromHtml(html, buttonSettings.PageWidth, buttonSettings.PageHeight, buttonSettings.LeftMargin, buttonSettings.RightMargin, buttonSettings.HeaderHeight, buttonSettings.FooterHeight);
                         }
                         else {
-                            var headerFooter = _pdfServices.GetHtmlHeaderFooterPageEvent(header, footer);
+                            var headerFooter = _pdfServices.GetHtmlHeaderFooterPageEvent(HttpUtility.HtmlDecode(header), HttpUtility.HtmlDecode(footer));
                             buffer = _pdfServices.PdfFromHtml(html, buttonSettings.PageWidth, buttonSettings.PageHeight, buttonSettings.LeftMargin, buttonSettings.RightMargin, buttonSettings.HeaderHeight, buttonSettings.FooterHeight, headerFooter);
                         }
                         var fileName = _tokenizer.Replace(buttonSettings.FileNameWithoutExtension, editModel);
