@@ -133,6 +133,10 @@
     <Content Include="Views\EditorTemplates\Parts\Calendar.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Laser.Orchard.Commons\Laser.Orchard.Commons.csproj">
+      <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
+      <Name>Laser.Orchard.Commons</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
       <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>
       <Name>Laser.Orchard.StartupConfig</Name>
@@ -155,6 +159,7 @@
     <Compile Include="Projections\ActivityRangeFilter.cs" />
     <Compile Include="Projections\ActivityRangeForm.cs" />
     <Compile Include="Projections\ActivityStartDateSortCriterionProvider.cs" />
+    <Compile Include="Services\CalendarPartDumperService.cs" />
     <Compile Include="Services\EventsService.cs" />
     <Compile Include="Services\IEventsService.cs" />
     <Compile Include="Settings\ActivityPartSettingsHooks.cs" />

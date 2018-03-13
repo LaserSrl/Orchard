@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Laser.Orchard.WebServices {
-    public enum SourceTypes { 
+namespace Laser.Orchard.Commons.Enums {
+    public enum SourceTypes {
         ContentItem,
         Shape
     }
@@ -14,5 +15,4 @@ namespace Laser.Orchard.WebServices {
         Terms,
         SubTerms
     }
-
 }

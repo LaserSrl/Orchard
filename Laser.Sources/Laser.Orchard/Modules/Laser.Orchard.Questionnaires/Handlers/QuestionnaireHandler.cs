@@ -14,7 +14,41 @@ namespace Laser.Orchard.Questionnaires.Handlers {
 
         public QuestionnaireHandler(IRepository<QuestionnairePartRecord> repository) {
             Filters.Add(StorageFilter.For(repository));
+
+            OnLoaded<QuestionnairePart>((context, part) => InitializeQuestionsToDisplay(part));
         }
+
+        protected void InitializeQuestionsToDisplay(QuestionnairePart part) {
+            // Pre load some stuff in the QuestionsToDisplay property. This way, when we do _contentManager.Get(id)
+            // of an item that has the QuestionnairePart, that property has a value already. We will want to set it
+            // back to null when building an editor shape, because we edit the List of QuestionRecords
+            // We are going to set the QuestionsToDisplay property to null in the QuestionnairesServices called in the
+            // driver, because the BuildEditorShape handler is called after the Editor method from the driver.
+            var qNumber = part.Settings
+                .GetModel<QuestionnairesPartSettingVM>()
+                .QuestionsSortedRandomlyNumber;
+            if (qNumber > 0) {
+                part.QuestionsToDisplay = Shuffle(
+                    part.Questions
+                        .Where(x => x.Published)
+                        .ToList()
+                        .ConvertAll(x => (dynamic)x))
+                    .ConvertAll(x => (QuestionRecord)x)
+                    .ToList()
+                    .Take(qNumber)
+                    .ToList();
+            }
+
+            if (part.Settings
+                .GetModel<QuestionnairesPartSettingVM>()
+                .RandomResponse) {
+                foreach (var qr in part.Questions) {
+                    qr.Answers = Shuffle(qr.Answers.ToList().ConvertAll(x => (dynamic)x))
+                        .ConvertAll(x => (AnswerRecord)x).ToList();
+                }
+            }
+        }
+        
 
         protected override void BuildDisplayShape(BuildDisplayContext context) {
             base.BuildDisplayShape(context);
