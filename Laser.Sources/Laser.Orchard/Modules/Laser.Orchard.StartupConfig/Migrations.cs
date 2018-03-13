@@ -160,6 +160,7 @@ namespace Laser.Orchard.StartupConfig {
             return 1;
         }
     }
+
     [OrchardFeature("Laser.Orchard.StartupConfig.JsonDataTablePart")]
     public class MigrationJsonDataTable : DataMigrationImpl {
         public int Create() {
