@@ -87,7 +87,7 @@ namespace Laser.Orchard.OpenAuthentication {
                                                  },
                             new RouteDescriptor {
                                                      Route = new Route(
-                                                         "External/AKTokenLogOn",
+                                                         "AKExternal/TokenLogOn",
                                                          new RouteValueDictionary {
                                                                                       {"area", Constants.LocalArea},
                                                                                       {"controller", "AKAccount"},
