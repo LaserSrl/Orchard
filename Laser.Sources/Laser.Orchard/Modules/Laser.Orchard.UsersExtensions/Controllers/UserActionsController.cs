@@ -1,7 +1,6 @@
 ﻿using Laser.Orchard.Mobile.ViewModels;
 using Laser.Orchard.StartupConfig.IdentityProvider;
 using Laser.Orchard.StartupConfig.Services;
-using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Laser.Orchard.UsersExtensions.Models;
 using Laser.Orchard.UsersExtensions.Services;
 using Orchard;

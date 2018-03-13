@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Laser.Orchard.OpenAuthentication.Extensions;
+using Orchard.Mvc.Routes;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Laser.Orchard.OpenAuthentication.Extensions;
-using Orchard.Mvc.Routes;
 
 namespace Laser.Orchard.OpenAuthentication {
     public class Routes : IRouteProvider {
@@ -84,6 +84,21 @@ namespace Laser.Orchard.OpenAuthentication {
                                                                                   },
                                                          new MvcRouteHandler())
                                                   
+                                                 },
+                            new RouteDescriptor {
+                                                     Route = new Route(
+                                                         "External/AKTokenLogOn",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", Constants.LocalArea},
+                                                                                      {"controller", "AKAccount"},
+                                                                                      {"action", "ExternalTokenLogOn"}
+                                                                                  },
+                                                         new RouteValueDictionary(),
+                                                         new RouteValueDictionary {
+                                                                                      {"area", Constants.LocalArea}
+                                                                                  },
+                                                         new MvcRouteHandler())
+
                                                  },
                 new RouteDescriptor {  Route = new Route(
                                                          "OpenId/AppDirectLogOn",
