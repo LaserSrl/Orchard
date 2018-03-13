@@ -60,7 +60,8 @@ namespace Laser.Orchard.Reporting.Drivers {
                 IEnumerable<AggregationResult> reportData = null;
                 int count = 0;
                 if(string.IsNullOrWhiteSpace(report.GroupByCategory)) {
-                    reportData = reportManger.RunHqlReport(report, part.ContentItem);
+                    var multiColumn = part.Record.ChartType == ((int)ChartTypes.SimpleTable);
+                    reportData = reportManger.RunHqlReport(report, part.ContentItem, multiColumn);
                     count = reportData.Count();
                 } else {
                     reportData = reportManger.RunReport(report, part.ContentItem);

@@ -1,4 +1,4 @@
-# Orchard resource strings - it-IT
+﻿# Orchard resource strings - it-IT
 # Copyright (c) 2017 Laser s.r.l.
 
 
@@ -750,7 +750,7 @@ msgstr "Filtro per questionari che sono senza risposta per l'utente corrente"
 
 msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireFilter"
 msgid "Only unanswered Questionnare for current user"
-msgstr "Solo questionari a cui l'utente corrente ha risposto"
+msgstr "Solo questionari a cui l'utente corrente non ha risposto"
 
 msgctxt "Laser.Orchard.Questionnaires.Handlers.QuestionnaireFilter"
 msgid "Questionnaire"

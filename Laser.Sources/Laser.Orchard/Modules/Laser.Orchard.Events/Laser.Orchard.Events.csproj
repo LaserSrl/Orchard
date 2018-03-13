@@ -146,6 +146,7 @@
     <Compile Include="Controllers\CalendarController.cs" />
     <Compile Include="Drivers\ActivityPartDriver.cs" />
     <Compile Include="Drivers\CalendarPartDriver.cs" />
+    <Compile Include="Enum.cs" />
     <Compile Include="Handlers\ActivityPartHandler.cs" />
     <Compile Include="Handlers\CalendarPartHandler.cs" />
     <Compile Include="Migrations.cs" />
