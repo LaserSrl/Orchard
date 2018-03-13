@@ -1,42 +1,39 @@
-﻿using System.IO;
-using System.Web;
-using iTextSharp.text;
+﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
-using iTextSharp.tool.xml.pipeline;
 
 namespace Laser.Orchard.Pdf.Services.PageEvents {
     public class HtmlHeaderFooter : PdfPageEventHelper {
-        private string originalheader;
-        private string originalfooter;
+        private ElementList header;
+        private ElementList footer;
         public HtmlHeaderFooter(string htmlHeader = "", string htmlFooter = "") {
-            originalheader = HttpUtility.HtmlDecode(htmlHeader);
-            originalfooter= HttpUtility.HtmlDecode(htmlFooter);       
+            header = XMLWorkerHelper.ParseToElementList(htmlHeader ?? "", null);
+            if (string.IsNullOrWhiteSpace(htmlHeader) == false && header.Count == 0) {
+                var htmlHeader2 = string.Format("<p>{0}</p>", htmlHeader);
+                header = XMLWorkerHelper.ParseToElementList(htmlHeader2, null);
+            }
+            footer = XMLWorkerHelper.ParseToElementList(htmlFooter ?? "", null);
+            if (string.IsNullOrWhiteSpace(htmlFooter) == false && footer.Count == 0) {
+                var htmlFooter2 = string.Format("<p>{0}</p>", htmlFooter);
+                footer = XMLWorkerHelper.ParseToElementList(htmlFooter2, null);
+            }
         }
         public override void OnEndPage(PdfWriter writer, Document document) {
-            var ct = new ColumnText(writer.DirectContent);
-             if (!string.IsNullOrEmpty(originalheader)) {
-                XMLWorkerHelper.GetInstance().ParseXHtml(new ColumnTextElementHandler(ct), new StringReader(originalheader));
-                ct.SetSimpleColumn(document.LeftMargin, document.Top, document.Right, document.Top + document.TopMargin);
-                ct.Go();
-            }
-            if (!string.IsNullOrEmpty(originalfooter)) {
-                XMLWorkerHelper.GetInstance().ParseXHtml(new ColumnTextElementHandler(ct), new StringReader(originalfooter));
-                ct.SetSimpleColumn(document.LeftMargin, document.Bottom - document.BottomMargin, document.Right, document.BottomMargin);
-                ct.Go();
-            }
-        }
-        public class ColumnTextElementHandler : IElementHandler {
-            public ColumnTextElementHandler(ColumnText ct) {
-                this.ct = ct;
-            }
-            ColumnText ct = null;
-            public void Add(IWritable w) {
-                if (w is WritableElement) {
-                    foreach (IElement e in ((WritableElement)w).Elements()) {
-                        ct.AddElement(e);
-                    }
+            if (header.Count > 0) {
+                var ctHeader = new ColumnText(writer.DirectContent);
+                ctHeader.SetSimpleColumn(document.LeftMargin, document.Top, document.Right, document.Top + document.TopMargin);
+                foreach (var elem in header) {
+                    ctHeader.AddElement(elem);
                 }
+                ctHeader.Go();
+            }
+            if (footer.Count > 0) {
+                var ctFooter = new ColumnText(writer.DirectContent);
+                ctFooter.SetSimpleColumn(document.LeftMargin, document.Bottom - document.BottomMargin, document.Right, document.BottomMargin);
+                foreach (var elem in footer) {
+                    ctFooter.AddElement(elem);
+                }
+                ctFooter.Go();
             }
         }
     }
