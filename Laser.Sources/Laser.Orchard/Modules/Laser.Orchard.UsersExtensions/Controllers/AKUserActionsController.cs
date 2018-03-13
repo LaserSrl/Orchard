@@ -13,10 +13,10 @@ using System.Web.Mvc;
 namespace Laser.Orchard.UsersExtensions.Controllers {
 
     [OutputCache(NoStore = true, Duration = 0)]
-    [RoutePrefix("UserActions")]
-    public class UserActionsController : BaseUserActionsController {
+    [RoutePrefix("AKUserActions")]
+    public class AKUserActionsController : BaseUserActionsController {
 
-        public UserActionsController(
+        public AKUserActionsController(
             IOrchardServices orchardServices,
             IUsersExtensionsServices usersExtensionsServices,
             IUserService userService,
@@ -159,6 +159,5 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
         }
 
         #endregion [http calls]
-        
     }
 }
