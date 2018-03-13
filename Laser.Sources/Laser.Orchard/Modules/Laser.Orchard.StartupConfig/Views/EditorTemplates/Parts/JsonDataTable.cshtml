@@ -21,6 +21,7 @@
             $(function () {
                 var $table = $("#table-@Model.Id");
                 var $hidden = $("#@Html.FieldIdFor(m => m.TableData)");
+
                 $table.tabulator({
                     height:"300px",
                     layout:"fitColumns",
@@ -28,6 +29,14 @@
                     columns: @Html.Raw(columns),
                     dataEdited:function(newData){
                         var newVal = JSON.stringify(newData);
+                        $hidden.val(newVal);
+                    },
+                    rowMoved:function(row){
+                        var rows = $("#table-@Model.Id").tabulator("getRows");
+                        for (var i=0; i < rows.length; i++){
+                            this.data[i] = rows[i].getData();
+                        }
+                        var newVal = JSON.stringify(this.data);
                         $hidden.val(newVal);
                     },
                     data: @Html.Raw(Model.TableData)
