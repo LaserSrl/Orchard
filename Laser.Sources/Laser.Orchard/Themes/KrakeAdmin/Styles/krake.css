@@ -87,11 +87,14 @@ button, .button, a.button {
     border: 0 none;
     border-radius: 3px;
     box-shadow: none;
-    color: #fff !important;
     height: 30px;
     line-height: 18px;
     min-width: 110px;
     font-size: 14px;
+}
+
+button:not(.mce-btn button), .button, a.button {
+    color: #fff !important;
 }
 
 #cboxClose,
