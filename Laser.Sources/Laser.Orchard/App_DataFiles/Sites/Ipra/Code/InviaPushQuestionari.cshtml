@@ -1,0 +1,50 @@
+@using Orchard
+@using Orchard.ContentManagement
+@using Orchard.ContentManagement.Records
+@using Orchard.Core.Common.Models
+@using Orchard.Data;
+@using Orchard.Roles.Models
+@using Orchard.Roles.Services
+@using Orchard.Security
+@using Orchard.Services
+@using Orchard.Users.Models
+@using System.Linq
+
+@functions{
+    IContentManager _contentManager;
+    IOrchardServices _orchardServices;
+    IRoleService _roleService;
+
+    Orchard.Workflows.Models.WorkflowContext wfCtx = null;
+
+    string output = "OK";
+}
+
+@{
+    try {
+        List<string> studenti = new List<string>();
+        wfCtx = Model.Tokens["Workflow"];
+
+        //Resolve services.
+        _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+        _orchardServices = Model.OrchardServices.WorkContext.Resolve<IOrchardServices>();
+        _roleService = Model.OrchardServices.WorkContext.Resolve<IRoleService>();
+
+        var userList = _contentManager.Query<UserPart, UserPartRecord>().List();
+        RoleRecord role = _roleService.GetRoleByName("UtenteApp");
+
+        foreach (var user in userList) {
+            if (user.As<IUserRoles>().Roles.Contains("UtenteApp")) {
+
+                studenti.Add(user.Id.ToString());
+
+            }
+        }
+
+        wfCtx.SetState("Utenti", string.Join(",", studenti));
+    } catch (Exception ex) {
+        wfCtx.SetState("ErrorMessage", ex.Message);
+        output = "Error";
+    }
+}
+@output

@@ -16,8 +16,7 @@ namespace Laser.Orchard.Reporting.Settings {
     {
         private IRepository<ReportRecord> reportRepository;
 
-        public DataReportViewerSettingsEvents(IRepository<ReportRecord> reportRepository)
-        {
+        public DataReportViewerSettingsEvents(IRepository<ReportRecord> reportRepository) {
             this.reportRepository = reportRepository;
         }
 
@@ -40,8 +39,7 @@ namespace Laser.Orchard.Reporting.Settings {
         {
             if (builder.Name != "DataReportViewerPart")
                 yield break;
-
-            var settings = new DataReportViewerPartSettings();
+          var settings = new DataReportViewerPartSettings();
             var model = new EditDataReportViewerViewModel();
             if (updateModel.TryUpdateModel(model, "DataReportViewerPartSettings", null, null))
             {
