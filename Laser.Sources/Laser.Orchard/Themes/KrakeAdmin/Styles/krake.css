@@ -84,6 +84,7 @@ html {
 
 button, .button, a.button {
     background: #de625e none repeat scroll 0 0;
+    color: #fff !important;
     border: 0 none;
     border-radius: 3px;
     box-shadow: none;
@@ -93,8 +94,8 @@ button, .button, a.button {
     font-size: 14px;
 }
 
-button:not(.mce-btn button), .button, a.button {
-    color: #fff !important;
+.mce-btn button {
+    color: initial !important;
 }
 
 #cboxClose,
