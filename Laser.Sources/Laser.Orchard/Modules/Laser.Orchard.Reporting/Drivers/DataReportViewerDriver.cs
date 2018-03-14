@@ -51,6 +51,7 @@ namespace Laser.Orchard.Reporting.Drivers {
             if (displayType == "Detail")
             {
                 var report = this.reportRepository.Table.FirstOrDefault(c => c.Id == part.Record.Report.Id);
+                var partSettings = part.Settings.GetModel<DataReportViewerPartSettings>();
 
                 if (report == null)
                 {
@@ -91,8 +92,8 @@ namespace Laser.Orchard.Reporting.Drivers {
                     ReportTitle = part.Record.Report.Title,
                     JsonData = serializer.Serialize(reportData.Select(c => new object[] { c.Label, c.AggregationValue }).ToArray()),
                     Data = reportData.ToList(),
-                    ChartCssClass = part.Record.ChartTagCssClass,
-                    ContainerCssClass = part.Record.ContainerTagCssClass,
+                    ChartCssClass = partSettings.ChartTagCssClass,
+                    ContainerCssClass = partSettings.ContainerTagCssClass,
                     ColorsArray = serializer.Serialize(colors),
                     HtmlId = part.Record.Id
                 };
