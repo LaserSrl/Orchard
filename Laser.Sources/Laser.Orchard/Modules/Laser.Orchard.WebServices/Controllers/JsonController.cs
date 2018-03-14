@@ -28,6 +28,7 @@ using System.Xml.Serialization;
 using Orchard.OutputCache.Filters;
 using Laser.Orchard.StartupConfig.Exceptions;
 using Orchard.OutputCache;
+using Laser.Orchard.Commons.Enums;
 
 namespace Laser.Orchard.WebServices.Controllers {
 

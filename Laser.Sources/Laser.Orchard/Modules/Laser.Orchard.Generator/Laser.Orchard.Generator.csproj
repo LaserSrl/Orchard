@@ -57,6 +57,8 @@
   <ItemGroup>
     <Compile Include="Controllers\JsonController.cs" />
     <Compile Include="Controllers\WebApiController.cs" />
+    <Compile Include="Services\ProjectionPartDumperService.cs" />
+    <Compile Include="Services\TaxonomyTermsPartDumperService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />

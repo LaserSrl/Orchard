@@ -15,10 +15,12 @@ namespace Laser.Orchard.Events.Drivers {
         public Localizer T { get; set; }
 
         private readonly IDateLocalization _dataLocalization;
+        private readonly IOrchardServices _orchardServices;
 
-        public ActivityPartDriver(IDateLocalization dataLocalization) {
+        public ActivityPartDriver(IDateLocalization dataLocalization, IOrchardServices orchardServices) {
             T = NullLocalizer.Instance;
             _dataLocalization = dataLocalization;
+            _orchardServices = orchardServices;
         }
 
         protected override string Prefix
@@ -109,6 +111,9 @@ namespace Laser.Orchard.Events.Drivers {
             DateTime? localDateTimeEnd = _dataLocalization.ReadDateLocalized(part.DateTimeEnd);
             DateTime? localDateRepeatEnd = _dataLocalization.ReadDateLocalized(part.RepeatEndDate);
             ActivityViewModel activityVM = new ActivityViewModel();
+
+            CultureInfo culture = CultureInfo.GetCultureInfo(_orchardServices.WorkContext.CurrentCulture);
+            activityVM.DateFormat = culture.DateTimeFormat.ShortDatePattern;
 
             //Mapper.CreateMap<ActivityPart, ActivityViewModel>()
             //    .ForMember(dest => dest.DateStart, opt => opt.Ignore())
@@ -214,7 +219,8 @@ namespace Laser.Orchard.Events.Drivers {
 
                 if (!partSettings.UseRecurrences) part.Repeat = false;
 
-                if (!String.IsNullOrWhiteSpace(activityVM.DateStart) && !String.IsNullOrWhiteSpace(activityVM.DateEnd) &&
+                if (!String.IsNullOrWhiteSpace(activityVM.DateStart) && 
+                    (!String.IsNullOrWhiteSpace(activityVM.DateEnd) || partSettings.SingleDate) &&
                     (activityVM.AllDay || (!activityVM.AllDay && !String.IsNullOrWhiteSpace(activityVM.TimeStart) && !String.IsNullOrWhiteSpace(activityVM.TimeEnd)))) {
                     try{
                         if (activityVM.AllDay) {
@@ -224,6 +230,11 @@ namespace Laser.Orchard.Events.Drivers {
                             part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, activityVM.TimeStart);
                             part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, activityVM.TimeEnd);
                         }
+
+                        if (partSettings.SingleDate) {
+                            part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateStart, "23:59");
+                        }
+
                     }catch(OrchardException) {
                         updater.AddModelError(Prefix + "DateFormatError", T("The starting date or ending date are not valid."));
                     }                  

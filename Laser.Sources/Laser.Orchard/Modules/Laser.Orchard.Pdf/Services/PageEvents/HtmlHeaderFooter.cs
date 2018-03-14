@@ -18,23 +18,24 @@ namespace Laser.Orchard.Pdf.Services.PageEvents {
                 // footer was not in html format so bring it in html format
                 var htmlFooter2 = string.Format("<p>{0}</p>", htmlFooter);
                 footer = XMLWorkerHelper.ParseToElementList(htmlFooter2, null);
-            }
+        }
         }
         public override void OnEndPage(PdfWriter writer, Document document) {
-            var ct = new ColumnText(writer.DirectContent);
-            if (header.Count > 0) {
-                ct.SetSimpleColumn(document.LeftMargin, document.Top, document.Right, document.Top + document.TopMargin);
-                foreach (var el in header) {
-                    ct.AddElement(el);
+             if (header.Count > 0) {
+                var ctHeader = new ColumnText(writer.DirectContent);
+                ctHeader.SetSimpleColumn(document.LeftMargin, document.Top, document.Right, document.Top + document.TopMargin);
+                foreach(var elem in header) {
+                    ctHeader.AddElement(elem);
                 }
-                ct.Go();
+                ctHeader.Go();
             }
             if (footer.Count > 0) {
-                ct.SetSimpleColumn(document.LeftMargin, document.Bottom - document.BottomMargin, document.Right, document.BottomMargin);
-                foreach (var el in footer) {
-                    ct.AddElement(el);
+                var ctFooter = new ColumnText(writer.DirectContent);
+                ctFooter.SetSimpleColumn(document.LeftMargin, document.Bottom - document.BottomMargin, document.Right, document.BottomMargin);
+                foreach (var elem in footer) {
+                    ctFooter.AddElement(elem);
                 }
-                ct.Go();
+                ctFooter.Go();
             }
         }
     }

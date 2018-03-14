@@ -669,6 +669,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                 cfg.CreateMap<QuestionnairePart, QuestionnaireEditModel>().ForMember(dest => dest.Questions, opt => opt.MapFrom(src => src.Questions));
                 cfg.CreateMap<AnswerRecord, AnswerEditModel>();
             });
+            part.QuestionsToDisplay = null; // ensure we actually use the Questions from the record (see how the Questions property is defined in the part)
             var editModel = Mapper.Map<QuestionnaireEditModel>(part);
             return (editModel);
         }
