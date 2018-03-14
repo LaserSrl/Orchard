@@ -222,17 +222,28 @@ namespace Laser.Orchard.Events.Drivers {
                 if (!String.IsNullOrWhiteSpace(activityVM.DateStart) && 
                     (!String.IsNullOrWhiteSpace(activityVM.DateEnd) || partSettings.SingleDate) &&
                     (activityVM.AllDay || (!activityVM.AllDay && !String.IsNullOrWhiteSpace(activityVM.TimeStart) && !String.IsNullOrWhiteSpace(activityVM.TimeEnd)))) {
-                    try{
+                    try {
+                        DateTime? startDate;
+                        DateTime? endDate;
+
                         if (activityVM.AllDay) {
-                            part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, "");
-                            part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, "");
+                            startDate = _dataLocalization.StringToDatetime(activityVM.DateStart, "");
+                            endDate = _dataLocalization.StringToDatetime(activityVM.DateEnd, "");
                         } else {
-                            part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, activityVM.TimeStart);
-                            part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, activityVM.TimeEnd);
+                            startDate = _dataLocalization.StringToDatetime(activityVM.DateStart, activityVM.TimeStart).Value;
+                            endDate = _dataLocalization.StringToDatetime(activityVM.DateEnd, activityVM.TimeEnd).Value;
                         }
 
+                        if(!partSettings.SingleDate && startDate.HasValue && endDate.HasValue && DateTime.Compare(startDate.Value, endDate.Value) > 0) {
+                            updater.AddModelError(Prefix + "DateFormatError", T("The ending date is greater than the starting date."));
+                        }
+
+                        part.DateTimeStart = startDate;
+                        part.DateTimeEnd = endDate;
+  
+
                         if (partSettings.SingleDate) {
-                            part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateStart, "23:59");
+                            part.DateTimeEnd = part.DateTimeStart;
                         }
 
                     }catch(OrchardException) {
