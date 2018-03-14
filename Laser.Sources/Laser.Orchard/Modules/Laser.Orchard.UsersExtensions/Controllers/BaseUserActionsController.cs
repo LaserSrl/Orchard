@@ -1,4 +1,5 @@
 ﻿using Laser.Orchard.Commons.Services;
+using Laser.Orchard.Mobile.ViewModels;
 using Laser.Orchard.StartupConfig.IdentityProvider;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
@@ -21,6 +22,13 @@ using System.Web.Mvc;
 using System.Xml.Linq;
 
 namespace Laser.Orchard.UsersExtensions.Controllers {
+    /// <summary>
+    /// This abstract controller exists because we have to manage a situation where we would
+    /// want all the logic in the actions to be under protection of an ApiKey filter, but the
+    /// earlier versions of the mobile applications calling our APIs do not send that. Hence
+    /// we have all the logic here, and then the implementation handles any eventual filter or
+    /// layer that may be required on top.
+    /// </summary>
     public abstract class BaseUserActionsController : Controller {
 
         private readonly IOrchardServices _orchardServices;
@@ -44,6 +52,50 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
 
             T = NullLocalizer.Instance;
         }
+
+        #region [http calls]
+
+        [HttpPost]
+        public ContentResult Register(UserRegistration userRegistrationParams) {
+            return RegisterLogic(userRegistrationParams);
+        }
+
+        [HttpPost]
+        public ContentResult SignIn(UserLogin login) {
+            return SignInLogic(login);
+        }
+
+        [HttpPost]
+        public JsonResult SignOut() {
+            return SignOutLogic();
+        }
+
+        [HttpPost]
+        public JsonResult RequestLostPasswordSms(PhoneNumberViewModel phoneNumber) {
+            return RequestLostPasswordLogic(phoneNumber.PhoneNumber, LostPasswordUserOptions.Phone, phoneNumber.InternationalPrefix);
+        }
+
+        [HttpPost]
+        public JsonResult RequestLostPasswordAccountOrEmail(string username) {
+            return RequestLostPasswordLogic(username, LostPasswordUserOptions.Account);
+        }
+
+        [HttpGet]
+        public ContentResult GetCleanRegistrationPolicies(string lang = null) {
+            return GetCleanRegistrationPoliciesLogic(lang);
+        }
+
+        [HttpGet]
+        public ContentResult GetRegistrationPolicies(string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string lang = null) {
+            return GetRegistrationPoliciesLogic(mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel, lang);
+        }
+
+        [HttpGet]
+        public JsonResult GetUserRegistrationModel() {
+            return GetUserRegistrationModelLogic();
+        }
+
+        #endregion [http calls]
 
         public Localizer T { get; set; }
 

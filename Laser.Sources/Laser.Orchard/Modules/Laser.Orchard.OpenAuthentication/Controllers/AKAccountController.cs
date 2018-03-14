@@ -3,6 +3,7 @@ using Laser.Orchard.StartupConfig.IdentityProvider;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Orchard.Security;
+using Orchard.UI.Notify;
 using Orchard.Users.Events;
 using System.Collections.Generic;
 using System.Web.Mvc;
@@ -11,6 +12,7 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
     public class AKAccountController : BaseAccountController {
 
         public AKAccountController(
+            INotifier notifier,
             IUtilsServices utilsServices,
             IOrchardOpenAuthClientProvider openAuthClientProvider,
             IOrchardOpenAuthWebSecurity orchardOpenAuthWebSecurity,
@@ -24,7 +26,8 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
                 identityProviders,
                 openAuthMembershipServices,
                 authenticationService,
-                userEventHandler
+                userEventHandler,
+                notifier
                 ) { }
 
         [OutputCache(NoStore = true, Duration = 0)]

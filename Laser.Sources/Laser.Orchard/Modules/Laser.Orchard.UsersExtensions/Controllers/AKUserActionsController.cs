@@ -115,49 +115,6 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
         }
 
         #endregion [https calls]
-
-        #region [http calls]
-
-        [HttpPost]
-        public ContentResult Register(UserRegistration userRegistrationParams) {
-            return RegisterLogic(userRegistrationParams);
-        }
-
-        [HttpPost]
-        public ContentResult SignIn(UserLogin login) {
-            return SignInLogic(login);
-        }
-
-        [HttpPost]
-        public JsonResult SignOut() {
-            return SignOutLogic();
-        }
-
-        [HttpPost]
-        public JsonResult RequestLostPasswordSms(PhoneNumberViewModel phoneNumber) {
-            return RequestLostPasswordLogic(phoneNumber.PhoneNumber, LostPasswordUserOptions.Phone, phoneNumber.InternationalPrefix);
-        }
-
-        [HttpPost]
-        public JsonResult RequestLostPasswordAccountOrEmail(string username) {
-            return RequestLostPasswordLogic(username, LostPasswordUserOptions.Account);
-        }
-
-        [HttpGet]
-        public ContentResult GetCleanRegistrationPolicies(string lang = null) {
-            return GetCleanRegistrationPoliciesLogic(lang);
-        }
-
-        [HttpGet]
-        public ContentResult GetRegistrationPolicies(string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string lang = null) {
-            return GetRegistrationPoliciesLogic(mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel, lang);
-        }
-
-        [HttpGet]
-        public JsonResult GetUserRegistrationModel() {
-            return GetUserRegistrationModelLogic();
-        }
-
-        #endregion [http calls]
+        
     }
 }
