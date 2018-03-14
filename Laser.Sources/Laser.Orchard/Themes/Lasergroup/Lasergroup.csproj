@@ -323,9 +323,6 @@
     <Content Include="Views\HtmlQuad_First.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\HtmlQuad_Fourth.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\HtmlFooter.cshtml" />
   </ItemGroup>
   <ItemGroup>

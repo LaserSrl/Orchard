@@ -95,8 +95,6 @@
     <Content Include="Scripts\AppNavSearch.js" />
     <Content Include="Scripts\AppOffcanvas.js" />
     <Content Include="Scripts\AppVendor.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery.autosize.min.js" />
     <Content Include="Scripts\jquery.min.js" />
     <Content Include="Scripts\jquery.nanoscroller.min.js" />

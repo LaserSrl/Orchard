@@ -171,7 +171,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Localization\it-IT\orchard.module.po" />
-    <Content Include="Contents\Web.config" />
     <Content Include="packages.config" />
     <None Include="Properties\PublishProfiles\Orchard_Module_Release.pubxml" />
     <Content Include="Views\GoogleMapForProjections.cshtml" />

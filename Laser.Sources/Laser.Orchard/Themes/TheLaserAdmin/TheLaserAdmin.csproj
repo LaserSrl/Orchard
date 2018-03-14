@@ -99,7 +99,6 @@
     <Compile Include="AdminThemeOverride.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\___Header.cshtml" />
     <Content Include="Views\OrchardVersion.cshtml" />
   </ItemGroup>
   <ItemGroup>
