@@ -213,6 +213,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.MultiStepAuth
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Pdf", "Modules\Laser.Orchard.Pdf\Laser.Orchard.Pdf.csproj", "{C389AD69-B5FE-4F2E-B06D-292CB089E4B4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laser.Orchard.Cache", "Modules\Laser.Orchard.Cache\Laser.Orchard.Cache.csproj", "{BDDD1904-6AD6-4D1E-B0A2-A0628485A089}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -591,6 +593,10 @@ Global
 		{C389AD69-B5FE-4F2E-B06D-292CB089E4B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C389AD69-B5FE-4F2E-B06D-292CB089E4B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C389AD69-B5FE-4F2E-B06D-292CB089E4B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDDD1904-6AD6-4D1E-B0A2-A0628485A089}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDDD1904-6AD6-4D1E-B0A2-A0628485A089}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDDD1904-6AD6-4D1E-B0A2-A0628485A089}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDDD1904-6AD6-4D1E-B0A2-A0628485A089}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -691,5 +697,6 @@ Global
 		{B5B95A77-5DF7-49B5-B083-91F48E9B9E54} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 		{9B2D5686-1A8D-48CA-B2A6-7EA1B942D5A9} = {43B44FB0-ECDC-4552-8D02-302983E0AC0A}
 		{C389AD69-B5FE-4F2E-B06D-292CB089E4B4} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
+		{BDDD1904-6AD6-4D1E-B0A2-A0628485A089} = {AAD1EA8B-01A9-4D52-8F72-49563B9C5573}
 	EndGlobalSection
 EndGlobal

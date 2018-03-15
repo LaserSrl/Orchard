@@ -1,0 +1,46 @@
+﻿@model Laser.Orchard.Cache.ViewModels.SearchIndexVM
+<h2>Cache Url</h2>
+
+@using (Html.BeginForm("Index", "CacheUrlAdmin", FormMethod.Get)) {
+    @Html.AntiForgeryToken()
+    <div style="float:right;">
+        <a class="button primaryAction" href="@Url.Action("Edit", "CacheUrlAdmin", new { area = "Laser.Orchard.Cache", id = 0 })" title="@T("Create New CacheUrl")">@T("Create New CacheUrl")</a>
+    </div>
+    <fieldset class="bulk-actions">
+        <label for="search">@T("Search:")</label>
+        @Html.TextBoxFor(m => m.Search.Expression)
+        <button type="submit">@T("Search")</button>
+        <a href="@Url.Action("Index")">@T("Clear")</a>
+    </fieldset>
+}
+<table class="items">
+    <thead>
+        <tr>
+            <th scope="col" style="width:100%;">@T("Url Scrap")</th>
+            <th scope="col">@T("Duration")</th>
+            <th scope="col">@T("GraceTime")</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var contentIndexVM in Model.ContentsIndexVM) {
+            <tr>
+                <td style="width: 100%;">
+                    <a href="@Url.Action("Edit", "CacheUrlAdmin", new { area = "Laser.Orchard.Cache", id = contentIndexVM.Id })">
+                        @contentIndexVM.CacheURL
+                    </a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit", "CacheUrlAdmin", new { area = "Laser.Orchard.Cache", id = contentIndexVM.Id })">
+                        @contentIndexVM.CacheDuration
+                    </a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit", "CacheUrlAdmin", new { area = "Laser.Orchard.Cache", id = contentIndexVM.Id })">
+                        @contentIndexVM.CacheGraceTime
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Display(Model.Pager)
