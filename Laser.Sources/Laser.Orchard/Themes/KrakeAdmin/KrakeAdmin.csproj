@@ -181,7 +181,6 @@
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Media-Video.Thumbnail.cshtml" />
     <Content Include="Views\Media-Image.Thumbnail.cshtml" />
     <Content Include="Views\Media-Audio.Thumbnail.cshtml" />
@@ -281,7 +280,9 @@
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Fields\ContentPicker.Edit.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\Shared\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
