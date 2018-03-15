@@ -133,7 +133,7 @@ namespace Laser.Orchard.Reporting.Services {
             return returnValue.Values;
         }
 
-        public IEnumerable<AggregationResult> RunHqlReport(ReportRecord report, IContent container) {
+        public IEnumerable<AggregationResult> RunHqlReport(ReportRecord report, IContent container, bool multiColumnTable = false) {
             if (report == null) { throw new ArgumentNullException("report"); }
             if (report.Query == null) { throw new ArgumentException("There is no QueryRecord associated with the Report"); }
 
@@ -168,7 +168,7 @@ namespace Laser.Orchard.Reporting.Services {
                 throw new ArgumentOutOfRangeException("HQL query not valid: please specify select clause with at least 2 columns (the first for labels, the second for values).");
             }
 
-            if (hql.ReturnAliases.Count() > 2) {
+            if (multiColumnTable) {
                 returnValue.Add("0", new AggregationResult {
                     AggregationValue = 0,
                     Label = "",
@@ -320,7 +320,8 @@ namespace Laser.Orchard.Reporting.Services {
             }
             IEnumerable<AggregationResult> reportData = null;
             if (string.IsNullOrWhiteSpace(report.GroupByCategory)) {
-                reportData = RunHqlReport(report, part.ContentItem);
+                var multiColumn = part.Record.ChartType == ((int)ChartTypes.SimpleTable);
+                reportData = RunHqlReport(report, part.ContentItem, multiColumn);
             } else {
                 reportData = RunReport(report, part.ContentItem);
             }

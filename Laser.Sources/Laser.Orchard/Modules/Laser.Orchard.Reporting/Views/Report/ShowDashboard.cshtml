@@ -6,6 +6,7 @@
     Style.Include("jquery.jqplot.css");
     Style.Include("reporting.css");
     Style.Include("report.print.css").Attributes.Add("media", "print");
+    Style.Require("bootstrap-table").AtHead();
     Script.Require("jQueryUI_Widget").AtHead();
     Script.Require("jqplot").AtHead();
     Script.Require("barjqplot").AtHead();
@@ -36,7 +37,12 @@
     }
     <div>
         @foreach (var rep in Model.Reports.AsPart<DataReportViewerPart>()) {
-            <div style="float:left" data-report-id="@rep.Record.Id"></div>
+            if (rep.Record.ChartType == 7) {
+                <div data-report-id="@rep.Record.Id"></div>
+            } else {
+                <div style="float:left" data-report-id="@rep.Record.Id"></div>
+            }
+
         }
     </div>
     <script type="text/javascript">

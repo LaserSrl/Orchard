@@ -8,12 +8,11 @@ namespace Laser.Orchard.Reporting.Settings {
         public virtual string ContainerTagCssClass { get; set; }
 
         public virtual string ChartTagCssClass { get; set; }
- 
-        public void Build(ContentTypePartDefinitionBuilder builder)
-        {
-            builder.WithSetting("DataReportViewerSettings.DefaultReportId", DefaultReportId.HasValue ? DefaultReportId.ToString() : string.Empty);
-            builder.WithSetting("DataReportViewerSettings.ContainerTagCssClass", ContainerTagCssClass);
-            builder.WithSetting("DataReportViewerSettings.DefaultReportId", ChartTagCssClass);
+
+        public void Build(ContentTypePartDefinitionBuilder builder) {
+            builder.WithSetting("DataReportViewerPartSettings.DefaultReportId", DefaultReportId.HasValue ? DefaultReportId.ToString() : string.Empty);
+            builder.WithSetting("DataReportViewerPartSettings.ContainerTagCssClass", ContainerTagCssClass);
+            builder.WithSetting("DataReportViewerPartSettings.ChartTagCssClass", ChartTagCssClass);
         }
     }
 }

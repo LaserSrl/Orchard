@@ -1,0 +1,42 @@
+@using System.Linq
+@using Orchard
+@using Orchard.Services
+@using Orchard.ContentManagement
+@using Orchard.ContentManagement.Records
+@using Orchard.Users.Models
+@using Orchard.Users.Services
+@using Orchard.Security
+@using Orchard.Data
+@using System.Web;
+@functions{
+    //services
+    IOrchardServices _orchardServices;
+    IContentManager _contentManager;
+}
+@{
+    //System.Diagnostics.Debugger.Break();
+    //Resolve services.
+    _orchardServices = Model.OrchardServices.WorkContext.Resolve<IOrchardServices>();
+    _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+    var Request = HttpContext.Current.Request;
+
+    IUser user = _orchardServices.WorkContext.CurrentUser;
+
+    if (user != null) {
+
+        if (Request["ContentId"] != null) {
+            string stringContentId = Request["ContentId"];
+            int contentId;
+            bool converted = Int32.TryParse(stringContentId, out contentId);
+
+            if (converted) {
+                dynamic content = _contentManager.Get(contentId);
+                if(content != null && content.ContentType.Equals("Prenotazione")) {
+                    if (user.Email.Equals(content.CommonPart.Owner.Email)) {
+                        _contentManager.Unpublish(content);
+                    }
+                }
+            }
+        }
+    }
+}
