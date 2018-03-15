@@ -339,9 +339,6 @@
     <Content Include="Views\Content-Piatto.Summary.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Content-Ristorante.Summary.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Parts.Map.cshtml" />
   </ItemGroup>
   <ItemGroup>

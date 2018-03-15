@@ -181,7 +181,6 @@
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Media-Video.Thumbnail.cshtml" />
     <Content Include="Views\Media-Image.Thumbnail.cshtml" />
