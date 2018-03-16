@@ -257,9 +257,6 @@
     <Content Include="Views\PlaceholderLogo.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ThemeSettings.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\RecentContentTab.cshtml" />
   </ItemGroup>
   <ItemGroup>
