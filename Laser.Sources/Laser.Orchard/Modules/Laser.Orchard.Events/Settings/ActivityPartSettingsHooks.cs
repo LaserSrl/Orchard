@@ -31,6 +31,10 @@ namespace Laser.Orchard.Events.Settings {
             updateModel.TryUpdateModel(model, "ActivityPartSettings", null, null);
             builder.WithSetting("ActivityPartSettings.UseRecurrences",
             ((bool)model.UseRecurrences).ToString());
+            builder.WithSetting("ActivityPartSettings.SingleDate",
+            ((bool)model.SingleDate).ToString());
+            builder.WithSetting("ActivityPartSettings.DateTimeType",
+            ((DateTimeTypes)model.DateTimeType).ToString());
             yield return DefinitionTemplate(model);
         }
     }

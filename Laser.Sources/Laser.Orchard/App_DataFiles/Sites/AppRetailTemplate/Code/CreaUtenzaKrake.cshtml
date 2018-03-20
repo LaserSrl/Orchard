@@ -37,7 +37,7 @@
 
     private int MinPasswordLength {
         get {
-            return _membershipService.GetSettings().MinRequiredPasswordLength;
+            return _membershipService.GetSettings().GetMinimumPasswordLength();
         }
     }
     //this does the same validation that Orchard does in Orchard.Users/Controllers/AccountController

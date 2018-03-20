@@ -334,5 +334,44 @@ namespace Laser.Orchard.Mobile {
             );
             return 34;
         }
+        public int UpdateFrom34() {
+            ContentDefinitionManager.AlterTypeDefinition("BackgroundPush", t => 
+                t.Creatable(false)
+                .Draftable(false)
+                .Listable(false)
+                .Securable(true)
+                .WithPart("MobilePushPart")
+            );
+            return 35;
+        }
+        public int UpdateFrom35() {
+            ContentDefinitionManager.AlterPartDefinition("BackgroundPush", f => f
+                .WithField("ExternalUrl", cfg => cfg.OfType("TextField"))
+            );
+            ContentDefinitionManager.AlterTypeDefinition("BackgroundPush", t =>
+                t.WithPart("BackgroundPush")
+            );
+            return 36;
+        }
+        public int UpdateFrom36() {
+            ContentDefinitionManager.AlterPartDefinition("BackgroundPush", f => f
+                .WithField("QueryDevice", cfg => cfg.OfType("TextField"))
+            );
+            return 37;
+        }
+
+        /// <summary>
+        /// This update is due to the introduction of LastDeviceUserDataProvider to allow
+        /// unique authentication cookie for each of a user's device.
+        /// </summary>
+        /// <returns></returns>
+        public int UpdateFrom37() {
+            SchemaBuilder.CreateTable("LatestUUIDForUserRecord", table => table
+                .Column<int>("Id", column => column.PrimaryKey().Identity())
+                .Column<int>("UserPartRecord_Id")
+                .Column<string>("UUID", column => column.WithLength(400)));
+
+            return 38;
+        }
     }
 }

@@ -37,7 +37,9 @@ namespace Pubblicazione {
         public Deploy() {
             InitializeComponent();
             additionalFiles = new string[] {
-                "*System.Net.FtpClient.dll"
+                "*System.Net.FtpClient.dll",
+                "*System.IdentityModel.Tokens.Jwt.dll",
+                "*System.IO.Compression.dll"
             };
         }
         private void btnFullDeploy_Click(object sender, EventArgs e) {
@@ -70,8 +72,8 @@ namespace Pubblicazione {
 
             foreach (var a in this.clbLibrary.CheckedItems) {
                 DirectoryInfo parentDir = Directory.GetParent(elencoModuli[this.clbModules.Items[0].ToString()]);
-                ProcessXcopy(parentDir.Parent.FullName + @"\*" + a.ToString() + ".dll", deploypath + @"\Modules\");
-                ProcessXcopy(parentDir.Parent.Parent.FullName + @"\Themes\*" + a.ToString() + ".dll", deploypath + @"\Themes\");
+                ProcessXcopy(parentDir.Parent.FullName + @"\Modules\*" + a.ToString() + ".dll", deploypath + @"\Modules\");
+                ProcessXcopy(parentDir.Parent.FullName + @"\Themes\*" + a.ToString() + ".dll", deploypath + @"\Themes\");
                 progressstep++;
                 bw.ReportProgress(100 * progressstep / totaleprogress);
                 Thread.Sleep(100);
@@ -79,8 +81,8 @@ namespace Pubblicazione {
 
             foreach (var a in this.clbLibraryOrchard.CheckedItems) {
                 DirectoryInfo parentDir = Directory.GetParent(elencoModuliOrchard[this.clbModulesOrchard.Items[0].ToString()]);
-                ProcessXcopy(parentDir.Parent.FullName + @"\*" + a.ToString() + ".dll", deploypath + @"\Modules\");
-                ProcessXcopy(parentDir.Parent.Parent.FullName + @"\Themes\*" + a.ToString() + ".dll", deploypath + @"\Themes\");
+                ProcessXcopy(parentDir.Parent.FullName + @"\Modules\*" + a.ToString() + ".dll", deploypath + @"\Modules\");
+                ProcessXcopy(parentDir.Parent.FullName + @"\Themes\*" + a.ToString() + ".dll", deploypath + @"\Themes\");
                 progressstep++;
                 bw.ReportProgress(100 * progressstep / totaleprogress);
                 Thread.Sleep(100);
@@ -173,7 +175,7 @@ namespace Pubblicazione {
         }
 
         private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e) {
-            TheprogressBar.Value = e.ProgressPercentage;
+ 			TheprogressBar.Value = e.ProgressPercentage;
         }
 
         private void bw_DoWork(object sender, DoWorkEventArgs e) {
@@ -202,8 +204,10 @@ namespace Pubblicazione {
                     break;
 
                 case "btnAll":
-
-                    totaleprogress = 1 + (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count) * 2;
+                    totaleprogress = 1 + (
+                        (this.clbModules.CheckedItems.Count + this.clbModulesOrchard.CheckedItems.Count )*2
+                        + this.clbThemes.CheckedItems.Count + this.clbThemesOrchard.CheckedItems.Count
+                        + this.clbLibrary.CheckedItems.Count + this.clbLibraryOrchard.CheckedItems.Count) ;
 
                     action = () => btnAll.Enabled = false;
                     btnAll.Invoke(action);

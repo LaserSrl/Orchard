@@ -1,0 +1,14 @@
+﻿@model Laser.Orchard.Caligoo.Models.CaligooUserPart
+<fieldset>
+    <legend>@T("Caligoo User")</legend>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.CaligooUserId)">@T("Caligoo User ID")</label>
+        @Html.TextBoxFor(m => m.CaligooUserId, new { @class = "text medium" })
+        <span class="hint">@T("The value of the corresponding user_id in Caligoo.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.CaligooUserName)">@T("Caligoo User Name")</label>
+        @Html.TextBoxFor(m => m.CaligooUserName, new { @class = "text medium" })
+        <span class="hint">@T("The value of the corresponding username in Caligoo.")</span>
+    </div>
+</fieldset>

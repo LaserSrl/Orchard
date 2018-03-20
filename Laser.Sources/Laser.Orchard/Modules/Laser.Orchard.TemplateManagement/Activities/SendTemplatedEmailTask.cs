@@ -75,23 +75,18 @@ namespace Laser.Orchard.TemplateManagement.Activities {
             string recipientBCC = activityContext.GetState<string>("RecipientBCC");
             string fromEmail = activityContext.GetState<string>("FromEmail");
             string replyTo = activityContext.GetState<string>("ReplyTo");
+            string emailTemplate = activityContext.GetState<string>("EmailTemplate");
             bool NotifyReadEmail = activityContext.GetState<string>("NotifyReadEmail") == "NotifyReadEmail";
-
-            var properties = new Dictionary<string, string> {
-                {"Body", activityContext.GetState<string>("Body")},
-                {"Subject", activityContext.GetState<string>("Subject")},
-                {"RecipientOther",activityContext.GetState<string>("RecipientOther")},
-                {"RecipientCC",activityContext.GetState<string>("RecipientCC")},
-                {"RecipientBCC",activityContext.GetState<string>("RecipientBCC")},
-                {"ReplyTo",activityContext.GetState<string>("ReplyTo")},
-                {"EmailTemplate",activityContext.GetState<string>("EmailTemplate")},
-                {"FromEmail",activityContext.GetState<string>("FromEmail")}
-            };
+            string attachmentList = activityContext.GetState<string>("AttachmentList");
             List<string> sendTo = new List<string>();
             List<string> sendCC = new List<string>();
             List<string> sendBCC = new List<string>();
+            List<string> attachments = new List<string>();
             var templateId = 0;
-            int.TryParse(properties["EmailTemplate"], out templateId);
+            var customTemplateId = activityContext.GetState<string>("CustomTemplateId");
+            if(int.TryParse(customTemplateId, out templateId) == false) {
+                int.TryParse(emailTemplate, out templateId);
+            }
             int contentVersion = 0;
             ContentItem content = null;
             if (workflowContext.Content != null) {
@@ -108,9 +103,9 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                 if (content.Has<CommonPart>()) {
                     var owner = content.As<CommonPart>().Owner;
                     if (owner != null && owner.ContentItem != null && owner.ContentItem.Record != null) {
-                        sendTo.AddRange(SplitEmail(owner.As<IUser>().Email));
+                        sendTo.AddRange(SplitList(owner.As<IUser>().Email));
                     }
-                    sendTo.AddRange(SplitEmail(owner.As<IUser>().Email));
+                    sendTo.AddRange(SplitList(owner.As<IUser>().Email));
                 }
             }
             else if (recipient == "author") {
@@ -118,7 +113,7 @@ namespace Laser.Orchard.TemplateManagement.Activities {
 
                 // can be null if user is anonymous
                 if (user != null && !String.IsNullOrWhiteSpace(user.Email)) {
-                    sendTo.AddRange(SplitEmail(user.Email));
+                    sendTo.AddRange(SplitList(user.Email));
                 }
             }
             else if (recipient == "admin") {
@@ -127,31 +122,34 @@ namespace Laser.Orchard.TemplateManagement.Activities {
 
                 // can be null if user is no super user is defined
                 if (user != null && !String.IsNullOrWhiteSpace(user.Email)) {
-                    sendTo.AddRange(SplitEmail(user.As<IUser>().Email));
+                    sendTo.AddRange(SplitList(user.As<IUser>().Email));
                 }
             }
             else if (recipient == "other") {
-                sendTo.AddRange(SplitEmail(activityContext.GetState<string>("RecipientOther")));
+                sendTo.AddRange(SplitList(activityContext.GetState<string>("RecipientOther")));
             }
             if (!String.IsNullOrWhiteSpace(recipientCC)) {
-                sendCC.AddRange(SplitEmail(recipientCC));
+                sendCC.AddRange(SplitList(recipientCC));
             }
             if (!String.IsNullOrWhiteSpace(recipientBCC)) {
-                sendBCC.AddRange(SplitEmail(recipientBCC));
+                sendBCC.AddRange(SplitList(recipientBCC));
             }
-            if (SendEmail(contentModel, templateId, sendTo, sendCC, sendBCC, NotifyReadEmail, fromEmail, replyTo))
+            if (!String.IsNullOrWhiteSpace(attachmentList)) {
+                attachments.AddRange(SplitList(attachmentList));
+            }
+            if (SendEmail(contentModel, templateId, sendTo, sendCC, sendBCC, NotifyReadEmail, fromEmail, replyTo, attachments))
 
                 yield return T("Sent");
             else
                 yield return T("Not Sent");
         }
 
-        private static IEnumerable<string> SplitEmail(string commaSeparated) {
+        private static IEnumerable<string> SplitList(string commaSeparated) {
             if (commaSeparated == null) return null;
             return commaSeparated.Split(new[] { ',', ';' });
         }
 
-        private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> cc, IEnumerable<string> bcc, bool NotifyReadEmail, string fromEmail = null, string replyTo = null) {
+        private bool SendEmail(dynamic contentModel, int templateId, IEnumerable<string> sendTo, IEnumerable<string> cc, IEnumerable<string> bcc, bool NotifyReadEmail, string fromEmail = null, string replyTo = null, IEnumerable<string> attachments = null) {
             var template = _templateServices.GetTemplate(templateId);
             var body = _templateServices.RitornaParsingTemplate(contentModel, templateId);
             if (body.StartsWith("Error On Template")) {
@@ -178,6 +176,11 @@ namespace Laser.Orchard.TemplateManagement.Activities {
                 data.Add("ReplyTo", replyTo);
             }
             data.Add("NotifyReadEmail", NotifyReadEmail);
+            if (attachments != null) {
+                if (attachments.Count() > 0) {
+                    data.Add("Attachments", attachments);
+                }
+            }
             _messageService.Send(SmtpMessageChannel.MessageType, data);
             return true;
         }

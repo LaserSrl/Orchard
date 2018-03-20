@@ -23,7 +23,7 @@ namespace Laser.Orchard.Mobile.Services {
         void DeleteUserDeviceAssociation(int userId);
         void RebindDevicesToMasterContact(int contactId);
         void Synchronize();
-        IEnumerable<PushNotificationRecord> SearchPushNotification(string texttosearch);
+        Tuple<IEnumerable<PushNotificationRecord>, int> SearchPushNotification(string texttosearch, int startIndex, int length);
     }
 
     public class PushNotificationService : IPushNotificationService {
@@ -291,8 +291,17 @@ namespace Laser.Orchard.Mobile.Services {
             return _pushNotificationRepository.Fetch(x => x.UUIdentifier == uuidentifier && x.Produzione == produzione).FirstOrDefault();
         }
 
-        public IEnumerable<PushNotificationRecord> SearchPushNotification(string texttosearch) {
-            return _pushNotificationRepository.Fetch(x => x.UUIdentifier.Contains(texttosearch)).ToList();
+        public Tuple<IEnumerable<PushNotificationRecord>, int> SearchPushNotification(string texttosearch, int startIndex, int length) {
+            IEnumerable<PushNotificationRecord> partialList = null;
+            int count = 0;
+            if (string.IsNullOrWhiteSpace(texttosearch)) {
+                count = _pushNotificationRepository.Count(x => true);
+                partialList = _pushNotificationRepository.Table.Skip(startIndex).Take(length);
+            } else {
+                count = _pushNotificationRepository.Count(x => x.UUIdentifier.Contains(texttosearch));
+                partialList = _pushNotificationRepository.Fetch(x => x.UUIdentifier.Contains(texttosearch)).Skip(startIndex).Take(length);
+            }
+            return new Tuple<IEnumerable<PushNotificationRecord>, int>(partialList, count);
         }
 
         #endregion [CRUD PushNotification]

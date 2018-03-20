@@ -1,9 +1,12 @@
 ﻿using Laser.Orchard.Commons.Services;
 using Laser.Orchard.Mobile.ViewModels;
+using Laser.Orchard.StartupConfig.IdentityProvider;
 using Laser.Orchard.StartupConfig.Services;
 using Laser.Orchard.StartupConfig.ViewModels;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Laser.Orchard.UsersExtensions.Models;
 using Laser.Orchard.UsersExtensions.Services;
+using Newtonsoft.Json.Linq;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
@@ -11,11 +14,15 @@ using Orchard.Core.Title.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
+using Orchard.Security;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Utility.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -28,20 +35,20 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
     public class UserActionsController : Controller {
         private readonly ICsrfTokenHelper _csrfTokenHelper;
         private readonly IUsersExtensionsServices _usersExtensionsServices;
-        private readonly IControllerContextAccessor _controllerContextAccessor;
         private readonly IOrchardServices _orchardServices;
         private readonly IUserService _userService;
         private readonly IUtilsServices _utilsServices;
+        private readonly IEnumerable<IIdentityProvider> _identityProviders;
 
         public ILogger Log { get; set; }
 
         public UserActionsController(IOrchardServices orchardServices, ICsrfTokenHelper csrfTokenHelper, IUsersExtensionsServices usersExtensionsServices, IUserService userService,
-            IControllerContextAccessor controllerContextAccessor, IUtilsServices utilsServices) {
+             IUtilsServices utilsServices, IEnumerable<IIdentityProvider> identityProviders) {
             _csrfTokenHelper = csrfTokenHelper;
             _usersExtensionsServices = usersExtensionsServices;
-            _controllerContextAccessor = controllerContextAccessor;
             _orchardServices = orchardServices;
             _userService = userService;
+            _identityProviders = identityProviders;
             T = NullLocalizer.Instance;
             Log = NullLogger.Instance;
             _utilsServices = utilsServices;
@@ -57,12 +64,14 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
         /// </param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult RegisterSsl(UserRegistration userRegistrationParams) {
+        [AlwaysAccessible]
+        public ContentResult RegisterSsl(UserRegistration userRegistrationParams) {
             return RegisterLogic(userRegistrationParams);
         }
 
         [HttpPost]
-        public JsonResult SignInSsl(UserLogin login) {
+        [AlwaysAccessible]
+        public ContentResult SignInSsl(UserLogin login) {
             return SignInLogic(login);
         }
 
@@ -85,6 +94,7 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
         /// </param>
         /// <returns></returns>
         [HttpPost]
+        [AlwaysAccessible]
         public JsonResult RequestLostPasswordSmsSsl(PhoneNumberViewModel phoneNumber) {
             return RequestLostPasswordLogic(phoneNumber.PhoneNumber, LostPasswordUserOptions.Phone, phoneNumber.InternationalPrefix);
         }
@@ -99,21 +109,25 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
         /// </param>
         /// <returns></returns>
         [HttpPost]
+        [AlwaysAccessible]
         public JsonResult RequestLostPasswordAccountOrEmailSsl(string username) {
             return RequestLostPasswordLogic(username, LostPasswordUserOptions.Account);
         }
 
         [HttpGet]
+        [AlwaysAccessible]
         public ContentResult GetCleanRegistrationPoliciesSsl(string lang = null) {
             return GetCleanRegistrationPoliciesLogic(lang);
         }
 
         [HttpGet]
+        [AlwaysAccessible]
         public ContentResult GetRegistrationPoliciesSsl(string mfilter = "", int page = 1, int pageSize = 10, bool tinyResponse = true, bool minified = false, bool realformat = false, int deeplevel = 10, string lang = null) {
             return GetRegistrationPoliciesLogic(mfilter, page, pageSize, tinyResponse, minified, realformat, deeplevel, lang);
         }
 
         [HttpGet]
+        [AlwaysAccessible]
         public JsonResult GetUserRegistrationModelSsl() {
             return GetUserRegistrationModelLogic();
         }
@@ -123,12 +137,12 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
         #region [http calls]
 
         [HttpPost]
-        public JsonResult Register(UserRegistration userRegistrationParams) {
+        public ContentResult Register(UserRegistration userRegistrationParams) {
             return RegisterLogic(userRegistrationParams);
         }
 
         [HttpPost]
-        public JsonResult SignIn(UserLogin login) {
+        public ContentResult SignIn(UserLogin login) {
             return SignInLogic(login);
         }
 
@@ -164,60 +178,41 @@ namespace Laser.Orchard.UsersExtensions.Controllers {
 
         #endregion [http calls]
 
-        private JsonResult RegisterLogic(UserRegistration userRegistrationParams) {
+        private ContentResult RegisterLogic(UserRegistration userRegistrationParams) {
             Response result;
-            int userId = 0;
             // ensure users can request lost password
             var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
             if (!registrationSettings.UsersCanRegister) {
                 result = _utilsServices.GetResponse(ResponseType.None, T("Users cannot register due to site settings.").Text);
-                return Json(result);
+                return _utilsServices.ConvertToJsonResult(result);
             }
             try {
                 _usersExtensionsServices.Register(userRegistrationParams);
                 List<string> roles = new List<string>();
                 var message = "";
-                if (_orchardServices.WorkContext.CurrentUser != null) {
-                    roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
-                    userId = _orchardServices.WorkContext.CurrentUser.Id;
-                } else {
-                    if (registrationSettings.UsersMustValidateEmail) {
-                        message = T("Thank you for registering. We sent you an e-mail with instructions to enable your account.").ToString();
-                    }
+                var registeredServicesData = _utilsServices.GetUserIdentityProviders(_identityProviders);
+                if (_orchardServices.WorkContext.CurrentUser == null && registrationSettings.UsersMustValidateEmail) {
+                    message = T("Thank you for registering. We sent you an e-mail with instructions to enable your account.").ToString();
                 }
-                var registeredServicesData = new {
-                    RegisteredServices = _controllerContextAccessor.Context.Controller.TempData,
-                    Roles = roles,
-                    UserId = userId
-                };
-                result = _utilsServices.GetResponse(ResponseType.Success, message, registeredServicesData);
+                var json = registeredServicesData.ToString();
+                result = _utilsServices.GetResponse(ResponseType.Success, message, json);
             } catch (Exception ex) {
                 result = _utilsServices.GetResponse(ResponseType.None, ex.Message);
             }
-
-            return Json(result);
+            return _utilsServices.ConvertToJsonResult(result);
         }
-
-        private JsonResult SignInLogic(UserLogin login) {
+        private ContentResult SignInLogic(UserLogin login) {
             Response result;
-            int userId = 0;
             try {
                 _usersExtensionsServices.SignIn(login);
                 List<string> roles = new List<string>();
-                if (_orchardServices.WorkContext.CurrentUser != null) {
-                    roles = ((dynamic)_orchardServices.WorkContext.CurrentUser.ContentItem).UserRolesPart.Roles;
-                    userId = _orchardServices.WorkContext.CurrentUser.Id;
-                }
-                var registeredServicesData = new {
-                    RegisteredServices = _controllerContextAccessor.Context.Controller.TempData,
-                    Roles = roles,
-                    UserId = userId
-                };
-                result = _utilsServices.GetResponse(ResponseType.Success, "", registeredServicesData);
+                var registeredServicesData = _utilsServices.GetUserIdentityProviders(_identityProviders);
+                var json = registeredServicesData.ToString();
+                result = _utilsServices.GetResponse(ResponseType.Success, "", json);
             } catch (Exception ex) {
                 result = _utilsServices.GetResponse(ResponseType.InvalidUser, ex.Message);
             }
-            return Json(result);
+            return _utilsServices.ConvertToJsonResult(result);
         }
 
         private JsonResult SignOutLogic() {

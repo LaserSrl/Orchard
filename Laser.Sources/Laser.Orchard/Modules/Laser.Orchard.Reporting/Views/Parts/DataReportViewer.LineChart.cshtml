@@ -26,7 +26,13 @@
             },
             axes: {
                 xaxis: {
-                    renderer: $.jqplot.CategoryAxisRenderer
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    rendererOptions:{
+                        tickRenderer:$.jqplot.CanvasAxisTickRenderer
+                    },
+                    tickOptions:{ 
+                        angle:-40
+                    }
                 }
             }
         });

@@ -9,6 +9,8 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Shapes;
 using System.Globalization;
 using System.Web.Helpers;
+using Orchard.Core.Common.Fields;
+using Markdown.Services;
 
 namespace Laser.Orchard.Commons.Services {
 
@@ -42,13 +44,15 @@ namespace Laser.Orchard.Commons.Services {
         private bool _omitContentItem;
         private string[] _complexBehaviour;
         private string[] _includeMembers; // members ending with "Record" or "Definition" that have to be always included 
-        // object/key/dump
+                                          // object/key/dump
+        private readonly MarkdownFilter _markdownFilter;
 
         public ObjectDumper(int levels, string[] filterContentFieldsParts = null, bool omitContentItem = false, bool tinyResponse = true, string[] complexBehaviour = null) {
             _levels = levels;
             _xdoc = new XDocument();
             _xdoc.Add(_current = new XElement("ul"));
             _complexBehaviour = complexBehaviour;
+            _markdownFilter = new MarkdownFilter();
 
             _contentRendered = new List<ContentFlags>();
             if (tinyResponse) {
@@ -60,7 +64,7 @@ namespace Laser.Orchard.Commons.Services {
                 "InfosetPart","FieldIndexPart","IdentityPart","UserPart","UserRolesPart", "AdminMenuPart", "MenuPart"};
             }
             _skipMembers = new string[]{
-               "*/Storage", "*/Settings","*/Zones","LocalizationPart/CultureField","LocalizationPart/MasterContentItemField","DisplayName"/*,"LocalizationPart/MasterContentItem"*/
+               "*/Storage", "*/Settings","*/Zones","LocalizationPart/CultureField","LocalizationPart/MasterContentItemField","DisplayName","TableData"/*,"LocalizationPart/MasterContentItem"*/
             };
             _keepOnlyTheeseMembers = new string[]{
                 "MasterContentItem/Id"
@@ -88,6 +92,10 @@ namespace Laser.Orchard.Commons.Services {
                 return null;
             }
             if (o != null){
+                if(string.Equals(name, "JsonDataTablePart", StringComparison.InvariantCulture)) {
+                    name = string.Format("{0}{1}", (o as ContentPart).ContentItem.ContentType, name);
+                    nameDynamicJsonArray = name;
+                }
                 if (FormatType(o) == "FieldExternal") {
                     // testo il caso in cui non ho un contentobject ma un content url
                     if (((dynamic)o).ContentObject != null) {
@@ -417,7 +425,16 @@ namespace Laser.Orchard.Commons.Services {
 
                 if (prop.GetIndexParameters().Length == 0 && prop.CanRead) {
                     if (!_skipParts.Contains(o.GetType().Name)) {
-                        Dump(prop.GetValue(o, null), member.Name);
+                        var val = prop.GetValue(o, null);
+                        if(o.GetType().Name == "TextField") {
+                            var tf = o as TextField;
+                            if (tf.PartFieldDefinition.Settings.ContainsKey("TextFieldSettings.Flavor")) {
+                                var flavor = tf.PartFieldDefinition.Settings["TextFieldSettings.Flavor"];
+                                // markdownFilter acts only if flavor is "markdown"
+                                val = _markdownFilter.ProcessContent(val.ToString(), flavor);
+                            }
+                        }
+                        Dump(val, member.Name);
                     }
                 }
             }

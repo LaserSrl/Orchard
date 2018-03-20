@@ -1,4 +1,4 @@
-@using Laser.Orchard.CommunicationGateway.Models;
+﻿@using Laser.Orchard.CommunicationGateway.Models;
 @using Laser.Orchard.StartupConfig.Models;
 @using Orchard.Data;
 @using Orchard.Localization.Records;
@@ -6,6 +6,7 @@
 @using Orchard.ContentManagement;
 @using Orchard.Projections.Models;
 @using Orchard.Projections.Services;
+@using Orchard.Roles.Models;
 @using System;
 @using System.Linq;
 @functions{
@@ -14,13 +15,15 @@
                                 //  IRepository<CommunicationEmailRecord> _emailRepository;
                                 //  IContentManager _contentManager;
 //    Orchard.Data.IRepository<FieldIndexPartRecord> _fieldIndexPartRecord;
-//    IContentManager _contentManager;
+    IContentManager _contentManager;
 	IRepository<CommunicationEmailRecord> _emailRepository;
     IRepository<CommunicationSmsRecord> _smsRepository;
  //   ICultureManager _cultureManager;
 }
 @{
     string retstring = "";
+    _contentManager = Model.OrchardServices.WorkContext.Resolve<IContentManager>();
+
     _smsRepository = Model.OrchardServices.WorkContext.Resolve<IRepository<CommunicationSmsRecord>>();
     _emailRepository = Model.OrchardServices.WorkContext.Resolve<IRepository<CommunicationEmailRecord>>();
     //    _cultureManager = Model.OrchardServices.WorkContext.Resolve<ICultureManager>();
@@ -33,6 +36,13 @@
     string prefisso = (string)communicationContact.ProfilePart.PrefissoTelefonico.Value;
     string telefono = (string)communicationContact.ProfilePart.NumeroTelefonico.Value;
     int contactid = communicationContact.Id;
+
+    var iduser=communicationContact.CommunicationContactPart.UserIdentifier;
+    var user=_contentManager.Get(iduser);
+    if (user!=null && user.UserRolesPart.Roles.Contains("Shopper")){
+        retstring = "Contatto non modificabile";
+    }
+
 
     var _emailRecord = _emailRepository.Fetch(x => x.Email == email && x.EmailContactPartRecord_Id != contactid ).FirstOrDefault();
     if (_emailRecord!=null)   {
@@ -89,5 +99,5 @@
     //   }
     //   if (!unique) {
     //       retstring = "Telefono non univoco";
-//   }
+    //   }
 }@retstring

@@ -28,6 +28,7 @@ using System.Text.RegularExpressions;
 using System.Web.Hosting;
 using Orchard.Email.Services;
 using Orchard.Tokens;
+using Laser.Orchard.Commons.Services;
 
 namespace Laser.Orchard.Questionnaires.Services {
 
@@ -668,6 +669,7 @@ namespace Laser.Orchard.Questionnaires.Services {
                 cfg.CreateMap<QuestionnairePart, QuestionnaireEditModel>().ForMember(dest => dest.Questions, opt => opt.MapFrom(src => src.Questions));
                 cfg.CreateMap<AnswerRecord, AnswerEditModel>();
             });
+            part.QuestionsToDisplay = null; // ensure we actually use the Questions from the record (see how the Questions property is defined in the part)
             var editModel = Mapper.Map<QuestionnaireEditModel>(part);
             return (editModel);
         }
@@ -771,7 +773,7 @@ namespace Laser.Orchard.Questionnaires.Services {
             string separator = ";";
             var elenco = GetUsersAnswers(questionnaireId, from, to);
             ContentItem ci = _orchardServices.ContentManager.Get(questionnaireId);
-            string fileName = String.Format("{0}-{1:yyyyMMdd}-{2:yyyyMMdd}.csv", NormalizeFileName(ci.As<TitlePart>().Title), from, to);
+            string fileName = String.Format("{0}-{1:yyyyMMdd}-{2:yyyyMMdd}.csv", new CommonUtils().NormalizeFileName(ci.As<TitlePart>().Title, "questionnaire", ' '), from, to);
             string filePath = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\" + _shellSettings.Name + @"\Export\QuestionnairesStatistics\" + fileName;
             // Creo la directory Export
             FileInfo fi = new FileInfo(filePath);
@@ -806,16 +808,6 @@ namespace Laser.Orchard.Questionnaires.Services {
         private string EscapeString(string text) {
             return (text ?? "").Replace('\"', '\'').Replace('\n', ' ').Replace('\r', ' ');
         }
-        private string NormalizeFileName(string text) {
-            var invalidChars = Path.GetInvalidFileNameChars();
-            string aux = text.Clone().ToString();
-            foreach (var ch in text) {
-                if (invalidChars.Contains(ch)) {
-                    aux = aux.Replace(ch, ' ');
-                }
-            }
-            return aux;
-        }
         public List<QuestionnaireStatsViewModel> GetStats(int questionnaireId, DateTime? from = null, DateTime? to = null) {
             var questionnaireData = _orchardServices.ContentManager.Query<QuestionnairePart, QuestionnairePartRecord>(VersionOptions.Published)
                                                        .Where(q => q.Id == questionnaireId)
@@ -838,8 +830,6 @@ namespace Laser.Orchard.Questionnaires.Services {
                 QuestionnaireStatsViewModel empty = new QuestionnaireStatsViewModel();
                 empty.QuestionnairePart_Id = questionnaireData.Id;
                 empty.QuestionnaireTitle = questionnaireData.As<TitlePart>().Title;
-                empty.Answers = null;
-
                 return new List<QuestionnaireStatsViewModel>() { empty };
             }
             else {

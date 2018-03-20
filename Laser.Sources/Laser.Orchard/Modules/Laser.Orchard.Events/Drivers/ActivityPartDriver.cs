@@ -15,10 +15,12 @@ namespace Laser.Orchard.Events.Drivers {
         public Localizer T { get; set; }
 
         private readonly IDateLocalization _dataLocalization;
+        private readonly IOrchardServices _orchardServices;
 
-        public ActivityPartDriver(IDateLocalization dataLocalization) {
+        public ActivityPartDriver(IDateLocalization dataLocalization, IOrchardServices orchardServices) {
             T = NullLocalizer.Instance;
             _dataLocalization = dataLocalization;
+            _orchardServices = orchardServices;
         }
 
         protected override string Prefix
@@ -109,6 +111,9 @@ namespace Laser.Orchard.Events.Drivers {
             DateTime? localDateTimeEnd = _dataLocalization.ReadDateLocalized(part.DateTimeEnd);
             DateTime? localDateRepeatEnd = _dataLocalization.ReadDateLocalized(part.RepeatEndDate);
             ActivityViewModel activityVM = new ActivityViewModel();
+
+            CultureInfo culture = CultureInfo.GetCultureInfo(_orchardServices.WorkContext.CurrentCulture);
+            activityVM.DateFormat = culture.DateTimeFormat.ShortDatePattern;
 
             //Mapper.CreateMap<ActivityPart, ActivityViewModel>()
             //    .ForMember(dest => dest.DateStart, opt => opt.Ignore())
@@ -214,16 +219,33 @@ namespace Laser.Orchard.Events.Drivers {
 
                 if (!partSettings.UseRecurrences) part.Repeat = false;
 
-                if (!String.IsNullOrWhiteSpace(activityVM.DateStart) && !String.IsNullOrWhiteSpace(activityVM.DateEnd) &&
+                if (!String.IsNullOrWhiteSpace(activityVM.DateStart) && 
+                    (!String.IsNullOrWhiteSpace(activityVM.DateEnd) || partSettings.SingleDate) &&
                     (activityVM.AllDay || (!activityVM.AllDay && !String.IsNullOrWhiteSpace(activityVM.TimeStart) && !String.IsNullOrWhiteSpace(activityVM.TimeEnd)))) {
-                    try{
+                    try {
+                        DateTime? startDate;
+                        DateTime? endDate;
+
                         if (activityVM.AllDay) {
-                            part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, "");
-                            part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, "");
+                            startDate = _dataLocalization.StringToDatetime(activityVM.DateStart, "");
+                            endDate = _dataLocalization.StringToDatetime(activityVM.DateEnd, "");
                         } else {
-                            part.DateTimeStart = _dataLocalization.StringToDatetime(activityVM.DateStart, activityVM.TimeStart);
-                            part.DateTimeEnd = _dataLocalization.StringToDatetime(activityVM.DateEnd, activityVM.TimeEnd);
+                            startDate = _dataLocalization.StringToDatetime(activityVM.DateStart, activityVM.TimeStart).Value;
+                            endDate = _dataLocalization.StringToDatetime(activityVM.DateEnd, activityVM.TimeEnd).Value;
                         }
+
+                        if(!partSettings.SingleDate && startDate.HasValue && endDate.HasValue && DateTime.Compare(startDate.Value, endDate.Value) > 0) {
+                            updater.AddModelError(Prefix + "DateFormatError", T("The ending date is greater than the starting date."));
+                        }
+
+                        part.DateTimeStart = startDate;
+                        part.DateTimeEnd = endDate;
+  
+
+                        if (partSettings.SingleDate) {
+                            part.DateTimeEnd = part.DateTimeStart;
+                        }
+
                     }catch(OrchardException) {
                         updater.AddModelError(Prefix + "DateFormatError", T("The starting date or ending date are not valid."));
                     }                  
@@ -282,11 +304,11 @@ namespace Laser.Orchard.Events.Drivers {
             }
             var DateTimeEnd = root.Attribute("DateTimeEnd");
             if (DateTimeEnd != null) {
-                part.DateTimeEnd = Convert.ToDateTime(DateTimeEnd.Value);
+                part.DateTimeEnd = Convert.ToDateTime(DateTimeEnd.Value, CultureInfo.InvariantCulture);
             }
             var DateTimeStart = root.Attribute("DateTimeStart");
             if (DateTimeStart != null) {
-                part.DateTimeStart = Convert.ToDateTime(DateTimeStart.Value);
+                part.DateTimeStart = Convert.ToDateTime(DateTimeStart.Value, CultureInfo.InvariantCulture);
             }
             var Repeat = root.Attribute("Repeat");
             if (Repeat != null) {
@@ -302,7 +324,7 @@ namespace Laser.Orchard.Events.Drivers {
             }
             var RepeatEndDate = root.Attribute("RepeatEndDate");
             if (RepeatEndDate != null) {
-                part.RepeatEndDate = Convert.ToDateTime(RepeatEndDate.Value);
+                part.RepeatEndDate = Convert.ToDateTime(RepeatEndDate.Value, CultureInfo.InvariantCulture);
             }
             var RepeatType = root.Attribute("RepeatType");
             if (RepeatType != null) {

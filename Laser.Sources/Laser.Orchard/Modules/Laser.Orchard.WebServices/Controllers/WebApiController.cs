@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Orchard;
 using Orchard.ContentManagement;
+using Orchard.Core.Contents;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
 using Orchard.Projections.Services;
@@ -16,8 +17,7 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace Laser.Orchard.WebServices.Controllers {
-
-    [WebApiKeyFilterForControllers(true)]
+    
     public class WebApiController : Controller, IWebApiService {
         private readonly IOrchardServices _orchardServices;
         private readonly IProjectionManager _projectionManager;
@@ -68,6 +68,7 @@ namespace Laser.Orchard.WebServices.Controllers {
             return Content(json.ToString(Newtonsoft.Json.Formatting.None), "application/json");
         }
 
+        [AlwaysAccessible]
         public ActionResult Display(string alias, int page = 1, int pageSize = 10, int maxLevel = 10) {
             try {
                 JObject json;
@@ -110,6 +111,9 @@ namespace Laser.Orchard.WebServices.Controllers {
                 if (content == null) {
                     return new HttpStatusCodeResult(404);
                 }
+
+                if (!_orchardServices.Authorizer.Authorize(Permissions.ViewContent, content))
+                    return Json(_utilsServices.GetResponse(ResponseType.UnAuthorized), JsonRequestBehavior.AllowGet);
 
                 //_maxLevel = maxLevel;
                 json = _contentSerializationServices.GetJson(content, page, pageSize);

@@ -1,0 +1,21 @@
+@{
+			if (Model.ContentItem.ActivityPart.DateTimeStart!=null || Model.ContentItem.ActivityPart.DateTimeEnd!=null){
+				if (Model.ContentItem.ActivityPart.DateTimeStart.Date== Model.ContentItem.ActivityPart.DateTimeEnd.Date){
+					@Raw("Men&ugrave; del Giorno "+@Model.ContentItem.ActivityPart.DateTimeStart.ToString("dd/MM/yyyy"))
+				} else{
+					if (Model.ContentItem.ActivityPart.DateTimeStart!=null && Model.ContentItem.ActivityPart.DateTimeEnd!=null){
+						@Raw("Men&ugrave; dal "+@Model.ContentItem.ActivityPart.DateTimeStart.ToString("dd/MM/yyyy")+" al "+@Model.ContentItem.ActivityPart.DateTimeEnd.ToString("dd/MM/yyyy"))
+					}
+					else{
+						if (Model.ContentItem.ActivityPart.DateTimeStart!=null){
+							@Raw("Men&ugrave; dal "+@Model.ContentItem.ActivityPart.DateTimeStart.ToString("dd/MM/yyyy"))
+						} else {
+							@Raw("Men&ugrave; fino al "+@Model.ContentItem.ActivityPart.DateTimeEnd.ToString("dd/MM/yyyy"))
+						}
+					}
+				}
+			}
+		}
+		
+		
+		

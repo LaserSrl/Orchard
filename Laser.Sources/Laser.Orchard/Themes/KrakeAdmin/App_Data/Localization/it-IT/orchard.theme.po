@@ -60,6 +60,30 @@ msgctxt "~/Themes/KrakeAdmin/Views/Content.SummaryAdmin.cshtml"
 msgid "More info"
 msgstr "Mostra più informazioni"
 
+msgctxt "~/Themes/KrakeAdmin/Views/CustomPickerPreview.cshtml"
+msgid "Add"
+msgstr "Aggiungi"
+
+msgctxt "~/Themes/KrakeAdmin/Views/CustomPickerPreview.cshtml"
+msgid "Content Item"
+msgstr "Elemento di contenuto"
+
+msgctxt "~/Themes/KrakeAdmin/Views/CustomPickerPreview.cshtml"
+msgid "Not Published"
+msgstr "Non pubblicato"
+
+msgctxt "~/Themes/KrakeAdmin/Views/CustomPickerPreview.cshtml"
+msgid "Remove"
+msgstr "Rimuovi"
+
+msgctxt "~/Themes/KrakeAdmin/Views/CustomPickerPreview.cshtml"
+msgid "You need to save your changes."
+msgstr "Devi salvare i cambiamenti."
+
+msgctxt "~/Themes/KrakeAdmin/Views/CustomPickerSummaryAdmin.cshtml"
+msgid "Select"
+msgstr "Seleziona"
+
 msgctxt "~/Themes/KrakeAdmin/Views/Dashboard/Admin/Index.cshtml"
 msgid "A simple and transparent interface to manage content (and processes) multifaceted and heterogeneous."
 msgstr "Un'interfaccia semplice e trasparente per gestire contenuti (e processi) poliedrici ed eterogenei."
@@ -327,6 +351,50 @@ msgstr "Mostra:"
 msgctxt "~/Themes/KrakeAdmin/Views/Pager.cshtml"
 msgid "Showing items {0} - {1} of {2}"
 msgstr "Elementi {0} - {1} di {2}"
+
+msgctxt "~/Themes/KrakeAdmin/Views/RecentContentTab.cshtml"
+msgid "Add Selected"
+msgstr "Aggiungi selezionato/i"
+
+msgctxt "~/Themes/KrakeAdmin/Views/RecentContentTab.cshtml"
+msgid "any (show all)"
+msgstr "qualsiasi (visualizza tutti)"
+
+msgctxt "~/Themes/KrakeAdmin/Views/RecentContentTab.cshtml"
+msgid "Apply"
+msgstr "Applica"
+
+msgctxt "~/Themes/KrakeAdmin/Views/RecentContentTab.cshtml"
+msgid "Culture"
+msgstr "Cultura"
+
+msgctxt "~/Themes/KrakeAdmin/Views/RecentContentTab.cshtml"
+msgid "Manage {0} Content"
+msgstr "Gestire Contenuto {0}"
+
+msgctxt "~/Themes/KrakeAdmin/Views/RecentContentTab.cshtml"
+msgid "Ordered by"
+msgstr "Ordinato per"
+
+msgctxt "~/Themes/KrakeAdmin/Views/RecentContentTab.cshtml"
+msgid "Recent Content"
+msgstr "Contenuti recenti"
+
+msgctxt "~/Themes/KrakeAdmin/Views/RecentContentTab.cshtml"
+msgid "recently created"
+msgstr "creato di recente"
+
+msgctxt "~/Themes/KrakeAdmin/Views/RecentContentTab.cshtml"
+msgid "recently modified"
+msgstr "modificato di recente"
+
+msgctxt "~/Themes/KrakeAdmin/Views/RecentContentTab.cshtml"
+msgid "recently published"
+msgstr "pubblicato di recente"
+
+msgctxt "~/Themes/KrakeAdmin/Views/RecentContentTab.cshtml"
+msgid "Show"
+msgstr "Visualizza"
 
 msgctxt "~/Themes/KrakeAdmin/Views/Title.cshtml"
 msgid "Project Krake"

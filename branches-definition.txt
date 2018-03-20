@@ -10,11 +10,18 @@ Pre-produzione
 Laser.Sources 		origin/pre
 Four2n.MiniProfiler	origin/master
 Nwazet.Commerce		origin/Laser
-Orchard.Sources		Laser.Orchard/Laser/1.10.x
+Orchard.Sources		Laser.Orchard/Laser/1.10.x.pre
 
 Test
+=====================================
+Laser.Sources 		origin/test
+Four2n.MiniProfiler	origin/master
+Nwazet.Commerce		origin/Laser
+Orchard.Sources		Laser.Orchard/Laser/1.10.x.test
+
+Dev
 =====================================
 Laser.Sources 		origin/dev
 Four2n.MiniProfiler	origin/master
 Nwazet.Commerce		origin/Laser
-Orchard.Sources		Laser.Orchard/Laser/1.10.x
+Orchard.Sources		Laser.Orchard/Laser/1.10.x.dev

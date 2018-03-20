@@ -1,0 +1,46 @@
+﻿@model Laser.Orchard.Caligoo.Models.CaligooSiteSettingsPart
+
+<fieldset>
+    <legend>@T("Caligoo Settings")</legend>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.LoginUrl)">@T("URL for login request")</label>
+        @Html.TextBoxFor(m => m.LoginUrl, new { @class = "text medium" })
+        <span class="hint">@T("URL to log in and get Caligoo JWT token.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.RefreshUrl)">@T("URL for refresh JWT token request")</label>
+        @Html.TextBoxFor(m => m.RefreshUrl, new { @class = "text medium" })
+        <span class="hint">@T("URL to refresh Caligoo JWT token.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Username)">@T("Username")</label>
+        @Html.TextBoxFor(m => m.Username, new { @class = "text medium" })
+        <span class="hint">@T("Username to log in to Caligoo.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.Password)">@T("Password")</label>
+        @Html.TextBoxFor(m => m.Password, new { @class = "text medium" })
+        <span class="hint">@T("Password to log in to Caligoo.")</span>
+    </div>
+    <hr/>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.BaseUrl)">@T("Base URL")</label>
+        @Html.TextBoxFor(m => m.BaseUrl, new { @class = "text large" })
+        <span class="hint">@T("Base URL to call Caligoo Web API.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.LocationsPath)">@T("Path for locations request")</label>
+        @Html.TextBoxFor(m => m.LocationsPath, new { @class = "text medium" })
+        <span class="hint">@T("Path to get Caligoo locations.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.UsersPath)">@T("Path for users request")</label>
+        @Html.TextBoxFor(m => m.UsersPath, new { @class = "text medium" })
+        <span class="hint">@T("Path to get Caligoo users.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.RequestTimeoutMillis)">@T("Timeout (milliseconds) for Caligoo Web API requests.")</label>
+        @Html.TextBoxFor(m => m.RequestTimeoutMillis, new { @class = "text medium" })
+        <span class="hint">@T("Timeout (milliseconds) used when calling Caligoo Web API. Leave 0 to use default value (10000).")</span>
+    </div>
+</fieldset>

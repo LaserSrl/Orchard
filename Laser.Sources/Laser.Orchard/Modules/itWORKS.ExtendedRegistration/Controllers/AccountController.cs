@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Web.Mvc;
-using System.Web.Security;
+﻿using Contrib.Profile.Services;
 using Orchard;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
+using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
@@ -15,30 +12,33 @@ using Orchard.Themes;
 using Orchard.Users.Events;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Web.Mvc;
+using System.Web.Security;
 
-
-namespace itWORKS.ExtendedRegistration.Controllers
-{
-    [Themed]
-    public class AccountController : Controller, IUpdateModel
-    {
+namespace itWORKS.ExtendedRegistration.Controllers {
+    [ValidateInput(false), Themed]
+    public class AccountController : Controller, IUpdateModel {
         private readonly IAuthenticationService _authenticationService;
         private readonly IMembershipService _membershipService;
         private readonly IUserService _userService;
         private readonly IOrchardServices _orchardServices;
-        private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
         //private readonly IShapeFactory shapeFactory;
         private readonly IContentManager _contentManager;
+        private readonly IFrontEndProfileService _frontEndProfileService;
+        private readonly ShellSettings _shellSettings;
+        private readonly IUserEventHandler _userEventHandler;
+        private readonly IAccountValidationService _accountValidationService;
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
         dynamic Shape { get; set; }
 
-        int MinPasswordLength
-        {
-            get
-            {
-                return _membershipService.GetSettings().MinRequiredPasswordLength;
+        int MinPasswordLength {
+            get {
+                return _membershipService.GetSettings().GetMinimumPasswordLength();
             }
         }
 
@@ -49,25 +49,29 @@ namespace itWORKS.ExtendedRegistration.Controllers
           IOrchardServices orchardServices,
           IShapeFactory shapeFactory,
           IContentManager contentManager,
-          IEnumerable<IUserEventHandler> userEventHandlers)
-        {
+          IFrontEndProfileService frontEndProfileService,
+          ShellSettings shellSetting,
+            IUserEventHandler userEventHandler,
+            IAccountValidationService accountValidationService) {
+
             _authenticationService = authenticationService;
             _membershipService = membershipService;
             _userService = userService;
             _orchardServices = orchardServices;
-            _userEventHandlers = userEventHandlers;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
             _contentManager = contentManager;
+            _frontEndProfileService = frontEndProfileService;
+            _shellSettings = shellSetting;
+            _userEventHandler = userEventHandler;
+            _accountValidationService = accountValidationService;
         }
 
-        public ActionResult Register()
-        {
+        public ActionResult Register() {
             // ensure users can register
             var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
-            if (!registrationSettings.UsersCanRegister)
-            {
+            if (!registrationSettings.UsersCanRegister) {
                 return HttpNotFound();
             }
 
@@ -76,24 +80,24 @@ namespace itWORKS.ExtendedRegistration.Controllers
             var shape = _orchardServices.New.Register();
 
             var user = _orchardServices.ContentManager.New("User");
-            if (user != null)
-            {
-                shape.UserProfile = _contentManager.BuildEditor(user);
+            if (user != null && !_frontEndProfileService.UserHasNoProfilePart(user.As<IUser>())) {
+                shape.UserProfile = _frontEndProfileService.BuildFrontEndShape(
+                    _contentManager.BuildEditor(user),
+                    _frontEndProfileService.MayAllowPartEdit,
+                    _frontEndProfileService.MayAllowFieldEdit);
             }
 
             return new ShapeResult(this, shape);
         }
 
         [HttpPost]
-        public ActionResult Register(string userName, string email, string password, string confirmPassword,string returnUrl=null)
-        {
+        public ActionResult Register(string userName, string email, string password, string confirmPassword, string returnUrl = null) {
             if (string.IsNullOrEmpty(returnUrl)) {
                 returnUrl = Request.QueryString["ReturnUrl"];
             }
             // ensure users can register
             var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
-            if (!registrationSettings.UsersCanRegister)
-            {
+            if (!registrationSettings.UsersCanRegister) {
                 return HttpNotFound();
             }
             ViewData["PasswordLength"] = MinPasswordLength;
@@ -101,52 +105,55 @@ namespace itWORKS.ExtendedRegistration.Controllers
             var shape = _orchardServices.New.Register();
 
             // validate user part, create a temp user part to validate input
-            var userPart = _orchardServices.ContentManager.New("User");
-            if (userPart != null)
-            {
-                shape.UserProfile = _orchardServices.ContentManager.UpdateEditor(userPart, this);
-                if (!ModelState.IsValid)
-                {
+            var userPart = _contentManager.New("User");
+            if (userPart != null && !_frontEndProfileService.UserHasNoProfilePart(userPart.As<IUser>())) {
+                shape.UserProfile = _frontEndProfileService.BuildFrontEndShape(
+                    _contentManager.UpdateEditor(userPart, this),
+                    _frontEndProfileService.MayAllowPartEdit,
+                    _frontEndProfileService.MayAllowFieldEdit);
+                if (!ModelState.IsValid) {
                     _orchardServices.TransactionManager.Cancel();
                     return new ShapeResult(this, shape);
                 }
             }
 
-            if (ValidateRegistration(userName, email, password, confirmPassword))
-            {
+            if (ValidateRegistration(userName, email, password, confirmPassword)) {
                 // Attempt to register the user
                 // No need to report this to IUserEventHandler because _membershipService does that for us
                 var user = _membershipService.CreateUser(new CreateUserParams(userName, password, email, null, null, false));
 
-                if (user != null)
-                {
-                    // we know userpart data is ok, now we update the 'real' recently published userpart
-                    _orchardServices.ContentManager.UpdateEditor(user.ContentItem, this);
+                if (user != null) {
+                    if (!_frontEndProfileService.UserHasNoProfilePart(user)) {
+                        // we know userpart data is ok, now we update the 'real' recently published userpart
+                        _frontEndProfileService.BuildFrontEndShape(
+                            _contentManager.UpdateEditor(user, this),
+                            _frontEndProfileService.MayAllowPartEdit,
+                            _frontEndProfileService.MayAllowFieldEdit);
+                    }
 
                     var userPart2 = user.As<UserPart>();
-                    if (user.As<UserPart>().EmailStatus == UserStatus.Pending)
-                    {
+                    if (user.As<UserPart>().EmailStatus == UserStatus.Pending) {
                         _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce })));
-
-                        foreach (var userEventHandler in _userEventHandlers)
-                        {
-                            userEventHandler.SentChallengeEmail(user);
-                        }
+                        
+                        _userEventHandler.SentChallengeEmail(user);
                         return RedirectToAction("ChallengeEmailSent", "Account", new { area = "Orchard.Users" });
                     }
 
-                    if (user.As<UserPart>().RegistrationStatus == UserStatus.Pending)
-                    {
+                    if (user.As<UserPart>().RegistrationStatus == UserStatus.Pending) {
                         return RedirectToAction("RegistrationPending", "Account", new { area = "Orchard.Users" });
                     }
 
+                    _userEventHandler.LoggingIn(userName, password);
                     _authenticationService.SignIn(user, false /* createPersistentCookie */);
-                  
-                   
-                    if (!string.IsNullOrEmpty(returnUrl)){
+                    _userEventHandler.LoggedIn(user);
+
+                    if (!string.IsNullOrEmpty(returnUrl)) {
                         return this.RedirectLocal(returnUrl);
                     }
-                    return Redirect("~/");
+
+                    return Redirect(string.IsNullOrWhiteSpace(_shellSettings.RequestUrlPrefix) ?
+                        "~/" :
+                        "~/" + _shellSettings.RequestUrlPrefix.Trim('/'));
                 }
 
                 ModelState.AddModelError("_FORM", T(ErrorCodeToString(/*createStatus*/MembershipCreateStatus.ProviderError)));
@@ -157,52 +164,54 @@ namespace itWORKS.ExtendedRegistration.Controllers
             return new ShapeResult(this, shape);
         }
 
-        private bool ValidateRegistration(string userName, string email, string password, string confirmPassword)
-        {
-            bool validate = true;
+        private bool ValidateRegistration(string userName, string email, string password, string confirmPassword) {
 
-            if (String.IsNullOrEmpty(userName))
-            {
-                ModelState.AddModelError("username", T("You must specify a username."));
-                validate = false;
+            IDictionary<string, LocalizedString> validationErrors;
+
+            var validate = _accountValidationService.ValidateUserName(userName, out validationErrors);
+            if (!validate) {
+                foreach (var error in validationErrors) {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
             }
 
-            if (String.IsNullOrEmpty(email))
-            {
-                ModelState.AddModelError("email", T("You must specify an email address."));
-                validate = false;
-            }
-            else if (!Regex.IsMatch(email, UserPart.EmailPattern, RegexOptions.IgnoreCase))
-            {
-                // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx    
-                ModelState.AddModelError("email", T("You must specify a valid email address."));
-                validate = false;
+            validate &= _accountValidationService.ValidateEmail(email, out validationErrors);
+            if (!validate) {
+                foreach (var error in validationErrors) {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
             }
 
             if (!validate)
                 return false;
 
-            if (!_userService.VerifyUserUnicity(userName, email))
-            {
+            if (!_userService.VerifyUserUnicity(userName, email)) {
                 ModelState.AddModelError("userExists", T("User with that username and/or email already exists."));
             }
-            if (password == null || password.Length < MinPasswordLength)
-            {
-                ModelState.AddModelError("password", T("You must specify a password of {0} or more characters.", MinPasswordLength));
-            }
-            if (!String.Equals(password, confirmPassword, StringComparison.Ordinal))
-            {
+
+            ValidatePassword(password);
+
+            if (!String.Equals(password, confirmPassword, StringComparison.Ordinal)) {
                 ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
             }
             return ModelState.IsValid;
         }
 
-        private static string ErrorCodeToString(MembershipCreateStatus createStatus)
-        {
+        private void ValidatePassword(string password) {
+            IDictionary<string, LocalizedString> validationErrors;
+
+            if (!_accountValidationService.ValidatePassword(password, out validationErrors)) {
+                foreach (var error in validationErrors) {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
+            }
+
+        }
+
+        private static string ErrorCodeToString(MembershipCreateStatus createStatus) {
             // See http://msdn.microsoft.com/en-us/library/system.web.security.membershipcreatestatus.aspx for
             // a full list of status codes.
-            switch (createStatus)
-            {
+            switch (createStatus) {
                 case MembershipCreateStatus.DuplicateUserName:
                     return "Username already exists. Please enter a different user name.";
 
@@ -238,13 +247,11 @@ namespace itWORKS.ExtendedRegistration.Controllers
             }
         }
 
-        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties)
-        {
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
 
-        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage)
-        {
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
     }

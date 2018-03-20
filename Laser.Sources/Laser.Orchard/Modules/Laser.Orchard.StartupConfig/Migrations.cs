@@ -70,6 +70,11 @@ namespace Laser.Orchard.StartupConfig {
             ContentDefinitionManager.AlterPartDefinition("DisplayTextPart", p => p.Attachable(true));
             return 6;
         }
+
+        public int UpdateFrom6() {
+            ContentDefinitionManager.AlterTypeDefinition("AuthenticatedProjection", type => type.Listable());
+            return 7;
+        }
     }
 
     [OrchardFeature("Laser.Orchard.StartupConfig.PermissionExtension")]
@@ -152,6 +157,18 @@ namespace Laser.Orchard.StartupConfig {
             );
             SchemaBuilder.AlterTable("MaintenancePartRecord", table => table
             .AddColumn("Selected_Tenant", DbType.String));
+            return 1;
+        }
+    }
+    [OrchardFeature("Laser.Orchard.StartupConfig.JsonDataTablePart")]
+    public class MigrationJsonDataTable : DataMigrationImpl {
+        public int Create() {
+            SchemaBuilder.CreateTable("JsonDataTablePartRecord", table => table
+                .ContentPartVersionRecord()
+                .Column<string>("TableData", c => c.Nullable().Unlimited())
+            );
+            ContentDefinitionManager.AlterPartDefinition("JsonDataTablePart", b => b
+                .Attachable(true));
             return 1;
         }
     }

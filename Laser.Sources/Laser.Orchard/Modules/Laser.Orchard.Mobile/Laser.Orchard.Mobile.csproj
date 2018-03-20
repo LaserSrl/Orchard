@@ -73,6 +73,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.Autoroute\bin\Orchard.Autoroute.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.ContentPicker, Version=1.10.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\Modules\Orchard.ContentPicker\bin\Orchard.ContentPicker.dll</HintPath>
+    </Reference>
     <Reference Include="Orchard.Core, Version=1.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Orchard.Sources\src\Orchard.Web\bin\Orchard.Core.dll</HintPath>
@@ -261,6 +265,7 @@
     <Content Include="Views\EditorTemplates\Parts\MobilePushApproved_Edit.cshtml" />
     <Content Include="Views\Parts\MobileContact.cshtml" />
     <None Include="Service References\SmsServiceReference\SmsWebService.wsdl" />
+    <Content Include="Views\EditorTemplates\Parts\Users.LastDeviceUserDataProviderSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\CheckMAMController.cs" />
@@ -277,6 +282,7 @@
     <Compile Include="Feature\MobileCommunicationImportFeature.cs" />
     <Compile Include="Feature\SmsCommunicationImportFeature.cs" />
     <Compile Include="Handlers\ContactRelatedEventHandler.cs" />
+    <Compile Include="Handlers\LastDeviceUserDataProviderSettingsPartHandler.cs" />
     <Compile Include="Handlers\MobileContactPartHandler.cs" />
     <Compile Include="Handlers\PushScheduledTaskHandler.cs" />
     <Compile Include="Handlers\SmsGatewayEventHandler.cs" />
@@ -284,6 +290,8 @@
     <Compile Include="Handlers\SmsPlaceholdersSettingsHandler.cs" />
     <Compile Include="Handlers\SmsScheduledTaskHandler.cs" />
     <Compile Include="Handlers\UserPwdRecoveryPartHandler.cs" />
+    <Compile Include="Models\LastDeviceUserDataProviderSettingsPart.cs" />
+    <Compile Include="Models\LatestUUIDForUserRecord.cs" />
     <Compile Include="Models\MobileContactPart.cs" />
     <Compile Include="Models\PushState.cs" />
     <Compile Include="Models\SentRecord.cs" />
@@ -298,10 +306,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Services\LastDeviceUserDataProvider.cs" />
     <Compile Include="Services\MissingSmsSettingsBanner.cs" />
     <Compile Include="Services\PushGatewayService.cs" />
     <Compile Include="Services\SmsCommunicationService.cs" />
     <Compile Include="Services\SmsValidationService.cs" />
+    <Compile Include="Services\UserPwdRecoveryDefaultFrontEndSettingsProvider.cs" />
     <Compile Include="SMSGatewayMigration.cs" />
     <Compile Include="SmsMigrations.cs" />
     <Compile Include="Projections\DeviceFilter.cs" />
@@ -361,6 +371,10 @@
       <Project>{9d49df40-ae74-4cce-b628-a1b26e99b2d4}</Project>
       <Name>Laser.Orchard.Commons</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Contrib.Profile\Contrib.Profile.csproj">
+      <Project>{bb5c57f4-d9cb-4440-89a6-d9ff9f41e4e3}</Project>
+      <Name>Contrib.Profile</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Laser.Orchard.CommunicationGateway\Laser.Orchard.CommunicationGateway.csproj">
       <Project>{bb12e69f-0976-407d-a716-542b7d22ee5f}</Project>
       <Name>Laser.Orchard.CommunicationGateway</Name>
@@ -368,6 +382,10 @@
     <ProjectReference Include="..\Laser.Orchard.Queries\Laser.Orchard.Queries.csproj">
       <Project>{d494b57f-2ae6-460f-9785-565376409afc}</Project>
       <Name>Laser.Orchard.Queries</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Laser.Orchard.ShortLinks\Laser.Orchard.ShortLinks.csproj">
+      <Project>{EC3AC4A2-7368-4609-999B-29965418372C}</Project>
+      <Name>Laser.Orchard.ShortLinks</Name>
     </ProjectReference>
     <ProjectReference Include="..\Laser.Orchard.StartupConfig\Laser.Orchard.StartupConfig.csproj">
       <Project>{17db396a-e8ce-4317-b558-8a5c17206518}</Project>

@@ -13,6 +13,18 @@ msgid "If this website has a search functionality powered by Google, this tag pr
 msgstr "Se il sito ha una funzionalità di ricerca abilitata da Google, questo tag impedisce a Google di mostrare una casella per la ricerca nel sito nei suoi risultati delle ricerche."
 
 msgctxt "~/Modules/Laser.Orchard.SEO/Views/DefinitionTemplates/SeoPartSettings.cshtml"
+msgid "Insert a json-ld that describe the content. For the list of elements avaible in structured data see http://schema.org/docs/schemas.html, for testing the script use https://search.google.com/structured-data/testing-tool. The text is tokenized."
+msgstr "Inserire un json-ld che descriva il contenuto. Per la lista degli elementi consentiti consultare http://schema.org/docs/schemas.html; per testare lo script utilizzare il tool all'indirizzo https://search.google.com/structured-data/testing-tool. Il testo è tokenizzabile."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/DefinitionTemplates/SeoPartSettings.cshtml"
+msgid "Json ld Templates"
+msgstr "Modelli json ld"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/DefinitionTemplates/SeoPartSettings.cshtml"
+msgid "Json ld text"
+msgstr "Testo json ld"
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/DefinitionTemplates/SeoPartSettings.cshtml"
 msgid "Prevents crawlers from following page links"
 msgstr "Impedisci ai crawlers dei motori di ricerca di seguire i link nella pagina."
 
@@ -39,6 +51,10 @@ msgstr "Impedisci alla pagina di essere indicizzata dai motori di ricerca."
 msgctxt "~/Modules/Laser.Orchard.SEO/Views/DefinitionTemplates/SeoPartSettings.cshtml"
 msgid "Prevents the page to appear as referring page for an image that appears in search results"
 msgstr "Impedisci ai motori di ricerca di utilizzare la pagina come riferimento per le immagini che appaiono come risultati delle ricerche."
+
+msgctxt "~/Modules/Laser.Orchard.SEO/Views/DefinitionTemplates/SeoPartSettings.cshtml"
+msgid "Select a template of json-ld object."
+msgstr "Selezionare un modello di json-ld."
 
 msgctxt "~/Modules/Laser.Orchard.SEO/Views/DefinitionTemplates/SeoPartSettings.cshtml"
 msgid "Specify the exact date to stop crawling and indexing the page"
