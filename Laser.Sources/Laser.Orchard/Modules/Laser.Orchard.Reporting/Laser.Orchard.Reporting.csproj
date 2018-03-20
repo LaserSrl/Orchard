@@ -184,7 +184,9 @@
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-    <Content Include="Views\DefinitionTemplates\DataReportViewerPartSettings.cshtml" />
+    <Content Include="Views\DefinitionTemplates\DataReportViewerPartSettings.cshtml">
+      <BrowseToURL>~/DefinitionTemplates/EditDataReportViewerViewModel</BrowseToURL>
+    </Content>
     <Content Include="Views\Parts\DataReportViewer.SimpleList.cshtml" />
     <Content Include="Views\Report\CreateHql.cshtml" />
     <Content Include="Views\Report\EditHql.cshtml" />

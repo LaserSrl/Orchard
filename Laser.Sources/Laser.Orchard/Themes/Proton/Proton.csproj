@@ -272,9 +272,6 @@
     <Content Include="Views\Fields.Common.Text-WidgetContatto-Indirizzo.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\_Fields.MediaLibraryPicker-Gallery.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Fields.MediaLibraryPicker-WidgetGallery-Gallery.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -340,9 +337,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Content-Piatto.Summary.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Content-Ristorante.Summary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Parts.Map.cshtml" />

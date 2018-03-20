@@ -164,6 +164,10 @@
   <ItemGroup>
     <Content Include="Views\Parts\NwazetContact.cshtml" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\NwazetContact_Edit.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

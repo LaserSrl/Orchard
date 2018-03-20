@@ -207,7 +207,6 @@
     <Content Include="Styles\images\sort_asc.png" />
     <Content Include="Styles\jqDataTable\images\sort_asc_disabled.png" />
     <Content Include="Styles\images\sort_both.png" />
-    <Content Include="Styles\jqDataTable\images\sort_desc.png" />
     <Content Include="Styles\jqDataTable\images\sort_desc_disabled.png" />
     <Content Include="Styles\jqDataTable\jquery.dataTables.min.css" />
     <Content Include="Styles\jqPlot\jquery.jqplot.css" />

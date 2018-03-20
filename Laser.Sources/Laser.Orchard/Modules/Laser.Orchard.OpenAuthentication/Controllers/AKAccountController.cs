@@ -1,34 +1,25 @@
-﻿using DotNetOpenAuth.AspNet;
-using Laser.Orchard.OpenAuthentication.Extensions;
-using Laser.Orchard.OpenAuthentication.Security;
-using Laser.Orchard.OpenAuthentication.Services;
+﻿using Laser.Orchard.OpenAuthentication.Services;
 using Laser.Orchard.StartupConfig.IdentityProvider;
 using Laser.Orchard.StartupConfig.Services;
-using Orchard;
-using Orchard.Logging;
-using Orchard.Mvc.Extensions;
+using Laser.Orchard.StartupConfig.WebApiProtection.Filters;
 using Orchard.Security;
-using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.Users.Events;
 using System.Collections.Generic;
 using System.Web.Mvc;
 
-
 namespace Laser.Orchard.OpenAuthentication.Controllers {
-    [Themed]
-    public class AccountController : BaseAccountController {
+    public class AKAccountController : BaseAccountController {
 
-        public AccountController(
+        public AKAccountController(
             INotifier notifier,
-            IOrchardOpenAuthWebSecurity orchardOpenAuthWebSecurity,
-            IAuthenticationService authenticationService,
-            IOpenAuthMembershipServices openAuthMembershipServices,
-            IOrchardOpenAuthClientProvider openAuthClientProvider,
-            IUserEventHandler userEventHandler,
             IUtilsServices utilsServices,
-            IOrchardServices orchardServices,
-            IEnumerable<IIdentityProvider> identityProviders) : base(
+            IOrchardOpenAuthClientProvider openAuthClientProvider,
+            IOrchardOpenAuthWebSecurity orchardOpenAuthWebSecurity,
+            IEnumerable<IIdentityProvider> identityProviders,
+            IOpenAuthMembershipServices openAuthMembershipServices,
+            IAuthenticationService authenticationService,
+            IUserEventHandler userEventHandler) : base(
                 utilsServices,
                 openAuthClientProvider,
                 orchardOpenAuthWebSecurity,
@@ -41,16 +32,17 @@ namespace Laser.Orchard.OpenAuthentication.Controllers {
 
         [OutputCache(NoStore = true, Duration = 0)]
         [AlwaysAccessible]
+        [WebApiKeyFilterForControllers(true)]
         public ContentResult ExternalTokenLogOn(string __provider__, string token, string secret = "") {
             return ExternalTokenLogOnLogic(__provider__, token, secret);
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
         [AlwaysAccessible]
+        [WebApiKeyFilterForControllers(true)]
         public ContentResult ExternalTokenLogOnSsl(string __provider__, string token, string secret = "") {
             return ExternalTokenLogOnLogic(__provider__, token, secret);
         }
 
     }
-
 }
