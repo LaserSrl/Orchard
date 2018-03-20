@@ -308,13 +308,6 @@
     <Content Include="Styles\Common.min.css">
       <DependentUpon>Common.less</DependentUpon>
     </Content>
-    <Content Include="Styles\MessageTemplateEditor.css">
-      <DependentUpon>MessageTemplateEditor.less</DependentUpon>
-    </Content>
-    <Content Include="Styles\MessageTemplateEditor.less" />
-    <Content Include="Styles\MessageTemplateEditor.min.css">
-      <DependentUpon>MessageTemplateEditor.less</DependentUpon>
-    </Content>
     <Content Include="packages.config" />
     <Content Include="Styles\TemplateEditor.less" />
     <Content Include="App_Data\Localization\it-IT\orchard.module.po" />

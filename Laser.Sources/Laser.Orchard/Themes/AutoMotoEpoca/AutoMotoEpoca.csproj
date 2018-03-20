@@ -125,9 +125,6 @@
     <Content Include="Placement.info" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\images\.DS_Store" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Document.cshtml" />
   </ItemGroup>
   <ItemGroup>

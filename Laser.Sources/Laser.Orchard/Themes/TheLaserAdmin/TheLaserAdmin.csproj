@@ -99,20 +99,19 @@
     <Compile Include="AdminThemeOverride.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\___Header.cshtml" />
     <Content Include="Views\OrchardVersion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Dashboard\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\EditorTemplates\Fields\MediaLibraryPicker.Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Orchard.Roles\Admin\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Document.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\EditorTemplates\Fields\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
