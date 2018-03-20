@@ -11,7 +11,7 @@ namespace Laser.Orchard.Reporting.Services {
     {
         IEnumerable<TypeDescriptor<GroupByDescriptor>> DescribeGroupByFields();
         IEnumerable<AggregationResult> RunReport(ReportRecord report, IContent container);
-        IEnumerable<AggregationResult> RunHqlReport(ReportRecord report, IContent container);
+        IEnumerable<AggregationResult> RunHqlReport(ReportRecord report, IContent container, bool multiColumnTable = false);
         int GetCount(ReportRecord report, IContent container);
         IEnumerable<GenericItem> GetReportListForCurrentUser(string titleFilter = "");
         IEnumerable<GenericItem> GetDashboardListForCurrentUser(string titleFilter = "");
