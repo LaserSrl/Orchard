@@ -135,7 +135,6 @@
     <Content Include="Views\Document.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\fonts\.DS_Store" />
     <Content Include="Styles\fonts\calcio.eot" />
     <Content Include="Styles\fonts\calcio.ttf" />
     <Content Include="Styles\fonts\calcio.woff" />
