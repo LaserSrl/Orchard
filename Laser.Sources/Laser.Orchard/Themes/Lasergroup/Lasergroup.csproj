@@ -323,9 +323,6 @@
     <Content Include="Views\HtmlQuad_First.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\HtmlQuad_Fourth.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\HtmlFooter.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -362,9 +359,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Localization\it-IT\orchard.theme.po" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Widget-AfterContentProdotto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ShowcaseBackLink.cshtml" />
