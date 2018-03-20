@@ -1,0 +1,26 @@
+@using Orchard
+@using Orchard.ContentManagement
+@using Orchard.ContentManagement.Records
+@using Orchard.Core.Common.Models
+@using Orchard.Data
+@using Orchard.Security
+@using Orchard.Services
+@using System.Linq
+
+@functions{
+    IContentManager _contentManager;
+    IOrchardServices _orchardServices;
+
+    string output = "OK";
+}
+
+@{
+    try {
+        dynamic item = Model.ContentItem;
+
+        Model.ContentItem.Prenotazione.HiddenData.Value = Model.ContentItem.Prenotazione.DataPrenotazione.DateTime.ToString("dd/MM/yyyy");
+    } catch (Exception ex) {
+        output = "Error";
+    }
+}
+@output
