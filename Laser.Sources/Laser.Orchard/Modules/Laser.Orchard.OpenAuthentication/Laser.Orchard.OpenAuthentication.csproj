@@ -274,6 +274,8 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AKAccountController.cs" />
+    <Compile Include="Controllers\BaseAccountController.cs" />
     <Compile Include="Controllers\OpenIdController.cs" />
     <Compile Include="Drivers\UserProviderDisplayPartDriver.cs" />
     <Compile Include="Drivers\UserProvidersPartDriver.cs" />
