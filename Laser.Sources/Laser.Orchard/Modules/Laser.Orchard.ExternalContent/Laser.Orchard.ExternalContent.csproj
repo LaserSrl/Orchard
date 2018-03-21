@@ -134,6 +134,7 @@
     <Compile Include="Fields\FieldExternal.cs" />
     <Compile Include="Handlers\FieldExternalHandler.cs" />
     <Compile Include="Migration.cs" />
+    <Compile Include="Models\Enums.cs" />
     <Compile Include="Services\ExternalFieldDumperService.cs" />
     <Compile Include="Services\FieldExternalService.cs" />
     <Compile Include="Settings\FieldExternalEditorEvents.cs" />
@@ -143,7 +144,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Fields\FieldExternal.cshtml" />
@@ -211,7 +211,7 @@
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>True</UseCustomServer>
+          <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>http://orchard.codeplex.com</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>

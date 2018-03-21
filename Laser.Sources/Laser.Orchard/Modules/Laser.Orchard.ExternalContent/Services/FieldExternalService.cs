@@ -33,6 +33,8 @@ using Orchard.ContentManagement;
 using Orchard.Tasks.Scheduling;
 using Laser.Orchard.StartupConfig.Exceptions;
 using Laser.Orchard.StartupConfig.RazorCodeExecution.Services;
+using System.Diagnostics;
+using System.Threading;
 
 //using System.Web.Razor;
 
@@ -211,7 +213,27 @@ namespace Laser.Orchard.ExternalContent.Services {
                         }
                     }
                     else {
-                        webpagecontent = GetHttpPage(UrlToGet, httpMethod, httpDataType, bodyRequest).Trim();
+                        if (settings.DataType == Models.OriginData.Executable) {
+                           
+                            var StartInfo = new ProcessStartInfo {
+                                FileName = externalUrl.Substring(0, externalUrl.IndexOf(".exe") + 4),
+                                Arguments = externalUrl.Substring(externalUrl.IndexOf(".exe") + 5),
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true
+                            };
+                             using (var proc = Process.Start(StartInfo)) {
+                                webpagecontent = proc.StandardOutput.ReadToEnd();
+                                string err = proc.StandardError.ReadToEnd();
+                                if (!string.IsNullOrEmpty(err)) {
+                                    Logger.Error(string.Format("ExternalExe {0}  : {2}", externalUrl,err));
+                                }
+                                proc.WaitForExit();
+                            };
+                        } else {
+                            webpagecontent = GetHttpPage(UrlToGet, httpMethod, httpDataType, bodyRequest).Trim();
+                        }
                     }
                     if (!webpagecontent.StartsWith("<")) {
                         if (webpagecontent.StartsWith("[")) {
