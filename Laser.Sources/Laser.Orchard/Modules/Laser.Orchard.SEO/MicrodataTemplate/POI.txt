@@ -8,10 +8,10 @@
        "@type": "GeoCoordinates",
        "latitude": "{Content.Parameter:MapPart-Latitude}",
        "longitude": "{Content.Parameter:MapPart-Longitude}"
-    }}
+    }},
   "image":[
     "{Site.BaseUrl}{Content.Fields.POI.Gallery.Url}"
    ]
-  }},
+  }}
 }}
 </script>
