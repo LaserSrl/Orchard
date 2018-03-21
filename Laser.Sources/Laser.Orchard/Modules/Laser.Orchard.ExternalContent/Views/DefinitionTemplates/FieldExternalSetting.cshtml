@@ -48,9 +48,14 @@
     </div>
 </fieldset>
 <fieldset>
-    <label for="@Html.FieldIdFor(m => m.ExternalURL)">@T("External URL")</label>
+    <label for="@Html.FieldIdFor(m => m.DataType)">@T("Data Type")</label>
+       @Html.DropDownListFor(m => m.DataType, new SelectList(Enum.GetValues(typeof(Laser.Orchard.ExternalContent.Models.OriginData)), Model.DataType), new { @class = "text" })
+      <span class="hint">@T("Default is RestWebService")</span>
+</fieldset>
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.ExternalURL)">@T("External URL / executable string")</label>
     @Html.TextBoxFor(m => m.ExternalURL, new { @class = "text large tokenized" })
-    <span class="hint">@T("Insert url and token")</span>
+    <span class="hint">@T("Insert url and token or executable (see Data type)")</span>
     @Html.ValidationMessageFor(m => m.ExternalURL)
 </fieldset>
 @Display.TokenHint()

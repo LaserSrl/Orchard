@@ -1,0 +1,15 @@
+@{
+
+	string s=Model.ContentItem.MenuListino.Note.Value;
+	string toadd="";	
+	for(int i=1; i<4-s.Split(new string[]{"\n"},StringSplitOptions.None).Length;i++){
+		toadd+="<br/> ";
+	}
+
+	if (string.IsNullOrEmpty(s)){
+		s="";
+	}
+	s=toadd+s.ToString().Replace("\n","<br/>");
+
+	@Raw(s)
+}		
