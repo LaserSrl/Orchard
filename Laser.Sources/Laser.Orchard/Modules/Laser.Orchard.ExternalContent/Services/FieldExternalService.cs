@@ -507,15 +507,17 @@ namespace Laser.Orchard.ExternalContent.Services {
             }
 
             if (System.IO.File.Exists(myfile)) {
+                string key = myfile;
+                DateTime d = System.IO.File.GetLastWriteTime(myfile);
+                key += d.ToShortDateString() + d.ToLongTimeString();
                 string mytemplate = File.ReadAllText(myfile);
                 string myfile2 = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\common.cshtml";
                 if (System.IO.File.Exists(myfile2)) {
                     mytemplate = File.ReadAllText(myfile2) + mytemplate; ;
                 }
-
                 if (!string.IsNullOrEmpty(mytemplate)) {
                     var docwww = XDocument.Parse(xmlpage);
-                    string result = _razorTemplateManager.RunString(myfile, mytemplate, docwww, dvb,null);
+                    string result = _razorTemplateManager.RunString(key, mytemplate, docwww, dvb,null);
                     output = result.Replace("\r\n", "");
                     //if (!string.IsNullOrEmpty(resultnobr)) {
 
