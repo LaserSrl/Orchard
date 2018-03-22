@@ -1,0 +1,29 @@
+@using System;
+@using System.Text;
+@using System.Net;
+@{
+    XmlDocument mydoc = ToXmlDocument(Model);
+	mydoc = cambianome(mydoc, "/RassegnaPdfsList", "RasPdf");
+	mydoc = aggiungipadre(mydoc, "root", "RasPdfs","RasPdf");
+	foreach (XmlNode child_node in mydoc.SelectNodes("//url")) {
+    	    XmlNode Size= mydoc.CreateElement("Size");
+		HttpWebRequest request= WebRequest.Create(child_node.InnerXml) as HttpWebRequest;
+		request.Method="HEAD";
+		var response=request.GetResponse() as HttpWebResponse;
+		Size.InnerXml = ":lasernumeric" + response.ContentLength.ToString() + "lasernumeric:";
+		child_node.ParentNode.AppendChild(Size);
+	XmlNode Data= mydoc.CreateElement("Date");
+		Data.InnerXml = child_node.InnerXml.Substring(child_node.InnerXml.IndexOf(".pdf")-10, 10);
+		child_node.ParentNode.AppendChild(Data);
+   	 }
+	foreach (XmlNode child_node in mydoc.SelectNodes("//title")) {
+            XmlNode identifier = mydoc.CreateElement("Sid");
+            identifier.InnerXml="RasPdf:" + child_node.InnerXml;
+            child_node.ParentNode.AppendChild(identifier);
+   	 }
+
+	mydoc = ConvertDateWithFormat(mydoc, "/Date");
+	mydoc = cambianome(mydoc, "/RasPdfs", "ToRemove");
+	
+	SpanXDocument(ToXDocument(mydoc).Root);
+}
