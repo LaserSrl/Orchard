@@ -1,0 +1,13 @@
+@{
+    XmlDocument mydoc = ToXmlDocument(Model);
+		mydoc = cambianome(mydoc, "/RassegnaButtonsList", "RasButton");
+	mydoc = aggiungipadre(mydoc, "root", "RasButtons","RasButton");
+	mydoc = cambianome(mydoc, "/label", "title");
+	foreach (XmlNode child_node in mydoc.SelectNodes("//title")) {
+            XmlNode identifier = mydoc.CreateElement("Sid");
+            identifier.InnerXml="RasPdf:" + child_node.InnerXml;
+            child_node.ParentNode.AppendChild(identifier);
+   	 }
+	mydoc = cambianome(mydoc, "/RasButtons", "ToRemove");
+	SpanXDocument(ToXDocument(mydoc).Root);
+}

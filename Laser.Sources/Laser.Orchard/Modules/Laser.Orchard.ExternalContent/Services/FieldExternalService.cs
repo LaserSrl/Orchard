@@ -35,6 +35,7 @@ using Laser.Orchard.StartupConfig.Exceptions;
 using Laser.Orchard.StartupConfig.RazorCodeExecution.Services;
 using System.Diagnostics;
 using System.Threading;
+using System.Reflection;
 
 //using System.Web.Razor;
 
@@ -214,23 +215,33 @@ namespace Laser.Orchard.ExternalContent.Services {
                     }
                     else {
                         if (settings.DataType == Models.OriginData.Executable) {
-                           
-                            var StartInfo = new ProcessStartInfo {
-                                FileName = externalUrl.Substring(0, externalUrl.IndexOf(".exe") + 4),
+                            string filename = HostingEnvironment.MapPath("~/")+@"App_Code\"+ externalUrl.Substring(0, externalUrl.IndexOf(".exe") + 4);
+                           if (!File.Exists(filename)) {
+  				throw new Exception(String.Format("File \"{0}\" not found!", filename));
+                           }
+
+			    var StartInfo = new ProcessStartInfo {
+                                FileName = filename,
                                 Arguments = externalUrl.Substring(externalUrl.IndexOf(".exe") + 5),
                                 UseShellExecute = false,
                                 RedirectStandardOutput = true,
                                 RedirectStandardError = true,
                                 CreateNoWindow = true
                             };
-                             using (var proc = Process.Start(StartInfo)) {
-                                webpagecontent = proc.StandardOutput.ReadToEnd();
-                                string err = proc.StandardError.ReadToEnd();
-                                if (!string.IsNullOrEmpty(err)) {
-                                    Logger.Error(string.Format("ExternalExe {0}  : {2}", externalUrl,err));
-                                }
-                                proc.WaitForExit();
-                            };
+                            var versionInfo = FileVersionInfo.GetVersionInfo(filename);
+                            if (versionInfo.CompanyName != "Laser Group") {
+				throw new Exception(string.Format("ExternalExe {0}  has not correct CompanyName", filename));
+				webpagecontent =null;
+                            } else {
+                                using (var proc = Process.Start(StartInfo)) {
+                                    webpagecontent = proc.StandardOutput.ReadToEnd();
+                                    string err = proc.StandardError.ReadToEnd();
+                                    if (!string.IsNullOrEmpty(err)) {
+                                        Logger.Error(string.Format("ExternalExe {0}  : {2}", externalUrl, err));
+                                    }
+                                    proc.WaitForExit();
+                                };
+                            }
                         } else {
                             webpagecontent = GetHttpPage(UrlToGet, httpMethod, httpDataType, bodyRequest).Trim();
                         }
