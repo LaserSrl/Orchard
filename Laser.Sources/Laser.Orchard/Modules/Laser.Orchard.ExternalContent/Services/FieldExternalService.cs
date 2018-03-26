@@ -33,6 +33,9 @@ using Orchard.ContentManagement;
 using Orchard.Tasks.Scheduling;
 using Laser.Orchard.StartupConfig.Exceptions;
 using Laser.Orchard.StartupConfig.RazorCodeExecution.Services;
+using System.Diagnostics;
+using System.Threading;
+using System.Reflection;
 
 //using System.Web.Razor;
 
@@ -211,7 +214,37 @@ namespace Laser.Orchard.ExternalContent.Services {
                         }
                     }
                     else {
-                        webpagecontent = GetHttpPage(UrlToGet, httpMethod, httpDataType, bodyRequest).Trim();
+                        if (settings.DataType == OriginData.Executable) {
+                            string filename = HostingEnvironment.MapPath("~/")+@"App_Code\"+ externalUrl.Substring(0, externalUrl.IndexOf(".exe") + 4);
+                           if (!File.Exists(filename)) {
+  				throw new Exception(String.Format("File \"{0}\" not found!", filename));
+                           }
+
+			    var StartInfo = new ProcessStartInfo {
+                                FileName = filename,
+                                Arguments = externalUrl.Substring(externalUrl.IndexOf(".exe") + 5),
+                                UseShellExecute = false,
+                                RedirectStandardOutput = true,
+                                RedirectStandardError = true,
+                                CreateNoWindow = true
+                            };
+                            var versionInfo = FileVersionInfo.GetVersionInfo(filename);
+                            if (versionInfo.CompanyName != "Laser Group") {
+				throw new Exception(string.Format("ExternalExe {0}  has not correct CompanyName", filename));
+				webpagecontent =null;
+                            } else {
+                                using (var proc = Process.Start(StartInfo)) {
+                                    webpagecontent = proc.StandardOutput.ReadToEnd();
+                                    string err = proc.StandardError.ReadToEnd();
+                                    if (!string.IsNullOrEmpty(err)) {
+                                        Logger.Error(string.Format("ExternalExe {0}  : {2}", externalUrl, err));
+                                    }
+                                    proc.WaitForExit();
+                                };
+                            }
+                        } else {
+                            webpagecontent = GetHttpPage(UrlToGet, httpMethod, httpDataType, bodyRequest).Trim();
+                        }
                     }
                     if (!webpagecontent.StartsWith("<")) {
                         if (webpagecontent.StartsWith("[")) {
@@ -485,15 +518,17 @@ namespace Laser.Orchard.ExternalContent.Services {
             }
 
             if (System.IO.File.Exists(myfile)) {
+                string key = myfile;
+                DateTime d = System.IO.File.GetLastWriteTime(myfile);
+                key += d.ToShortDateString() + d.ToLongTimeString();
                 string mytemplate = File.ReadAllText(myfile);
                 string myfile2 = HostingEnvironment.MapPath("~/") + @"App_Data\Sites\common.cshtml";
                 if (System.IO.File.Exists(myfile2)) {
                     mytemplate = File.ReadAllText(myfile2) + mytemplate; ;
                 }
-
                 if (!string.IsNullOrEmpty(mytemplate)) {
                     var docwww = XDocument.Parse(xmlpage);
-                    string result = _razorTemplateManager.RunString(myfile, mytemplate, docwww, dvb,null);
+                    string result = _razorTemplateManager.RunString(key, mytemplate, docwww, dvb,null);
                     output = result.Replace("\r\n", "");
                     //if (!string.IsNullOrEmpty(resultnobr)) {
 

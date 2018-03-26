@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Web.Mvc;
 namespace Laser.Orchard.ExternalContent.Settings {
     public class FieldExternalSetting {
@@ -7,6 +6,7 @@ namespace Laser.Orchard.ExternalContent.Settings {
             CacheMinute = 5;
             CacheToFileSystem = false;
             ScheduledMinute = 0;
+            DataType = OriginData.RestWebService;
         }
         public bool Required { get; set; }
         public string ExternalURL { get; set; }
@@ -22,5 +22,6 @@ namespace Laser.Orchard.ExternalContent.Settings {
         public string CacheInput { get; set; }
         public bool CacheToFileSystem { get; set; }
         public Int32 ScheduledMinute { get; set; } 
+        public OriginData DataType { get; set; }
     }
 }
