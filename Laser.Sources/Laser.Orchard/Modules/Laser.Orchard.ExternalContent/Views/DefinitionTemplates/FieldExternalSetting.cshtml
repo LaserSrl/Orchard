@@ -49,7 +49,7 @@
 </fieldset>
 <fieldset>
     <label for="@Html.FieldIdFor(m => m.DataType)">@T("Data Type")</label>
-       @Html.DropDownListFor(m => m.DataType, new SelectList(Enum.GetValues(typeof(Laser.Orchard.ExternalContent.Models.OriginData)), Model.DataType), new { @class = "text" })
+       @Html.DropDownListFor(m => m.DataType, new SelectList(Enum.GetValues(typeof(Laser.Orchard.ExternalContent.OriginData)), Model.DataType), new { @class = "text" })
       <span class="hint">@T("Default is RestWebService")</span>
 </fieldset>
 <fieldset>
