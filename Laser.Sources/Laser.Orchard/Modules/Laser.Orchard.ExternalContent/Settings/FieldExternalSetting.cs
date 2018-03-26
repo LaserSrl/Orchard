@@ -1,6 +1,4 @@
-﻿
-using Laser.Orchard.ExternalContent.Models;
-using System;
+﻿using System;
 using System.Web.Mvc;
 namespace Laser.Orchard.ExternalContent.Settings {
     public class FieldExternalSetting {

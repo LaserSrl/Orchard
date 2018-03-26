@@ -214,7 +214,7 @@ namespace Laser.Orchard.ExternalContent.Services {
                         }
                     }
                     else {
-                        if (settings.DataType == Models.OriginData.Executable) {
+                        if (settings.DataType == OriginData.Executable) {
                             string filename = HostingEnvironment.MapPath("~/")+@"App_Code\"+ externalUrl.Substring(0, externalUrl.IndexOf(".exe") + 4);
                            if (!File.Exists(filename)) {
   				throw new Exception(String.Format("File \"{0}\" not found!", filename));
