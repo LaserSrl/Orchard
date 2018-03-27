@@ -431,7 +431,7 @@ namespace Laser.Orchard.Commons.Services {
                             if (tf.PartFieldDefinition.Settings.ContainsKey("TextFieldSettings.Flavor")) {
                                 var flavor = tf.PartFieldDefinition.Settings["TextFieldSettings.Flavor"];
                                 // markdownFilter acts only if flavor is "markdown"
-                                val = _markdownFilter.ProcessContent(val.ToString(), flavor);
+                                val = _markdownFilter.ProcessContent(val?.ToString(), flavor);
                             }
                         }
                         Dump(val, member.Name);
