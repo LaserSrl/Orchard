@@ -22,7 +22,6 @@ namespace Laser.Orchard.WebServices.Routes {
                         new RouteValueDictionary {
                             {"area", "Laser.Orchard.WebServices"},
                             {"controller", "Json"},
-                            {"action", "GetByAlias"}
                             {"action", "GetByAlias"},
                             {"id",UrlParameter.Optional} // added to fix redirect url on filter Orchard.SecureSocketsLayer
                             // If you set the default value for a URL parameter to UrlParameter.Optional , MVC makes sure to remove that key from the route value dictionary so that it doesn’t exist
