@@ -6,9 +6,9 @@
     "@type": "WebPage",
     "@id": "{Site.BaseUrl}{Content.DisplayUrl}"
   }},
-  "headline": "Content.Fields.CONTENTNAME.SOTTOTITOLO",
+  "headline": "{Content.DisplayText}",
   "image": [
-    "{Site.BaseUrl}{Content.Fields.CONTENTNAME.GALLERY.Url}"
+    "{Site.BaseUrl}{Content.Fields.BlogPost.Gallery.Url}"
    ],
   "datePublished": "{Content.Date}",
   "dateModified": "{Content.DateModified}",

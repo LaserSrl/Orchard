@@ -1,8 +1,6 @@
 ﻿@model Laser.Orchard.SEO.Models.SeoPartSettings
 @{
     Script.Require("jQuery");
-
-    //Model.Templates.Add("", "");
 }
 
 
@@ -45,6 +43,10 @@
     <label for="@Html.FieldIdFor(m => m.Templates)">@T("Json ld Templates")</label>
     @Html.DropDownListFor(m => m.Templates, new SelectList(Model.Templates.OrderBy(x => x.Key), "Value", "Key"), "", new { @id = "dropDownTemplate" })
     <span class="hint">@T("Select a template of json-ld object.")</span>
+
+    @Html.CheckBoxFor(m => m.ShowAggregatedMicrodata)
+    <label for="@Html.FieldIdFor(m => m.ShowAggregatedMicrodata)" class="forcheckbox" style="font-weight: normal;">@T("Add microdata for nested content")</label>
+    <span class="hint">@T("If this content type contains an aggregator (i.e. projection, taxonomy, content picker), microdata for a carousel showing its linked items will be generated.")</span>
 </fieldset>
 
 @using (Script.Foot()) {

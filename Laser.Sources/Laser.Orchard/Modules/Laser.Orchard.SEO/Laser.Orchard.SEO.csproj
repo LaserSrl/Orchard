@@ -113,6 +113,10 @@
   <ItemGroup>
     <EmbeddedResource Include="CountryCodes.txt" />
     <EmbeddedResource Include="LanguageCodes.txt" />
+    <Content Include="MicrodataTemplate\Article.txt" />
+    <Content Include="MicrodataTemplate\Contact.txt" />
+    <Content Include="MicrodataTemplate\Event%28ActivityPart+MapPart%29.txt" />
+    <Content Include="MicrodataTemplate\Prodotto.txt" />
     <Content Include="Styles\KeywordHelper.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -1,22 +1,23 @@
 ﻿using Laser.Orchard.SEO.Models;
+using Orchard;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
+using Orchard.Mvc.Extensions;
+using Orchard.Mvc.Html;
 using Orchard.Tokens;
 using System;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using Orchard.DisplayManagement.Shapes;
 using System.Web.Mvc;
-using System.Web;
 
 namespace Laser.Orchard.SEO.Handlers {
 
     public class SeoHandler : ContentHandler {
+        private readonly IOrchardServices _orchardServices;
         private readonly ITokenizer _tokenizer;
 
+        public SeoHandler(IOrchardServices orchardServices, IRepository<SeoVersionRecord> repository, ITokenizer tokenizer) {
 
-        public SeoHandler(IRepository<SeoVersionRecord> repository, ITokenizer tokenizer) {
-
+            _orchardServices = orchardServices;
             _tokenizer = tokenizer;
 
             Filters.Add(StorageFilter.For(repository));
@@ -50,12 +51,29 @@ namespace Laser.Orchard.SEO.Handlers {
             OnGetDisplayShape<SeoPart>((context, part) => {
                 if (context.DisplayType == "Detail") {
                     var settings = part.Settings.GetModel<SeoPartSettings>();
+                    var layout = (dynamic)context.Layout;
+
                     //eval text box area
-                    if (!String.IsNullOrEmpty(settings.JsonLd)) {
-                        var layout = (dynamic)context.Layout;
+                    if (!string.IsNullOrEmpty(settings.JsonLd) && !part.HideDetailMicrodata) {
                         string script = scriptEval(settings, part);
-                        var output = new { Microscript = script };
                         layout.Head.Add(context.New.SeoMicrodataScript(ScriptMicrodata: script));
+                    }
+
+                    //carousel microdata - attualmente funzionante per projection e taxonomy term
+                    if (layout.SummaryMicrodata != null && settings.ShowAggregatedMicrodata && !part.HideAggregatedMicrodata) {
+                        string script = buildCarouselMicrodata(layout.SummaryMicrodata);
+                        layout.Head.Add(context.New.SeoMicrodataScript(ScriptMicrodata: script));
+                    }
+                } else if (context.DisplayType == "Summary") {
+                    if (!part.HideDetailMicrodata) {
+                        var layout = (dynamic)context.Layout;
+
+                        if (layout.SummaryMicrodata == null)
+                            layout.SummaryMicrodata = new List<string>();
+
+                        var urlHelper = new UrlHelper(_orchardServices.WorkContext.HttpContext.Request.RequestContext);
+
+                        layout.SummaryMicrodata.Add(urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(part)));
                     }
                 }
             });
@@ -65,6 +83,19 @@ namespace Laser.Orchard.SEO.Handlers {
         private string scriptEval(SeoPartSettings settings, SeoPart part) {
             var tokensDictionary = new Dictionary<string, object> { { "Content", part.ContentItem } };
             return _tokenizer.Replace(settings.JsonLd, tokensDictionary); ;
+        }
+
+        private string buildCarouselMicrodata(List<string> urlList) {
+            List<string> templateList = new List<string>();
+            string elementTemplate = "{{\"@type\":\"ListItem\",\"position\":{0},\"url\":\"{1}\"}}";
+
+            int counter = 1;
+            foreach (string url in urlList) {
+                templateList.Add(string.Format(elementTemplate, counter, url));
+                counter++;
+            }
+
+            return string.Format("<script type=\"application/ld+json\">{{\"@context\":\"http://schema.org\",\"@type\":\"ItemList\",\"itemListElement\":[{0}]}}</script>", string.Join(",", templateList));
         }
 
     }

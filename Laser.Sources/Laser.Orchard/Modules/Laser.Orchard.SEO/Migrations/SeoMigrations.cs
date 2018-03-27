@@ -61,6 +61,16 @@ namespace Laser.Orchard.SEO {
             return 5;
         }
 
+        public int UpdateFrom5() {
+            SchemaBuilder.AlterTable("SeoVersionRecord", table => table
+                .AddColumn<bool>("HideDetailMicrodata"));
+
+            SchemaBuilder.AlterTable("SeoVersionRecord", table => table
+                .AddColumn<bool>("HideAggregatedMicrodata"));
+
+            return 6;
+        }
+
         #region Obsolete code
         //private readonly IRepository<SeoRecord> _record;
         //private readonly IRepository<SeoVersionRecord> _versionRecord;
