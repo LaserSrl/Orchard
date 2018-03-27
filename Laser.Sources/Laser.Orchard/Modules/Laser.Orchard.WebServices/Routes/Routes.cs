@@ -22,7 +22,8 @@ namespace Laser.Orchard.WebServices.Routes {
                         new RouteValueDictionary {
                             {"area", "Laser.Orchard.WebServices"},
                             {"controller", "Json"},
-                            {"action", "GetByAlias"}
+                            {"action", "GetByAlias"},
+                            {"id",  UrlParameter.Optional }
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {
@@ -31,12 +32,15 @@ namespace Laser.Orchard.WebServices.Routes {
                         new MvcRouteHandler())
                 },
                  new RouteDescriptor {
+                     Priority=1,
                     Route = new Route(
                         "WebServices/ObjectAlias",
                         new RouteValueDictionary {
                             {"area", "Laser.Orchard.WebServices"},
                             {"controller", "Json"},
-                            {"action", "GetObjectByAlias"}
+                            {"action", "GetObjectByAlias"},
+                            {"id",  UrlParameter.Optional },
+                            { "version", UrlParameter.Optional},
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {
@@ -51,7 +55,9 @@ namespace Laser.Orchard.WebServices.Routes {
                             {"area", "Laser.Orchard.WebServices"},
                             {"controller", "Json"},
                             {"action", "GetObjectByAlias"},
-                            {"version",1}
+                            {"id",  UrlParameter.Optional },
+                            { "version",1},
+                            
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {
@@ -65,6 +71,7 @@ namespace Laser.Orchard.WebServices.Routes {
                         new RouteValueDictionary {
                             {"area", "Laser.Orchard.WebServices"},
                             {"controller", "Json"},
+                            {"id",  UrlParameter.Optional },
                             {"action", "GetObjectByAlias"},
                         },
                         new RouteValueDictionary(),
