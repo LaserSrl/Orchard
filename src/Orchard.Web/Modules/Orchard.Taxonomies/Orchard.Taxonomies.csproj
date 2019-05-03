@@ -130,6 +130,7 @@
     <Compile Include="Settings\TaxonomyFieldLocalizationEditorEvents.cs" />
     <Compile Include="Handlers\LocalizedTaxonomyPartHandler.cs" />
     <Compile Include="Models\MoveTermsContext.cs" />
+    <Compile Include="Security\AuthorizationEventHandler.cs" />
     <Compile Include="Services\ITaxonomyExtensionsService.cs" />
     <Compile Include="Services\TaxonomyExtensionsService.cs" />
     <Compile Include="Settings\TaxonomyFieldLocalizationSettings.cs" />
