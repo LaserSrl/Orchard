@@ -9,17 +9,23 @@ namespace Orchard.Blogs.Security {
         public void Complete(CheckAccessContext context) { }
 
         public void Adjust(CheckAccessContext context) {
-            if (!context.Granted &&
-                context.Content.Is<ICommonPart>()) {
+            if (context.Content.Is<ICommonPart>()) {
 
-                if (context.Content.ContentItem.ContentType == "BlogPost" && 
+                if (context.Content.ContentItem.ContentType == "BlogPost" &&
                     BlogPostVariationExists(context.Permission)) {
+                    context.Granted = false; //Force granted to false so next adjust iteration will check against the new permission starting from an unauthorized condition
                     context.Adjusted = true;
                     context.Permission = GetBlogPostVariation(context.Permission);
                 }
-
+                else if (context.Content.ContentItem.ContentType == "Blog" &&
+                    BlogVariationExists(context.Permission)) {
+                    context.Granted = false; //Force granted to false so next adjust iteration will check against the new permission starting from an unauthorized condition
+                    context.Adjusted = true;
+                    context.Permission = GetBlogVariation(context.Permission);
+                }
                 if (OwnerVariationExists(context.Permission) &&
                     HasOwnership(context.User, context.Content)) {
+                    context.Granted = false; //Force granted to false so next adjust iteration will check against the new permission starting from an unauthorized condition
                     context.Adjusted = true;
                     context.Permission = GetOwnerVariation(context.Permission);
                 }
@@ -61,6 +67,7 @@ namespace Orchard.Blogs.Security {
         }
 
         private static Permission GetOwnerVariation(Permission permission) {
+            //BlogPost
             if (permission.Name == Permissions.PublishBlogPost.Name)
                 return Permissions.PublishOwnBlogPost;
             if (permission.Name == Permissions.EditBlogPost.Name)
@@ -71,17 +78,21 @@ namespace Orchard.Blogs.Security {
                 return Core.Contents.Permissions.ViewOwnContent;
             if (permission.Name == Permissions.MetaListBlogs.Name)
                 return Permissions.MetaListOwnBlogs;
-
+            //Blog
+            if (permission.Name == Permissions.ManageBlogs.Name)
+                return Permissions.ManageOwnBlogs;
             return null;
         }
 
-        private static bool BlogPostVariationExists(Permission permission)
-        {
+        private static bool BlogPostVariationExists(Permission permission) {
             return GetBlogPostVariation(permission) != null;
         }
-
-        private static Permission GetBlogPostVariation(Permission permission)
-        {
+        private static bool BlogVariationExists(Permission permission) {
+            return GetBlogVariation(permission) != null;
+        }
+        private static Permission GetBlogPostVariation(Permission permission) {
+            if (permission.Name == Orchard.Core.Contents.Permissions.CreateContent.Name)
+                return Permissions.EditBlogPost;
             if (permission.Name == Orchard.Core.Contents.Permissions.PublishContent.Name)
                 return Permissions.PublishBlogPost;
             if (permission.Name == Orchard.Core.Contents.Permissions.PublishOwnContent.Name)
@@ -94,6 +105,25 @@ namespace Orchard.Blogs.Security {
                 return Permissions.DeleteBlogPost;
             if (permission.Name == Orchard.Core.Contents.Permissions.DeleteOwnContent.Name)
                 return Permissions.DeleteOwnBlogPost;
+
+            return null;
+        }
+
+        private static Permission GetBlogVariation(Permission permission) {
+            if (permission.Name == Orchard.Core.Contents.Permissions.CreateContent.Name)
+                return Permissions.ManageBlogs;
+            if (permission.Name == Orchard.Core.Contents.Permissions.PublishContent.Name)
+                return Permissions.ManageBlogs;
+            if (permission.Name == Orchard.Core.Contents.Permissions.PublishOwnContent.Name)
+                return Permissions.ManageBlogs;
+            if (permission.Name == Orchard.Core.Contents.Permissions.EditContent.Name)
+                return Permissions.ManageBlogs;
+            if (permission.Name == Orchard.Core.Contents.Permissions.EditOwnContent.Name)
+                return Permissions.ManageBlogs;
+            if (permission.Name == Orchard.Core.Contents.Permissions.DeleteContent.Name)
+                return Permissions.ManageBlogs;
+            if (permission.Name == Orchard.Core.Contents.Permissions.DeleteOwnContent.Name)
+                return Permissions.ManageBlogs;
 
             return null;
         }

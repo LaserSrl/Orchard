@@ -266,6 +266,7 @@
     <Compile Include="Settings\Migrations.cs" />
     <Compile Include="Settings\Drivers\SiteSettingsPartDriver.cs" />
     <Compile Include="Settings\Routes.cs" />
+    <Compile Include="Settings\Security\AuthorizationEventHandler.cs" />
     <Compile Include="Settings\Tokens\SettingsTokens.cs" />
     <Compile Include="Settings\ViewModels\SiteCulturesViewModel.cs" />
     <Compile Include="Settings\Metadata\ContentDefinitionManager.cs" />

@@ -76,10 +76,21 @@ namespace Orchard.Taxonomies.Handlers {
             if (taxonomy == null)
                 return;
 
+            context.Metadata.CreateRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Taxonomies"},
+                {"Controller", "Admin"},
+                {"Action", "Create"}
+            };
             context.Metadata.EditorRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Taxonomies"},
                 {"Controller", "Admin"},
                 {"Action", "Edit"},
+                {"Id", taxonomy.Id}
+            };
+            context.Metadata.RemoveRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Taxonomies"},
+                {"Controller", "Admin"},
+                {"Action", "Delete"},
                 {"Id", taxonomy.Id}
             };
 

@@ -111,6 +111,7 @@
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Rules\CommentsActions.cs" />
     <Compile Include="Rules\CommentsForms.cs" />
+    <Compile Include="Security\AuthorizationEventHandler.cs" />
     <Compile Include="Services\CommentsCountProcessor.cs" />
     <Compile Include="Services\ICommentsCountProcessor.cs" />
     <Compile Include="Settings\CommentsPartSettings.cs" />
@@ -216,6 +217,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Content.PublishButton-Comment.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

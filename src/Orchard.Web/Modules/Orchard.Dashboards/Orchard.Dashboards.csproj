@@ -140,6 +140,7 @@
     <Compile Include="Handlers\DashboardSiteSettingsPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Security\AuthorizationEventHandler.cs" />
     <Compile Include="Services\DashboardService.cs" />
     <Compile Include="Services\IDashboardService.cs" />
     <Compile Include="Shapes\LayoutPartShape.cs" />
