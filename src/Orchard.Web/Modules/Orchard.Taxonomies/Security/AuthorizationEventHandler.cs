@@ -49,7 +49,7 @@ namespace Orchard.Taxonomies.Security {
                         }
                     }
                     if (permission != context.Permission) {
-                        context.Granted = false; //Force granted to false so next adjust iteration will check against the new permission strating from an unauthorized condition
+                        context.Granted = false; //Force granted to false so next adjust iteration will check against the new permission starting from an unauthorized condition
                         context.Permission = permission;
                         context.Adjusted = true;
                     }

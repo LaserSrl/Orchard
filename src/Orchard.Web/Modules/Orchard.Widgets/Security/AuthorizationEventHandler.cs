@@ -12,61 +12,30 @@ namespace Orchard.Widgets.Security {
 
         public void Adjust(CheckAccessContext context) {
             Permission permission = context.Permission;
-            // adjusting permissions only if the content is not securable
-            if (!context.Granted &&
-                context.Content.Is<ICommonPart>()) {
+            if (context.Content.Is<ICommonPart>()) {
                 var typeDefinition = context.Content.ContentItem.TypeDefinition;
+                // adjusting permissions only if the content is not securable
                 if (!typeDefinition.Settings.GetModel<ContentTypeSettings>().Securable) {
-                    if (context.Content.Is<WidgetPart>()) {
+                    if (context.Content.Is<WidgetPart>() || context.Content.Is<LayerPart>()) {
                         if (context.Permission == Core.Contents.Permissions.CreateContent) {
                             permission = Permissions.ManageWidgets;
                         }
-                        else if (context.Permission == TryGetOwnerVariation(Core.Contents.Permissions.EditContent, context)) {
+                        else if (context.Permission == Core.Contents.Permissions.EditContent || context.Permission == Core.Contents.Permissions.EditOwnContent) {
                             permission = Permissions.ManageWidgets;
                         }
-                        else if (context.Permission == TryGetOwnerVariation(Core.Contents.Permissions.PublishContent, context)) {
+                        else if (context.Permission == Core.Contents.Permissions.PublishContent || context.Permission == Core.Contents.Permissions.PublishOwnContent) {
                             permission = Permissions.ManageWidgets;
                         }
-                        else if (context.Permission == TryGetOwnerVariation(Core.Contents.Permissions.DeleteContent, context)) {
+                        else if (context.Permission == Core.Contents.Permissions.DeleteContent || context.Permission == Core.Contents.Permissions.DeleteOwnContent) {
                             permission = Permissions.ManageWidgets;
                         }
                     }
                     if (permission != context.Permission) {
+                        context.Granted = false; //Force granted to false so next adjust iteration will check against the new permission starting from an unauthorized condition
                         context.Permission = permission;
                         context.Adjusted = true;
                     }
                 }
-            }
-        }
-
-        private static bool HasOwnership(IUser user, IContent content) {
-            if (user == null || content == null)
-                return false;
-
-            var common = content.As<ICommonPart>();
-            if (common == null || common.Owner == null)
-                return false;
-
-            return user.Id == common.Owner.Id;
-        }
-
-        private static Permission TryGetOwnerVariation(Permission permission, CheckAccessContext context) {
-            if (HasOwnership(context.User, context.Content)) {
-                if (permission.Name == Core.Contents.Permissions.PublishContent.Name)
-                    return Core.Contents.Permissions.PublishOwnContent;
-                if (permission.Name == Core.Contents.Permissions.EditContent.Name)
-                    return Core.Contents.Permissions.EditOwnContent;
-                if (permission.Name == Core.Contents.Permissions.DeleteContent.Name)
-                    return Core.Contents.Permissions.DeleteOwnContent;
-                if (permission.Name == Core.Contents.Permissions.ViewContent.Name)
-                    return Core.Contents.Permissions.ViewOwnContent;
-                if (permission.Name == Core.Contents.Permissions.PreviewContent.Name)
-                    return Core.Contents.Permissions.PreviewOwnContent;
-
-                return null;
-            }
-            else {
-                return permission;
             }
         }
     }
