@@ -155,6 +155,7 @@
     <Compile Include="Models\ImageProfilePartRecord.cs" />
     <Compile Include="Providers\Filters\FormatFilter.cs" />
     <Compile Include="Providers\Filters\ResizeFilter.cs" />
+    <Compile Include="Security\AuthorizationEventHandler.cs" />
     <Compile Include="Services\ImageProfileManager.cs" />
     <Compile Include="Services\IImageFilterProvider.cs" />
     <Compile Include="Services\IImageProcessingFileNameProvider.cs" />
