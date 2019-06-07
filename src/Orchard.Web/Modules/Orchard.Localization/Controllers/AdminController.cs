@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Contents;
 using Orchard.Core.Contents.Settings;
 using Orchard.DisplayManagement;
 using Orchard.Localization.Models;
@@ -41,6 +42,8 @@ namespace Orchard.Localization.Controllers {
             if (masterLocalizationPart == null)
                 return HttpNotFound();
 
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, masterContentItem, T("Couldn't create translated content")))
+                return new HttpUnauthorizedResult();
             // Check is current item stll exists, and redirect.
             var existingTranslation = _localizationService.GetLocalizedContentItem(masterContentItem, to);
             if (existingTranslation != null) {

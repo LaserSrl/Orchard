@@ -1,15 +1,43 @@
+using System.Collections.Generic;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Contents.Settings;
+using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Security.Permissions;
+using Orchard.UI.Notify;
 
 namespace Orchard.Core.Contents.Security {
     public class AuthorizationEventHandler : IAuthorizationServiceEventHandler {
-        public void Checking(CheckAccessContext context) { }
+        private IEnumerable<IPermissionProvider> _permissions;
+        private INotifier _notifier;
+
+        public AuthorizationEventHandler(IEnumerable<IPermissionProvider> permissions, INotifier notifier) {
+            _permissions = permissions;
+            _notifier = notifier;
+            T = NullLocalizer.Instance;
+        }
+        public ILogger Logger { get; set; }
+        public Localizer T { get; set; }
+
+        public void Checking(CheckAccessContext context) {
+            var permissionList = _permissions.Invoke(x => x.GetPermissions(), Logger);
+            foreach (var permission in permissionList) {
+                var customPermission = permission.Where(w => w.Overrides != null && w.Overrides(context.Permission, context.Content));
+                if (customPermission.Any()) {
+                    if (customPermission.FirstOrDefault() != null) {
+                        context.Permission = customPermission.First();
+                        break;
+                    }
+                }
+            }
+        }
         public void Complete(CheckAccessContext context) { }
 
         public void Adjust(CheckAccessContext context) {
+
             if (!context.Granted &&
                 context.Content.Is<ICommonPart>()) {
 

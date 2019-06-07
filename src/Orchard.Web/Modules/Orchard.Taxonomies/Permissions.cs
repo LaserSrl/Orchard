@@ -1,11 +1,17 @@
 ﻿using System.Collections.Generic;
+using Orchard.ContentManagement;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
+using Orchard.Taxonomies.Models;
 
 namespace Orchard.Taxonomies {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageTaxonomies = new Permission { Description = "Manage taxonomies", Name = "ManageTaxonomies" };
-        public static readonly Permission CreateTaxonomy = new Permission { Description = "Create taxonomy", Name = "CreateTaxonomy", ImpliedBy = new[] { ManageTaxonomies } };
+        public static readonly Permission ManageTaxonomies = new Permission { Description = "Manage taxonomies", Name = "ManageTaxonomies",
+            Overrides = (permission, content) => OverridePermissions(permission, content)
+        };
+        public static readonly Permission CreateTaxonomy = new Permission { Description = "Create taxonomy", Name = "CreateTaxonomy", ImpliedBy = new[] { ManageTaxonomies },
+            Overrides = (permission, content) => OverridePermissions(permission, content)
+        };
         public static readonly Permission ManageTerms = new Permission { Description = "Manage terms", Name = "ManageTerms", ImpliedBy = new[] { CreateTaxonomy } };
         public static readonly Permission MergeTerms = new Permission { Description = "Merge terms", Name = "MergeTerms", ImpliedBy = new[] { ManageTerms } };
         public static readonly Permission CreateTerm = new Permission { Description = "Create term", Name = "CreateTerm", ImpliedBy = new[] { ManageTerms, MergeTerms } };
@@ -46,10 +52,30 @@ namespace Orchard.Taxonomies {
                 },
                 new PermissionStereotype {
                     Name = "Contributor",
-                    Permissions = new Permission[0] 
+                    Permissions = new Permission[0]
                 },
             };
         }
 
+        private static bool OverridePermissions(Permission sourcePermission, IContent content) {
+            if (content != null && content.Is<TaxonomyPart>()) {
+                if (sourcePermission == Orchard.Core.Contents.Permissions.CreateContent ) {
+                    return true;
+                }
+                else if (sourcePermission == Orchard.Core.Contents.Permissions.EditContent) {
+                    return true;
+                }
+                else if (sourcePermission == Orchard.Core.Contents.Permissions.PublishContent) {
+                    return true;
+                }
+                else if (sourcePermission == Orchard.Core.Contents.Permissions.DeleteContent) {
+                    return true;
+                }
+            }
+            return false;
+
+        }
+
     }
 }
+

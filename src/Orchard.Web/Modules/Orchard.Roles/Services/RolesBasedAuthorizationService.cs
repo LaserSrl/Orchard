@@ -41,6 +41,7 @@ namespace Orchard.Roles.Services {
 
         public bool TryCheckAccess(Permission permission, IUser user, IContent content) {
             var context = new CheckAccessContext { Permission = permission, User = user, Content = content };
+
             _authorizationServiceEventHandler.Checking(context);
 
             for (var adjustmentLimiter = 0; adjustmentLimiter != 3; ++adjustmentLimiter) {
