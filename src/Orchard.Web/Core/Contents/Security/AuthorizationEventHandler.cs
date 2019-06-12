@@ -24,14 +24,20 @@ namespace Orchard.Core.Contents.Security {
 
         public void Checking(CheckAccessContext context) {
             var permissionList = _permissions.Invoke(x => x.GetPermissions(), Logger);
+            var contentIsSecurable = false;
+            if (context.Content != null && context.Content.ContentItem != null) {
+                var typeDefinition = context.Content.ContentItem.TypeDefinition;
+                contentIsSecurable = typeDefinition.Settings.GetModel<ContentTypeSettings>().Securable;
+            }
             foreach (var permission in permissionList) {
-                var customPermission = permission.Where(w => w.Overrides != null && w.Overrides(context.Permission, context.Content));
-                if (customPermission.Any()) {
-                    if (customPermission.FirstOrDefault() != null) {
-                        context.Permission = customPermission.First();
-                        break;
-                    }
+                var customPermission = permission.Where(w => w.ReplaceFor.ReplacedPermissions.Contains(context.Permission)
+                && w.ReplaceFor.Condition(context.Permission, context.Content)
+                && (!contentIsSecurable || (w.ReplaceFor.OverrideSecurable && contentIsSecurable)));
+                if (customPermission.Count() > 0) {
+                    context.Permissions.Remove(context.Permission);
+                    context.Permissions.AddRange(customPermission);
                 }
+                context.Permissions = context.Permissions.Distinct().ToList(); //Removes duplicates
             }
         }
         public void Complete(CheckAccessContext context) { }

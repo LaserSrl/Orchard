@@ -41,9 +41,23 @@ namespace Orchard.Roles.Services {
 
         public bool TryCheckAccess(Permission permission, IUser user, IContent content) {
             var context = new CheckAccessContext { Permission = permission, User = user, Content = content };
-
+            context.Permissions.Add(permission);
             _authorizationServiceEventHandler.Checking(context);
+            // test unicity in context.Permissions
+            // if a Permission in context.Permissions is overridden by any of the others,
+            // it should be removed fomr the list of permissions to be tested.
+            // This can be done by recursively calling Checking on contexts created with the "new"
+            // permission, and comparing the resulting lists. This process should go on until the
+            // list of permissions stops changing.
 
+            foreach (var p in context.Permissions) {
+                context.Granted |= InnerCheck(new CheckAccessContext { Permission = p, User = user, Content = content });
+            }
+
+            return context.Granted;
+        }
+
+        private bool InnerCheck(CheckAccessContext context) {
             for (var adjustmentLimiter = 0; adjustmentLimiter != 3; ++adjustmentLimiter) {
                 if (!context.Granted && context.User != null) {
                     if (!String.IsNullOrEmpty(_workContextAccessor.GetContext().CurrentSite.SuperUser) &&
@@ -68,7 +82,7 @@ namespace Orchard.Roles.Services {
 
                         // when it is a simulated anonymous user in the admin
                         if (!rolesToExamine.Contains(AnonymousRole[0])) {
-                            rolesToExamine = rolesToExamine.Concat(AuthenticatedRole);   
+                            rolesToExamine = rolesToExamine.Concat(AuthenticatedRole);
                         }
                     }
                     else {

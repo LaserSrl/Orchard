@@ -6,17 +6,70 @@ using Orchard.Taxonomies.Models;
 
 namespace Orchard.Taxonomies {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageTaxonomies = new Permission { Description = "Manage taxonomies", Name = "ManageTaxonomies",
-            Overrides = (permission, content) => OverridePermissions(permission, content)
+        public static readonly Permission ManageTaxonomies = new Permission {
+            Description = "Manage taxonomies",
+            Name = "ManageTaxonomies",
+            ReplaceFor = new PermissionReplaceContext {
+                ReplacedPermissions = new List<Permission> {
+                    Orchard.Core.Contents.Permissions.DeleteContent
+                },
+                Condition = (permission, content) => content != null && content.Is<TaxonomyPart>(),
+                OverrideSecurable = false
+            }
+
         };
-        public static readonly Permission CreateTaxonomy = new Permission { Description = "Create taxonomy", Name = "CreateTaxonomy", ImpliedBy = new[] { ManageTaxonomies },
-            Overrides = (permission, content) => OverridePermissions(permission, content)
+        public static readonly Permission CreateTaxonomy = new Permission {
+            Description = "Create taxonomy",
+            Name = "CreateTaxonomy",
+            ImpliedBy = new[] { ManageTaxonomies },
+            ReplaceFor = new PermissionReplaceContext {
+                ReplacedPermissions = new List<Permission> {
+                    Orchard.Core.Contents.Permissions.CreateContent,
+                    Orchard.Core.Contents.Permissions.EditContent,
+                    Orchard.Core.Contents.Permissions.PublishContent
+                },
+                Condition = (permission, content) => content != null && content.Is<TaxonomyPart>(),
+                OverrideSecurable = false
+            }
         };
         public static readonly Permission ManageTerms = new Permission { Description = "Manage terms", Name = "ManageTerms", ImpliedBy = new[] { CreateTaxonomy } };
         public static readonly Permission MergeTerms = new Permission { Description = "Merge terms", Name = "MergeTerms", ImpliedBy = new[] { ManageTerms } };
-        public static readonly Permission CreateTerm = new Permission { Description = "Create term", Name = "CreateTerm", ImpliedBy = new[] { ManageTerms, MergeTerms } };
-        public static readonly Permission EditTerm = new Permission { Description = "Edit term", Name = "EditTerm", ImpliedBy = new[] { ManageTerms, MergeTerms } };
-        public static readonly Permission DeleteTerm = new Permission { Description = "Delete term", Name = "DeleteTerm", ImpliedBy = new[] { ManageTerms, MergeTerms } };
+        public static readonly Permission CreateTerm = new Permission {
+            Description = "Create term",
+            Name = "CreateTerm",
+            ImpliedBy = new[] { ManageTerms, MergeTerms },
+            ReplaceFor = new PermissionReplaceContext {
+                ReplacedPermissions = new List<Permission> {
+                    Orchard.Core.Contents.Permissions.CreateContent
+                },
+                Condition = (permission, content) => content != null && content.Is<TermPart>(),
+                OverrideSecurable = false
+            }
+        };
+        public static readonly Permission EditTerm = new Permission {
+            Description = "Edit term",
+            Name = "EditTerm",
+            ImpliedBy = new[] { ManageTerms, MergeTerms },
+            ReplaceFor = new PermissionReplaceContext {
+                ReplacedPermissions = new List<Permission> {
+                    Orchard.Core.Contents.Permissions.EditContent
+                },
+                Condition = (permission, content) => content != null && content.Is<TermPart>(),
+                OverrideSecurable = false
+            }
+        };
+        public static readonly Permission DeleteTerm = new Permission {
+            Description = "Delete term",
+            Name = "DeleteTerm",
+            ImpliedBy = new[] { ManageTerms, MergeTerms },
+            ReplaceFor = new PermissionReplaceContext {
+                ReplacedPermissions = new List<Permission> {
+                    Orchard.Core.Contents.Permissions.DeleteContent
+                },
+                Condition = (permission, content) => content != null && content.Is<TermPart>(),
+                OverrideSecurable = false
+            }
+        };
 
         public virtual Feature Feature { get; set; }
 
@@ -57,23 +110,40 @@ namespace Orchard.Taxonomies {
             };
         }
 
-        private static bool OverridePermissions(Permission sourcePermission, IContent content) {
+        private static bool OverridePermissions(Permission sourcePermission, Permission targetpermission, IContent content) {
             if (content != null && content.Is<TaxonomyPart>()) {
-                if (sourcePermission == Orchard.Core.Contents.Permissions.CreateContent ) {
+                if (targetpermission == ManageTaxonomies) {
+                    if (sourcePermission == Orchard.Core.Contents.Permissions.CreateContent) {
+                        return true;
+                    }
+                    else if (sourcePermission == Orchard.Core.Contents.Permissions.EditContent) {
+                        return true;
+                    }
+                    else if (sourcePermission == Orchard.Core.Contents.Permissions.PublishContent) {
+                        return true;
+                    }
+                }
+                else if (targetpermission == CreateTaxonomy) {
+                    if (sourcePermission == Orchard.Core.Contents.Permissions.DeleteContent) {
+                        return true;
+                    }
+                }
+            }
+            if (content != null && content.Is<TermPart>()) {
+                if (sourcePermission == Core.Contents.Permissions.CreateContent && targetpermission == CreateTerm) {
                     return true;
                 }
-                else if (sourcePermission == Orchard.Core.Contents.Permissions.EditContent) {
+                else if (sourcePermission == Core.Contents.Permissions.EditContent && targetpermission == EditTerm) {
                     return true;
                 }
-                else if (sourcePermission == Orchard.Core.Contents.Permissions.PublishContent) {
+                else if (sourcePermission == Core.Contents.Permissions.PublishContent && targetpermission == EditTerm) {
                     return true;
                 }
-                else if (sourcePermission == Orchard.Core.Contents.Permissions.DeleteContent) {
+                else if (sourcePermission == Core.Contents.Permissions.DeleteContent && targetpermission == DeleteTerm) {
                     return true;
                 }
             }
             return false;
-
         }
 
     }
