@@ -49,6 +49,14 @@ namespace Orchard.Projections.FilterEditors.Forms {
                     f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.Ends), Text = T("Ends with").Text });
                     f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.NotEnds), Text = T("Does not end with").Text });
                     f._Operator.Add(new SelectListItem { Value = Convert.ToString(StringOperator.NotContains), Text = T("Does not contain").Text });
+                    f._Operator.Add(new SelectListItem {
+                        Value = Convert.ToString(StringOperator.ContainsAnyIfProvided),
+                        Text = T("Contains any word (if any is provided)").Text
+                    });
+                    f._Operator.Add(new SelectListItem {
+                        Value = Convert.ToString(StringOperator.ContainsAllIfProvided),
+                        Text = T("Contains all words (if any is provided)").Text
+                    });
 
                     return f;
                 };
@@ -88,6 +96,20 @@ namespace Orchard.Projections.FilterEditors.Forms {
                     return y => y.Not(x => x.Like(property, Convert.ToString(value), HqlMatchMode.End));
                 case StringOperator.NotContains:
                     return y => y.Not(x => x.Like(property, Convert.ToString(value), HqlMatchMode.Anywhere));
+                case StringOperator.ContainsAnyIfProvided:
+                    if (string.IsNullOrWhiteSpace((string)value))
+                        return x => x.IsNotEmpty("Id"); // basically, return every possible ContentItem
+                    var values3 = Convert.ToString(value)
+                        .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    var predicates3 = values3.Skip(1)
+                        .Select<string, Action<IHqlExpressionFactory>>(x => y => y.Like(property, x, HqlMatchMode.Anywhere)).ToArray();
+                    return x => x.Disjunction(y => y.Like(property, values3[0], HqlMatchMode.Anywhere), predicates3);
+                case StringOperator.ContainsAllIfProvided:
+                    if (string.IsNullOrWhiteSpace((string)value))
+                        return x => x.IsNotEmpty("Id"); // basically, return every possible ContentItem
+                    var values4 = Convert.ToString(value).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    var predicates4 = values4.Skip(1).Select<string, Action<IHqlExpressionFactory>>(x => y => y.Like(property, x, HqlMatchMode.Anywhere)).ToArray();
+                    return x => x.Conjunction(y => y.Like(property, values4[0], HqlMatchMode.Anywhere), predicates4);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -118,12 +140,23 @@ namespace Orchard.Projections.FilterEditors.Forms {
                     return T("{0} does not end with '{1}'", fieldName, value);
                 case StringOperator.NotContains:
                     return T("{0} does not contain '{1}'", fieldName, value);
+                case StringOperator.ContainsAnyIfProvided:
+                    return T("{0} contains any of '{1}' (or '{1}' is empty)",
+                        fieldName,
+                        new LocalizedString(string.Join("', '",
+                            value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))));
+                case StringOperator.ContainsAllIfProvided:
+                    return T("{0} contains all '{1}' (or '{1}' is empty)",
+                        fieldName,
+                        new LocalizedString(string.Join("', '",
+                            value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))));
+                    
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
     }
-
+                             
     public enum StringOperator {
         Equals,
         NotEquals,
@@ -135,5 +168,7 @@ namespace Orchard.Projections.FilterEditors.Forms {
         Ends,
         NotEnds,
         NotContains,
+        ContainsAnyIfProvided,
+        ContainsAllIfProvided
     }
 }
