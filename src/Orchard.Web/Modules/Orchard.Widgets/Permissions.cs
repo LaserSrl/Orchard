@@ -6,7 +6,20 @@ using Orchard.Widgets.Models;
 
 namespace Orchard.Widgets {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageWidgets = new Permission { Description = "Managing Widgets", Name = "ManageWidgets" };
+        public static readonly Permission ManageWidgets = new Permission { Description = "Managing Widgets", Name = "ManageWidgets",
+            ReplaceFor = new PermissionReplaceContext {
+                ReplacedPermissions = new List<Permission> {
+                    Core.Contents.Permissions.CreateContent,
+                    Core.Contents.Permissions.EditContent,
+                    Core.Contents.Permissions.PublishContent,
+                    Core.Contents.Permissions.DeleteContent
+                },
+                Condition = (permission, content) => {
+                    return content != null && content.Is<WidgetPart>();
+                },
+                OverrideSecurable = false
+            }
+        };
 
         public virtual Feature Feature { get; set; }
 
@@ -24,25 +37,5 @@ namespace Orchard.Widgets {
                 },
             };
         }
-
-        private static bool OverridePermissions(Permission sourcePermission, IContent content) {
-            if (content != null && content.Is<WidgetPart>()) {
-                if (sourcePermission == Orchard.Core.Contents.Permissions.CreateContent) {
-                    return true;
-                }
-                else if (sourcePermission == Orchard.Core.Contents.Permissions.EditContent) {
-                    return true;
-                }
-                else if (sourcePermission == Orchard.Core.Contents.Permissions.PublishContent) {
-                    return true;
-                }
-                else if (sourcePermission == Orchard.Core.Contents.Permissions.DeleteContent) {
-                    return true;
-                }
-            }
-            return false;
-
-        }
-
     }
 }
