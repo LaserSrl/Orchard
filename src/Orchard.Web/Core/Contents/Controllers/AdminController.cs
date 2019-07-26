@@ -13,20 +13,19 @@ using Orchard.Core.Containers.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.Data;
-using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Localization.Services;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
+using Orchard.Settings;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
-using Orchard.Settings;
 using Orchard.Utility.Extensions;
-using Orchard.Localization.Services;
 
 namespace Orchard.Core.Contents.Controllers {
     [ValidateInput(false)]
-    public class AdminController : Controller, IUpdateModel {
+    public class AdminController : ContentControllerBase, IUpdateModel {
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ITransactionManager _transactionManager;
@@ -36,24 +35,21 @@ namespace Orchard.Core.Contents.Controllers {
 
         public AdminController(
             IOrchardServices orchardServices,
-            IContentManager contentManager,
             IContentDefinitionManager contentDefinitionManager,
-            ITransactionManager transactionManager,
             ISiteService siteService,
-            IShapeFactory shapeFactory,
             ICultureManager cultureManager,
-            ICultureFilter cultureFilter) {
+            ICultureFilter cultureFilter) : base(orchardServices.ContentManager) {
             Services = orchardServices;
-            _contentManager = contentManager;
+            _contentManager = orchardServices.ContentManager;
+            _transactionManager = orchardServices.TransactionManager;
             _contentDefinitionManager = contentDefinitionManager;
-            _transactionManager = transactionManager;
             _siteService = siteService;
             _cultureManager = cultureManager;
             _cultureFilter = cultureFilter;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
-            Shape = shapeFactory;
+            Shape = orchardServices.New;
         }
 
         enum RouteOptions { Editor, Create, Remove };
@@ -249,9 +245,9 @@ namespace Orchard.Core.Contents.Controllers {
 
             var contentItem = _contentManager.New(id);
 
-            var alternativeRoute = CheckRouteCoherence(contentItem, RouteOptions.Create);
-            if (alternativeRoute != null) {
-                return alternativeRoute;
+            var customRouteRedirection = GetCustomContentItemRouteRedirection(contentItem, ContentItemRoute.Create);
+            if (customRouteRedirection != null) {
+                return customRouteRedirection;
             }
 
             if (!Services.Authorizer.Authorize(Permissions.CreateContent, contentItem, T("Cannot create content")))
@@ -320,9 +316,9 @@ namespace Orchard.Core.Contents.Controllers {
         public ActionResult Edit(int id) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
-            var alternativeRoute = CheckRouteCoherence(contentItem, RouteOptions.Editor);
-            if (alternativeRoute != null) {
-                return alternativeRoute;
+            var customRouteRedirection = GetCustomContentItemRouteRedirection(contentItem, ContentItemRoute.Editor);
+            if (customRouteRedirection != null) {
+                return customRouteRedirection;
             }
 
             if (contentItem == null)
@@ -430,11 +426,6 @@ namespace Orchard.Core.Contents.Controllers {
         [HttpPost]
         public ActionResult Remove(int id, string returnUrl) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
-
-            var alternativeRoute = CheckRouteCoherence(contentItem, RouteOptions.Remove);
-            if (alternativeRoute != null) {
-                return alternativeRoute;
-            }
 
             if (!Services.Authorizer.Authorize(Permissions.DeleteContent, contentItem, T("You do not have permission to delete content.")))
                 return new HttpUnauthorizedResult();
