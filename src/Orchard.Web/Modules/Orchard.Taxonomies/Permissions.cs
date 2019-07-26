@@ -109,43 +109,6 @@ namespace Orchard.Taxonomies {
                 },
             };
         }
-
-        private static bool OverridePermissions(Permission sourcePermission, Permission targetpermission, IContent content) {
-            if (content != null && content.Is<TaxonomyPart>()) {
-                if (targetpermission == ManageTaxonomies) {
-                    if (sourcePermission == Orchard.Core.Contents.Permissions.CreateContent) {
-                        return true;
-                    }
-                    else if (sourcePermission == Orchard.Core.Contents.Permissions.EditContent) {
-                        return true;
-                    }
-                    else if (sourcePermission == Orchard.Core.Contents.Permissions.PublishContent) {
-                        return true;
-                    }
-                }
-                else if (targetpermission == CreateTaxonomy) {
-                    if (sourcePermission == Orchard.Core.Contents.Permissions.DeleteContent) {
-                        return true;
-                    }
-                }
-            }
-            if (content != null && content.Is<TermPart>()) {
-                if (sourcePermission == Core.Contents.Permissions.CreateContent && targetpermission == CreateTerm) {
-                    return true;
-                }
-                else if (sourcePermission == Core.Contents.Permissions.EditContent && targetpermission == EditTerm) {
-                    return true;
-                }
-                else if (sourcePermission == Core.Contents.Permissions.PublishContent && targetpermission == EditTerm) {
-                    return true;
-                }
-                else if (sourcePermission == Core.Contents.Permissions.DeleteContent && targetpermission == DeleteTerm) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
     }
 }
 
