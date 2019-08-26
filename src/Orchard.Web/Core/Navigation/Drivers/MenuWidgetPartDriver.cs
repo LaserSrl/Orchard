@@ -12,6 +12,7 @@ using Orchard.Localization;
 using Orchard.UI.Navigation;
 using Orchard.Utility.Extensions;
 using Orchard.ContentManagement.Utilities;
+using Orchard.Logging;
 
 namespace Orchard.Core.Navigation.Drivers {
     public class MenuWidgetPartDriver : ContentPartDriver<MenuWidgetPart> {
@@ -30,9 +31,13 @@ namespace Orchard.Core.Navigation.Drivers {
             _workContextAccessor = workContextAccessor;
             _menuService = menuService;
             T = NullLocalizer.Instance;
+
+            Logger = NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
+
+        public ILogger Logger { get; set; }
 
         protected override string Prefix {
             get {
@@ -40,18 +45,46 @@ namespace Orchard.Core.Navigation.Drivers {
             }
         }
 
+        class MenuWidgetDisplayCacheItem {
+            internal IContent Menu { get; set; }
+            internal IEnumerable<MenuItem> MenuItems { get; set; }
+            internal string MenuName { get; set; }
+            // We are not caching the dynamic menuShape directly to handle the case where
+            // the same menu is being displayed in two different widgets with different
+            // shapes (i.e. breadcrumb and "normal")
+            internal MenuWidgetDisplayCacheItem(
+                MenuWidgetPart part,
+                IMenuService menuService,
+                INavigationManager navigationManager,
+                dynamic shapeHelper) {
+
+                Menu = menuService.GetMenu(part.MenuContentItemId);
+                if (Menu != null) {
+                    MenuItems = navigationManager.BuildMenu(Menu);
+                    MenuName = Menu.As<TitlePart>().Title.HtmlClassify();
+                }
+            }
+        }
+
+        private Dictionary<int, MenuWidgetDisplayCacheItem> _displayCache = new Dictionary<int, MenuWidgetDisplayCacheItem>();
+
         protected override DriverResult Display(MenuWidgetPart part, string displayType, dynamic shapeHelper) {
-            var menu = _menuService.GetMenu(part.MenuContentItemId);
+            Logger.Error($"MenuWidgetPartDriver.Display for {part.Id} {part.MenuContentItemId}");
+            if (!_displayCache.ContainsKey(part.MenuContentItemId)) {
+                _displayCache.Add(part.MenuContentItemId,
+                    new MenuWidgetDisplayCacheItem (part, _menuService, _navigationManager, shapeHelper));
+            }
+            var fromCache = _displayCache[part.MenuContentItemId];
+            var menu = fromCache.Menu;
             if (menu == null) {
                 return null;
             }
 
-            var menuItems = _navigationManager.BuildMenu(menu);
+            var menuItems = fromCache.MenuItems;
 
-            var menuName = menu.As<TitlePart>().Title.HtmlClassify();
             if (part.Breadcrumb) {
                 var menuShape = shapeHelper.Breadcrumb();
-                menuShape.MenuName(menuName);
+                menuShape.MenuName(fromCache.MenuName);
                 menuShape.ContentItem(menu);
                 return ContentShape("Parts_MenuWidget", () => {
                     var currentCulture = _workContextAccessor.GetContext().CurrentCulture;
@@ -103,7 +136,7 @@ namespace Orchard.Core.Navigation.Drivers {
                 });
             } else {
                 var menuShape = shapeHelper.Menu();
-                menuShape.MenuName(menuName);
+                menuShape.MenuName(fromCache.MenuName);
                 menuShape.ContentItem(menu);
                 return ContentShape("Parts_MenuWidget", () => {
                     var currentCulture = _workContextAccessor.GetContext().CurrentCulture;
