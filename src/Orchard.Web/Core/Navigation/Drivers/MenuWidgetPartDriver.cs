@@ -12,7 +12,6 @@ using Orchard.Localization;
 using Orchard.UI.Navigation;
 using Orchard.Utility.Extensions;
 using Orchard.ContentManagement.Utilities;
-using Orchard.Logging;
 
 namespace Orchard.Core.Navigation.Drivers {
     public class MenuWidgetPartDriver : ContentPartDriver<MenuWidgetPart> {
@@ -31,13 +30,9 @@ namespace Orchard.Core.Navigation.Drivers {
             _workContextAccessor = workContextAccessor;
             _menuService = menuService;
             T = NullLocalizer.Instance;
-
-            Logger = NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
-
-        public ILogger Logger { get; set; }
 
         protected override string Prefix {
             get {
@@ -45,58 +40,46 @@ namespace Orchard.Core.Navigation.Drivers {
             }
         }
 
-        class MenuWidgetDisplayCacheItem {
-            internal IContent Menu { get; set; }
-            internal IEnumerable<MenuItem> MenuItems { get; set; }
-            internal string MenuName { get; set; }
-            // We are not caching the dynamic menuShape directly to handle the case where
-            // the same menu is being displayed in two different widgets with different
-            // shapes (i.e. breadcrumb and "normal")
-            internal MenuWidgetDisplayCacheItem(
-                MenuWidgetPart part,
-                IMenuService menuService,
-                INavigationManager navigationManager,
-                dynamic shapeHelper) {
-
-                Menu = menuService.GetMenu(part.MenuContentItemId);
-                if (Menu != null) {
-                    MenuItems = navigationManager.BuildMenu(Menu);
-                    MenuName = Menu.As<TitlePart>().Title.HtmlClassify();
-                }
-            }
-        }
-
-        private Dictionary<int, MenuWidgetDisplayCacheItem> _displayCache = new Dictionary<int, MenuWidgetDisplayCacheItem>();
-
         protected override DriverResult Display(MenuWidgetPart part, string displayType, dynamic shapeHelper) {
-            Logger.Error($"MenuWidgetPartDriver.Display for {part.Id} {part.MenuContentItemId}");
-            if (!_displayCache.ContainsKey(part.MenuContentItemId)) {
-                _displayCache.Add(part.MenuContentItemId,
-                    new MenuWidgetDisplayCacheItem (part, _menuService, _navigationManager, shapeHelper));
-            }
-            var fromCache = _displayCache[part.MenuContentItemId];
-            var menu = fromCache.Menu;
-            if (menu == null) {
-                return null;
-            }
+            return ContentShape( "Parts_MenuWidget", () => {
+                var menu = _menuService.GetMenu(part.MenuContentItemId);
+                
+                if(menu == null) {
+                    return null;
+                }
 
-            var menuItems = fromCache.MenuItems;
+                var menuName = menu.As<TitlePart>().Title.HtmlClassify();
+                var currentCulture = _workContextAccessor.GetContext().CurrentCulture;
+                var menuItems = _navigationManager.BuildMenu(menu);
 
-            if (part.Breadcrumb) {
-                var menuShape = shapeHelper.Breadcrumb();
-                menuShape.MenuName(fromCache.MenuName);
-                menuShape.ContentItem(menu);
-                return ContentShape("Parts_MenuWidget", () => {
-                    var currentCulture = _workContextAccessor.GetContext().CurrentCulture;
-                    menuItems = menuItems
-                        .Where(mi => mi.Content == null // if there is no associated content, it is culture neutral
-                            || string.IsNullOrEmpty(mi.Culture) // if the menu item is culture neutral or of the current culture
-                            || string.Equals(mi.Culture, currentCulture, StringComparison.OrdinalIgnoreCase));
+                if (!part.Breadcrumb) {
+                    menuItems = menuItems.Where(x => !x.Content.Has<BreadcrumbMenuItemPart>());
+                }
 
-                    var request = _workContextAccessor.GetContext().HttpContext.Request;
-                    var routeData = request.RequestContext.RouteData;
-                    var selectedPath = NavigationHelper.SetSelectedPath(menuItems, request, routeData);
+                //var localized = new List<MenuItem>();
+                //foreach(var menuItem in menuItems) {
+                //    // if there is no associated content, it as culture neutral
+                //    if(menuItem.Content == null) {
+                //        localized.Add(menuItem);
+                //    }
 
+                //    // if the menu item is culture neutral or of the current culture
+                //    else if (String.IsNullOrEmpty(menuItem.Culture) || String.Equals(menuItem.Culture, currentCulture, StringComparison.OrdinalIgnoreCase)) {
+                //        localized.Add(menuItem);
+                //    }
+                //}
+
+                menuItems = menuItems
+                    .Where(mi => mi.Content == null // if there is no associated content, it is culture neutral
+                        || string.IsNullOrEmpty(mi.Culture) // if the menu item is culture neutral or of the current culture
+                        || string.Equals(mi.Culture, currentCulture, StringComparison.OrdinalIgnoreCase)); //localized;
+
+                var request = _workContextAccessor.GetContext().HttpContext.Request;
+                var routeData = request.RequestContext.RouteData;
+                var selectedPath = NavigationHelper.SetSelectedPath(menuItems, request, routeData);
+                dynamic menuShape; // = shapeHelper.Menu();
+
+                if (part.Breadcrumb) {
                     menuItems = selectedPath ?? new Stack<MenuItem>();
                     foreach (var menuItem in menuItems) {
                         menuItem.Items = Enumerable.Empty<MenuItem>();
@@ -129,27 +112,9 @@ namespace Orchard.Core.Navigation.Drivers {
                     }
 
                     menuItems = result;
-
-                    NavigationHelper.PopulateMenu(shapeHelper, menuShape, menuShape, menuItems);
-
-                    return shapeHelper.Parts_MenuWidget(Menu: menuShape);
-                });
-            } else {
-                var menuShape = shapeHelper.Menu();
-                menuShape.MenuName(fromCache.MenuName);
-                menuShape.ContentItem(menu);
-                return ContentShape("Parts_MenuWidget", () => {
-                    var currentCulture = _workContextAccessor.GetContext().CurrentCulture;
-                    menuItems = menuItems
-                        .Where(x => !x.Content.Has<BreadcrumbMenuItemPart>())
-                        .Where(mi => mi.Content == null // if there is no associated content, it is culture neutral
-                            || string.IsNullOrEmpty(mi.Culture) // if the menu item is culture neutral or of the current culture
-                            || string.Equals(mi.Culture, currentCulture, StringComparison.OrdinalIgnoreCase));
-                    
-                    var request = _workContextAccessor.GetContext().HttpContext.Request;
-                    var routeData = request.RequestContext.RouteData;
-                    var selectedPath = NavigationHelper.SetSelectedPath(menuItems, request, routeData);
-
+                    menuShape = shapeHelper.Breadcrumb();
+                }
+                else {
                     var topLevelItems = menuItems.ToList();
 
                     // apply start level by pushing children as top level items. When the start level is
@@ -162,7 +127,8 @@ namespace Orchard.Core.Navigation.Drivers {
                             foreach (var menuItem in topLevelItems) {
                                 temp.AddRange(menuItem.Items);
                             }
-                        } else if (selectedPath != null) {
+                        }
+                        else if (selectedPath != null) {
                             topLevelItems = topLevelItems.Intersect(selectedPath.Where(x => x.Selected)).ToList();
                             foreach (var menuItem in topLevelItems) {
                                 temp.AddRange(menuItem.Items);
@@ -172,9 +138,9 @@ namespace Orchard.Core.Navigation.Drivers {
                     }
 
                     // limit the number of levels to display (down from and including the start level)
-                    if (part.Levels > 0) {
+                    if(part.Levels > 0) {
                         var current = topLevelItems.ToList();
-                        for (var i = 1; current.Any() && i < part.Levels; i++) {
+                        for (var i = 1; current.Any() && i < part.Levels; i++ ) {
                             var temp = new List<MenuItem>();
                             foreach (var menuItem in current) {
                                 temp.AddRange(menuItem.Items);
@@ -184,16 +150,19 @@ namespace Orchard.Core.Navigation.Drivers {
                         // cut the sub-levels beneath any menu items that are at the lowest level being displayed
                         foreach (var menuItem in current) {
                             menuItem.Items = Enumerable.Empty<MenuItem>();
-                        }
+                        }                
                     }
                     menuItems = topLevelItems;
-                    
-                    NavigationHelper.PopulateMenu(shapeHelper, menuShape, menuShape, menuItems);
+                    menuShape = shapeHelper.Menu();
+                }
 
-                    return shapeHelper.Parts_MenuWidget(Menu: menuShape);
-                });
-            }
-            
+                menuShape.MenuName(menuName);
+                menuShape.ContentItem(menu);
+
+                NavigationHelper.PopulateMenu(shapeHelper, menuShape, menuShape, menuItems);
+
+                return shapeHelper.Parts_MenuWidget(Menu: menuShape);
+            });
         }
         
         protected override DriverResult Editor(MenuWidgetPart part, dynamic shapeHelper) {
