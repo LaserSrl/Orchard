@@ -48,7 +48,7 @@ namespace Orchard.Roles.Services {
             _authorizationServiceEventHandler.Checking(context);
             // test unicity in context.Permissions
             // if a Permission in context.Permissions is overridden by any of the others,
-            // it should be removed fomr the list of permissions to be tested.
+            // it should be removed from the list of permissions to be tested.
             // This can be done by recursively calling Checking on contexts created with the "new"
             // permission, and comparing the resulting lists. This process should go on until the
             // list of permissions stops changing.

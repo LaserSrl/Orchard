@@ -26,6 +26,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -172,6 +173,7 @@
     <Compile Include="Contents\Extensions\MetaDataExtensions.cs" />
     <Compile Include="Contents\Handlers\ContentsHandler.cs" />
     <Compile Include="Contents\Permissions.cs" />
+    <Compile Include="Contents\Security\PermissionOverrideAuthorizationEventHandler.cs" />
     <Compile Include="Contents\Settings\ContentTypeSettings.cs" />
     <Compile Include="Contents\Settings\ContentPartSettings.cs" />
     <Compile Include="Contents\Shapes.cs" />

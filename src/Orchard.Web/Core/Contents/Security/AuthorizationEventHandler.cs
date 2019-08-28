@@ -11,35 +11,8 @@ using Orchard.UI.Notify;
 
 namespace Orchard.Core.Contents.Security {
     public class AuthorizationEventHandler : IAuthorizationServiceEventHandler {
-        private IEnumerable<IPermissionProvider> _permissions;
-        private INotifier _notifier;
 
-        public AuthorizationEventHandler(IEnumerable<IPermissionProvider> permissions, INotifier notifier) {
-            _permissions = permissions;
-            _notifier = notifier;
-            T = NullLocalizer.Instance;
-        }
-        public ILogger Logger { get; set; }
-        public Localizer T { get; set; }
-
-        public void Checking(CheckAccessContext context) {
-            var permissionList = _permissions.Invoke(x => x.GetPermissions(), Logger);
-            var contentIsSecurable = false;
-            if (context.Content != null && context.Content.ContentItem != null) {
-                var typeDefinition = context.Content.ContentItem.TypeDefinition;
-                contentIsSecurable = typeDefinition.Settings.GetModel<ContentTypeSettings>().Securable;
-            }
-            foreach (var permission in permissionList) {
-                var customPermission = permission.Where(w => w.ReplaceFor.ReplacedPermissions.Contains(context.Permission)
-                && w.ReplaceFor.Condition(context.Permission, context.Content)
-                && (!contentIsSecurable || (w.ReplaceFor.OverrideSecurable && contentIsSecurable)));
-                if (customPermission.Count() > 0) {
-                    context.Permissions.Remove(context.Permission);
-                    context.Permissions.AddRange(customPermission);
-                }
-                context.Permissions = context.Permissions.Distinct().ToList(); //Removes duplicates
-            }
-        }
+        public void Checking(CheckAccessContext context) { }
         public void Complete(CheckAccessContext context) { }
 
         public void Adjust(CheckAccessContext context) {
