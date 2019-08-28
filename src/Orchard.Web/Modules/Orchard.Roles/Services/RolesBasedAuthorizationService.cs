@@ -15,7 +15,11 @@ namespace Orchard.Roles.Services {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IAuthorizationServiceEventHandler _authorizationServiceEventHandler;
 
-        public RolesBasedAuthorizationService(IRoleService roleService, IWorkContextAccessor workContextAccessor, IAuthorizationServiceEventHandler authorizationServiceEventHandler) {
+        public RolesBasedAuthorizationService(
+            IRoleService roleService,
+            IWorkContextAccessor workContextAccessor,
+            IAuthorizationServiceEventHandler authorizationServiceEventHandler) {
+
             _roleService = roleService;
             _workContextAccessor = workContextAccessor;
             _authorizationServiceEventHandler = authorizationServiceEventHandler;
@@ -61,30 +65,27 @@ namespace Orchard.Roles.Services {
                 if (!context.Granted && context.User != null) {
                     if (!String.IsNullOrEmpty(_workContextAccessor.GetContext().CurrentSite.SuperUser) &&
                            String.Equals(context.User.UserName, _workContextAccessor.GetContext().CurrentSite.SuperUser, StringComparison.Ordinal)) {
+                        // superuser has all permissions
                         context.Granted = true;
                     }
                 }
 
                 if (!context.Granted) {
-
                     // determine which set of permissions would satisfy the access check
                     var grantingNames = PermissionNames(context.Permission, Enumerable.Empty<string>()).Distinct().ToArray();
-
                     // determine what set of roles should be examined by the access check
                     var rolesToExamine = new List<string>();
                     if (context.User == null) {
                         rolesToExamine.Add(SystemRoles.Anonymous);
-                    }
-                    else if (context.User.Has<IUserRoles>()) {
+                    } else if (context.User.Has<IUserRoles>()) {
                         // the current user is not null, so get his roles and add "Authenticated" to it
                         rolesToExamine = context.User.As<IUserRoles>().Roles.ToList();
 
                         // when it is a simulated anonymous user in the admin
-                        if (!rolesToExamine.Contains(AnonymousRole[0])) {
-                            rolesToExamine = rolesToExamine.Concat(AuthenticatedRole);
+                        if (!rolesToExamine.Contains(SystemRoles.Anonymous)) {
+                            rolesToExamine.Add(SystemRoles.Authenticated);
                         }
-                    }
-                    else {
+                    } else {
                         // the user is not null and has no specific role, then it's just "Authenticated"
                         rolesToExamine.Add(SystemRoles.Authenticated);
                     }
