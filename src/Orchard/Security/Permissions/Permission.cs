@@ -18,13 +18,15 @@ namespace Orchard.Security.Permissions {
         public string Category { get; set; }
 
         public IEnumerable<Permission> ImpliedBy { get; set; }
-        public bool RequiresOwnership { get; set; }
 
         public PermissionReplaceContext ReplaceFor { get; set; }
 
         public static Permission Named(string name) {
             return new Permission { Name = name };
         }
+
+        [Obsolete("This property is not used anywhere, so it shouldn't be referenced.")]
+        public bool RequiresOwnership { get; set; }
     }
 
     public class PermissionReplaceContext {
