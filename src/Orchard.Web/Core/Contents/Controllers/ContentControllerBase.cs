@@ -44,6 +44,11 @@ namespace Orchard.Core.Contents.Controllers {
                         return RedirectToRoute(itemMetadata.DisplayRouteValues);
 
                     break;
+                case ContentItemRoute.Remove:
+                    if (isCustomRoute(itemMetadata.RemoveRouteValues))
+                        return RedirectToRoute(itemMetadata.RemoveRouteValues);
+
+                    break;
             }
 
             return null;

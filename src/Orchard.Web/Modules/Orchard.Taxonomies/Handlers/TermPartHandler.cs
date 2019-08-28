@@ -22,7 +22,12 @@ namespace Orchard.Taxonomies.Handlers {
                 {"Action", "Edit"},
                 {"Id", term.Id}
             };
-
+            context.Metadata.CreateRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Taxonomies"},
+                {"Controller", "TermAdmin"},
+                {"Action", "SelectTerm"}, // that action allows selecting the term's parent before creating it
+                {"taxonomyId", term.TaxonomyId}
+            };
         }
     }
 }

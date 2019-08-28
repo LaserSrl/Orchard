@@ -104,9 +104,8 @@ namespace Orchard.Core.Contents.Security {
         /// permission.</returns>
         /// <remarks>Specific implementations of this method should generally also use the
         /// result from the base class with base.ShouldOverride(context).</remarks>
-        protected new virtual bool ShouldOverride(CheckAccessContext context) {
-            return base.ShouldOverride(context)
-                && context.Content != null && context.Content.Is<TPart>();
+        protected override bool ShouldOverride(CheckAccessContext context) {
+            return context.Content != null && context.Content.Is<TPart>();
         }
     }
 }

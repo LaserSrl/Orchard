@@ -1,12 +1,21 @@
 ﻿@model TermAdminIndexViewModel
-@using Orchard.Taxonomies
+@using Orchard.Taxonomies;
 @using Orchard.Taxonomies.ViewModels;
+@using Orchard.Taxonomies.Models;
 @using Orchard.Taxonomies.Helpers;
+@using Orchard.Taxonomies.Services;
+@using Orchard.ContentManagement;
 @{
     Style.Include("admin-taxonomy.css");
     Layout.Title = T("Manage terms for {0}", Model.Taxonomy.Name).ToString();
 
     var termIndex = 0;
+
+
+    var fakeTerm = Model.Terms.FirstOrDefault()?.ContentItem?.As<TermPart>();
+    if (fakeTerm == null) {
+        fakeTerm = WorkContext.Resolve<ITaxonomyService>().NewTerm(Model.Taxonomy);
+    }
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {
@@ -21,7 +30,7 @@
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="@T("Apply")" />
     </fieldset>
-    if (Authorizer.Authorize(Permissions.CreateTerm)) {
+    if (Authorizer.Authorize(Orchard.Core.Contents.Permissions.CreateContent, fakeTerm)) {
         <div class="manage">@Html.ActionLink(T("Add a term").ToString(), "SelectTerm", new { taxonomyId = Model.Taxonomy.Id }, new { @class = "button primaryAction" })</div>
     }
     <fieldset>
@@ -37,16 +46,16 @@
                 </tr>
             </thead>
             @foreach (var termEntry in Model.Terms) {
-                    var ti = termIndex;
+                var ti = termIndex;
                 <tr>
                     <td>
                         <input type="hidden" value="@Model.Terms[termIndex].Id" name="@Html.NameOf(m => m.Terms[ti].Id)" />
-                        @* Tabs for levels *@ @for (var i = 1; i <= termEntry.GetLevels(); i++) { <span class="gap">&nbsp;</span> }
+                        @* Tabs for levels *@ @for (var i = 1; i <= termEntry.GetLevels(); i++) {<span class="gap">&nbsp;</span>}
                         <input type="checkbox" value="true" name="@Html.NameOf(m => m.Terms[ti].IsChecked)" />
                         @Html.ItemDisplayLink(termEntry.Name, termEntry.ContentItem)
                     </td>
                     <td>
-                        @if (Authorizer.Authorize(Permissions.EditTerm)) {
+                        @if (Authorizer.Authorize(Orchard.Core.Contents.Permissions.EditContent, termEntry.ContentItem)) {
                             @Html.ItemEditLink(T("Edit").Text, termEntry.ContentItem, new { returnUrl = Url.Action("Index", "TermAdmin", new { taxonomyId = Model.Taxonomy.Id }) }) <text>|</text>
                             @Html.ActionLink(T("Move").ToString(), "MoveTerm", new { taxonomyId = Model.Taxonomy.Id, termIds = termEntry.Id })
                         }

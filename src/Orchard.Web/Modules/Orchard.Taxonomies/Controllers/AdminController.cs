@@ -20,6 +20,7 @@ using Orchard.Mvc.Html;
 using Orchard.Utility.Extensions;
 using Orchard.Mvc.Extensions;
 using System.Web.Routing;
+using CorePermissions = Orchard.Core.Contents.Permissions;
 
 namespace Orchard.Taxonomies.Controllers {
 
@@ -57,10 +58,42 @@ namespace Orchard.Taxonomies.Controllers {
 
         public ActionResult Index(PagerParameters pagerParameters) {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+            // we should only display this page if the user is alowed some form of interaction with
+            // taxonomies or at least with terms. The term permissions are implied by the ones for
+            // taxonomies so we just check those.
+            var showAnything = Services.Authorizer.Authorize(Permissions.MergeTerms)
+                || Services.Authorizer.Authorize(Permissions.EditTerm)
+                || Services.Authorizer.Authorize(Permissions.CreateTerm)
+                || Services.Authorizer.Authorize(Permissions.DeleteTerm);
+            IEnumerable<TaxonomyPart> validTaxonomies = null;
+            if (!showAnything) {
+                // If the user doe not have the generic permission, they may still have a Securable
+                // permission on some term type.
+                // The way to get the allowed taxonomy types is to go through all term types
+                // looking for the ones for which the user has some form of authorization
+                validTaxonomies = _taxonomyService
+                    .GetTaxonomies()
+                    .Where(tax => {
+                        var fakeTerm = _taxonomyService.GetTerms(tax.Id).FirstOrDefault() ??
+                            _taxonomyService.NewTerm(tax);
+                        return Services.Authorizer.Authorize(CorePermissions.CreateContent, fakeTerm)
+                            || Services.Authorizer.Authorize(CorePermissions.EditContent, fakeTerm)
+                            || Services.Authorizer.Authorize(CorePermissions.DeleteContent, fakeTerm);
+                    });
+                showAnything = validTaxonomies.Any();
+            }
+            if (!showAnything) {
+                return new HttpUnauthorizedResult();
+            }
 
-            var taxonomies = _taxonomyService.GetTaxonomiesQuery().Slice(pager.GetStartIndex(), pager.PageSize);
+            var taxonomies = validTaxonomies == null
+                ? _taxonomyService.GetTaxonomiesQuery().Slice(pager.GetStartIndex(), pager.PageSize)
+                : validTaxonomies.Skip(pager.GetStartIndex()).Take(pager.PageSize);
 
-            var pagerShape = Shape.Pager(pager).TotalItemCount(_taxonomyService.GetTaxonomiesQuery().Count());
+            var itemsCount = validTaxonomies == null
+                ? _taxonomyService.GetTaxonomiesQuery().Count()
+                : validTaxonomies.Count();
+            var pagerShape = Shape.Pager(pager).TotalItemCount(itemsCount);
 
             var entries = taxonomies
                     .Select(CreateTaxonomyEntry)
