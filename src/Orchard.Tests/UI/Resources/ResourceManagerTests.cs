@@ -32,7 +32,8 @@ namespace Orchard.Tests.UI.Resources {
         private void VerifyPaths(string resourceType, RequireSettings defaultSettings, string expectedPaths) {
             defaultSettings = defaultSettings ?? new RequireSettings();
             var requiredResources = _resourceManager.BuildRequiredResources(resourceType);
-            var renderedResources = string.Join(",", requiredResources.Select(context => context.GetResourceUrl(defaultSettings, _appPath,_resourceFileHashProvider)).ToArray());
+            var renderedResources = string.Join(",", requiredResources.Select(context => context
+                .GetResourceUrl(defaultSettings, _appPath, _resourceFileHashProvider)).ToArray());
             Assert.That(renderedResources, Is.EqualTo(expectedPaths));
         }
 
@@ -93,6 +94,33 @@ namespace Orchard.Tests.UI.Resources {
             };
             _resourceManager.Require("script", "Script1");
             VerifyPaths("script", new RequireSettings { CdnMode = true }, "http://cdn/script1.min.js");
+        }
+
+        [Test]
+        public void CdnSslPathIsUsedInCdnMode() {
+            _testManifest.DefineManifest = m => {
+                m.DefineResource("script", "Script1").SetUrl("script1.js").SetCdn("https://cdn/script1.min.js");
+            };
+            _resourceManager.Require("script", "Script1");
+            VerifyPaths("script", new RequireSettings { CdnMode = true }, "https://cdn/script1.min.js", true);
+        }
+
+        [Test]
+        public void LocalPathIsUsedInCdnModeNotSupportsSsl() {
+            _testManifest.DefineManifest = m => {
+                m.DefineResource("script", "Script1").SetUrl("script1.min.js", "script1.js").SetCdn("http://cdn/script1.min.js", "http://cdn/script1.js");
+            };
+            _resourceManager.Require("script", "Script1");
+            VerifyPaths("script", new RequireSettings { CdnMode = true }, "script1.min.js", true);
+        }
+
+        [Test]
+        public void LocalDebugPathIsUsedInCdnModeNotSupportsSslAndDebug() {
+            _testManifest.DefineManifest = m => {
+                m.DefineResource("script", "Script1").SetUrl("script1.min.js", "script1.js").SetCdn("http://cdn/script1.min.js", "http://cdn/script1.js");
+            };
+            _resourceManager.Require("script", "Script1");
+            VerifyPaths("script", new RequireSettings { CdnMode = true, DebugMode = true }, "script1.js", true);
         }
 
         [Test]

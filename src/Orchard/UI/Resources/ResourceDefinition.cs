@@ -120,8 +120,6 @@ namespace Orchard.UI.Resources {
         }
 
         public string[] Cultures { get; private set; }
-        [Obsolete("This parameter has no effect on the resource URL.")]
-        public bool CdnSupportsSsl { get; private set; }
         public IEnumerable<string> Dependencies { get; private set; }
         public string FilePathAttributeName { get; private set; }
         public TagBuilder TagBuilder { get; private set; }
@@ -170,11 +168,6 @@ namespace Orchard.UI.Resources {
             return this;
         }
 
-        [Obsolete("Use SetCdn without the \"cdnSupportsSsl\" parameter instead as it has no effect.")]
-        public ResourceDefinition SetCdn(string cdnUrl, string cdnUrlDebug, bool cdnSupportsSsl) {
-            return SetCdn(cdnUrl, cdnUrlDebug);
-        }
-
         public ResourceDefinition SetPhysicalPath(string physicalPath) {
             return SetPhysicalPath(physicalPath, null);
         }
@@ -210,10 +203,6 @@ namespace Orchard.UI.Resources {
         }
 
         public string ResolveUrl(RequireSettings settings, string applicationPath, IResourceFileHashProvider resourceFileHashProvider) {
-            return ResolveUrl(settings, applicationPath, false, resourceFileHashProvider);
-        }
-
-        public string ResolveUrl(RequireSettings settings, string applicationPath, bool ssl, IResourceFileHashProvider resourceFileHashProvider) {
             string url;
             string physicalPath = null;
             // Url priority:
