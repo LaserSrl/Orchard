@@ -4,7 +4,8 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Projections {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageQueries = new Permission { Description = "Manage queries", Name = "ManageQueries", Category = "Projection"};
+        public static readonly Permission ManageQueries = new Permission {
+            Description = "Manage queries", Name = "ManageQueries", Category = "Projection"};
 
         public virtual Feature Feature { get; set; }
 

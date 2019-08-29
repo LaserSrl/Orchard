@@ -24,7 +24,7 @@ namespace Orchard.Widgets.Handlers {
                 context.Metadata.EditorRouteValues = new RouteValueDictionary {
                     {"Area", "Orchard.Widgets"},
                     {"Controller", "Admin"},
-                    {"Action", "EditWidget"},
+                    {"Action", "EditLayer"},
                     {"id", part.Id}
                 };
                 // remove goes through edit layer...
