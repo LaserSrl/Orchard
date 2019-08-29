@@ -14,6 +14,7 @@ using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Comments.ViewModels;
 using Orchard.Comments.Services;
+using CorePermissions = Orchard.Core.Contents.Permissions;
 
 namespace Orchard.Comments.Controllers {
     using Orchard.Settings;
@@ -220,6 +221,8 @@ namespace Orchard.Comments.Controllers {
             var commentPart = _contentManager.Get<CommentPart>(id);
             if (commentPart == null)
                 return new HttpNotFoundResult();
+            if (!_orchardServices.Authorizer.Authorize(CorePermissions.EditContent, commentPart, T("Couldn't edit comment")))
+                return new HttpUnauthorizedResult();
 
             dynamic editorShape = _contentManager.BuildEditor(commentPart);
             return View(editorShape);
@@ -231,6 +234,8 @@ namespace Orchard.Comments.Controllers {
                 return new HttpUnauthorizedResult();
 
             var commentPart = _contentManager.Get<CommentPart>(id);
+            if (!_orchardServices.Authorizer.Authorize(CorePermissions.EditContent, commentPart, T("Couldn't edit comment")))
+                return new HttpUnauthorizedResult();
 
             var editorShape = _contentManager.UpdateEditor(commentPart, this);
 
@@ -277,12 +282,11 @@ namespace Orchard.Comments.Controllers {
 
         [HttpPost]
         public ActionResult Delete(int id, string returnUrl) {
-            if (!_orchardServices.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment")))
-                return new HttpUnauthorizedResult();
-
             var commentPart = _contentManager.Get<CommentPart>(id);
             if (commentPart == null)
                 return new HttpNotFoundResult();
+            if (!_orchardServices.Authorizer.Authorize(CorePermissions.DeleteContent, commentPart, T("Couldn't delete comment")))
+                return new HttpUnauthorizedResult();
 
             int commentedOn = commentPart.Record.CommentedOn;
             _commentService.DeleteComment(id);
