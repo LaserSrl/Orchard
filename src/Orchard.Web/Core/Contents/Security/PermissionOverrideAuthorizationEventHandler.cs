@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Orchard.ContentManagement;
 using Orchard.Core.Contents.Settings;
 using Orchard.Security;
@@ -52,7 +50,8 @@ namespace Orchard.Core.Contents.Security {
         /// <remarks>Specific implementations of this method should generally also use the
         /// result from the base class with base.ShouldOverride(context).</remarks>
         protected virtual bool ShouldOverride(CheckAccessContext context) {
-            return ReplacedPermissions.Contains(context.Permission);
+            return ReplacedPermissions.Contains(context.Permission)
+                && (ConsiderSecurableSetting && !ContentIsSecurable(context));
         }
         /// <summary>
         /// Utility method that verifies whether the ContentType of the ContentItem (if any) in
@@ -67,6 +66,12 @@ namespace Orchard.Core.Contents.Security {
             }
             return false;
         }
+        /// <summary>
+        /// boolean property that tells whether the Securable flag for the content
+        /// should be considered. When this is true, if the content is securable
+        /// we should not override the permission.
+        /// </summary>
+        protected virtual bool ConsiderSecurableSetting => false;
 
         public void Checking(CheckAccessContext context) {
             // This method updates context.Permissions:

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Orchard.Core.Contents.Security;
-using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.Taxonomies.Models;
 
@@ -8,17 +7,7 @@ namespace Orchard.Taxonomies.Security {
 
     public abstract class TermPermissionOverrideHandler
         : PermissionOverrideAuthorizationEventHandler<TermPart> {
-        protected override bool ShouldOverride(CheckAccessContext context) {
-            // base.ShouldOverride(context) here checks:
-            // context.Permission is in ReplacedPermissions
-            // context.Content exists
-            // context.Content has a TermPart
-            if (base.ShouldOverride(context)) {
-                // if the content is securable we should not override the permission
-                return !ContentIsSecurable(context);
-            }
-            return false;
-        }
+        protected override bool ConsiderSecurableSetting => true;
     }
 
     public class CreateTermPermissionOverrideHandler
