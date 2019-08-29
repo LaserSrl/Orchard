@@ -4,7 +4,8 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Users {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageUsers = new Permission { Description = "Managing Users", Name = "ManageUsers" };
+        public static readonly Permission ManageUsers = new Permission {
+            Description = "Managing Users", Name = "ManageUsers" };
 
         public virtual Feature Feature { get; set; }
 

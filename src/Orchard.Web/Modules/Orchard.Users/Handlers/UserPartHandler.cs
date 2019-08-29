@@ -2,6 +2,7 @@
 using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Users.Models;
+using System.Web.Routing;
 
 namespace Orchard.Users.Handlers {
     public class UserPartHandler : ContentHandler {
@@ -16,6 +17,18 @@ namespace Orchard.Users.Handlers {
             if (part != null) {
                 context.Metadata.Identity.Add("User.UserName", part.UserName);
                 context.Metadata.DisplayText = part.UserName;
+
+                context.Metadata.EditorRouteValues = new RouteValueDictionary {
+                    {"Area", "Orchard.Users"},
+                    {"Controller", "Admin"},
+                    {"Action", "Edit"},
+                    {"Id", part.Id}
+                };
+                context.Metadata.CreateRouteValues = new RouteValueDictionary {
+                    {"Area", "Orchard.Users"},
+                    {"Controller", "Admin"},
+                    {"Action", "Create"}
+                };
             }
         }
     }
