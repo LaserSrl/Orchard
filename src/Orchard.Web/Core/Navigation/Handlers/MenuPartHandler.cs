@@ -47,6 +47,7 @@ namespace Orchard.Core.Navigation.Handlers {
             if (part != null) {
                 string stereotype;
                 if (context.ContentItem.TypeDefinition.Settings.TryGetValue("Stereotype", out stereotype) && stereotype == "MenuItem") {
+                    // for menuitems
                     context.Metadata.DisplayText = part.MenuText;
                     context.Metadata.EditorRouteValues = new RouteValueDictionary {
                         {"Area", "Navigation"},
@@ -60,8 +61,10 @@ namespace Orchard.Core.Navigation.Handlers {
                         {"Action", "Delete"},
                         {"Id", context.ContentItem.Id}
                     };
-                }
-            }
+                    // Creating menuitems requires the Type we are attempting to create as well
+                    // as the Id of the menu the menuitem should be a part of
+                } 
+            } 
         }
 
     }

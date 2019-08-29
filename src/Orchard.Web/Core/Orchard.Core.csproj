@@ -196,6 +196,7 @@
     <Compile Include="Navigation\Models\MenuWidgetPart.cs" />
     <Compile Include="Navigation\Models\ShapeMenuItemPart.cs" />
     <Compile Include="Navigation\Security\AuthorizationEventHandler.cs" />
+    <Compile Include="Navigation\Security\ManageMenusPermissionOverrideHandler.cs" />
     <Compile Include="Navigation\Services\AdminMenuNavigationProvider.cs" />
     <Compile Include="Navigation\Services\DefaultMenuManager.cs" />
     <Compile Include="Navigation\Services\IMenuManager.cs" />
