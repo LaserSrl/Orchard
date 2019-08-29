@@ -82,7 +82,11 @@ namespace Orchard.Taxonomies.Handlers {
                 {"Action", "Edit"},
                 {"Id", taxonomy.Id}
             };
-
+            context.Metadata.CreateRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Taxonomies"},
+                {"Controller", "Admin"},
+                {"Action", "Create"}
+            };
         }
     }
 }

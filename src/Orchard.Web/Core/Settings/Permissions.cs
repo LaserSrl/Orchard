@@ -4,17 +4,8 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Core.Settings {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageSettings = new Permission { Description = "Manage Settings", Name = "ManageSettings",
-            ReplaceFor = new PermissionReplaceContext {
-                ReplacedPermissions = new List<Permission>() {
-                    Core.Contents.Permissions.CreateContent,
-                    Core.Contents.Permissions.EditContent,
-                    Core.Contents.Permissions.PublishContent,
-                    Core.Contents.Permissions.DeleteContent,
-                },
-                Condition = (permission, content) => (content != null && content.ContentItem.ContentType == "Site"),
-                OverrideSecurable = true
-            }
+        public static readonly Permission ManageSettings = new Permission {
+            Description = "Manage Settings", Name = "ManageSettings"
         };
 
         public virtual Feature Feature { get; set; }
