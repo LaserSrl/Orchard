@@ -67,7 +67,7 @@ namespace Orchard.Taxonomies.Controllers {
                 || Services.Authorizer.Authorize(Permissions.DeleteTerm);
             IEnumerable<TaxonomyPart> validTaxonomies = null;
             if (!showAnything) {
-                // If the user doe not have the generic permission, they may still have a Securable
+                // If the user does not have the generic permission, they may still have a Securable
                 // permission on some term type.
                 // The way to get the allowed taxonomy types is to go through all term types
                 // looking for the ones for which the user has some form of authorization
