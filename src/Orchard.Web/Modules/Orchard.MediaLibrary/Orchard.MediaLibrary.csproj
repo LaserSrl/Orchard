@@ -25,6 +25,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -206,6 +207,7 @@
     <Compile Include="Providers\WebSearchMenu.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Security\MediaAuthorizationEventHandler.cs" />
+    <Compile Include="Security\MediaPartPermissionOverrideHandlers.cs" />
     <Compile Include="Services\IMediaLibraryService.cs" />
     <Compile Include="Providers\IMediaFolderProvider.cs" />
     <Compile Include="Services\MediaLibraryService.cs" />
