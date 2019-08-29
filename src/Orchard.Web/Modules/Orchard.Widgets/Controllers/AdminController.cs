@@ -55,6 +55,8 @@ namespace Orchard.Widgets.Controllers {
         dynamic Shape { get; set; }
 
         public ActionResult Index(int? layerId, string culture) {
+            if (!IsAuthorizedToManageWidgets())
+                return new HttpUnauthorizedResult();
             ExtensionDescriptor currentTheme = _siteThemeService.GetSiteTheme();
             if (currentTheme == null) {
                 Services.Notifier.Error(T("To manage widgets you must have a theme enabled."));

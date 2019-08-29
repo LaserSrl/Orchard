@@ -27,6 +27,7 @@
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -122,6 +123,7 @@
     <Compile Include="Filters\WidgetFilter.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Conditions\ContentDisplayedRuleProvider.cs" />
+    <Compile Include="Security\ManageWidgetsPermissionOverrideHandler.cs" />
     <Compile Include="Services\IWidgetCommandsService.cs" />
     <Compile Include="Services\RuleManager.cs" />
     <Compile Include="Services\DefaultLayerEvaluationService.cs" />
