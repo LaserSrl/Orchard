@@ -72,6 +72,15 @@ namespace Orchard.Core.Contents.Security {
         /// we should not override the permission.
         /// </summary>
         protected virtual bool ConsiderSecurableSetting => false;
+        /// <summary>
+        /// Contains all basic CRUD permissions from the Core.Contents Module.
+        /// </summary>
+        protected static Permission[] BasicCRUDPermissions = {
+            Permissions.CreateContent,
+            Permissions.EditContent,
+            Permissions.PublishContent,
+            Permissions.DeleteContent,
+        };
 
         public void Checking(CheckAccessContext context) {
             // This method updates context.Permissions:

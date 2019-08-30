@@ -6,14 +6,8 @@ using Orchard.Security.Permissions;
 namespace Orchard.Comments.Security {
     public class ManageCommentsPermissionOverrideHandler
         : PermissionOverrideAuthorizationEventHandler<CommentPart> {
-        private static Permission[] replaced = {
-            Core.Contents.Permissions.CreateContent,
-            Core.Contents.Permissions.EditContent,
-            Core.Contents.Permissions.PublishContent,
-            Core.Contents.Permissions.DeleteContent,
-        };
         protected override IEnumerable<Permission> ReplacedPermissions =>
-            replaced;
+            BasicCRUDPermissions;
 
         protected override Permission OverridingPermission =>
             Permissions.ManageComments;

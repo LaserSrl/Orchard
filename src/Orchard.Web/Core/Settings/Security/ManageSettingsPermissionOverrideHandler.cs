@@ -6,14 +6,8 @@ using Orchard.Security.Permissions;
 namespace Orchard.Core.Settings.Security {
     public class ManageSettingsPermissionOverrideHandler
         : PermissionOverrideAuthorizationEventHandler {
-        private static Permission[] replaced = {
-            Core.Contents.Permissions.CreateContent,
-            Core.Contents.Permissions.EditContent,
-            Core.Contents.Permissions.PublishContent,
-            Core.Contents.Permissions.DeleteContent,
-        };
         protected override IEnumerable<Permission> ReplacedPermissions =>
-            replaced;
+            BasicCRUDPermissions;
 
         protected override Permission OverridingPermission =>
             Permissions.ManageSettings;

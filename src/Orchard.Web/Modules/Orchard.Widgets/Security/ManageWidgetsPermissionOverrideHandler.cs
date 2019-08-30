@@ -8,14 +8,8 @@ namespace Orchard.Widgets.Security {
         : PermissionOverrideAuthorizationEventHandler<WidgetPart> {
         // This class is identical to ManageLayersPermissionOverrideHandler
         // because both WidgetPart and LayerPart are protected by the same Permission.
-        private static Permission[] replaced = {
-            Core.Contents.Permissions.CreateContent,
-            Core.Contents.Permissions.EditContent,
-            Core.Contents.Permissions.PublishContent,
-            Core.Contents.Permissions.DeleteContent,
-        };
         protected override IEnumerable<Permission> ReplacedPermissions =>
-            replaced;
+            BasicCRUDPermissions;
 
         protected override Permission OverridingPermission =>
             Permissions.ManageWidgets;
@@ -25,14 +19,8 @@ namespace Orchard.Widgets.Security {
         : PermissionOverrideAuthorizationEventHandler<LayerPart> {
         // This class is identical to ManageWidgetsPermissionOverrideHandler
         // because both WidgetPart and LayerPart are protected by the same Permission.
-        private static Permission[] replaced = {
-            Core.Contents.Permissions.CreateContent,
-            Core.Contents.Permissions.EditContent,
-            Core.Contents.Permissions.PublishContent,
-            Core.Contents.Permissions.DeleteContent,
-        };
         protected override IEnumerable<Permission> ReplacedPermissions =>
-            replaced;
+            BasicCRUDPermissions;
 
         protected override Permission OverridingPermission =>
             Permissions.ManageWidgets;
