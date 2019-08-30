@@ -51,7 +51,7 @@ namespace Orchard.Core.Contents.Security {
         /// result from the base class with base.ShouldOverride(context).</remarks>
         protected virtual bool ShouldOverride(CheckAccessContext context) {
             return ReplacedPermissions.Contains(context.Permission)
-                && (ConsiderSecurableSetting && !ContentIsSecurable(context));
+                && !(ConsiderSecurableSetting && ContentIsSecurable(context));
         }
         /// <summary>
         /// Utility method that verifies whether the ContentType of the ContentItem (if any) in
