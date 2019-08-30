@@ -6,31 +6,34 @@ using Orchard.Security.Permissions;
 namespace Orchard.Blogs.Security {
     public class PublishBlogPostPermissionOverrideHandler
         : PermissionOverrideAuthorizationEventHandler<BlogPostPart> {
+        private static Permission[] replaced = {
+            Core.Contents.Permissions.PublishContent
+        };
         protected override IEnumerable<Permission> ReplacedPermissions =>
-            new List<Permission>() {
-                Core.Contents.Permissions.PublishContent
-            };
+            replaced;
 
         protected override Permission OverridingPermission =>
             Permissions.PublishBlogPost;
     }
     public class EditBlogPostPermissionOverrideHandler
         : PermissionOverrideAuthorizationEventHandler<BlogPostPart> {
+        private static Permission[] replaced = {
+            Core.Contents.Permissions.CreateContent,
+            Core.Contents.Permissions.EditContent
+        };
         protected override IEnumerable<Permission> ReplacedPermissions =>
-            new List<Permission>() {
-                Core.Contents.Permissions.CreateContent,
-                Core.Contents.Permissions.EditContent
-            };
+            replaced;
 
         protected override Permission OverridingPermission =>
             Permissions.EditBlogPost;
     }
     public class DeleteBlogPostPermissionOverrideHandler
         : PermissionOverrideAuthorizationEventHandler<BlogPostPart> {
+        private static Permission[] replaced = {
+            Core.Contents.Permissions.DeleteContent
+        };
         protected override IEnumerable<Permission> ReplacedPermissions =>
-            new List<Permission>() {
-                Core.Contents.Permissions.DeleteContent,
-            };
+            replaced;
 
         protected override Permission OverridingPermission =>
             Permissions.DeleteBlogPost;

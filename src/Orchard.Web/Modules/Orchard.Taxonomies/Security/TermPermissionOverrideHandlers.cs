@@ -12,30 +12,33 @@ namespace Orchard.Taxonomies.Security {
 
     public class CreateTermPermissionOverrideHandler
         : TermPermissionOverrideHandler {
+        private static Permission[] replaced = {
+            Core.Contents.Permissions.CreateContent
+        };
         protected override IEnumerable<Permission> ReplacedPermissions =>
-            new List<Permission> {
-                Orchard.Core.Contents.Permissions.CreateContent
-            };
+            replaced;
 
         protected override Permission OverridingPermission =>
             Permissions.CreateTerm;
     }
     public class EditTermPermissionOverrideHandler
         : TermPermissionOverrideHandler {
+        private static Permission[] replaced = {
+            Core.Contents.Permissions.EditContent
+        };
         protected override IEnumerable<Permission> ReplacedPermissions =>
-            new List<Permission> {
-                Orchard.Core.Contents.Permissions.EditContent
-            };
+            replaced;
 
         protected override Permission OverridingPermission =>
             Permissions.EditTerm;
     }
     public class DeleteTermPermissionOverrideHandler
         : TermPermissionOverrideHandler {
+        private static Permission[] replaced = {
+            Core.Contents.Permissions.DeleteContent,
+        };
         protected override IEnumerable<Permission> ReplacedPermissions =>
-            new List<Permission> {
-                Orchard.Core.Contents.Permissions.DeleteContent
-            };
+            replaced;
 
         protected override Permission OverridingPermission =>
             Permissions.DeleteTerm;

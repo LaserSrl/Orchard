@@ -6,10 +6,11 @@ using Orchard.Taxonomies.Models;
 namespace Orchard.Taxonomies.Security {
     public class ManageTaxonomiesPermissionOverrideHandler
         : PermissionOverrideAuthorizationEventHandler<TaxonomyPart> {
+        private static Permission[] replaced = {
+            Core.Contents.Permissions.DeleteContent
+        };
         protected override IEnumerable<Permission> ReplacedPermissions =>
-            new List<Permission> {
-                Orchard.Core.Contents.Permissions.DeleteContent
-            };
+            replaced;
 
         protected override Permission OverridingPermission =>
             Permissions.ManageTaxonomies;
@@ -17,12 +18,13 @@ namespace Orchard.Taxonomies.Security {
 
     public class CreateTaxonomyPermissionOverrideHandler
         : PermissionOverrideAuthorizationEventHandler<TaxonomyPart> {
+        private static Permission[] replaced = {
+            Core.Contents.Permissions.CreateContent,
+            Core.Contents.Permissions.EditContent,
+            Core.Contents.Permissions.PublishContent
+        };
         protected override IEnumerable<Permission> ReplacedPermissions =>
-            new List<Permission> {
-                Orchard.Core.Contents.Permissions.CreateContent,
-                Orchard.Core.Contents.Permissions.EditContent,
-                Orchard.Core.Contents.Permissions.PublishContent
-            };
+            replaced;
 
         protected override Permission OverridingPermission =>
             Permissions.CreateTaxonomy;
