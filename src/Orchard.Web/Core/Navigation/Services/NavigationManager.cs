@@ -57,10 +57,10 @@ namespace Orchard.Core.Navigation.Services {
             var sources = GetSources(menuName);
             var hasDebugShowAllMenuItems = _authorizationService
                 .TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
-            return FinishMenu(
+            return FinishMenuCached(
                 Reduce(
                     Filter(
-                        Merge(sources)), //MergeCached(sources, menuName)),
+                        MergeCached(sources, menuName)),
                     menuName == "admin",
                     hasDebugShowAllMenuItems).ToArray());
         }
@@ -70,12 +70,12 @@ namespace Orchard.Core.Navigation.Services {
             var hasDebugShowAllMenuItems = _authorizationService
                 .TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
             var keyFragment = KeyFragment(menu);
-            return FinishMenu(
+            return FinishMenuCached(
                 Reduce(
-                    Arrange( //ArrangeCached(
+                    ArrangeCached(
                         Filter(
-                            Merge(sources)) //MergeCached(sources, keyFragment)),
-                        ), //keyFragment),
+                            MergeCached(sources, keyFragment)),
+                        keyFragment),
                     false,
                     hasDebugShowAllMenuItems).ToArray());
         }
@@ -86,10 +86,10 @@ namespace Orchard.Core.Navigation.Services {
             var keyFragment = KeyFragment(menu);
             return Position.GetNext(
                 Reduce(
-                    Arrange( //ArrangeCached(
+                    ArrangeCached(
                         Filter(
-                            Merge(sources)) //MergeCached(sources, keyFragment)),
-                        ), //keyFragment),
+                            MergeCached(sources, keyFragment)),
+                        keyFragment),
                     false,
                     hasDebugShowAllMenuItems).ToArray());
         }
@@ -114,6 +114,50 @@ namespace Orchard.Core.Navigation.Services {
             }
 
             return menuItems;
+        }
+
+        private IEnumerable<MenuItem> FinishMenuCached(ICollection<MenuItem> menuItems) {
+            // This method is not really caching anything, but it's supposed to be used with the
+            // other XCached methods here.
+            foreach (var menuItem in menuItems) {
+                menuItem.Href = GetUrl(menuItem.Url, menuItem.RouteValues);
+                menuItem.Items = FinishMenuCached(menuItem.Items.ToArray());
+            }
+            // we return a deep copy of what we computed. The reason for this is
+            // that methods downstream may modify the items we are passing. If we
+            // passed the references to the objects that we have in cache, those
+            // objects would themselves be modified. This results, at best, in
+            // unexpected UI.
+            return menuItems.Select(mi => CreateCopy(mi));
+        }
+
+        private static MenuItem CreateCopy(MenuItem item) {
+            return new MenuItem {
+                Text = item.Text,
+                IdHint = item.IdHint,
+                Url = item.Url,
+                Href = item.Href,
+                Position = item.Position,
+                LinkToFirstChild = item.LinkToFirstChild,
+                LocalNav = item.LocalNav,
+                Culture = item.Culture,
+                Selected = item.Selected,
+                Level = item.Level,
+                // TODO: is this a deep copy of RouteValues?
+                RouteValues = item.RouteValues == null
+                    ? null
+                    : new RouteValueDictionary(item.RouteValues),
+                // deep copy of items
+                Items = item.Items == null
+                    ? null
+                    : item.Items.Select(mi => CreateCopy(mi)).ToArray(),
+                Permissions = item.Permissions,
+                Content = item.Content,
+                // deep copy of classes
+                Classes = item.Classes == null
+                    ? null
+                    : new List<string>(item.Classes)
+            };
         }
 
         private IEnumerable<MenuItem> Filter(IEnumerable<MenuItem> menuItems) {
