@@ -12,8 +12,6 @@ using Orchard.UI;
 using Orchard.UI.Navigation;
 using Orchard.Utility;
 using Orchard.Exceptions;
-using Orchard.Caching;
-using Orchard.UI.Admin;
 
 namespace Orchard.Core.Navigation.Services {
     public class NavigationManager : INavigationManager {
@@ -24,8 +22,6 @@ namespace Orchard.Core.Navigation.Services {
         private readonly UrlHelper _urlHelper;
         private readonly IOrchardServices _orchardServices;
         private readonly ShellSettings _shellSettings;
-        private readonly ICacheManager _cacheManager;
-        private readonly ISignals _signals;
 
         public NavigationManager(
             IEnumerable<INavigationProvider> navigationProviders, 
@@ -34,10 +30,7 @@ namespace Orchard.Core.Navigation.Services {
             IEnumerable<INavigationFilter> navigationFilters,
             UrlHelper urlHelper, 
             IOrchardServices orchardServices,
-            ShellSettings shellSettings,
-            ICacheManager cacheManager,
-            ISignals signals) {
-
+            ShellSettings shellSettings) {
             _navigationProviders = navigationProviders;
             _menuProviders = menuProviders;
             _authorizationService = authorizationService;
@@ -45,9 +38,6 @@ namespace Orchard.Core.Navigation.Services {
             _urlHelper = urlHelper;
             _orchardServices = orchardServices;
             _shellSettings = shellSettings;
-            _cacheManager = cacheManager;
-            _signals = signals;
-
             Logger = NullLogger.Instance;
         }
 
@@ -55,52 +45,20 @@ namespace Orchard.Core.Navigation.Services {
 
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
             var sources = GetSources(menuName);
-            var hasDebugShowAllMenuItems = _authorizationService
-                .TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
-            return FinishMenuCached(
-                Reduce(
-                    Filter(
-                        MergeCached(sources, menuName)),
-                    menuName == "admin",
-                    hasDebugShowAllMenuItems).ToArray());
+            var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
+            return FinishMenu(Reduce(Filter(Merge(sources)), menuName == "admin", hasDebugShowAllMenuItems).ToArray());
         }
 
         public IEnumerable<MenuItem> BuildMenu(IContent menu) {
             var sources = GetSources(menu);
-            var hasDebugShowAllMenuItems = _authorizationService
-                .TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
-            var keyFragment = KeyFragment(menu);
-            return FinishMenuCached(
-                Reduce(
-                    ArrangeCached(
-                        Filter(
-                            MergeCached(sources, keyFragment)),
-                        keyFragment),
-                    false,
-                    hasDebugShowAllMenuItems).ToArray());
+            var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
+            return FinishMenu(Reduce(Arrange(Filter(Merge(sources))), false, hasDebugShowAllMenuItems).ToArray());
         }
 
         public string GetNextPosition(IContent menu) {
             var sources = GetSources(menu);
             var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
-            var keyFragment = KeyFragment(menu);
-            return Position.GetNext(
-                Reduce(
-                    ArrangeCached(
-                        Filter(
-                            MergeCached(sources, keyFragment)),
-                        keyFragment),
-                    false,
-                    hasDebugShowAllMenuItems).ToArray());
-        }
-
-        private string KeyFragment(IContent menu) {
-            var fragment = "menu";
-            if (menu.ContentItem.ContentManager!=null) {
-                fragment += "_" + menu.ContentItem.ContentManager.GetItemMetadata(menu).DisplayText;
-            }
-            fragment += "_" + menu.Id;
-            return fragment;
+            return Position.GetNext(Reduce(Arrange(Filter(Merge(sources))), false, hasDebugShowAllMenuItems).ToArray());
         }
 
         public IEnumerable<string> BuildImageSets(string menuName) {
@@ -114,50 +72,6 @@ namespace Orchard.Core.Navigation.Services {
             }
 
             return menuItems;
-        }
-
-        private IEnumerable<MenuItem> FinishMenuCached(ICollection<MenuItem> menuItems) {
-            // This method is not really caching anything, but it's supposed to be used with the
-            // other XCached methods here.
-            foreach (var menuItem in menuItems) {
-                menuItem.Href = GetUrl(menuItem.Url, menuItem.RouteValues);
-                menuItem.Items = FinishMenuCached(menuItem.Items.ToArray());
-            }
-            // we return a deep copy of what we computed. The reason for this is
-            // that methods downstream may modify the items we are passing. If we
-            // passed the references to the objects that we have in cache, those
-            // objects would themselves be modified. This results, at best, in
-            // unexpected UI.
-            return menuItems.Select(mi => CreateCopy(mi));
-        }
-
-        private static MenuItem CreateCopy(MenuItem item) {
-            return new MenuItem {
-                Text = item.Text,
-                IdHint = item.IdHint,
-                Url = item.Url,
-                Href = item.Href,
-                Position = item.Position,
-                LinkToFirstChild = item.LinkToFirstChild,
-                LocalNav = item.LocalNav,
-                Culture = item.Culture,
-                Selected = item.Selected,
-                Level = item.Level,
-                // TODO: is this a deep copy of RouteValues?
-                RouteValues = item.RouteValues == null
-                    ? null
-                    : new RouteValueDictionary(item.RouteValues),
-                // deep copy of items
-                Items = item.Items == null
-                    ? null
-                    : item.Items.Select(mi => CreateCopy(mi)).ToArray(),
-                Permissions = item.Permissions,
-                Content = item.Content,
-                // deep copy of classes
-                Classes = item.Classes == null
-                    ? null
-                    : new List<string>(item.Classes)
-            };
         }
 
         private IEnumerable<MenuItem> Filter(IEnumerable<MenuItem> menuItems) {
@@ -292,38 +206,6 @@ namespace Orchard.Core.Navigation.Services {
             }
         }
 
-        private bool? _adminFilterIsApplied;
-        private bool AdminFilterIsApplied {
-            get {
-                // compute this only once per request
-                if (!_adminFilterIsApplied.HasValue) {
-                    _adminFilterIsApplied = AdminFilter.IsApplied(
-                        _orchardServices.WorkContext.HttpContext.Request.RequestContext);
-                }
-                return _adminFilterIsApplied.Value;
-            }
-        }
-
-        private IEnumerable<MenuItem> MergeCached(IEnumerable<IEnumerable<MenuItem>> sources, string keyFragment) {
-            // this method simply caches the results of the static Merge method
-            // so we can avoid calling it as often.
-            // The big "cost" associated to those methods comes from having to actually enumerate
-            // the collections, so we should generate a cache key without doing that.
-            // We don't cache admin side stuff, even though it would be nice to, because
-            // right now it would be too complex to make sure that cache gets eveicted all
-            // the times it should
-            if (AdminFilterIsApplied) {
-                return Merge(sources);
-            }
-            var cacheKey = $"Orchard.Core.Navigation.Services.NavigationManager.MergeCached_{keyFragment}";
-            return _cacheManager.Get(cacheKey, true, ctx => {
-
-                ctx.Monitor(_signals.When("Orchard.Core.Navigation.MenusUpdated"));
-
-                return Merge(sources);
-            });
-        }
-
         private static IEnumerable<MenuItem> Merge(IEnumerable<IEnumerable<MenuItem>> sources) {
             var comparer = new MenuItemComparer();
             var orderer = new FlatPositionComparer();
@@ -337,26 +219,6 @@ namespace Orchard.Core.Navigation.Services {
                 .OrderBy(positionGroup => positionGroup.Key, orderer)
                 // ordered by item text in the postion group
                 .SelectMany(positionGroup => positionGroup.OrderBy(item => item.Text == null ? "" : item.Text.TextHint));
-        }
-
-        private IEnumerable<MenuItem> ArrangeCached(IEnumerable<MenuItem> items, string keyFragment) {
-            // this method simply caches the results of the static Arrange method
-            // so we can avoid calling it as often.
-            // The big "cost" associated to those methods comes from having to actually enumerate
-            // the collections, so we should generate a cache key without doing that. 
-            // We don't cache admin side stuff, even though it would be nice to, because
-            // right now it would be too complex to make sure that cache gets eveicted all
-            // the times it should
-            if (AdminFilterIsApplied) {
-                return Arrange(items);
-            }
-            var cacheKey = $"Orchard.Core.Navigation.Services.NavigationManager.ArrangeCached_{keyFragment}";
-            return _cacheManager.Get(cacheKey, true, ctx => {
-
-                ctx.Monitor(_signals.When("Orchard.Core.Navigation.MenusUpdated"));
-
-                return Arrange(items);
-            });
         }
 
         /// <summary>
