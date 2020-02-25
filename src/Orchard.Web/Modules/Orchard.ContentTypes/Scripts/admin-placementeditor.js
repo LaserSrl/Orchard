@@ -117,6 +117,9 @@
     $("#placement").on("click", ".delete", function (e) {
         var me = $(this);
         var parent = me.parent(".zone-container");
+        if (!parent.length) {
+            parent = me.parents(".zone-container");
+        }
         var list, newList;
         if (parent.hasClass("tab-container")) {
             list = parent.children(".tabdrag").html();
