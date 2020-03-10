@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using Autofac;
 
 namespace Orchard.Localization {
@@ -13,7 +14,12 @@ namespace Orchard.Localization {
         }
 
         public static Localizer Resolve(IComponentContext context, string scope) {
-            var text = context.Resolve<IText>(new NamedParameter("scope", scope));
+            var text = context.Resolve<IText>(new NamedParameter("scope", new List<string> { scope }));
+            return text.Get;
+        }
+
+        public static Localizer Resolve(IComponentContext context, IEnumerable<string> scopes) {
+            var text = context.Resolve<IText>(new NamedParameter("scopes", scopes));
             return text.Get;
         }
     }
