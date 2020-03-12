@@ -65,7 +65,7 @@ namespace Orchard.Localization.Services {
             foreach (var scope in scopes) {
                 string parent_text = GetParentTranslation(scope, text, cultureName);
                 if (!parent_text.Equals(text)) {
-                    new Tuple<string, string>(parent_text, scope);
+                    return new Tuple<string, string>(parent_text, scope);
                 }
             }
             return new Tuple<string, string>(text, scopes.FirstOrDefault());
