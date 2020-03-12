@@ -49,7 +49,7 @@ namespace Orchard.Localization.Services {
         ILogger Logger { get; set; }
         public bool DisableMonitoring { get; set; }
 
-        public Tuple<string,string> GetLocalizedString(IEnumerable<string> scopes, string text, string cultureName) {
+        public Tuple<string, string> GetLocalizedString(IEnumerable<string> scopes, string text, string cultureName) {
             var culture = LoadCulture(cultureName);
             foreach (var scope in scopes) {
                 string scopedKey = (scope + "|" + text).ToLowerInvariant();
@@ -59,11 +59,16 @@ namespace Orchard.Localization.Services {
             }
             string genericKey = ("|" + text).ToLowerInvariant();
             if (culture.Translations.ContainsKey(genericKey)) {
-                return new Tuple<string,string>(culture.Translations[genericKey], null);
+                return new Tuple<string, string>(culture.Translations[genericKey], null);
             }
 
-            return new Tuple<string, string>(GetParentTranslation(scopes.FirstOrDefault(), text, cultureName), scopes.FirstOrDefault());
-
+            foreach (var scope in scopes) {
+                string parent_text = GetParentTranslation(scope, text, cultureName);
+                if (!parent_text.Equals(text)) {
+                    new Tuple<string, string>(parent_text, scope);
+                }
+            }
+            return new Tuple<string, string>(text, scopes.FirstOrDefault());
         }
 
         // This will translate a string into a string in the target cultureName.
@@ -72,22 +77,6 @@ namespace Orchard.Localization.Services {
         // If the culture doesn't have a translation for the string, it will fallback to the 
         // parent culture as defined in the .net culture hierarchy. e.g. fr-FR will fallback to fr.
         // In case it's not found anywhere, the text is returned as is.
-        //public string GetLocalizedString(string scope, string text, string cultureName) {
-        //    var culture = LoadCulture(cultureName);
-
-        //    string scopedKey = (scope + "|" + text).ToLowerInvariant();
-        //    if (culture.Translations.ContainsKey(scopedKey)) {
-        //        return culture.Translations[scopedKey];
-        //    }
-
-        //    string genericKey = ("|" + text).ToLowerInvariant();
-        //    if (culture.Translations.ContainsKey(genericKey)) {
-        //        return culture.Translations[genericKey];
-        //    }
-
-        //    return GetParentTranslation(scope, text, cultureName);
-        //}
-
         private string GetParentTranslation(string scope, string text, string cultureName) {
             string scopedKey = (scope + "|" + text).ToLowerInvariant();
             string genericKey = ("|" + text).ToLowerInvariant();

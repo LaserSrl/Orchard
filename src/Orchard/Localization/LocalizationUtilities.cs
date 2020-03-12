@@ -5,12 +5,12 @@ using Autofac;
 namespace Orchard.Localization {
     public class LocalizationUtilities {
         public static Localizer Resolve(WorkContext workContext, string scope) {
-            return workContext == null ? NullLocalizer.Instance : Resolve(workContext.Resolve<ILifetimeScope>(), scope);
+            return workContext == null ? NullLocalizer.Instance : Resolve(workContext.Resolve<ILifetimeScope>(), new List<string> { scope });
         }
 
         public static Localizer Resolve(ControllerContext controllerContext, string scope) {
             var workContext = controllerContext.GetWorkContext();
-            return Resolve(workContext, scope);
+            return Resolve(workContext,  scope );
         }
 
         public static Localizer Resolve(IComponentContext context, string scope) {

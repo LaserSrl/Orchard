@@ -25,29 +25,20 @@ namespace Orchard.Localization {
             if (userProperty != null) {
                 List<string> scopes = new List<string>();
                 var type = registration.Activator.LimitType;
-                while (type != typeof(System.Object)) {//TODO: System.*
+                while (!type.Namespace.Equals("System")) {
                     scopes.Add(type.FullName);
                     type = type.BaseType;
                 }
 
-                //if (scopes.Count == 1) {
-                //    registration.Activated += (sender, e) => {
-                //        if (e.Instance.GetType().FullName != scopes.First()) {
-                //            return;
-                //        }
-                //        var localizer = _localizerCache.GetOrAdd(scopes.First(), key => LocalizationUtilities.Resolve(e.Context, scopes.First()));
-                //        userProperty.SetValue(e.Instance, localizer, null);
-                //    };
-                //}
-                //else {
+                foreach(var scope in scopes) {
                     registration.Activated += (sender, e) => {
-                        //if (e.Instance.GetType().FullName != scopes) { //todo: verificare correttezza controllo
-                        //    return;
-                        //}
-                        var localizer = _localizerCache.GetOrAdd(scopes.First(), key => LocalizationUtilities.Resolve(e.Context, scopes));
+                        if (e.Instance.GetType().FullName != scope) {
+                            return;
+                        }
+                        var localizer = _localizerCache.GetOrAdd(scope, key => LocalizationUtilities.Resolve(e.Context, scopes));
                         userProperty.SetValue(e.Instance, localizer, null);
                     };
-                //}
+                }
             }
         }
 
