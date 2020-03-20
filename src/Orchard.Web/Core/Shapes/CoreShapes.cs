@@ -746,6 +746,8 @@ namespace Orchard.Core.Shapes {
 
                 if (item is IShape) {
                     item.Tag = itemTag;
+                    item.ShapeIndex = index;
+                    item.ShapeCount = count;
                 }
 
                 var itemOutput = Display(item).ToHtmlString();
