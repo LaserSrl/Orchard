@@ -80,6 +80,7 @@ namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
             }
         }
 
+        /* elena: creata una nuova GetItemMetadata per la localization per estrarre il blogid dal masteridentity
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
             var blogPost = context.ContentItem;
             if (blogPost.As<BlogPostPart>() == null) {
@@ -97,6 +98,9 @@ namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
                 if (commonPart != null &&
                     commonPart.Record.Container != null) {
                     blogId = commonPart.Record.Container.Id;
+                    if (commonPart.Container == null) {
+                        commonPart.Container = _contentManager.Get(blogId, VersionOptions.Latest);
+                    }
                 }
             }
 
@@ -131,5 +135,6 @@ namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
                 {"blogId", blogId}
             };
         }
+        */
     }
 }

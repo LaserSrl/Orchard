@@ -3,6 +3,8 @@ using Orchard.Blogs.Extensions;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Feeds;
+using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Common.Models;
 
 namespace Orchard.Blogs.Drivers {
     public class BlogPostPartDriver : ContentPartDriver<BlogPostPart> {
@@ -22,5 +24,16 @@ namespace Orchard.Blogs.Drivers {
 
             return null;
         }
+        /* elena : sovrascrittura dell'exporting per aggiornare il container
+        protected override void Exporting(BlogPostPart part, ExportContentContext context) {
+            base.Exporting(part, context);
+
+            if (part.ContentItem.As<CommonPart>()?.Container == null) {
+                var contentCommon = _contentManager.Get(part.As<CommonPart>().Record.Container.Id, VersionOptions.Latest);
+                var containerIdentity = _contentManager.GetItemMetadata(contentCommon).Identity;
+                context.Element(part.As<CommonPart>().PartDefinition.Name).SetAttributeValue("Container", containerIdentity.ToString());
+            }
+        }
+        */
     }
 }
