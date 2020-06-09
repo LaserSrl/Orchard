@@ -36,7 +36,7 @@ namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
             OnPublishing<BlogPostPart>((context, part) => MigrateBlogPost(context.ContentItem));
         }
 
-        public INotifier Notifier {get;set;}
+        public INotifier Notifier { get; set; }
 
         public Localizer T { get; set; }
 
@@ -46,7 +46,7 @@ namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
                 return;
             }
             //bolgPost just cloned for translation, never saved
-            if(blogPost.As<CommonPart>().Container == null) {
+            if (blogPost.As<CommonPart>().Container == null) {
                 return;
             }
             var blog = _contentManager.Get(blogPost.As<CommonPart>().Container.Id);
@@ -64,7 +64,7 @@ namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
                 var blogids = new HashSet<int> { blog.As<BlogPart>().ContentItem.Id };
 
                 //seek for same culture blog
-                var realBlog = _localizationService.GetLocalizations(blog).SingleOrDefault(w=>w.As<LocalizationPart>().Culture == blogPostCulture);
+                var realBlog = _localizationService.GetLocalizations(blog).SingleOrDefault(w => w.As<LocalizationPart>().Culture == blogPostCulture);
                 if (realBlog.Has<LocalizationPart>() && realBlog.As<LocalizationPart>().Culture.Id == blogPostCulture.Id) {
                     blogPost.As<ICommonPart>().Container = realBlog;
                     if (blogPost.Has<AutoroutePart>()) {
@@ -78,6 +78,58 @@ namespace Orchard.Blogs.BlogsLocalizationExtensions.Handlers {
 
                 return;
             }
+        }
+
+        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+            var blogPost = context.ContentItem;
+            if (blogPost.As<BlogPostPart>() == null) {
+                return;
+            }
+
+            if (blogPost.As<LocalizationPart>() == null) {
+                return;
+            }
+
+            int blogId = 0;
+            var masterIdentity = blogPost.As<LocalizationPart>().MasterContentItem;
+            if (masterIdentity != null) {
+                var commonPart = masterIdentity.As<CommonPart>();
+                if (commonPart != null &&
+                    commonPart.Record.Container != null) {
+                    blogId = commonPart.Record.Container.Id;
+                }
+            }
+
+            if (blogId == 0) {
+                context.Metadata.CreateRouteValues = new RouteValueDictionary {
+                    {"Area", "Orchard.Blogs"},
+                    {"Controller", "BlogPostAdmin"},
+                    {"Action", "CreateWithoutBlog"}
+                };
+
+                return;
+            }
+
+            context.Metadata.CreateRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Blogs"},
+                {"Controller", "BlogPostAdmin"},
+                {"Action", "Create"},
+                {"blogId", blogId}
+            };
+            context.Metadata.EditorRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Blogs"},
+                {"Controller", "BlogPostAdmin"},
+                {"Action", "Edit"},
+                {"postId", context.ContentItem.Id},
+                {"blogId", blogId}
+            };
+            context.Metadata.RemoveRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Blogs"},
+                {"Controller", "BlogPostAdmin"},
+                {"Action", "Delete"},
+                {"postId", context.ContentItem.Id},
+                {"blogId", blogId}
+            };
         }
     }
 }

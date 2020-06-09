@@ -11,12 +11,17 @@ namespace Orchard.Blogs.Handlers {
     public class BlogPostPartHandler : ContentHandler {
         private readonly IAuthorizationService _authorizationService;
         private readonly IBlogService _blogService;
+        private readonly IBlogPostService _blogPostService;
         private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IContentManager _contentManager;
 
-        public BlogPostPartHandler(IAuthorizationService authorizationService, IBlogService blogService, IBlogPostService blogPostService, RequestContext requestContext, IWorkContextAccessor workContextAccessor) {
+
+        public BlogPostPartHandler(IAuthorizationService authorizationService, IBlogService blogService, IBlogPostService blogPostService, RequestContext requestContext, IWorkContextAccessor workContextAccessor, IContentManager contentManager) {
             _authorizationService = authorizationService;
             _blogService = blogService;
             _workContextAccessor = workContextAccessor;
+            _blogPostService = blogPostService;
+            _contentManager = contentManager;
 
             OnGetDisplayShape<BlogPostPart>(SetModelProperties);
             OnGetEditorShape<BlogPostPart>(SetModelProperties);
@@ -38,6 +43,10 @@ namespace Orchard.Blogs.Handlers {
             CommonPart commonPart = blogPostPart.As<CommonPart>();
             if (commonPart != null &&
                 commonPart.Record.Container != null) {
+
+                if (commonPart.Container == null) {
+                    commonPart.Container = _contentManager.Get(commonPart.Record.Container.Id, VersionOptions.Latest);
+                }
 
                 _blogService.ProcessBlogPostsCount(commonPart.Container.Id);
             }
@@ -64,6 +73,17 @@ namespace Orchard.Blogs.Handlers {
                 }
             } else {
                 blogId = blogPost.BlogPart.Id;
+            }
+
+            if (blogId == 0) {
+                var commonPart = context.ContentItem.As<CommonPart>();
+                if (commonPart != null &&
+                    commonPart.Record.Container!=null) {
+                    blogId = commonPart.Record.Container.Id;
+                    if (commonPart.Container == null) { 
+                        commonPart.Container = _contentManager.Get(blogId, VersionOptions.Latest);
+                    }
+                }
             }
 
             if (blogId == 0) {
