@@ -72,13 +72,10 @@ namespace Orchard.CustomForms.Controllers {
             var customForm = form.As<CustomFormPart>();
 
             // Retrieve the id of the content to edit
-            int contentId = 0;
             var queryString = Services.WorkContext.HttpContext.Request.QueryString;
 
-            if (queryString.AllKeys.Contains("contentId")) {
-                int.TryParse(queryString["contentId"], out contentId);
-            }
-
+            int.TryParse(queryString["contentId"], out int contentId);
+            
             ContentItem contentItem;
             if (contentId > 0) {
                 contentItem = _contentManager.Get(contentId,VersionOptions.Latest);
@@ -103,11 +100,15 @@ namespace Orchard.CustomForms.Controllers {
                 return new HttpUnauthorizedResult();
 
             var model = _contentManager.BuildEditor(contentItem);
-
+            var routeValues = _contentManager.GetItemMetadata(form).DisplayRouteValues;
+            if (contentId > 0) {
+                routeValues.Add("contentId", contentId);
+            }
+          
             model
                 .ContentItem(form)
                 .ContentId(contentId)
-                .ReturnUrl(Url.RouteUrl(_contentManager.GetItemMetadata(form).DisplayRouteValues));
+                .ReturnUrl(Url.RouteUrl(routeValues));
 
             return View(model);
         }
@@ -183,8 +184,15 @@ namespace Orchard.CustomForms.Controllers {
                         return this.RedirectLocal(returnUrl);
                     }
                 }
+                var routeValues = _contentManager.GetItemMetadata(form).DisplayRouteValues;
+                if (contentId > 0) {
+                    routeValues.Add("contentId", contentId);
+                }
 
-                model.ContentItem(form);
+                model
+                    .ContentItem(form)
+                    .ContentId(contentId)
+                    .ReturnUrl(Url.RouteUrl(routeValues));
                 return View(model);
             }
 
