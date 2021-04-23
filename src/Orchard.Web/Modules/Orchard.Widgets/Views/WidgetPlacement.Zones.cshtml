@@ -28,7 +28,7 @@
                     foreach (WidgetPart widget in widgets.Where(w => w.Zone == zone).OrderBy(w => w.Position, new Orchard.UI.FlatPositionComparer())) {
                         <li class="widgets-@(widget.LayerId == Model.CurrentLayer.Id ? "this" : "other")-layer widgets-layer-@widget.LayerId@(i == 0 ? " first" : (i == count ? " last" : ""))">
                             @using (Html.BeginFormAntiForgeryPost()) {
-                                var contentLocalization = (widget.ContentItem.As<LocalizationPart>() != null && widget.ContentItem.As<LocalizationPart>().Culture != null) ? " (" + widget.ContentItem.As<LocalizationPart>().Culture.Culture + ")" : string.Empty;
+                                var contentLocalization = (widget.ContentItem.As<LocalizationPart>() != null && widget.ContentItem.As<LocalizationPart>().Culture != null) ? " (" + widget.ContentItem.As<LocalizationPart>().Culture.Culture + ")" : string.Empty;	
                                 <h3>@Html.ActionLink((HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName) + contentLocalization, "EditWidget", new { @widget.Id, returnUrl })</h3><div class="contentType"> - @widget.TypeDefinition.DisplayName</div>
                                 <div class="widgets-actions">
                                     @if (widget.HasPublished()) {
