@@ -29,6 +29,7 @@ using Orchard.Utility.Extensions;
 namespace Orchard.OutputCache.Filters {
     public class OutputCacheFilter : FilterProvider, IActionFilter, IResultFilter, IDisposable {
         private const string REQUEST_VERIFICATION_TOKEN_BEACON_TAG = "<$request-verification-token-beacon-for-hidden-field />";
+        private const string REQUEST_VERIFICATION_TOKEN_INVARIANT_TAG = "<input name=\"__RequestVerificationToken\"";
         private static string _refreshKey = "__r";
         private static long _epoch = new DateTime(2014, DateTimeKind.Utc).Ticks;
 
@@ -615,17 +616,21 @@ namespace Orchard.OutputCache.Filters {
             // Because of the __RequestVerificationToken hidden field vary by the user, before caching the output, we need to replace the 
             // __RequestVerificationToken hidden field with a "beacon" text that will be replaced before rendering the page
             // with a fresh new __RequestVerificationToken hidden field.
-            // What we do is to replace every <input name="__RequestVerificationToken " value="{the-value}" /> with
+            // What we do is to replace every <input name="__RequestVerificationToken" value="{the-value}" /> with
             //                                <$request-verification-token-beacon-for-hidden-field />
             if (PreventCachingRequestVerificationToken()) {
-                string patternRegion = "<\\s*input\\s*.*name\\s*=\\s*\"__RequestVerificationToken\"\\s*.*value\\s*=\\s*\"" +
-                                       "(?<value>[\\w-]*)" +
-                                       "\"\\s*/>";
-                RegexOptions regexOptions = RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled;
-                Regex reg = new Regex(patternRegion, regexOptions);
                 var outputString = encoding.GetString(source);
-                var resultString = reg.Replace(outputString, REQUEST_VERIFICATION_TOKEN_BEACON_TAG);
-                return encoding.GetBytes(resultString);
+                var resultString = new StringBuilder();
+                var startIndex = 0;
+                var verificationTokenTagStartIndex = outputString.IndexOf(REQUEST_VERIFICATION_TOKEN_INVARIANT_TAG, startIndex); //searches in the outputString first byte of RequestVerificationToken input tag
+                while (verificationTokenTagStartIndex >= 0) {
+                    resultString.Append(outputString.Substring(startIndex, verificationTokenTagStartIndex - startIndex)); //appends to resultString the text before RequestVerificationToken input tag
+                    resultString.Append(REQUEST_VERIFICATION_TOKEN_BEACON_TAG); //appends the beacon placeholder tag
+                    startIndex = outputString.IndexOf("/>", verificationTokenTagStartIndex) + 2; // set the new starting index after the replaced RequestVerificationToken input tag
+                    verificationTokenTagStartIndex = outputString.IndexOf(REQUEST_VERIFICATION_TOKEN_INVARIANT_TAG, startIndex);// searches in the outputString next first byte of RequestVerificationToken input tag
+                }
+                resultString.Append(outputString.Substring(startIndex)); // completes the resultString appending the remaining characters
+                return encoding.GetBytes(resultString.ToString());
             }
             return source;
         }
