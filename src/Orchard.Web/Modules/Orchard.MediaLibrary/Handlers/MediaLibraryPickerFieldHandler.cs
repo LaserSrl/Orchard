@@ -37,9 +37,7 @@ namespace Orchard.MediaLibrary.Handlers {
 
             foreach (var field in fields) {
                 var localField = field;
-                localField._contentItems = localField.Ids.Count() == 1
-                    ? new Lazy<IEnumerable<MediaPart>>(() => new List<MediaPart> { _contentManager.Get<MediaPart>(localField.Ids[0], VersionOptions.Published, QueryHints.Empty) })
-                    : new Lazy<IEnumerable<MediaPart>>(() => _contentManager.GetMany<MediaPart>(localField.Ids, VersionOptions.Published, QueryHints.Empty).ToList());
+                localField._contentItems = new Lazy<IEnumerable<MediaPart>>(() => _contentManager.GetMany<MediaPart>(localField.Ids, VersionOptions.Published, QueryHints.Empty).ToList());
             }
         }
     }

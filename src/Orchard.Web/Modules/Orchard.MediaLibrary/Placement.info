@@ -103,7 +103,7 @@
     </Match>
 
     <Match DisplayType="Summary">
-        <Place Fields_MediaLibraryPicker_Summary="Content:after"/>
+        <Place Fields_MediaLibraryPicker_Summary="-"/>
     </Match>
 
     <Match DisplayType="SummaryAdmin">
