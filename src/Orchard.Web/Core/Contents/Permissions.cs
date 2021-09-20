@@ -19,7 +19,6 @@ namespace Orchard.Core.Contents {
         public static readonly Permission ViewOwnContent = new Permission { Description = "View own content", Name = "ViewOwnContent", ImpliedBy = new[] { ViewContent } };
         public static readonly Permission PreviewContent = new Permission { Description = "Preview content", Name = "PreviewContent", ImpliedBy = new[] { EditContent, PublishContent } };
         public static readonly Permission PreviewOwnContent = new Permission { Description = "Preview own content", Name = "PreviewOwnContent", ImpliedBy = new[] { PreviewContent } };
-        public static readonly Permission EditContentWrapper = new Permission { Description = "Edit Content Wrapper in front-end", Name = "EditContentWrapper" };
 
 
         public static readonly Permission MetaListContent = new Permission { ImpliedBy = new[] { EditOwnContent, PublishOwnContent, DeleteOwnContent } };
@@ -38,8 +37,7 @@ namespace Orchard.Core.Contents {
                 ViewOwnContent,
                 PreviewOwnContent,
                 PreviewContent,
-                CreateContent,
-                EditContentWrapper
+                CreateContent
             };
         }
 
@@ -47,7 +45,7 @@ namespace Orchard.Core.Contents {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] {PublishContent,EditContent,DeleteContent,PreviewContent, CreateContent, EditContentWrapper }
+                    Permissions = new[] {PublishContent,EditContent,DeleteContent,PreviewContent, CreateContent }
                 },
                 new PermissionStereotype {
                     Name = "Editor",
