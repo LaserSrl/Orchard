@@ -33,7 +33,7 @@ namespace Orchard.OutputCache.Filters {
         }
 
         public void KeyGenerated(StringBuilder key) {
-            IEnumerable<UserPermission> userRolesPermissions = new List<UserPermission>();
+            List<UserPermission> userRolesPermissions = new List<UserPermission>();
             IQueryable<UserPermission> userRolesPermissionsQuery = Enumerable.Empty<UserPermission>().AsQueryable();
             IQueryable<UserPermission> permissionsQuery = Enumerable.Empty<UserPermission>().AsQueryable();
 
@@ -54,8 +54,7 @@ namespace Orchard.OutputCache.Filters {
                           r => r.Id,
                           (ur, r) => r
                       )
-                      .Select(urp=>new UserPermission { RoleName = urp.Name })
-                      .OrderBy(urp=>urp.RoleName);
+                      .Select(urp=>new UserPermission { RoleName = urp.Name });
                 } else {
                     userRolesPermissionsQuery = _userRolesRepo
                         // get user roles and permissions
@@ -84,28 +83,37 @@ namespace Orchard.OutputCache.Filters {
                             rp => rp.Permission.Id,
                             p => p.Id,
                             (rp, p) => new UserPermission { RoleName = rp.Role.Name, PermissionName = p.FeatureName + "." + p.Name }
-                        )
-                        .OrderBy(urp=>urp.RoleName)
-                        .ThenBy(urp=>urp.PermissionName);
+                        );
                 }
             } else {
                 // the anonymous user has no roles, get its permissions
                 permissionsQuery = GetPermissioFromRole("Anonymous");
             }
 
-            if (userRolesPermissionsQuery.Any() || permissionsQuery.Any()) {
-                userRolesPermissions = userRolesPermissionsQuery.ToList()
-                    .Union(permissionsQuery.ToList());
+            if (userRolesPermissionsQuery.Any()) {
+                userRolesPermissions.AddRange(userRolesPermissionsQuery
+                    .OrderBy(urp => urp.RoleName)
+                    .ThenBy(urp => urp.PermissionName)
+                    .ToList());
+            }
+            if (permissionsQuery.Any()) {
+                userRolesPermissions.AddRange(permissionsQuery
+                    .OrderBy(urp => urp.RoleName)
+                    .ThenBy(urp => urp.PermissionName)
+                    .ToList());
+            }
+
+            if (userRolesPermissions.Any()) {
                 
                 var userRoles = String.Join(";", userRolesPermissions
-                    .OrderBy(r=>r.RoleName)
                     .Select(r => r.RoleName)
-                    .Distinct());
+                    .Distinct()
+                    .OrderBy(s => s));
 
                 var userPermissions = String.Join(";", userRolesPermissions
-                    .OrderBy(p=>p.PermissionName)
                     .Select(p => p.PermissionName)
-                    .Distinct());
+                    .Distinct() // permissions may be duplicate: two different roles may give the same permission
+                    .OrderBy(s => s));
 
 
                 key.Append(string.Format("UserRoles={0};UserPermissions={1};",
@@ -130,8 +138,7 @@ namespace Orchard.OutputCache.Filters {
                     rp => rp.Permission.Id,
                     p => p.Id,
                     (rp, p) => new UserPermission { RoleName = rp.Role.Name, PermissionName = p.FeatureName + "." + p.Name }
-                )
-                .OrderBy(rp => rp.PermissionName);
+                );
         }
     }
     public class UserPermission {
