@@ -432,6 +432,7 @@ namespace Orchard.Users.Controllers {
             if (!ValidatePassword(newPassword, confirmPassword, user)) {
                 return View();
             }
+
             _userEventHandler.ChangingPassword(user, newPassword);
 
             _membershipService.SetPassword(user, newPassword);
@@ -493,13 +494,11 @@ namespace Orchard.Users.Controllers {
                 ModelState.AddModelError("newPassword", T("The new password must be different from the current password."));
             }
 
-            ValidatePassword(newPassword, user);
-
-            if (!string.Equals(newPassword, confirmPassword, StringComparison.Ordinal)) {
-                ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
+            if (!ModelState.IsValid) {
+                return false;
             }
 
-            return ValidatePassword(newPassword, confirmPassword);
+            return ValidatePassword(newPassword, confirmPassword, user);
         }
 
         private IUser ValidateLogOn(string userNameOrEmail, string password) {
@@ -591,7 +590,7 @@ namespace Orchard.Users.Controllers {
             return ModelState.IsValid;
         }
 
-        private void ValidatePassword(string password, IUser user) {
+        private bool ValidatePassword(string password, IUser user) {
             var context = new AccountValidationContext {
                 Password = password,
                 User = user
