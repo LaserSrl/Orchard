@@ -6,6 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using NHibernate;
+using NHibernate.Engine;
+using NHibernate.Hql;
+using NHibernate.Hql.Ast.ANTLR;
 using NHibernate.Transform;
 using Orchard.ContentManagement.Records;
 using Orchard.Data.Providers;
@@ -208,12 +211,20 @@ namespace Orchard.ContentManagement {
 
         public int Count() {
             ApplyHqlVersionOptionsRestrictions(_versionOptions);
-            var hql = ToHql(true);
-            hql = "select count(Id) from Orchard.ContentManagement.Records.ContentItemVersionRecord where Id in ( " + hql + " )";
-            return Convert.ToInt32(_session.CreateQuery(hql)
-                           .SetCacheable(true)
-                           .UniqueResult())
-                ;
+            var sql = ToSql(true);
+            sql = "SELECT count(*) as totalCount from (" + sql + ") t";
+            return Convert.ToInt32(_session.CreateSQLQuery(sql)
+                    .AddScalar("totalCount", NHibernateUtil.Int32)
+                    .SetCacheable(true) // TODO: check that this doesn't break anything
+                    .UniqueResult());
+        }
+
+        public string ToSql(bool count) {
+            var sessionImp = (ISessionImplementor)_session;
+            var translators = TranslatorFactory.CreateQueryTranslators(
+                new StringQueryExpression(ToHql(count)),
+                null, false, sessionImp.EnabledFilters, sessionImp.Factory);
+            return translators[0].SQLString;
         }
 
         public string ToHql(bool count) {
