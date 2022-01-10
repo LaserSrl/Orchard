@@ -8,7 +8,8 @@ var fs = require("fs"),
     plumber = require("gulp-plumber"),
     sourcemaps = require("gulp-sourcemaps"),
     less = require("gulp-less"),
-    sass = require("gulp-sass"),
+    //sass = require('gulp-sass')(require('sass')),
+    sass = require('gulp-sass'),
     autoprefixer = require("gulp-autoprefixer"),
     minify = require("gulp-minify-css"),
     typescript = require("gulp-typescript"),
@@ -166,6 +167,16 @@ function buildJsPipeline(assetGroup, doConcat, doRebuild) {
             throw "Input file '" + inputPath + "' is not of a valid type for output file '" + assetGroup.outputPath + "'.";
     });
     var generateSourceMaps = assetGroup.hasOwnProperty("generateSourceMaps") ? assetGroup.generateSourceMaps : true;
+    // Source maps are useless if neither concatenating nor transpiling.
+    if ((!doConcat || assetGroup.inputPaths.length < 2) && !assetGroup.inputPaths.some(function (inputPath) { return path.extname(inputPath).toLowerCase() === ".ts"; }))
+        generateSourceMaps = false;
+    var typeScriptOptions = { allowJs: true, noImplicitAny: true, noEmitOnError: true };
+    if (assetGroup.typeScriptOptions)
+        typeScriptOptions = Object.assign(typeScriptOptions, assetGroup.typeScriptOptions); // Merge override options from asset group if any.
+    if (doConcat) {
+        typeScriptOptions.outFile = assetGroup.outputFileName;
+        typeScriptOptions.module = "system";
+    }
     return gulp.src(assetGroup.inputPaths)
         .pipe(gulpif(!doRebuild,
             gulpif(doConcat,
