@@ -32,6 +32,8 @@ namespace Orchard.ContentManagement {
 
         public IContentManager ContentManager { get; private set; }
 
+        static readonly private ASTQueryTranslatorFactory TranslatorFactory = new ASTQueryTranslatorFactory();
+
         public DefaultHqlQuery(
             IContentManager contentManager, 
             ISession session,
