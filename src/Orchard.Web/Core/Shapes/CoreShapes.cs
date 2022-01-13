@@ -467,7 +467,7 @@ namespace Orchard.Core.Shapes {
                 (includeLocation.HasValue ? r.Settings.Location == includeLocation.Value : true) &&
                 (excludeLocation.HasValue ? r.Settings.Location != excludeLocation.Value : true))) {
 
-                var url = context.GetResourceUrl(defaultSettings, appPath, ssl, _resourceFileHashProvider);
+                var url = context.GetResourceUrl(defaultSettings, appPath, _resourceFileHashProvider);
                 var condition = context.Settings.Condition;
                 var attributes = context.Settings.HasAttributes ? context.Settings.Attributes : null;
                 IHtmlString result;

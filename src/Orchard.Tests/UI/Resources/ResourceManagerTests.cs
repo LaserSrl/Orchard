@@ -32,7 +32,7 @@ namespace Orchard.Tests.UI.Resources {
         private void VerifyPaths(string resourceType, RequireSettings defaultSettings, string expectedPaths) {
             defaultSettings = defaultSettings ?? new RequireSettings();
             var requiredResources = _resourceManager.BuildRequiredResources(resourceType);
-            var renderedResources = string.Join(",", requiredResources.Select(context => context.GetResourceUrl(defaultSettings, _appPath, ssl, _resourceFileHashProvider)).ToArray());
+            var renderedResources = string.Join(",", requiredResources.Select(context => context.GetResourceUrl(defaultSettings, _appPath,_resourceFileHashProvider)).ToArray());
             Assert.That(renderedResources, Is.EqualTo(expectedPaths));
         }
 
