@@ -102,7 +102,7 @@ namespace Orchard.Tests.UI.Resources {
                 m.DefineResource("script", "Script1").SetUrl("script1.js").SetCdn("https://cdn/script1.min.js");
             };
             _resourceManager.Require("script", "Script1");
-            VerifyPaths("script", new RequireSettings { CdnMode = true }, "https://cdn/script1.min.js", true);
+            VerifyPaths("script", new RequireSettings { CdnMode = true }, "https://cdn/script1.min.js");
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace Orchard.Tests.UI.Resources {
                 m.DefineResource("script", "Script1").SetUrl("script1.min.js", "script1.js").SetCdn("http://cdn/script1.min.js", "http://cdn/script1.js");
             };
             _resourceManager.Require("script", "Script1");
-            VerifyPaths("script", new RequireSettings { CdnMode = true }, "script1.min.js", true);
+            VerifyPaths("script", new RequireSettings { CdnMode = true }, "script1.min.js");
         }
 
         [Test]
@@ -120,7 +120,7 @@ namespace Orchard.Tests.UI.Resources {
                 m.DefineResource("script", "Script1").SetUrl("script1.min.js", "script1.js").SetCdn("http://cdn/script1.min.js", "http://cdn/script1.js");
             };
             _resourceManager.Require("script", "Script1");
-            VerifyPaths("script", new RequireSettings { CdnMode = true, DebugMode = true }, "script1.js", true);
+            VerifyPaths("script", new RequireSettings { CdnMode = true, DebugMode = true }, "script1.js");
         }
 
         [Test]
