@@ -1,5 +1,7 @@
 using System;
 using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.ApplicationServer.Caching;
 using NHibernate;
 using NHibernate.Cache;
@@ -172,6 +174,35 @@ namespace Orchard.Azure.Services.Caching.Database {
                 // will recognize it as the same region supplied to the constructor.
                 return _region;
             }
+        }
+
+
+        // Implementation of Async interface.
+        // Async methods are naively implemented as wrappers for their synchronous
+        // counterparts. As such, they ignore the cancellationToken.
+
+        public Task<object> GetAsync(object key, CancellationToken cancellationToken) {
+            return new Task<object>(() => Get(key));
+        }
+
+        public Task PutAsync(object key, object value, CancellationToken cancellationToken) {
+            return new Task(() => Put(key, value));
+        }
+
+        public Task RemoveAsync(object key, CancellationToken cancellationToken) {
+            return new Task(() => Remove(key));
+        }
+
+        public Task ClearAsync(CancellationToken cancellationToken) {
+            return new Task(() => Clear());
+        }
+
+        public Task LockAsync(object key, CancellationToken cancellationToken) {
+            return new Task(() => Lock(key));
+        }
+
+        public Task UnlockAsync(object key, CancellationToken cancellationToken) {
+            return new Task(() => Unlock(key));
         }
     }
 }
