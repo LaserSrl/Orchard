@@ -11,7 +11,7 @@ namespace Orchard.Azure.Services.Caching.Database {
     public class AzureCacheClient : ICache {
 
         public AzureCacheClient(DataCache cache, string region, TimeSpan? expirationTime) {
-            _logger = LoggerProvider.LoggerFor(typeof(AzureCacheClient));
+            _logger = NHibernateLogger.For(typeof(AzureCacheClient));
             _cache = cache;
             _region = region ?? DefaultRegion;
             // Azure Cache supports only alphanumeric strings for regions, but
@@ -27,13 +27,13 @@ namespace Orchard.Azure.Services.Caching.Database {
             //_lockHandleDictionary = new ConcurrentDictionary<object, DataCacheLockHandle>();
             //_lockTimeout = TimeSpan.FromSeconds(30);
 
-            if (_logger.IsDebugEnabled) {
-                _logger.DebugFormat("Created an AzureCacheClient for region '{0}' (original region '{1}').", _regionAlphaNumeric, _region);
+            if (_logger.IsDebugEnabled()) {
+                _logger.Debug("Created an AzureCacheClient for region '{0}' (original region '{1}').", _regionAlphaNumeric, _region);
             }
         }
 
         private const string DefaultRegion = "NHibernate";
-        private readonly IInternalLogger _logger;
+        private readonly INHibernateLogger _logger;
         private readonly DataCache _cache;
         private readonly string _region;
         private readonly string _regionAlphaNumeric;
@@ -44,8 +44,8 @@ namespace Orchard.Azure.Services.Caching.Database {
                 throw new ArgumentNullException("key", "The parameter 'key' must not be null.");
             }
 
-            if (_logger.IsDebugEnabled)
-                _logger.DebugFormat("Get() invoked with key='{0}' in region '{1}'.", key, _regionAlphaNumeric);
+            if (_logger.IsDebugEnabled())
+                _logger.Debug("Get() invoked with key='{0}' in region '{1}'.", key, _regionAlphaNumeric);
 
             return _cache.Get(key.ToString(), _regionAlphaNumeric);
         }
@@ -58,8 +58,8 @@ namespace Orchard.Azure.Services.Caching.Database {
                 throw new ArgumentNullException("value", "The parameter 'value' must not be null.");
             }
 
-            if (_logger.IsDebugEnabled) {
-                _logger.DebugFormat("Put() invoked with key='{0}' and value='{1}' in region '{2}'.", key, value, _regionAlphaNumeric);
+            if (_logger.IsDebugEnabled()) {
+                _logger.Debug("Put() invoked with key='{0}' and value='{1}' in region '{2}'.", key, value, _regionAlphaNumeric);
             }
 
             if (_expirationTime.HasValue) {
@@ -75,24 +75,24 @@ namespace Orchard.Azure.Services.Caching.Database {
                 throw new ArgumentNullException("key", "The parameter 'key' must not be null.");
             }
 
-            if (_logger.IsDebugEnabled) {
-                _logger.DebugFormat("Remove() invoked with key='{0}' in region '{1}'.", key, _regionAlphaNumeric);
+            if (_logger.IsDebugEnabled()) {
+                _logger.Debug("Remove() invoked with key='{0}' in region '{1}'.", key, _regionAlphaNumeric);
             }
 
             _cache.Remove(key.ToString(), _regionAlphaNumeric);
         }
 
         public void Clear() {
-            if (_logger.IsDebugEnabled) {
-                _logger.DebugFormat("Clear() invoked in region '{0}'.", _regionAlphaNumeric);
+            if (_logger.IsDebugEnabled()) {
+                _logger.Debug("Clear() invoked in region '{0}'.", _regionAlphaNumeric);
             }
 
             _cache.ClearRegion(_regionAlphaNumeric);
         }
 
         public void Destroy() {
-            if (_logger.IsDebugEnabled) {
-                _logger.DebugFormat("Destroy() invoked in region '{0}'.", _regionAlphaNumeric);
+            if (_logger.IsDebugEnabled()) {
+                _logger.Debug("Destroy() invoked in region '{0}'.", _regionAlphaNumeric);
             }
 
             Clear();
@@ -153,8 +153,8 @@ namespace Orchard.Azure.Services.Caching.Database {
 
         // TODO: Try to understand what this is for and how it's used.
         public long NextTimestamp() {
-            if (_logger.IsDebugEnabled) {
-                _logger.DebugFormat("NextTimestamp() invoked in region '{0}'.", _regionAlphaNumeric);
+            if (_logger.IsDebugEnabled()) {
+                _logger.Debug("NextTimestamp() invoked in region '{0}'.", _regionAlphaNumeric);
             }
 
             return Timestamper.Next();
