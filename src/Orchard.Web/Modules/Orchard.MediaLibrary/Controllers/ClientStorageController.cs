@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.FileSystems.Media;
+using Orchard.Localization;
+using Orchard.Logging;
+using Orchard.MediaLibrary.Models;
 using Orchard.MediaLibrary.Services;
 using Orchard.MediaLibrary.ViewModels;
 using Orchard.Themes;
 using Orchard.UI.Admin;
-using Orchard.MediaLibrary.Models;
-using Orchard.Localization;
-using System.Linq;
-using Orchard.FileSystems.Media;
-using Orchard.Logging;
 
 namespace Orchard.MediaLibrary.Controllers {
     [Admin, Themed(false)]
@@ -171,7 +170,14 @@ namespace Orchard.MediaLibrary.Controllers {
                                                                 .Where(x => x.FolderPath == replaceMedia.FolderPath && x.FileName == replaceMedia.FileName)
                                                                 .Count();
                     if (mediaItemsUsingTheFile == 1) { // if the file is referenced only by the deleted media content, the file too can be removed.
-                        _mediaLibraryService.DeleteFile(replaceMedia.FolderPath, replaceMedia.FileName);
+                        try {
+                            _mediaLibraryService.DeleteFile(replaceMedia.FolderPath, replaceMedia.FileName);
+                        } catch (ArgumentException) { // File not found by FileSystemStorageProvider is thrown as ArgumentException.
+                            statuses.Add(new {
+                                error = T("Error when deleting file to replace: file {0} does not exist in folder {1}. Media has been updated anyway.", replaceMedia.FileName, replaceMedia.FolderPath).Text,
+                                progress = 1.0
+                            });
+                        }
                     }
                     else {
                         // it changes the media file name
