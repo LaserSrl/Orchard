@@ -64,6 +64,10 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public virtual TaxonomyPart GetTaxonomy(int id) {
+            // If id isn't valid, return null without executing the query.
+            if (id <= 0) {
+                return null;
+            }
             return _contentManager.Get(id, VersionOptions.Published).As<TaxonomyPart>();
         }
 
@@ -169,6 +173,10 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public IEnumerable<TermPart> GetTerms(int taxonomyId) {
+            // If taxonomyId isn't valid, return a empty list without executing the query.
+            if (taxonomyId <= 0) {
+                return new List<TermPart>();
+            }
             var result = GetTermsQuery(taxonomyId)
                 .OrderBy(x => x.FullWeight)
                 .List();
@@ -177,6 +185,10 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public IEnumerable<TermPart> GetRootTerms(int taxonomyId) {
+            // If taxonomyId isn't valid, return a empty list without executing the query.
+            if (taxonomyId <= 0) {
+                return new List<TermPart>();
+            }
             var result = GetTermsQuery(taxonomyId)
                 .Where(x => x.Path == "/")
                 .OrderBy(x => x.FullWeight)
@@ -202,11 +214,19 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public int GetTermsCount(int taxonomyId) {
+            // If taxonomyId isn't valid, return 0 without executing the query.
+            if (taxonomyId <= 0) {
+                return 0;
+            }
             return GetTermsQuery(taxonomyId)
                 .Count();
         }
 
         public TermPart GetTerm(int id) {
+            // If term id isn't valid, return null without executing the query.
+            if (id <= 0) {
+                return null;
+            }
             return GetTermsQuery()
                 .Where(x => x.Id == id).List().FirstOrDefault();
         }
@@ -231,6 +251,10 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public TermPart GetTermByName(int taxonomyId, string name) {
+            // If taxonomyId isn't valid, return null without executing the query.
+            if (taxonomyId <= 0) {
+                return null;
+            }
             return GetTermsQuery(taxonomyId)
                 .Join<TitlePartRecord>()
                 .Where(r => r.Title == name)
