@@ -64,10 +64,6 @@ namespace Orchard.Taxonomies.Services {
         }
 
         public virtual TaxonomyPart GetTaxonomy(int id) {
-            // If id isn't valid, return null without executing the query.
-            if (id <= 0) {
-                return null;
-            }
             return _contentManager.Get(id, VersionOptions.Published).As<TaxonomyPart>();
         }
 
@@ -175,7 +171,7 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<TermPart> GetTerms(int taxonomyId) {
             // If taxonomyId isn't valid, return a empty list without executing the query.
             if (taxonomyId <= 0) {
-                return new List<TermPart>();
+                return Array.Empty<TermPart>();
             }
             var result = GetTermsQuery(taxonomyId)
                 .OrderBy(x => x.FullWeight)
@@ -187,7 +183,7 @@ namespace Orchard.Taxonomies.Services {
         public IEnumerable<TermPart> GetRootTerms(int taxonomyId) {
             // If taxonomyId isn't valid, return a empty list without executing the query.
             if (taxonomyId <= 0) {
-                return new List<TermPart>();
+                return Array.Empty<TermPart>();
             }
             var result = GetTermsQuery(taxonomyId)
                 .Where(x => x.Path == "/")
