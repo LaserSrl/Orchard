@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
 using Orchard.Widgets.Models;
@@ -34,10 +35,6 @@ namespace Orchard.Widgets.Drivers {
                 ContentShape("Parts_Widgets_WidgetPart",
                              () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.WidgetPart", Model: widgetPart, Prefix: Prefix))
             };
-
-            if (widgetPart.Id > 0)
-                results.Add(ContentShape("Widget_DeleteButton",
-                    deleteButton => deleteButton));
 
             return Combined(results.ToArray());
         }
