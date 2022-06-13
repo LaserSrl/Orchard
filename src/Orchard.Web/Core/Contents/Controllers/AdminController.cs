@@ -352,6 +352,18 @@ namespace Orchard.Core.Contents.Controllers {
             return EditPOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
         }
 
+        [HttpPost, ActionName("Edit")]
+        [Mvc.FormValueRequired("submit.Unpublish")]
+        public ActionResult EditUnpublishPOST(int id, string returnUrl) {
+            return Unpublish(id, returnUrl);
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [Mvc.FormValueRequired("submit.Delete")]
+        public ActionResult EditDeletePOST(int id, string returnUrl) {
+            return Remove(id, returnUrl);
+        }
+
         private ActionResult EditPOST(int id, string returnUrl, Action<ContentItem> conditionallyPublish) {
             var contentItem = _contentManager.Get(id, VersionOptions.DraftRequired);
 
