@@ -185,6 +185,21 @@ namespace Orchard.UI.Resources {
             return this;
         }
 
+        public ResourceDefinition SetPhysicalPath(string physicalPath) {
+            return SetPhysicalPath(physicalPath, null);
+        }
+
+        public ResourceDefinition SetPhysicalPath(string physicalPath, string physicalPathDebug) {
+            if (String.IsNullOrEmpty(physicalPath)) {
+                throw new ArgumentNullException("physicalPath");
+            }
+            _physicalPath = physicalPath;
+            if (physicalPathDebug != null) {
+                _physicalPathDebug = physicalPathDebug;
+            }
+            return this;
+        }
+
         /// <summary>
         /// Sets the version of the resource.
         /// </summary>

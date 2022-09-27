@@ -12,9 +12,9 @@ namespace Orchard.UI.Resources {
         public TagBuilder GetTagBuilder(RequireSettings baseSettings, string appPath, IResourceFileHashProvider resourceFileHashProvider) {
             var tagBuilder = new TagBuilder(Resource.TagName);
             tagBuilder.MergeAttributes(Resource.TagBuilder.Attributes);
-            if (!string.IsNullOrEmpty(Resource.FilePathAttributeName)) {
+            if (!String.IsNullOrEmpty(Resource.FilePathAttributeName)) {
                 var resolvedUrl = GetResourceUrl(baseSettings, appPath, resourceFileHashProvider);
-                if (!string.IsNullOrEmpty(resolvedUrl)) {
+                if (!String.IsNullOrEmpty(resolvedUrl)) {
                     tagBuilder.MergeAttribute(Resource.FilePathAttributeName, resolvedUrl, true);
                 }
             }
