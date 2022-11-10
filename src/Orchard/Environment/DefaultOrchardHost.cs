@@ -36,6 +36,9 @@ namespace Orchard.Environment {
         private IEnumerable<ShellContext> _shellContexts;
         private readonly ContextState<IList<ShellSettings>> _tenantsToRestart;
 
+        private readonly ReaderWriterLockSlim _shellContextDisposalLock = new ReaderWriterLockSlim();
+        private bool _areShellsBeingDisposed = false;
+
         public int Retries { get; set; }
         public bool DelayRetries { get; set; }
 
@@ -112,7 +115,12 @@ namespace Orchard.Environment {
         /// Ensures shells are activated, or re-activated if extensions have changed
         /// </summary>
         IEnumerable<ShellContext> BuildCurrent() {
+            WaitShellDisposal();
+
+            // Rebuild all shells if none exists, or do nothing if any exists
+
             if (_shellContexts == null) {
+                Logger.Error("About to rebuild shell contexts");
                 lock (_syncLock) {
                     if (_shellContexts == null) {
                         SetupExtensions();
@@ -126,11 +134,14 @@ namespace Orchard.Environment {
         }
 
         void StartUpdatedShells() {
+            WaitShellDisposal();
             while (_tenantsToRestart.GetState().Any()) {
                 var settings = _tenantsToRestart.GetState().First();
                 _tenantsToRestart.GetState().Remove(settings);
                 Logger.Debug("Updating shell: " + settings.Name);
                 lock (_syncLock) {
+                    // shell restarting due to an updating or similar, so this may have to update the
+                    // collection of shell contexts that is stored in this class
                     ActivateShell(settings);
                 }
             }
@@ -252,6 +263,14 @@ namespace Orchard.Environment {
         private void DisposeShellContext() {
             Logger.Information("Disposing active shell contexts");
 
+            // if there are any shells, dispose of all of them. This should wait for any shell
+            // creation/update process to complete, and such tasks should proceed in the right
+            // order.
+            _shellContextDisposalLock.EnterWriteLock();
+            _areShellsBeingDisposed = true;
+            _shellContextDisposalLock.ExitWriteLock();
+
+            Logger.Error("Acquired lock to dispose active shell contexts");
             if (_shellContexts != null) {
                 lock (_syncLock) {
                     if (_shellContexts != null) {
@@ -262,6 +281,24 @@ namespace Orchard.Environment {
                     }
                 }
                 _shellContexts = null;
+            }
+
+            _shellContextDisposalLock.EnterWriteLock();
+            _areShellsBeingDisposed = false;
+            _shellContextDisposalLock.ExitWriteLock();
+            Logger.Error("Released lock to dispose active shell contexts");
+        }
+
+        private void WaitShellDisposal() {
+            // while disposing of shells, this should wait for the disposals to complete
+            _shellContextDisposalLock.EnterReadLock();
+            var areShellsBeingDisposed = _areShellsBeingDisposed;
+            _shellContextDisposalLock.ExitReadLock();
+            while (areShellsBeingDisposed) {
+                // keep checking if we are done with the disposal
+                _shellContextDisposalLock.EnterReadLock();
+                areShellsBeingDisposed = _areShellsBeingDisposed;
+                _shellContextDisposalLock.ExitReadLock();
             }
         }
 
