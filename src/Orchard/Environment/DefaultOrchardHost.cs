@@ -263,6 +263,44 @@ namespace Orchard.Environment {
         private void DisposeShellContext() {
             Logger.Information("Disposing active shell contexts");
 
+            /*
+
+            [LockRecursionException: Impossibile acquisire un blocco di scrittura quando è impostato il blocco di lettura. Modello soggetto a deadlock. Verificare che i blocchi di lettura siano stati rilasciati prima di acquisire un blocco di scrittura. Se è necessario un aggiornamento, utilizzare un blocco di aggiornamento in sostituzione del blocco di lettura.]
+   System.Threading.ReaderWriterLockSlim.TryEnterWriteLockCore(TimeoutTracker timeout) +6240138
+   System.Threading.ReaderWriterLockSlim.TryEnterWriteLock(TimeoutTracker timeout) +46
+   System.Threading.ReaderWriterLockSlim.EnterWriteLock() +66
+   Orchard.Environment.DefaultOrchardHost.DisposeShellContext() in D:\dotnet\Inva.Orchard\Orchard\src\Orchard\Environment\DefaultOrchardHost.cs:269
+   Orchard.Environment.DefaultOrchardHost.<MonitorExtensions>b__48_0(AcquireContext`1 ctx) in D:\dotnet\Inva.Orchard\Orchard\src\Orchard\Environment\DefaultOrchardHost.cs:254
+   Orchard.Caching.Cache`2.CreateEntry(TKey k, Func`2 acquire) in D:\dotnet\Inva.Orchard\Orchard\src\Orchard\Caching\Cache.cs:57
+   Orchard.Caching.Cache`2.UpdateEntry(CacheEntry currentEntry, TKey k, Func`2 acquire) in D:\dotnet\Inva.Orchard\Orchard\src\Orchard\Caching\Cache.cs:33
+   Orchard.Caching.<>c__DisplayClass3_0.<Get>b__1(TKey k, CacheEntry currentEntry) in D:\dotnet\Inva.Orchard\Orchard\src\Orchard\Caching\Cache.cs:21
+   System.Collections.Concurrent.ConcurrentDictionary`2.AddOrUpdate(TKey key, Func`2 addValueFactory, Func`3 updateValueFactory) +103
+   Orchard.Caching.Cache`2.Get(TKey key, Func`2 acquire) in D:\dotnet\Inva.Orchard\Orchard\src\Orchard\Caching\Cache.cs:17
+   Orchard.Caching.DefaultCacheManager.Get(TKey key, Func`2 acquire) in D:\dotnet\Inva.Orchard\Orchard\src\Orchard\Caching\DefaultCacheManager.cs:33
+   Orchard.Caching.CacheManagerExtensions.Get(ICacheManager cacheManager, TKey key, Boolean preventConcurrentCalls, Func`2 acquire) in D:\dotnet\Inva.Orchard\Orchard\src\Orchard\Caching\ICacheManager.cs:13
+   Orchard.Environment.DefaultOrchardHost.MonitorExtensions() in D:\dotnet\Inva.Orchard\Orchard\src\Orchard\Environment\DefaultOrchardHost.cs:250
+   Orchard.Environment.<>c__DisplayClass51_0.<BeginRequest>b__0() in D:\dotnet\Inva.Orchard\Orchard\src\Orchard\Environment\DefaultOrchardHost.cs:314
+   Orchard.Environment.<>c__DisplayClass51_0.<BeginRequest>b__1() in D:\dotnet\Inva.Orchard\Orchard\src\Orchard\Environment\DefaultOrchardHost.cs:330
+   Orchard.Utility.NamedReaderWriterLock.RunWithReadLock(String name, Action body) in D:\dotnet\Inva.Orchard\Orchard\src\Orchard\Utility\NamedReaderWriterLock.cs:40
+   Orchard.Environment.DefaultOrchardHost.BeginRequest() in D:\dotnet\Inva.Orchard\Orchard\src\Orchard\Environment\DefaultOrchardHost.cs:329
+   Orchard.Environment.DefaultOrchardHost.Orchard.Environment.IOrchardHost.BeginRequest() in D:\dotnet\Inva.Orchard\Orchard\src\Orchard\Environment\DefaultOrchardHost.cs:95
+   Orchard.Web.MvcApplication.HostBeginRequest(HttpApplication application, IOrchardHost host) in D:\dotnet\Inva.Orchard\Orchard\src\Orchard.Web\Global.asax.cs:42
+   Orchard.WarmupStarter.Starter`1.OnBeginRequest(HttpApplication application) in D:\dotnet\Inva.Orchard\Orchard\src\Orchard.WarmupStarter\Starter.cs:68
+   Orchard.Web.MvcApplication.Application_BeginRequest() in D:\dotnet\Inva.Orchard\Orchard\src\Orchard.Web\Global.asax.cs:30
+
+[TargetInvocationException: Eccezione generata dalla destinazione di una chiamata.]
+   System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor) +0
+   System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments) +269
+   System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture) +146
+   System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters) +34
+   System.Web.Util.ArglessEventHandlerProxy.Callback(Object sender, EventArgs e) +74
+   System.Web.SyncEventExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute() +142
+   System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step) +75
+   System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously) +93
+             
+             */
+
+
             // if there are any shells, dispose of all of them. This should wait for any shell
             // creation/update process to complete, and such tasks should proceed in the right
             // order.
@@ -293,6 +331,9 @@ namespace Orchard.Environment {
             // while disposing of shells, this should wait for the disposals to complete
             _shellContextDisposalLock.EnterReadLock();
             var areShellsBeingDisposed = _areShellsBeingDisposed;
+            if (areShellsBeingDisposed) {
+                Logger.Error("Shells are being disposed");
+            }
             _shellContextDisposalLock.ExitReadLock();
             while (areShellsBeingDisposed) {
                 // keep checking if we are done with the disposal
