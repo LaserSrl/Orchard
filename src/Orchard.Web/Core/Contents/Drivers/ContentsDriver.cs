@@ -2,6 +2,7 @@
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Contents.Settings;
+using Orchard.UI.Admin;
 
 namespace Orchard.Core.Contents.Drivers {
     public class ContentsDriver : ContentPartDriver<ContentPart> {
@@ -23,14 +24,13 @@ namespace Orchard.Core.Contents.Drivers {
 
             if (part.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable) {
                 results.Add(ContentShape("Content_PublishButton", publishButton => publishButton));
-
-                if (part.ContentItem.IsPublished()) {
-                    results.Add(ContentShape("Content_UnpublishButton", unpublishButton => unpublishButton));
-                }
+                results.Add(ContentShape("Content_UnpublishButton", unpublishButton => unpublishButton));
             }              
 
             if (part.Id > 0) {
-                results.Add(ContentShape("Content_DeleteButton", deleteButton => deleteButton));
+                if (AdminFilter.IsApplied(System.Web.HttpContext.Current.Request.RequestContext)) {
+                    results.Add(ContentShape("Content_DeleteButton", deleteButton => deleteButton));                    
+                }
             }
 
             return Combined(results.ToArray());
