@@ -5,6 +5,8 @@ using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Logging;
 
+using System.Diagnostics;
+
 namespace Orchard.Environment.ShellBuilders {
     /// <summary>
     /// High-level coordinator that exercises other component capabilities to
@@ -47,33 +49,57 @@ namespace Orchard.Environment.ShellBuilders {
 
         public ILogger Logger { get; set; }
 
-        public ShellContext CreateShellContext(ShellSettings settings) {           
+        public ShellContext CreateShellContext(ShellSettings settings) {
+
+            var swDescCacheFetch = new Stopwatch();
+            var swBPCompose = new Stopwatch();
+            var swScopeCreate = new Stopwatch();
+            var swDescriptorCreate = new Stopwatch();
+            var swDescriptorCreate2 = new Stopwatch();
+            var swNewerDescriptor = new Stopwatch();
 
             Logger.Debug("Creating shell context for tenant {0}", settings.Name);
-
+            swDescCacheFetch.Start();
             var knownDescriptor = _shellDescriptorCache.Fetch(settings.Name);
+            swDescCacheFetch.Stop();
             if (knownDescriptor == null) {
                 Logger.Information("No descriptor cached. Starting with minimum components.");
                 knownDescriptor = MinimumShellDescriptor();
             }
-
+            swBPCompose.Start();
             var blueprint = _compositionStrategy.Compose(settings, knownDescriptor);
+            swBPCompose.Stop();
+            swScopeCreate.Start();
             var shellScope = _shellContainerFactory.CreateContainer(settings, blueprint);
+            swScopeCreate.Stop();
 
+            swDescriptorCreate.Start();
             ShellDescriptor currentDescriptor;
             using (var standaloneEnvironment = shellScope.CreateWorkContextScope()) {
                 var shellDescriptorManager = standaloneEnvironment.Resolve<IShellDescriptorManager>();
+                swDescriptorCreate2.Start();
                 currentDescriptor = shellDescriptorManager.GetShellDescriptor();
+                swDescriptorCreate2.Stop();
             }
+            swDescriptorCreate.Stop();
 
             if (currentDescriptor != null && knownDescriptor.SerialNumber != currentDescriptor.SerialNumber) {
+                swNewerDescriptor.Start();
                 Logger.Information("Newer descriptor obtained. Rebuilding shell container.");
 
                 _shellDescriptorCache.Store(settings.Name, currentDescriptor);
                 blueprint = _compositionStrategy.Compose(settings, currentDescriptor);
                 shellScope.Dispose();
                 shellScope = _shellContainerFactory.CreateContainer(settings, blueprint);
+                swNewerDescriptor.Stop();
             }
+
+            Logger.Error($"CREATESHELLCONTEXT {settings.Name} _shellDescriptorCache.Fetch: {swDescCacheFetch.Elapsed.TotalMilliseconds}");
+            Logger.Error($"CREATESHELLCONTEXT {settings.Name} _compositionStrategy.Compose: {swBPCompose.Elapsed.TotalMilliseconds}");
+            Logger.Error($"CREATESHELLCONTEXT {settings.Name} _shellContainerFactory.CreateContainer: {swScopeCreate.Elapsed.TotalMilliseconds}");
+            Logger.Error($"CREATESHELLCONTEXT {settings.Name} Create descriptor: {swDescriptorCreate.Elapsed.TotalMilliseconds}");
+            Logger.Error($"CREATESHELLCONTEXT {settings.Name} shellDescriptorManager.GetShellDescriptor(): {swDescriptorCreate2.Elapsed.TotalMilliseconds}");
+            Logger.Error($"CREATESHELLCONTEXT {settings.Name} Newer descriptor: {swNewerDescriptor.Elapsed.TotalMilliseconds}");
 
             return new ShellContext {
                 Settings = settings,

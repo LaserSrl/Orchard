@@ -10,6 +10,8 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.Locking;
 using Orchard.Logging;
 
+using System.Diagnostics;
+
 namespace Orchard.Core.Settings.Descriptor {
     public class ShellDescriptorManager : Component, IShellDescriptorManager {
         private readonly IRepository<ShellDescriptorRecord> _shellDescriptorRepository;
@@ -40,18 +42,26 @@ namespace Orchard.Core.Settings.Descriptor {
         }
 
         public ShellDescriptor GetShellDescriptor() {
+            var swQuery = new Stopwatch();
+            swQuery.Start();
             ShellDescriptorRecord shellDescriptorRecord = GetDescriptorRecord();
+            swQuery.Stop();
+            Logger.Error($"SHELLDESCRIPTORMANAGER {_shellSettings.Name} query: {swQuery.Elapsed.TotalMilliseconds}");
             if (shellDescriptorRecord == null) return null;
             return GetShellDescriptorFromRecord(shellDescriptorRecord);
         }
 
-        private static ShellDescriptor GetShellDescriptorFromRecord(ShellDescriptorRecord shellDescriptorRecord) {
+        private ShellDescriptor GetShellDescriptorFromRecord(ShellDescriptorRecord shellDescriptorRecord) {
+            var swFeatures = new Stopwatch();
             ShellDescriptor descriptor = new ShellDescriptor { SerialNumber = shellDescriptorRecord.SerialNumber };
+            swFeatures.Start();
             var descriptorFeatures = new List<ShellFeature>();
             foreach (var descriptorFeatureRecord in shellDescriptorRecord.Features) {
                 descriptorFeatures.Add(new ShellFeature { Name = descriptorFeatureRecord.Name });
             }
             descriptor.Features = descriptorFeatures;
+            swFeatures.Stop();
+
             var descriptorParameters = new List<ShellParameter>();
             foreach (var descriptorParameterRecord in shellDescriptorRecord.Parameters) {
                 descriptorParameters.Add(
@@ -62,7 +72,7 @@ namespace Orchard.Core.Settings.Descriptor {
                     });
             }
             descriptor.Parameters = descriptorParameters;
-
+            Logger.Error($"SHELLDESCRIPTORMANAGER {_shellSettings.Name} features: {swFeatures.Elapsed.TotalMilliseconds}");
             return descriptor;
         }
 
