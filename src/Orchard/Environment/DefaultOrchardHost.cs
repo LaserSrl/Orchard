@@ -92,12 +92,12 @@ namespace Orchard.Environment {
 
         void IOrchardHost.Initialize() {
             var lockName = RandomString(8);
-            Logger.Error($"ORCHARDHOST Initializing {lockName}");
+            //Logger.Error($"ORCHARDHOST Initializing {lockName}");
             Logger.Information("Initializing");
             var swInit = Stopwatch.StartNew();
             BuildCurrent();
             swInit.Stop();
-            Logger.Error($"ORCHARDHOST Initialize {lockName} took {swInit.Elapsed.TotalMilliseconds}");
+            //Logger.Error($"ORCHARDHOST Initialize {lockName} took {swInit.Elapsed.TotalMilliseconds}");
             Logger.Information("Initialized");
         }
 
@@ -110,7 +110,7 @@ namespace Orchard.Environment {
             var swInit = Stopwatch.StartNew();
             BeginRequest();
             swInit.Stop();
-            Logger.Error($"ORCHARDHOST BeginRequest took {swInit.Elapsed.TotalMilliseconds}");
+            //Logger.Error($"ORCHARDHOST BeginRequest took {swInit.Elapsed.TotalMilliseconds}");
         }
 
         void IOrchardHost.EndRequest() {
@@ -153,10 +153,10 @@ namespace Orchard.Environment {
             //        }
             //    }
             //}
-            Logger.Error("Requested BuildCurrent() with no parameter.");
+            //Logger.Error("Requested BuildCurrent() with no parameter.");
             _initializationLock.EnterUpgradeableReadLock();
             try {
-                Logger.Error($"BuildCurrent(): _initializationLock.EnterUpgradeableReadLock() {lockName}");
+                //Logger.Error($"BuildCurrent(): _initializationLock.EnterUpgradeableReadLock() {lockName}");
 
                 var shellContexts = _shellContextsDictionary.Values;
                 // Here we should test whether there are some shells that may have to be activated.
@@ -171,20 +171,20 @@ namespace Orchard.Environment {
                     ;
                 if (shouldInit) {
                     _initializationLock.EnterWriteLock();
-                    Logger.Error($"BuildCurrent(): _initializationLock.EnterWriteLock() {lockName}");
+                    //Logger.Error($"BuildCurrent(): _initializationLock.EnterWriteLock() {lockName}");
                     try {
                         SetupExtensions();
                         MonitorExtensions();
                         CreateAndActivateShells();
                     }
                     finally {
-                        Logger.Error($"BuildCurrent(): _initializationLock.ExitWriteLock() {lockName}");
+                        //Logger.Error($"BuildCurrent(): _initializationLock.ExitWriteLock() {lockName}");
                         _initializationLock.ExitWriteLock();
                     }
                 }
             }
             finally {
-                Logger.Error($"BuildCurrent(): _initializationLock.ExitUpgradeableReadLock() {lockName} ");
+                //Logger.Error($"BuildCurrent(): _initializationLock.ExitUpgradeableReadLock() {lockName} ");
                 _initializationLock.ExitUpgradeableReadLock();
             }
             
@@ -197,7 +197,7 @@ namespace Orchard.Environment {
         /// parameter.
         /// </summary> 
         private void BuildCurrent(ShellSettings currentShell) {
-            Logger.Error($"Requested BuildCurrent(shell) for shell {currentShell?.Name ?? "null"}");
+            //Logger.Error($"Requested BuildCurrent(shell) for shell {currentShell?.Name ?? "null"}");
             // If the application should reinitialize, it won't go through this call, but rather
             // through its other BuildCurrent().
             if (currentShell == null) {
@@ -206,25 +206,25 @@ namespace Orchard.Environment {
             else {
                 var lockName = RandomString(8);
                 _initializationLock.EnterUpgradeableReadLock();
-                Logger.Error($"BuildCurrent({currentShell?.Name ?? "null"}): _initializationLock.EnterUpgradeableReadLock(){lockName}");
+                //Logger.Error($"BuildCurrent({currentShell?.Name ?? "null"}): _initializationLock.EnterUpgradeableReadLock(){lockName}");
                 try {
                     // Do we need to activate the requested shell?
                     if (!_shellContextsDictionary.ContainsKey(currentShell.Name)) {
                         _initializationLock.EnterWriteLock();
-                        Logger.Error($"BuildCurrent({currentShell?.Name ?? "null"}): _initializationLock.EnterWriteLock() {lockName}");
+                        //Logger.Error($"BuildCurrent({currentShell?.Name ?? "null"}): _initializationLock.EnterWriteLock() {lockName}");
                         try {
                             SetupExtensions();
                             MonitorExtensions();
                             _shellActivationLock.RunWithWriteLock(currentShell.Name, () => SingleShellCreationActivation(currentShell));
                         }
                         finally {
-                            Logger.Error($"BuildCurrent({currentShell?.Name ?? "null"}): _initializationLock.ExitWriteLock() {lockName}");
+                            //Logger.Error($"BuildCurrent({currentShell?.Name ?? "null"}): _initializationLock.ExitWriteLock() {lockName}");
                             _initializationLock.ExitWriteLock();
                         }
                     }
                 }
                 finally {
-                    Logger.Error($"BuildCurrent({currentShell?.Name ?? "null"}): _initializationLock.ExitUpgradeableReadLock() {lockName}");
+                    //Logger.Error($"BuildCurrent({currentShell?.Name ?? "null"}): _initializationLock.ExitUpgradeableReadLock() {lockName}");
                     _initializationLock.ExitUpgradeableReadLock();
                 }
             }
@@ -280,7 +280,7 @@ namespace Orchard.Environment {
                 try {
                     var context = CreateShellContext(settings);
                     ActivateShell(context);
-                    Logger.Error($"Activated Shell {settings.Name}");
+                    //Logger.Error($"Activated Shell {settings.Name}");
 
                     // If everything went well, return to stop the retry loop
                     break;
@@ -388,7 +388,7 @@ namespace Orchard.Environment {
             if (!_initializationLock.IsWriteLockHeld) {
                 _initializationLock.EnterWriteLock();
                 try {
-                    Logger.Error("About to dispose all shells.");
+                    //Logger.Error("About to dispose all shells.");
 
                     if (_shellContextsDictionary.Any()) {
                         Parallel.ForEach(_shellContextsDictionary.Values,
@@ -410,7 +410,7 @@ namespace Orchard.Environment {
                         //}
                         _shellContextsDictionary.Clear();
                     }
-                    Logger.Error("Done disposing all shells.");
+                    //Logger.Error("Done disposing all shells.");
                 }
                 finally {
                     _initializationLock.ExitWriteLock();
@@ -492,7 +492,7 @@ namespace Orchard.Environment {
             // is this is a new tenant ? or is it a tenant waiting for setup ?
             if (shellContext == null || settings.State == TenantState.Uninitialized) {
                 _shellActivationLock.RunWithWriteLock(
-                    shellContext.Settings.Name,
+                    settings.Name,
                     () => {
                         // create the Shell
                         var context = CreateShellContext(settings);
@@ -505,25 +505,26 @@ namespace Orchard.Environment {
             else if (settings.State == TenantState.Disabled) {
 
                 _shellActivationLock.RunWithWriteLock(
-                    shellContext.Settings.Name,
+                    settings.Name,
                     () => {
                         shellContext.Shell.Terminate();
                         shellContext.Dispose();
                         _runningShellTable.Remove(settings);
                         // remove from dictionary
-                        _shellContextsDictionary.TryRemove(shellContext.Settings.Name, out shellContext);
+                        _shellContextsDictionary.TryRemove(settings.Name, out shellContext);
                     });
             }
             // reload the shell as its settings have changed
             else {
                 _shellActivationLock.RunWithWriteLock(settings.Name, () => {
-                    // dispose previous context
-                    shellContext.Shell.Terminate();
+                    // dispose previous context if it exists
+                    if (shellContext != null) {
+                        shellContext.Shell.Terminate();
+                        shellContext.Dispose();
+                    }
 
                     var context = _shellContextFactory.CreateShellContext(settings);
-
                     // Activate and register modified context.
-                    shellContext.Dispose();
                     context.Shell.Activate();
                     _shellContextsDictionary.AddOrUpdate(settings.Name,
                         context,
