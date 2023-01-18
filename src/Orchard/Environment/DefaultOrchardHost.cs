@@ -1,21 +1,23 @@
 using System;
-using System.Linq;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using NHibernate.Util;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
-using Orchard.Environment.Descriptor;
-using Orchard.Environment.Descriptor.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
-using Orchard.Utility.Extensions;
 using Orchard.Utility;
-using System.Threading;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment {
     // All the event handlers that DefaultOrchardHost implements have to be declared in OrchardStarter.
@@ -29,12 +31,16 @@ namespace Orchard.Environment {
         private readonly IExtensionMonitoringCoordinator _extensionMonitoringCoordinator;
         private readonly ICacheManager _cacheManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly static object _syncLock = new object();
         private readonly static object _shellContextsWriteLock = new object();
         private readonly NamedReaderWriterLock _shellActivationLock = new NamedReaderWriterLock();
 
-        private IEnumerable<ShellContext> _shellContexts;
         private readonly ContextState<IList<ShellSettings>> _tenantsToRestart;
+
+        private readonly ConcurrentDictionary<string, ShellContext> _shellContextsDictionary
+            = new ConcurrentDictionary<string, ShellContext>(StringComparer.OrdinalIgnoreCase);
+        // The lock used for initialization/disposal of shells.
+        readonly static ReaderWriterLockSlim _initializationLock =
+            new ReaderWriterLockSlim();
 
         public int Retries { get; set; }
         public bool DelayRetries { get; set; }
@@ -112,17 +118,70 @@ namespace Orchard.Environment {
         /// Ensures shells are activated, or re-activated if extensions have changed
         /// </summary>
         IEnumerable<ShellContext> BuildCurrent() {
-            if (_shellContexts == null) {
-                lock (_syncLock) {
-                    if (_shellContexts == null) {
+
+            _initializationLock.EnterUpgradeableReadLock();
+            try {
+                var shellContexts = _shellContextsDictionary.Values;
+                // Here we should test whether there are some shells that may have to be activated.
+                var shouldInit =
+                    // No shell has been activated, so we should activate stuff
+                    !shellContexts.Any()
+                    // There are fewer active shells than the ones there should be by reading the settings
+                    || (shellContexts.Count() < _shellSettingsManager.LoadSettings()
+                        .Where(settings => settings.State == TenantState.Running
+                            || settings.State == TenantState.Uninitialized || settings.State == TenantState.Initializing)
+                        .Count())
+                    ;
+                if (shouldInit) {
+                    _initializationLock.EnterWriteLock();
+                    try {
                         SetupExtensions();
                         MonitorExtensions();
                         CreateAndActivateShells();
                     }
+                    finally {
+                        _initializationLock.ExitWriteLock();
+                    }
                 }
             }
+            finally {
+                _initializationLock.ExitUpgradeableReadLock();
+            }
+            
+            return _shellContextsDictionary.Values;
+        }
 
-            return _shellContexts;
+        /// <summary>
+        /// Ensures shells are activated, or re-activated if extensions have changed.
+        /// This version of the method gives "priority" to a specific shell, passed as
+        /// parameter.
+        /// </summary> 
+        private void BuildCurrent(ShellSettings currentShell) {
+            // If the application should reinitialize, it won't go through this call, but rather
+            // through its other BuildCurrent().
+            if (currentShell == null) {
+                BuildCurrent();
+            }
+            else {
+                _initializationLock.EnterUpgradeableReadLock();
+                try {
+                    // Do we need to activate the requested shell?
+                    if (!_shellContextsDictionary.ContainsKey(currentShell.Name)) {
+                        _initializationLock.EnterWriteLock();
+                        try {
+                            SetupExtensions();
+                            MonitorExtensions();
+                            _shellActivationLock.RunWithWriteLock(currentShell.Name, () => SingleShellCreationActivation(currentShell));
+                        }
+                        finally {
+                            _initializationLock.ExitWriteLock();
+                        }
+                    }
+                }
+                finally {
+                    _initializationLock.ExitUpgradeableReadLock();
+                }
+            }
         }
 
         void StartUpdatedShells() {
@@ -130,9 +189,7 @@ namespace Orchard.Environment {
                 var settings = _tenantsToRestart.GetState().First();
                 _tenantsToRestart.GetState().Remove(settings);
                 Logger.Debug("Updating shell: " + settings.Name);
-                lock (_syncLock) {
-                    ActivateShell(settings);
-                }
+                ActivateShell(settings);
             }
         }
 
@@ -147,38 +204,8 @@ namespace Orchard.Environment {
             // Load all tenants, and activate their shell.
             if (allSettings.Any()) {
                 Parallel.ForEach(allSettings, settings => {
-                    for (var i = 0; i <= Retries; i++) {
-
-                        // Not the first attempt, wait for a while ...
-                        if (DelayRetries && i > 0) {
-
-                            // Wait for i^2 which means 1, 2, 4, 8 ... seconds
-                            Thread.Sleep(TimeSpan.FromSeconds(Math.Pow(i, 2)));
-                        }
-
-                        try {
-                            var context = CreateShellContext(settings);
-                            ActivateShell(context);
-
-                            // If everything went well, return to stop the retry loop
-                            break;
-                        }
-                        catch (Exception ex) {
-                            if (i == Retries) {
-                                Logger.Fatal("A tenant could not be started: {0} after {1} retries.", settings.Name, Retries);
-                                return;
-                            }
-                            else {
-                                Logger.Error(ex, "A tenant could not be started: " + settings.Name + " Attempt number: " + i);
-                            }
-                        }
-                        
-                    }
-
-                    while (_processingEngine.AreTasksPending()) {
-                        Logger.Debug("Processing pending task after activate Shell");
-                        _processingEngine.ExecuteNextTask();
-                    }
+                    // Each shell does its own lock.
+                    _shellActivationLock.RunWithWriteLock(settings.Name, () => SingleShellCreationActivation(settings));
                 });
             }
             // No settings, run the Setup.
@@ -190,19 +217,50 @@ namespace Orchard.Environment {
             Logger.Information("Done creating shells");
         }
 
+        private void SingleShellCreationActivation(ShellSettings settings) {
+            for (var i = 0; i <= Retries; i++) {
+
+                // Not the first attempt, wait for a while ...
+                if (DelayRetries && i > 0) {
+
+                    // Wait for i^2 which means 1, 2, 4, 8 ... seconds
+                    Thread.Sleep(TimeSpan.FromSeconds(Math.Pow(i, 2)));
+                }
+
+                try {
+                    var context = CreateShellContext(settings);
+                    ActivateShell(context);
+                    // If everything went well, return to stop the retry loop
+                    break;
+                }
+                catch (Exception ex) {
+                    if (i == Retries) {
+                        Logger.Fatal("A tenant could not be started: {0} after {1} retries.", settings.Name, Retries);
+                        return;
+                    }
+                    else {
+                        Logger.Error(ex, "A tenant could not be started: " + settings.Name + " Attempt number: " + i);
+                    }
+                }
+
+            }
+
+            while (_processingEngine.AreTasksPending()) {
+                Logger.Debug("Processing pending task after activate Shell");
+                _processingEngine.ExecuteNextTask();
+            }
+        }
+
         /// <summary>
         /// Starts a Shell and registers its settings in RunningShellTable
         /// </summary>
         private void ActivateShell(ShellContext context) {
             Logger.Debug("Activating context for tenant {0}", context.Settings.Name);
             context.Shell.Activate();
-
-            lock (_shellContextsWriteLock) {
-                _shellContexts = (_shellContexts ?? Enumerable.Empty<ShellContext>())
-                                .Where(c => c.Settings.Name != context.Settings.Name)
-                                .Concat(new[] { context })
-                                .ToArray();
-            }
+            // Add the computed context to the dictionary.
+            _shellContextsDictionary.AddOrUpdate(context.Settings.Name,
+                context,
+                (k, c) => c = context);
 
             _runningShellTable.Add(context.Settings);
         }
@@ -252,28 +310,32 @@ namespace Orchard.Environment {
         private void DisposeShellContext() {
             Logger.Information("Disposing active shell contexts");
 
-            if (_shellContexts != null) {
-                lock (_syncLock) {
-                    if (_shellContexts != null) {
-                        foreach (var shellContext in _shellContexts) {
-                            shellContext.Shell.Terminate();
-                            shellContext.Dispose();
-                        }
+            // Ideally we would like to have to not configure the lock for recursion, so we would have an
+            // easier time preventing deadlocks, as any attempt in that direction would error. Because
+            // of that, we check whether we are already holding the lock here, to prevent attempts to
+            // retake it.
+            if (!_initializationLock.IsWriteLockHeld) {
+                _initializationLock.EnterWriteLock();
+                try {
+                    if (_shellContextsDictionary.Any()) {
+                        Parallel.ForEach(_shellContextsDictionary.Values,
+                            shellContext => _shellActivationLock.RunWithWriteLock(
+                                shellContext.Settings.Name,
+                                () => {
+                                    shellContext.Shell.Terminate();
+                                    shellContext.Dispose();
+                                }));
+                        _shellContextsDictionary.Clear();
                     }
                 }
-                _shellContexts = null;
+                finally {
+                    _initializationLock.ExitWriteLock();
+                }
             }
         }
 
         protected virtual void BeginRequest() {
             BlockRequestsDuringSetup();
-
-            Action ensureInitialized = () => {
-                // Ensure all shell contexts are loaded, or need to be reloaded if
-                // extensions have changed
-                MonitorExtensions();
-                BuildCurrent();
-            };
 
             ShellSettings currentShellSettings = null;
 
@@ -282,14 +344,16 @@ namespace Orchard.Environment {
                 currentShellSettings = _runningShellTable.Match(httpContext);
             }
 
-            if (currentShellSettings == null) {
-                ensureInitialized();
-            }
-            else {
-                _shellActivationLock.RunWithReadLock(currentShellSettings.Name, () => {
-                    ensureInitialized();
-                });
-            }
+            Action<ShellSettings> ensureInitialized = (currentShell) => {
+                // Ensure all shell contexts are loaded, or need to be reloaded if
+                // extensions have changed
+                MonitorExtensions();
+                BuildCurrent(currentShell);
+            };
+
+            // BuildCurrent may cause a write lock for the shell, so we don't invoke
+            // with a further lock here.
+            ensureInitialized(currentShellSettings);
 
             // StartUpdatedShells can cause a writer shell activation lock so it should run outside the reader lock.
             StartUpdatedShells();
@@ -323,7 +387,9 @@ namespace Orchard.Environment {
             Logger.Debug("Activating shell: " + settings.Name);
 
             // look for the associated shell context
-            var shellContext = _shellContexts.FirstOrDefault(c => c.Settings.Name == settings.Name);
+            ShellContext shellContext;
+            // It's ok if we don't find the context in the dictionary. We'll manage that later.
+            _shellContextsDictionary.TryGetValue(settings.Name, out shellContext);
 
             if (shellContext == null && settings.State == TenantState.Disabled) {
                 return;
@@ -331,36 +397,44 @@ namespace Orchard.Environment {
 
             // is this is a new tenant ? or is it a tenant waiting for setup ?
             if (shellContext == null || settings.State == TenantState.Uninitialized) {
-                // create the Shell
-                var context = CreateShellContext(settings);
+                _shellActivationLock.RunWithWriteLock(
+                    settings.Name,
+                    () => {
+                        // create the Shell
+                        var context = CreateShellContext(settings);
 
-                // activate the Shell
-                ActivateShell(context);
+                        // activate the Shell
+                        ActivateShell(context);
+                    });
             }
             // terminate the shell if the tenant was disabled
             else if (settings.State == TenantState.Disabled) {
-                shellContext.Shell.Terminate();
-                _runningShellTable.Remove(settings);
 
-                // Forcing enumeration with ToArray() so a lazy execution isn't causing issues by accessing the disposed context.
-                _shellContexts = _shellContexts.Where(shell => shell.Settings.Name != settings.Name).ToArray();
-
-                shellContext.Dispose();
+                _shellActivationLock.RunWithWriteLock(
+                    settings.Name,
+                    () => {
+                        shellContext.Shell.Terminate();
+                        shellContext.Dispose();
+                        _runningShellTable.Remove(settings);
+                        // remove from dictionary
+                        _shellContextsDictionary.TryRemove(settings.Name, out shellContext);
+                    });
             }
             // reload the shell as its settings have changed
             else {
                 _shellActivationLock.RunWithWriteLock(settings.Name, () => {
-                    // dispose previous context
-                    shellContext.Shell.Terminate();
+                    // dispose previous context if it exists
+                    if (shellContext != null) {
+                        shellContext.Shell.Terminate();
+                        shellContext.Dispose();
+                    }
 
                     var context = _shellContextFactory.CreateShellContext(settings);
-
                     // Activate and register modified context.
-                    // Forcing enumeration with ToArray() so a lazy execution isn't causing issues by accessing the disposed shell context.
-                    _shellContexts = _shellContexts.Where(shell => shell.Settings.Name != settings.Name).Union(new[] { context }).ToArray();
-
-                    shellContext.Dispose();
                     context.Shell.Activate();
+                    _shellContextsDictionary.AddOrUpdate(settings.Name,
+                        context,
+                        (k, c) => c = context);
 
                     _runningShellTable.Update(settings);
                 });
@@ -371,15 +445,14 @@ namespace Orchard.Environment {
         /// A feature is enabled/disabled, the tenant needs to be restarted
         /// </summary>
         void IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor, string tenant) {
-            if (_shellContexts == null) {
+            if (!_shellContextsDictionary.Values.Any()) {
                 return;
             }
 
             Logger.Debug("Shell changed: " + tenant);
 
-            var context = _shellContexts.FirstOrDefault(x => x.Settings.Name == tenant);
-
-            if (context == null) {
+            ShellContext context;
+            if(!_shellContextsDictionary.TryGetValue(tenant, out context)) {
                 return;
             }
 
