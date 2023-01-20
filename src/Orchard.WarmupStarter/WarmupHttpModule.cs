@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Contexts;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace Orchard.WarmupStarter {
@@ -81,13 +83,44 @@ namespace Orchard.WarmupStarter {
             }
             else {
                 // this is the "on hold" execution path
-                var asyncResult = new WarmupAsyncResult(cb, extradata);
+                var application = (HttpApplication)sender;
+                WarmupAsyncResult asyncResult;
+                if (application != null) {
+                    asyncResult = new HttpRetryAsyncResult(application, cb, extradata);
+                }
+                else {
+                    asyncResult = new WarmupAsyncResult(cb, extradata);
+                }
                 Await(asyncResult.Completed);
                 return asyncResult;
             }
         }
 
         private static void EndBeginRequest(IAsyncResult ar) {
+        }
+
+        /// <summary>
+        /// Async results for "on hold" requests. These requests are retried when "Completed()"
+        /// is called by redirecting to the same url. This way they are separated from the queue
+        /// of other requests.
+        /// </summary>
+        private class HttpRetryAsyncResult : WarmupAsyncResult {
+            HttpApplication _sender;
+            public HttpRetryAsyncResult(HttpApplication sender,
+                AsyncCallback cb, object asyncState)
+                : base(cb, asyncState) {
+
+                _sender = sender;
+            }
+
+            public new void Completed() {
+                base.Completed();
+                // don't redirect POSTs.
+                if (_sender.Context.Request.RequestType == "GET") {
+                    _sender.Context.Response.Redirect(
+                        _sender.Context.Request.RawUrl, true);
+                }
+            }
         }
 
         /// <summary>

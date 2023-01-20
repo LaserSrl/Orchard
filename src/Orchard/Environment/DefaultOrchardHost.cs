@@ -2,8 +2,11 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
+using log4net.Repository.Hierarchy;
 using NHibernate.Util;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
@@ -38,9 +41,11 @@ namespace Orchard.Environment {
 
         private readonly ConcurrentDictionary<string, ShellContext> _shellContextsDictionary
             = new ConcurrentDictionary<string, ShellContext>(StringComparer.OrdinalIgnoreCase);
-        // The lock used for initialization/disposal of shells.
+        // The locks used for initialization/disposal of shells.
         readonly static ReaderWriterLockSlim _initializationLock =
             new ReaderWriterLockSlim();
+        readonly static ReaderWriterLockSlim _shellDisposalLock
+            = new ReaderWriterLockSlim();
 
         public int Retries { get; set; }
         public bool DelayRetries { get; set; }
@@ -84,9 +89,12 @@ namespace Orchard.Environment {
         }
 
         void IOrchardHost.Initialize() {
+            var httpContext = _httpContextAccessor.Current();
+            Logger.Error($"Initialize() {httpContext?.Request.Path ?? "null context"} started");
             Logger.Information("Initializing");
             BuildCurrent();
             Logger.Information("Initialized");
+            Logger.Error($"Initialize() {httpContext?.Request.Path ?? "null context"} done");
         }
 
         void IOrchardHost.ReloadExtensions() {
@@ -118,6 +126,9 @@ namespace Orchard.Environment {
         /// Ensures shells are activated, or re-activated if extensions have changed
         /// </summary>
         IEnumerable<ShellContext> BuildCurrent() {
+            // This method gets called:
+            // - During initialization of the application
+            // - at the beginning of a request, if the system failed to match the HttpContext to a Shell/tenant
 
             _initializationLock.EnterUpgradeableReadLock();
             try {
@@ -137,15 +148,25 @@ namespace Orchard.Environment {
                     try {
                         SetupExtensions();
                         MonitorExtensions();
-                        CreateAndActivateShells();
                     }
                     finally {
                         _initializationLock.ExitWriteLock();
                     }
+                    // here the initialization lock is in UpgradeableRead mode. Downgrade it to
+                    // read mode.
+                    _initializationLock.EnterReadLock();
+                    _initializationLock.ExitUpgradeableReadLock();
+
+                    CreateAndActivateShells();
                 }
             }
             finally {
-                _initializationLock.ExitUpgradeableReadLock();
+                if (_initializationLock.IsReadLockHeld) {
+                    _initializationLock.ExitReadLock();
+                }
+                if (_initializationLock.IsUpgradeableReadLockHeld) {
+                    _initializationLock.ExitUpgradeableReadLock();
+                }
             }
             
             return _shellContextsDictionary.Values;
@@ -171,15 +192,24 @@ namespace Orchard.Environment {
                         try {
                             SetupExtensions();
                             MonitorExtensions();
-                            _shellActivationLock.RunWithWriteLock(currentShell.Name, () => SingleShellCreationActivation(currentShell));
                         }
                         finally {
                             _initializationLock.ExitWriteLock();
                         }
+                        // here the initialization lock is in UpgradeableRead mode.  Downgrade it to
+                        // read mode.
+                        _initializationLock.EnterReadLock();
+                        _initializationLock.ExitUpgradeableReadLock();
+                        _shellActivationLock.RunWithWriteLock(currentShell.Name, () => SingleShellCreationActivation(currentShell));
                     }
                 }
                 finally {
-                    _initializationLock.ExitUpgradeableReadLock();
+                    if (_initializationLock.IsReadLockHeld) {
+                        _initializationLock.ExitReadLock();
+                    }
+                    if (_initializationLock.IsUpgradeableReadLockHeld) {
+                        _initializationLock.ExitUpgradeableReadLock();
+                    }
                 }
             }
         }
@@ -218,36 +248,46 @@ namespace Orchard.Environment {
         }
 
         private void SingleShellCreationActivation(ShellSettings settings) {
-            for (var i = 0; i <= Retries; i++) {
-
-                // Not the first attempt, wait for a while ...
-                if (DelayRetries && i > 0) {
-
-                    // Wait for i^2 which means 1, 2, 4, 8 ... seconds
-                    Thread.Sleep(TimeSpan.FromSeconds(Math.Pow(i, 2)));
-                }
-
+            // tries to enter the lock in read mode. If the lock is held in write mode it fails.
+            // This case would be if the shells are being disposed: as a result, no shell can be activated
+            // while at the same time we are disposing them.
+            if (_shellDisposalLock.TryEnterReadLock(0)) {
                 try {
-                    var context = CreateShellContext(settings);
-                    ActivateShell(context);
-                    // If everything went well, return to stop the retry loop
-                    break;
-                }
-                catch (Exception ex) {
-                    if (i == Retries) {
-                        Logger.Fatal("A tenant could not be started: {0} after {1} retries.", settings.Name, Retries);
-                        return;
-                    }
-                    else {
-                        Logger.Error(ex, "A tenant could not be started: " + settings.Name + " Attempt number: " + i);
-                    }
-                }
+                    for (var i = 0; i <= Retries; i++) {
 
-            }
+                        // Not the first attempt, wait for a while ...
+                        if (DelayRetries && i > 0) {
 
-            while (_processingEngine.AreTasksPending()) {
-                Logger.Debug("Processing pending task after activate Shell");
-                _processingEngine.ExecuteNextTask();
+                            // Wait for i^2 which means 1, 2, 4, 8 ... seconds
+                            Thread.Sleep(TimeSpan.FromSeconds(Math.Pow(i, 2)));
+                        }
+
+                        try {
+                            var context = CreateShellContext(settings);
+                            ActivateShell(context);
+                            // If everything went well, return to stop the retry loop
+                            break;
+                        }
+                        catch (Exception ex) {
+                            if (i == Retries) {
+                                Logger.Fatal("A tenant could not be started: {0} after {1} retries.", settings.Name, Retries);
+                                return;
+                            }
+                            else {
+                                Logger.Error(ex, "A tenant could not be started: " + settings.Name + " Attempt number: " + i);
+                            }
+                        }
+
+                    }
+
+                    while (_processingEngine.AreTasksPending()) {
+                        Logger.Debug("Processing pending task after activate Shell");
+                        _processingEngine.ExecuteNextTask();
+                    }
+                }
+                finally {
+                    _shellDisposalLock.ExitReadLock();
+                }
             }
         }
 
@@ -316,6 +356,7 @@ namespace Orchard.Environment {
             // retake it.
             if (!_initializationLock.IsWriteLockHeld) {
                 _initializationLock.EnterWriteLock();
+                _shellDisposalLock.EnterWriteLock();
                 try {
                     if (_shellContextsDictionary.Any()) {
                         Parallel.ForEach(_shellContextsDictionary.Values,
@@ -329,6 +370,7 @@ namespace Orchard.Environment {
                     }
                 }
                 finally {
+                    _shellDisposalLock.ExitWriteLock();
                     _initializationLock.ExitWriteLock();
                 }
             }
@@ -343,6 +385,7 @@ namespace Orchard.Environment {
             if (httpContext != null) {
                 currentShellSettings = _runningShellTable.Match(httpContext);
             }
+            Logger.Error($"BeginRequest() {httpContext?.Request.Path ?? "null context"} started");
 
             Action<ShellSettings> ensureInitialized = (currentShell) => {
                 // Ensure all shell contexts are loaded, or need to be reloaded if
@@ -357,9 +400,13 @@ namespace Orchard.Environment {
 
             // StartUpdatedShells can cause a writer shell activation lock so it should run outside the reader lock.
             StartUpdatedShells();
+
+            Logger.Error($"BeginRequest() {httpContext?.Request.Path ?? "null context"} done");
         }
 
         protected virtual void EndRequest() {
+            var httpContext = _httpContextAccessor.Current();
+            Logger.Error($"EndRequest() {httpContext?.Request.Path ?? "null context"} started");
             // Synchronously process all pending tasks. It's safe to do this at this point
             // of the pipeline, as the request transaction has been closed, so creating a new
             // environment and transaction for these tasks will behave as expected.)
@@ -369,6 +416,7 @@ namespace Orchard.Environment {
             }
 
             StartUpdatedShells();
+            Logger.Error($"EndRequest() {httpContext?.Request.Path ?? "null context"} done");
         }
 
         void IShellSettingsManagerEventHandler.Saved(ShellSettings settings) {
