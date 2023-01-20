@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Contexts;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Web;
 
 namespace Orchard.WarmupStarter {
@@ -83,14 +81,7 @@ namespace Orchard.WarmupStarter {
             }
             else {
                 // this is the "on hold" execution path
-                var application = (HttpApplication)sender;
-                WarmupAsyncResult asyncResult;
-                if (application != null) {
-                    asyncResult = new HttpRetryAsyncResult(application, cb, extradata);
-                }
-                else {
-                    asyncResult = new WarmupAsyncResult(cb, extradata);
-                }
+                var asyncResult = new WarmupAsyncResult(cb, extradata);
                 Await(asyncResult.Completed);
                 return asyncResult;
             }
@@ -100,41 +91,13 @@ namespace Orchard.WarmupStarter {
         }
 
         /// <summary>
-        /// Async results for "on hold" requests. These requests are retried when "Completed()"
-        /// is called by redirecting to the same url. This way they are separated from the queue
-        /// of other requests.
-        /// </summary>
-        private class HttpRetryAsyncResult : WarmupAsyncResult {
-            HttpApplication _sender;
-            public HttpRetryAsyncResult(HttpApplication sender,
-                AsyncCallback cb, object asyncState)
-                : base(cb, asyncState) {
-
-                _sender = sender;
-            }
-
-            public new void Completed() {
-                // don't redirect POSTs.
-                if (_sender.Context.Request.RequestType == "GET") {
-                    _sender.Context.Response.Redirect(
-                        _sender.Context.Request.RawUrl, true);
-                    _isCompleted = true;
-                    _eventWaitHandle.Set();
-                }
-                else {
-                    base.Completed();
-                }
-            }
-        }
-
-        /// <summary>
         /// AsyncResult for "on hold" request (resumes when "Completed()" is called)
         /// </summary>
         private class WarmupAsyncResult : IAsyncResult {
-            protected readonly EventWaitHandle _eventWaitHandle = new AutoResetEvent(false/*initialState*/);
+            private readonly EventWaitHandle _eventWaitHandle = new AutoResetEvent(false/*initialState*/);
             private readonly AsyncCallback _cb;
             private readonly object _asyncState;
-            protected bool _isCompleted;
+            private bool _isCompleted;
 
             public WarmupAsyncResult(AsyncCallback cb, object asyncState) {
                 _cb = cb;

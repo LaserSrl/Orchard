@@ -88,8 +88,8 @@ namespace Orchard.Environment {
             var httpContext = _httpContextAccessor.Current();
             Logger.Error($"Initialize() {httpContext?.Request.Path ?? "null context"} started");
             Logger.Information("Initializing");
-            BuildCurrent();
-            //InitializeApplication();
+            //BuildCurrent();
+            InitializeApplication();
             Logger.Information("Initialized");
             Logger.Error($"Initialize() {httpContext?.Request.Path ?? "null context"} done");
         }
@@ -125,7 +125,8 @@ namespace Orchard.Environment {
         IEnumerable<ShellContext> BuildCurrent() {
             // This method gets called:
             // - During initialization of the application
-            // - at the beginning of a request, if the system failed to match the HttpContext to a Shell/tenant
+            // - At the beginning of a request, if the system failed to match the HttpContext to a Shell/tenant
+            // - To get a list of all active shells
 
             _initializationLock.EnterUpgradeableReadLock();
             try {
@@ -197,23 +198,35 @@ namespace Orchard.Environment {
                     finally {
                         _initializationLock.ExitWriteLock();
                     }
-                    // TODO: test this. Detaching the creation of the shells in its own task will
-                    // mean this method returns earlier, but it may prevent correctly logging errors
-                    // in their initialization.
-                    Task.Factory.StartNew(() => {
-                        _initializationLock.EnterReadLock();
-                        try {
-                            CreateAndActivateInactiveShells();
-                        }
-                        finally {
-                            _initializationLock.ExitReadLock();
-                        }
-                    });
+                    // here the initialization lock is in UpgradeableRead mode. Downgrade it to
+                    // read mode.
+                    _initializationLock.EnterReadLock();
+                    _initializationLock.ExitUpgradeableReadLock();
+
+                    CreateAndActivateInactiveShells();
+
+                    //// TODO: test this. Detaching the creation of the shells in its own task will
+                    //// mean this method returns earlier, but it may prevent correctly logging errors
+                    //// in their initialization.
+                    //Task.Factory.StartNew(() => {
+                    //    _initializationLock.EnterReadLock();
+                    //    try {
+                    //        CreateAndActivateInactiveShells();
+                    //    }
+                    //    finally {
+                    //        _initializationLock.ExitReadLock();
+                    //    }
+                    //});
 
                 }
             }
             finally {
-                _initializationLock.ExitUpgradeableReadLock();
+                if (_initializationLock.IsReadLockHeld) {
+                    _initializationLock.ExitReadLock();
+                }
+                if (_initializationLock.IsUpgradeableReadLockHeld) {
+                    _initializationLock.ExitUpgradeableReadLock();
+                }
             }
         }
 
