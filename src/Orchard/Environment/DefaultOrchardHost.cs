@@ -2,11 +2,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
-using log4net.Repository.Hierarchy;
 using NHibernate.Util;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
@@ -34,7 +31,6 @@ namespace Orchard.Environment {
         private readonly IExtensionMonitoringCoordinator _extensionMonitoringCoordinator;
         private readonly ICacheManager _cacheManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly static object _shellContextsWriteLock = new object();
         private readonly NamedReaderWriterLock _shellActivationLock = new NamedReaderWriterLock();
 
         private readonly ContextState<IList<ShellSettings>> _tenantsToRestart;
@@ -58,7 +54,7 @@ namespace Orchard.Environment {
             IExtensionLoaderCoordinator extensionLoaderCoordinator,
             IExtensionMonitoringCoordinator extensionMonitoringCoordinator,
             ICacheManager cacheManager,
-            IHostLocalRestart hostLocalRestart, 
+            IHostLocalRestart hostLocalRestart,
             IHttpContextAccessor httpContextAccessor) {
 
             _shellSettingsManager = shellSettingsManager;
@@ -93,6 +89,7 @@ namespace Orchard.Environment {
             Logger.Error($"Initialize() {httpContext?.Request.Path ?? "null context"} started");
             Logger.Information("Initializing");
             BuildCurrent();
+            //InitializeApplication();
             Logger.Information("Initialized");
             Logger.Error($"Initialize() {httpContext?.Request.Path ?? "null context"} done");
         }
@@ -157,7 +154,7 @@ namespace Orchard.Environment {
                     _initializationLock.EnterReadLock();
                     _initializationLock.ExitUpgradeableReadLock();
 
-                    CreateAndActivateShells();
+                    CreateAndActivateInactiveShells();
                 }
             }
             finally {
@@ -168,8 +165,56 @@ namespace Orchard.Environment {
                     _initializationLock.ExitUpgradeableReadLock();
                 }
             }
-            
+
             return _shellContextsDictionary.Values;
+        }
+
+        /// <summary>
+        /// Initialize application and create a task to initialize shells. This is
+        /// similar to BuildCurrent(), but returns earlier because it detaches a
+        /// separate thread to initialize the shells.
+        /// </summary>
+        void InitializeApplication() {
+            _initializationLock.EnterUpgradeableReadLock();
+            try {
+                var shellContexts = _shellContextsDictionary.Values;
+                // Here we should test whether there are some shells that may have to be activated.
+                var shouldInit =
+                    // No shell has been activated, so we should activate stuff
+                    !shellContexts.Any()
+                    // There are fewer active shells than the ones there should be by reading the settings
+                    || (shellContexts.Count() < _shellSettingsManager.LoadSettings()
+                        .Where(settings => settings.State == TenantState.Running
+                            || settings.State == TenantState.Uninitialized || settings.State == TenantState.Initializing)
+                        .Count())
+                    ;
+                if (shouldInit) {
+                    _initializationLock.EnterWriteLock();
+                    try {
+                        SetupExtensions();
+                        MonitorExtensions();
+                    }
+                    finally {
+                        _initializationLock.ExitWriteLock();
+                    }
+                    // TODO: test this. Detaching the creation of the shells in its own task will
+                    // mean this method returns earlier, but it may prevent correctly logging errors
+                    // in their initialization.
+                    Task.Factory.StartNew(() => {
+                        _initializationLock.EnterReadLock();
+                        try {
+                            CreateAndActivateInactiveShells();
+                        }
+                        finally {
+                            _initializationLock.ExitReadLock();
+                        }
+                    });
+
+                }
+            }
+            finally {
+                _initializationLock.ExitUpgradeableReadLock();
+            }
         }
 
         /// <summary>
@@ -231,7 +276,34 @@ namespace Orchard.Environment {
                 .Where(settings => settings.State == TenantState.Running || settings.State == TenantState.Uninitialized || settings.State == TenantState.Initializing)
                 .ToArray();
 
-            // Load all tenants, and activate their shell.
+            // Load all tenants, and activate their shell. This will also "reactivate" already
+            // active shells.
+            if (allSettings.Any()) {
+                Parallel.ForEach(allSettings, settings => {
+                    // Each shell does its own lock.
+                    _shellActivationLock.RunWithWriteLock(settings.Name, () => SingleShellCreationActivation(settings));
+                });
+            }
+            // No settings, run the Setup.
+            else {
+                var setupContext = CreateSetupContext();
+                ActivateShell(setupContext);
+            }
+
+            Logger.Information("Done creating shells");
+        }
+
+        void CreateAndActivateInactiveShells() {
+            Logger.Information("Start creation of inactive shells");
+
+            // Is there any tenant right now?
+            var allSettings = _shellSettingsManager.LoadSettings()
+                .Where(settings => settings.State == TenantState.Running || settings.State == TenantState.Uninitialized || settings.State == TenantState.Initializing)
+                // Don't consider tenants that are already active
+                .Where(settings => !_shellContextsDictionary.ContainsKey(settings.Name))
+                .ToArray();
+            // Load all tenants, and activate their shell. This will also "reactivate" already
+            // active shells.
             if (allSettings.Any()) {
                 Parallel.ForEach(allSettings, settings => {
                     // Each shell does its own lock.
@@ -500,7 +572,7 @@ namespace Orchard.Environment {
             Logger.Debug("Shell changed: " + tenant);
 
             ShellContext context;
-            if(!_shellContextsDictionary.TryGetValue(tenant, out context)) {
+            if (!_shellContextsDictionary.TryGetValue(tenant, out context)) {
                 return;
             }
 

@@ -114,11 +114,15 @@ namespace Orchard.WarmupStarter {
             }
 
             public new void Completed() {
-                base.Completed();
                 // don't redirect POSTs.
                 if (_sender.Context.Request.RequestType == "GET") {
                     _sender.Context.Response.Redirect(
                         _sender.Context.Request.RawUrl, true);
+                    _isCompleted = true;
+                    _eventWaitHandle.Set();
+                }
+                else {
+                    base.Completed();
                 }
             }
         }
@@ -127,10 +131,10 @@ namespace Orchard.WarmupStarter {
         /// AsyncResult for "on hold" request (resumes when "Completed()" is called)
         /// </summary>
         private class WarmupAsyncResult : IAsyncResult {
-            private readonly EventWaitHandle _eventWaitHandle = new AutoResetEvent(false/*initialState*/);
+            protected readonly EventWaitHandle _eventWaitHandle = new AutoResetEvent(false/*initialState*/);
             private readonly AsyncCallback _cb;
             private readonly object _asyncState;
-            private bool _isCompleted;
+            protected bool _isCompleted;
 
             public WarmupAsyncResult(AsyncCallback cb, object asyncState) {
                 _cb = cb;
