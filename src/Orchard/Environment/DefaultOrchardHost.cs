@@ -86,12 +86,10 @@ namespace Orchard.Environment {
 
         void IOrchardHost.Initialize() {
             var httpContext = _httpContextAccessor.Current();
-            Logger.Error($"Initialize() {httpContext?.Request.Path ?? "null context"} started");
             Logger.Information("Initializing");
             //BuildCurrent();
             InitializeApplication();
             Logger.Information("Initialized");
-            Logger.Error($"Initialize() {httpContext?.Request.Path ?? "null context"} done");
         }
 
         void IOrchardHost.ReloadExtensions() {
@@ -203,21 +201,7 @@ namespace Orchard.Environment {
                     _initializationLock.EnterReadLock();
                     _initializationLock.ExitUpgradeableReadLock();
 
-                    CreateAndActivateInactiveShells();
-
-                    //// TODO: test this. Detaching the creation of the shells in its own task will
-                    //// mean this method returns earlier, but it may prevent correctly logging errors
-                    //// in their initialization.
-                    //Task.Factory.StartNew(() => {
-                    //    _initializationLock.EnterReadLock();
-                    //    try {
-                    //        CreateAndActivateInactiveShells();
-                    //    }
-                    //    finally {
-                    //        _initializationLock.ExitReadLock();
-                    //    }
-                    //});
-
+                    CreateAndActivateShells();
                 }
             }
             finally {
@@ -470,7 +454,6 @@ namespace Orchard.Environment {
             if (httpContext != null) {
                 currentShellSettings = _runningShellTable.Match(httpContext);
             }
-            Logger.Error($"BeginRequest() {httpContext?.Request.Path ?? "null context"} started");
 
             Action<ShellSettings> ensureInitialized = (currentShell) => {
                 // Ensure all shell contexts are loaded, or need to be reloaded if
@@ -485,13 +468,9 @@ namespace Orchard.Environment {
 
             // StartUpdatedShells can cause a writer shell activation lock so it should run outside the reader lock.
             StartUpdatedShells();
-
-            Logger.Error($"BeginRequest() {httpContext?.Request.Path ?? "null context"} done");
         }
 
         protected virtual void EndRequest() {
-            var httpContext = _httpContextAccessor.Current();
-            Logger.Error($"EndRequest() {httpContext?.Request.Path ?? "null context"} started");
             // Synchronously process all pending tasks. It's safe to do this at this point
             // of the pipeline, as the request transaction has been closed, so creating a new
             // environment and transaction for these tasks will behave as expected.)
@@ -501,7 +480,6 @@ namespace Orchard.Environment {
             }
 
             StartUpdatedShells();
-            Logger.Error($"EndRequest() {httpContext?.Request.Path ?? "null context"} done");
         }
 
         void IShellSettingsManagerEventHandler.Saved(ShellSettings settings) {
