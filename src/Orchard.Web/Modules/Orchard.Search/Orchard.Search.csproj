@@ -140,14 +140,17 @@
     <ProjectReference Include="..\Orchard.Blogs\Orchard.Blogs.csproj">
       <Project>{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}</Project>
       <Name>Orchard.Blogs</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
       <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
       <Name>Orchard.MediaLibrary</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Widgets\Orchard.Widgets.csproj">
       <Project>{194d3ccc-1153-474d-8176-fde8d7d0d0bd}</Project>
       <Name>Orchard.Widgets</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

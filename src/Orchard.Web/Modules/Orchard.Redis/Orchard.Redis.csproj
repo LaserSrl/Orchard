@@ -108,14 +108,17 @@
     <ProjectReference Include="..\Orchard.Caching\Orchard.Caching.csproj">
       <Project>{7528BF74-25C7-4ABE-883A-443B4EEC4776}</Project>
       <Name>Orchard.Caching</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.MessageBus\Orchard.MessageBus.csproj">
       <Project>{ed715544-e649-4f48-b8ee-9368c41c3ac0}</Project>
       <Name>Orchard.MessageBus</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.OutputCache\Orchard.OutputCache.csproj">
       <Project>{6e444ff1-a47c-4cf6-bb3f-507c8ebd776d}</Project>
       <Name>Orchard.OutputCache</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

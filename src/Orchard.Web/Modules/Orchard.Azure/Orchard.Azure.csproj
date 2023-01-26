@@ -169,6 +169,7 @@
     <ProjectReference Include="..\Orchard.OutputCache\Orchard.OutputCache.csproj">
       <Project>{6e444ff1-a47c-4cf6-bb3f-507c8ebd776d}</Project>
       <Name>Orchard.OutputCache</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
