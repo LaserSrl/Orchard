@@ -74,15 +74,6 @@ namespace Orchard.WarmupStarter {
 
         private IAsyncResult BeginBeginRequest(object sender, EventArgs e, AsyncCallback cb, object extradata) {
             // host is available, process every requests, or file is processed
-
-            // Log the calls that are being intercepted here
-            System.IO.File.AppendAllText(
-                @"D:\piovanellim\Laser.Orchard\Orchard\src\Orchard.Web\App_Data\Logs\perf-paths.log",
-                System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "\t\t\t "
-                + $"{((HttpApplication)sender).Context.Request.Path}" + Environment.NewLine
-                );
-            
-
             if (!InWarmup() || WarmupUtility.DoBeginRequest(_context)) {
                 var asyncResult = new DoneAsyncResult(extradata);
                 cb(asyncResult);

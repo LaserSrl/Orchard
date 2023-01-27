@@ -65,24 +65,7 @@ namespace Orchard.ContentManagement {
 
             BindPlacement(context, actualDisplayType, stereotype);
 
-            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-
-            _handlers.Value.Invoke(handler => {
-                sw = null;
-                sw = new System.Diagnostics.Stopwatch();
-                //System.IO.File.AppendAllText(
-                //    @"D:\piovanellim\Laser.Orchard\Orchard\src\Orchard.Web\App_Data\Logs\perf-display.log",
-                //    System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "\t\t\t ---- \t\t\t" + "BuildDisplay For " + handler.GetType().ToString() + " START" + "\r\n");
-                sw.Start();
-                handler.BuildDisplay(context);
-                sw.Stop();
-                System.IO.File.AppendAllText(
-                    @"D:\piovanellim\Laser.Orchard\Orchard\src\Orchard.Web\App_Data\Logs\perf-display.log",
-                    System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "\t\t\t "
-                    + sw.Elapsed.TotalMilliseconds.ToString() + "\t\t\t"
-                    + $"BuildDisplay {context.DisplayType} For content {context.Content.Id} "
-                    + handler.GetType().ToString() + "\t " + "\r\n");
-            }, Logger);
+            _handlers.Value.Invoke(handler => handler.BuildDisplay(context), Logger);
             return context.Shape;
         }
 
@@ -105,23 +88,7 @@ namespace Orchard.ContentManagement {
             context.Layout = workContext.Layout;
             BindPlacement(context, null, stereotype);
 
-            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-            _handlers.Value.Invoke(handler => {
-                sw = null;
-                sw = new System.Diagnostics.Stopwatch();
-                //System.IO.File.AppendAllText(
-                //    @"D:\piovanellim\Laser.Orchard\Orchard\src\Orchard.Web\App_Data\Logs\perf-editor.log",
-                //    System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "\t\t\t ---- \t\t\t" + "BuildEditor For " + handler.GetType().ToString() + " START" + "\r\n");
-                sw.Start();
-                handler.BuildEditor(context);
-                sw.Stop();
-                System.IO.File.AppendAllText(
-                    @"D:\piovanellim\Laser.Orchard\Orchard\src\Orchard.Web\App_Data\Logs\perf-editor.log",
-                    System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "\t\t\t "
-                    + sw.Elapsed.TotalMilliseconds.ToString() + "\t\t\t"
-                    + $"BuildEditor For {context.Content.Id} "
-                    + handler.GetType().ToString() + "\t " + "\r\n");
-            }, Logger);
+            _handlers.Value.Invoke(handler => handler.BuildEditor(context), Logger);
 
 
             return context.Shape;
