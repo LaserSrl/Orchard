@@ -47,8 +47,6 @@ namespace Orchard.Environment.Extensions.Loaders {
             Logger = NullLogger.Instance;
 
             _extensionsVirtualPathPrefixes = extensionLocations.ModuleAndThemeLocations;
-
-            Disabled = true;
         }
 
         public ILogger Logger { get; set; }
@@ -62,7 +60,6 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency) {
-            return Enumerable.Empty<string>();
             // Return csproj and all .cs files
             return GetDependencies(dependency.VirtualPath);
         }
@@ -124,7 +121,6 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
-            return;
             //Note: This is the same implementation as "PrecompiledExtensionLoader"
             if (string.IsNullOrEmpty(referenceEntry.VirtualPath))
                 return;
