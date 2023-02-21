@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.FileSystems.Media;
@@ -17,16 +18,23 @@ namespace Orchard.MediaLibrary.Controllers {
     public class ClientStorageController : Controller {
         private readonly IMediaLibraryService _mediaLibraryService;
         private readonly IMimeTypeProvider _mimeTypeProvider;
+        private readonly IStorageProvider _storageProvider;
 
         public ClientStorageController(
             IMediaLibraryService mediaManagerService,
             IOrchardServices orchardServices,
-            IMimeTypeProvider mimeTypeProvider) {
+            IMimeTypeProvider mimeTypeProvider,
+            IStorageProvider storageProvider) {
             _mediaLibraryService = mediaManagerService;
             _mimeTypeProvider = mimeTypeProvider;
+            _storageProvider = storageProvider; 
             Services = orchardServices;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
+
+
+
+
         }
 
         public IOrchardServices Services { get; set; }
@@ -60,8 +68,114 @@ namespace Orchard.MediaLibrary.Controllers {
         }
 
         [HttpPost]
+        public ActionResult ChunkUpload([ModelBinder(typeof(ChunkUploadRequestBinder))] ChunkUploadRequest request) {
+            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.ImportMediaContent, request.UploadFolder)) {
+                return new HttpUnauthorizedResult();
+            }
+
+            if (!_mediaLibraryService.CanManageMediaFolder(request.UploadFolder)) {
+                return new HttpUnauthorizedResult();
+            }
+
+            var filename = Path.GetFileName(request.OriginalFile.FileName);
+            var statuses = new List<object>();
+
+            var upload = true;
+
+            // if the file has been pasted, provide a default name
+            if (request.OriginalFile.ContentType.Equals("image/png", StringComparison.InvariantCultureIgnoreCase) && !filename.EndsWith(".png", StringComparison.InvariantCultureIgnoreCase)) {
+                filename = "clipboard.png";
+            }
+
+            // skip file if the allowed extensions is defined and doesn't match
+            var settings = Services.WorkContext.CurrentSite.As<MediaLibrarySettingsPart>();
+            if (!settings.IsFileAllowed(filename)) {
+                statuses.Add(new {
+                    error = T("This file is not allowed: {0}", filename).Text,
+                    progress = 1.0,
+                });
+                upload = false;
+            }
+
+            if (upload) {
+                var path = _storageProvider.Combine("D:\\Laser.Orchard\\Laser.Orchard\\Orchard\\src\\Orchard.Web\\Media\\Default\\Pictures", filename); // create path
+
+                FileStatus status = null;
+
+                try {
+                    if (request.IsChunk) {
+                        if (request.IsFirst) {
+                            // do some stuff that has to be done before the file starts uploading
+                            var a = 0;
+                        }
+
+                        var inputStream = request.OriginalFile.InputStream;
+
+                        using (var fs = new FileStream(path, FileMode.Append, FileAccess.Write)) {
+                            var buffer = new byte[1024];
+
+                            var l = inputStream.Read(buffer, 0, 1024);
+                            while (l > 0) {
+                                fs.Write(buffer, 0, l);
+                                l = inputStream.Read(buffer, 0, 1024);
+                            }
+
+                            fs.Flush();
+                            fs.Close();
+                        }
+
+                        status = new FileStatus(new FileInfo(path));
+
+                        if (request.IsLast) {
+                            // do some stuff that has to be done after the file is uploaded
+                            var a = 0;
+
+                            try {
+                                var mediaPart = _mediaLibraryService.ImportMedia(new FileStream(path, FileMode.Open, FileAccess.Read), request.UploadFolder, filename, request.MediaType);
+                                Services.ContentManager.Create(mediaPart);
+
+                                statuses.Add(new {
+                                    id = mediaPart.Id,
+                                    name = mediaPart.Title,
+                                    type = mediaPart.MimeType,
+                                    size = request.OriginalFile.ContentLength,
+                                    progress = 1.0,
+                                    url = mediaPart.FileName,
+                                });
+                            } catch (Exception ex) {
+                                Logger.Error(ex, "Unexpected exception when uploading a media.");
+                                statuses.Add(new {
+                                    error = T(ex.Message).Text,
+                                    progress = 1.0,
+                                });
+                            }
+                        }
+                    } else {
+                        //file.SaveAs(path);
+                        status = new FileStatus(new FileInfo(path));
+                    }
+                } catch {
+                    statuses.Add(new {
+                        error = T("Something went wrong").Text,
+                        progress = 1.0,
+                    });
+                }
+
+                //// this is just a browser json support/compatibility workaround
+                //if (request.JsonAccepted)
+                //    return Json(status);
+                //else
+                //    return Json(status, "text/plain");
+            }
+            
+
+            // Return JSON
+            return Json(statuses, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
         public ActionResult Upload(string folderPath, string type) {
-            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.ImportMediaContent, folderPath)) {
+            if (!_mediaLibraryService.CheckMediaFolderPermission(Permissions.ImportMediaContent, folderPath)) {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
                 return new HttpUnauthorizedResult();
             }
 

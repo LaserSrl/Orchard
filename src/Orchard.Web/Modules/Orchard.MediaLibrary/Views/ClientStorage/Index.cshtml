@@ -80,7 +80,9 @@
             // Add drag-n-drop HTML5 support
             $('#fileupload').fileupload({
                 autoUpload: true,
-                sequentialUploads: true,
+                maxChunkSize: 300000,
+                limitMultiFileUploads: 5,
+                //limitConcurrentUploads: 5,
                 @if(Model.Replace == null) {
                 <text>
                 url: '@Url.Action("Upload")',
