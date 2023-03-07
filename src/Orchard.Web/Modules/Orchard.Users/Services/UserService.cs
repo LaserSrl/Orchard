@@ -128,6 +128,10 @@ namespace Orchard.Users.Services {
             if (user == null)
                 return null;
 
+            if (user.As<UserPart>().EmailStatus == UserStatus.Approved) {
+                return null;
+            }
+
             user.As<UserPart>().EmailStatus = UserStatus.Approved;
 
             return user;
