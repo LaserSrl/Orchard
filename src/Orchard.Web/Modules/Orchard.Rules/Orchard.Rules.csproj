@@ -140,14 +140,17 @@
     <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
       <Project>{642A49D7-8752-4177-80D6-BFBBCFAD3DE0}</Project>
       <Name>Orchard.Forms</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Scripting\Orchard.Scripting.csproj">
       <Project>{99002B65-86F7-415E-BF4A-381AA8AB9CCC}</Project>
       <Name>Orchard.Scripting</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6F759635-13D7-4E94-BCC9-80445D63F117}</Project>
       <Name>Orchard.Tokens</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
