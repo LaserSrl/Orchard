@@ -143,30 +143,37 @@
     <ProjectReference Include="..\Orchard.Autoroute\Orchard.Autoroute.csproj">
       <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project>
       <Name>Orchard.Autoroute</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Email\Orchard.Email.csproj">
       <Project>{05660f47-d649-48bd-9ded-df4e01e7cff9}</Project>
       <Name>Orchard.Email</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
       <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
       <Name>Orchard.MediaLibrary</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Projections\Orchard.Projections.csproj">
       <Project>{5531e894-d259-45a3-aa61-26dbe720c1ce}</Project>
       <Name>Orchard.Projections</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Taxonomies\Orchard.Taxonomies.csproj">
       <Project>{e649ea64-d213-461b-87f7-d67035801443}</Project>
       <Name>Orchard.Taxonomies</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Widgets\Orchard.Widgets.csproj">
       <Project>{194d3ccc-1153-474d-8176-fde8d7d0d0bd}</Project>
       <Name>Orchard.Widgets</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Workflows\Orchard.Workflows.csproj">
       <Project>{7059493c-8251-4764-9c1e-2368b8b485bc}</Project>
       <Name>Orchard.Workflows</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

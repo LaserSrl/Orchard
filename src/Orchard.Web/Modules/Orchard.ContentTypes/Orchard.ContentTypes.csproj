@@ -192,6 +192,7 @@
     <ProjectReference Include="..\Orchard.Themes\Orchard.Themes.csproj">
       <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
       <Name>Orchard.Themes</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

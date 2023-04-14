@@ -267,18 +267,22 @@
     <ProjectReference Include="..\Markdown\Markdown.csproj">
       <Project>{3158c928-888c-4a84-8bc1-4a8257489538}</Project>
       <Name>Markdown</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Alias\Orchard.Alias.csproj">
       <Project>{475b6c45-b27c-438b-8966-908b9d6d1077}</Project>
       <Name>Orchard.Alias</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Autoroute\Orchard.Autoroute.csproj">
       <Project>{66fccd76-2761-47e3-8d11-b45d0001ddaa}</Project>
       <Name>Orchard.Autoroute</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Conditions\Orchard.Conditions.csproj">
       <Project>{98251eae-a41b-47b2-aa91-e28b8482da70}</Project>
       <Name>Orchard.Conditions</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
       <Project>{642a49d7-8752-4177-80d6-bfbbcfad3de0}</Project>
@@ -288,18 +292,22 @@
     <ProjectReference Include="..\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
       <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
       <Name>Orchard.MediaLibrary</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Projections\Orchard.Projections.csproj">
       <Project>{5531e894-d259-45a3-aa61-26dbe720c1ce}</Project>
       <Name>Orchard.Projections</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Themes\Orchard.Themes.csproj">
       <Project>{cde24a24-01d3-403c-84b9-37722e18dfb7}</Project>
       <Name>Orchard.Themes</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
       <Name>Orchard.Tokens</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

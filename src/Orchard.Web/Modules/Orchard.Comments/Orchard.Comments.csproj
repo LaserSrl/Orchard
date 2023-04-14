@@ -157,10 +157,12 @@
     <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
       <Project>{6f759635-13d7-4e94-bcc9-80445d63f117}</Project>
       <Name>Orchard.Tokens</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Workflows\Orchard.Workflows.csproj">
       <Project>{7059493c-8251-4764-9c1e-2368b8b485bc}</Project>
       <Name>Orchard.Workflows</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

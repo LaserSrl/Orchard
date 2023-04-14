@@ -106,6 +106,7 @@
     <ProjectReference Include="..\Orchard.Scripting\Orchard.Scripting.csproj">
       <Project>{99002b65-86f7-415e-bf4a-381aa8ab9ccc}</Project>
       <Name>Orchard.Scripting</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
