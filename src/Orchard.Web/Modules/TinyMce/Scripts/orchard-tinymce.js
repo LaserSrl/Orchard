@@ -11,9 +11,6 @@ if (mediaLibraryEnabled) {
     mediaPlugins += " medialibrary";
 }
 
-
-//TODO: manage concatenation and buttons
-//TODO: manage global scope variables
 if (contenPickerEnabled && tokensHtmlFilterEnabled) {
     contentPickerPlugins += " orchardcontentlinks"
     contentPickerButtons += "orchardlink"

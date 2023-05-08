@@ -1,5 +1,4 @@
-﻿
-tinymce.PluginManager.add('orchardcontentlinks', function (editor, url) {
+﻿tinymce.PluginManager.add('orchardcontentlinks', function (editor, url) {
     var contentPickerAction = function () {
         var data = {};
         var callbackName = "_contentpicker_" + new Date().getTime();
@@ -11,7 +10,7 @@ tinymce.PluginManager.add('orchardcontentlinks', function (editor, url) {
             if (!textLink || textLink == "") {
                 textLink = returnData.displayText;
             }
-            editor.insertContent("<a href=\"#{ContentManager.Get:" + returnData.id.toString() + ".DisplayUrl}\">" + textLink + "</a>");
+            editor.insertContent("<a href=\"#{ContentItem.Id:" + returnData.id.toString() + ".DisplayUrl}\">" + textLink + "</a>");
 
         };
         $[callbackName].data = data;
@@ -32,7 +31,7 @@ tinymce.PluginManager.add('orchardcontentlinks', function (editor, url) {
 
     // Add a button that opens a window
     editor.addButton('orchardlink', {
-        image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QAEABHAPK/xSSIAAAACXBIWXMAAC4jAAAuIwF4pT92AAAB3klEQVRIx9XVvUuVcRQH8I/e61WSIrMXG4xqaKihDCIbIsolgv6BhkaH1sbGoK2hvS3aKiepcGmICCQIaY+SpFChFE1T7235Xni4XB8dNOjA4fm9nfM9b8857DJ1tOz7cRG3sq6UyM7iJZ7j93YBL+MFFlBHo4QXMYHb6GljLKi27E9gBDU8xfImhtzEUQxHxzJeYSngm9JoHsxjoOTdm4InS5jEdfS1etK5A3ncg3N4mPz17jRAM9SncB9XdgOgCXIah8uSvF16hGeF/T7cS7i6dgJgrGU/gLsBsFshakv/P0B1m0Z0FLiOjdxVcjaHIwWZSrPVbAXQHcHBVMpamtx07o7hQIxYCVgVv/AVs2UAFRxP32n+obN4jykMhfdG6XxKtC/d9S3GywC6cCE95nsUL+ATDqY9LOR8NVzD/nTlG5iubhH7k/iDJ3hdyNlQZsFcFH/Bj9zVY9AoBssAGlFQiSdrWE+cO7MeTg4mkqND8eJ8CuFnGcB62vAZXMOlJK+SuK9k0LwL+EgA+5OvSUxV2yhdzYMHuIPHOJtqWon1vYXQfIi3fVn34Bs+4nOr1VcxXhiZzWqqFbi78C0aWIvy5ruKNkN9ETMRnsnYbCSe7bhekN1IBJp3Df+C/gLjrnlNxkqTcgAAAABJRU5ErkJggg==',
+        image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsSAAALEgHS3X78AAABb0lEQVRIibWW223CQBBFDxEFUAIdJNHsf6CCkApiKgBXAFSAUgFJBdCB4X9HogSX4A6Sjx0rK8cGY5P7sw9Z93h3HvYAk4jbAk/cpgLYqPpz0wODCJDZ9NTSfBVBpk2QKuCk6tdt3EXcN5BGoFrIQ8u3bdIZeAZyIBNxf664LwBVnwPTJkhvgEGKJsiwp/dCxE2i9RFYAlsD9gIcgRHwUtkv4kVngKqf1u2LuHUMvUsMLunfAVevSMQtCUf+UvWHWwEXTyDidoSMGAF7EZfcDWDmCTC3gM6BnYgb9wZYoSSEXlP2l3LsDCiAQzTPgXd+KzMDzqr+2Amg6t+AmXXViUHGBs0MWJv7rQB25yszWpn5xsYjoR0XVYNrGkbmCSGQr4SsyYG8qWLbqjxBAqSq/hP4MNDYQL1UFloBPEbzPeEENxdWEyAl5PiIEOCcjndeVfxNngELM08NdOtfBlgnLWM3qHvC8n7bwbzUWdWnAD+rk38HDdeC5gAAAABJRU5ErkJggg==',
         tooltip: 'Content link',
         onclick: contentPickerAction
     });
@@ -40,7 +39,7 @@ tinymce.PluginManager.add('orchardcontentlinks', function (editor, url) {
     // Adds a menu item to the tools menu
     editor.addMenuItem('orchardlink ', {
         text: 'content link',
-        //image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QAEABHAPK/xSSIAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAvElEQVRIx+2VsRHCMAxFH3AwAR075CjSpGOfLEU6nAKmoIICJohHYANoVPjAji0nNLn8OxeSvny2vmTDDCUOQOfYb1mptpU9grDKDX12N20Nvq88OH+ZkLQGDFA7vho4SWwQdkADPIHS8ZfiOwonC1s5+R2oPPFKYka46hpegCtQ9PD3wA0452qwiXBWwlnklqhNKFGrKVFI5EdA5EYrsm8OQm1qPG0anaPRB216eI3wXNvYh2P/+eHM+MEHpr9Js1lOQvUAAAAASUVORK5CYII=',
+        image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsSAAALEgHS3X78AAABb0lEQVRIibWW223CQBBFDxEFUAIdJNHsf6CCkApiKgBXAFSAUgFJBdCB4X9HogSX4A6Sjx0rK8cGY5P7sw9Z93h3HvYAk4jbAk/cpgLYqPpz0wODCJDZ9NTSfBVBpk2QKuCk6tdt3EXcN5BGoFrIQ8u3bdIZeAZyIBNxf664LwBVnwPTJkhvgEGKJsiwp/dCxE2i9RFYAlsD9gIcgRHwUtkv4kVngKqf1u2LuHUMvUsMLunfAVevSMQtCUf+UvWHWwEXTyDidoSMGAF7EZfcDWDmCTC3gM6BnYgb9wZYoSSEXlP2l3LsDCiAQzTPgXd+KzMDzqr+2Amg6t+AmXXViUHGBs0MWJv7rQB25yszWpn5xsYjoR0XVYNrGkbmCSGQr4SsyYG8qWLbqjxBAqSq/hP4MNDYQL1UFloBPEbzPeEENxdWEyAl5PiIEOCcjndeVfxNngELM08NdOtfBlgnLWM3qHvC8n7bwbzUWdWnAD+rk38HDdeC5gAAAABJRU5ErkJggg==',
         context: 'insert',
         onclick: contentPickerAction
     });
@@ -49,7 +48,6 @@ tinymce.PluginManager.add('orchardcontentlinks', function (editor, url) {
         getMetadata: function () {
             return {
                 name: "Orchard content link plugin"
-                //url: "http://exampleplugindocsurl.com"
             };
         }
     };
