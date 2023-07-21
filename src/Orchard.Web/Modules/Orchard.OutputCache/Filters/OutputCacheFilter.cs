@@ -393,11 +393,23 @@ namespace Orchard.OutputCache.Filters {
             // Vary by theme.
             result.Add("theme", _workContext.CurrentTheme.Id.ToLowerInvariant());
 
+            // Vary for ajax vs "normal" calls
+            result.Add("isajax", filterContext.HttpContext.Request.IsAjaxRequest().ToString());
+
             // Vary by configured query string parameters.
             var queryString = filterContext.RequestContext.HttpContext.Request.QueryString;
             foreach (var key in queryString.AllKeys) {
-                if (key == null || (CacheSettings.VaryByQueryStringParameters != null && !CacheSettings.VaryByQueryStringParameters.Contains(key)))
+                if (key == null)
                     continue;
+
+                // In exclusive mode, don't vary if the key matches
+                if (CacheSettings.VaryByQueryStringIsExclusive && (CacheSettings.VaryByQueryStringParameters != null && CacheSettings.VaryByQueryStringParameters.Contains(key)))
+                    continue;
+
+                // In inclusive mode, don't vary if the key doesn't match
+                if(!CacheSettings.VaryByQueryStringIsExclusive && (CacheSettings.VaryByQueryStringParameters == null || !CacheSettings.VaryByQueryStringParameters.Contains(key)))
+                    continue;
+
                 result[key] = queryString[key];
             }
 

@@ -34,6 +34,7 @@ namespace Orchard.Taxonomies.Controllers {
             _localizationService = localizationService;
         }
 
+        [OutputCache(NoStore = true, Duration = 0)]
         public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture) {
             var viewModel = new TaxonomyFieldViewModel();
             bool autocomplete = false;
@@ -65,8 +66,15 @@ namespace Orchard.Taxonomies.Controllers {
                         var firstTermForCulture = appliedTerms.FirstOrDefault(x => x.As<LocalizationPart>() != null && x.As<LocalizationPart>().Culture != null && x.As<LocalizationPart>().Culture.Culture == culture);
                         if (firstTermForCulture != null) {
                             firstTermIdForCulture = firstTermForCulture.Id;
+                        } else {
+                            // If there is no valid localization, firstTermForCulture is null.
+                            // To avoid that, use the first checked term (if any is checked).
+                            firstTermForCulture = appliedTerms.FirstOrDefault(t => terms.Any(x => x.Id == t.Id));
+                            if (firstTermForCulture != null) {
+                                firstTermIdForCulture = firstTermForCulture.Id;
+                            }
                         }
-                        terms.ForEach(t => t.IsChecked = appliedTerms.Select(x => x.Id).Contains(t.Id));
+                        terms.ForEach(t => t.IsChecked = appliedTerms.Any(x => x.Id == t.Id));
                     }
                     viewModel = new TaxonomyFieldViewModel {
                         DisplayName = taxonomyField.DisplayName,
