@@ -1,4 +1,3 @@
-using System;
 using System.Web.Mvc;
 
 namespace Orchard.UI.Resources {
@@ -13,9 +12,9 @@ namespace Orchard.UI.Resources {
         public TagBuilder GetTagBuilder(RequireSettings baseSettings, string appPath, IResourceFileHashProvider resourceFileHashProvider) {
             var tagBuilder = new TagBuilder(Resource.TagName);
             tagBuilder.MergeAttributes(Resource.TagBuilder.Attributes);
-            if (!String.IsNullOrEmpty(Resource.FilePathAttributeName)) {
+            if (!string.IsNullOrEmpty(Resource.FilePathAttributeName)) {
                 var resolvedUrl = GetResourceUrl(baseSettings, appPath, resourceFileHashProvider);
-                if (!String.IsNullOrEmpty(resolvedUrl)) {
+                if (!string.IsNullOrEmpty(resolvedUrl)) {
                     tagBuilder.MergeAttribute(Resource.FilePathAttributeName, resolvedUrl, true);
                 }
             }

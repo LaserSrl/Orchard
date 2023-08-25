@@ -4,8 +4,14 @@ namespace Orchard.Resources {
     public class Bootstrap : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();
-            manifest.DefineStyle("Bootstrap").SetUrl("bootstrap.min.css", "bootstrap.css").SetVersion("3.3.5").SetCdn("//ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/css/bootstrap.min.css", "//ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/css/bootstrap.css");
-            manifest.DefineScript("Bootstrap").SetUrl("bootstrap.min.js", "bootstrap.js").SetVersion("3.3.5").SetDependencies("jQuery").SetCdn("//ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/bootstrap.min.js", "//ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/bootstrap.js");
+            manifest.DefineStyle("Bootstrap")
+                .SetUrl("bootstrap.min.css", "bootstrap.css")
+                .SetCdn("//cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css", "//cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.css")
+                .SetVersion("4.6.1");
+            manifest.DefineScript("Bootstrap").SetUrl("bootstrap.bundle.min.js", "bootstrap.bundle.js")
+                .SetDependencies("jQuery")
+                .SetCdn("//cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js", "//cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.js")
+                .SetVersion("4.6.1");
         }
     }
 }

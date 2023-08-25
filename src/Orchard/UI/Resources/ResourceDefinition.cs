@@ -122,8 +122,6 @@ namespace Orchard.UI.Resources {
         }
 
         public string[] Cultures { get; private set; }
-        [Obsolete("This parameter has no effect on the resource URL.")]
-        public bool CdnSupportsSsl { get; private set; }
         public IEnumerable<string> Dependencies { get; private set; }
         public string FilePathAttributeName { get; private set; }
         public TagBuilder TagBuilder { get; private set; }
@@ -170,11 +168,6 @@ namespace Orchard.UI.Resources {
             if (!string.IsNullOrWhiteSpace(cdnUrlDebug)) UrlCdnDebug = cdnUrlDebug;
 
             return this;
-        }
-
-        [Obsolete("Use SetCdn without the \"cdnSupportsSsl\" parameter instead as it has no effect.")]
-        public ResourceDefinition SetCdn(string cdnUrl, string cdnUrlDebug, bool cdnSupportsSsl) {
-            return SetCdn(cdnUrl, cdnUrlDebug);
         }
 
         public ResourceDefinition SetPhysicalPath(string physicalPath) {
