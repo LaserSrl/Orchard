@@ -127,7 +127,7 @@
                                     break;
                                 case "Column":
                                     parentClasses = [".layout-row:not(.layout-row-full)"];
-                                    placeholderClasses = "layout-element layout-container layout-column ui-sortable-placeholder";
+                                    placeholderClasses = "layout-element layout-container layout-column col ui-sortable-placeholder";
                                     floating = true; // To ensure a smooth horizontal-list reordering. https://github.com/angular-ui/ui-sortable#floating
                                     break;
                                 case "Content":
@@ -145,6 +145,8 @@
                                 connectWith: _(parentClasses).map(function (e) { return "#" + editorId + " " + e + ":not(.layout-container-sealed) > .layout-element-wrapper > .layout-children"; }).join(", "),
                                 placeholder: placeholderClasses,
                                 "ui-floating": floating,
+                                helper: "clone", // We clone the element and we append it to the body because the container overflow is set to auto (see: Assets\Less\LayoutEditor\Toolbox.less) and otherwise it could not be moved with drag&drop
+                                appendTo: "body",
                                 create: function (e, ui) {
                                     e.target.isToolbox = true; // Will indicate to connected sortables that dropped items were sent from toolbox.
                                 },
