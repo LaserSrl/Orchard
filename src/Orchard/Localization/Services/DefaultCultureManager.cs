@@ -92,7 +92,7 @@ namespace Orchard.Localization.Services {
             }
             var cultures = GetAllCulturesByName();
             CultureRecord result;
-            cultures.TryGetValue(cultureName ?? "", out result);
+            cultures.TryGetValue(cultureName, out result);
 
             return result;
         }
