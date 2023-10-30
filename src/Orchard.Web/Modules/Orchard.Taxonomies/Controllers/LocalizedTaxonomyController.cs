@@ -1,18 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
+using System.Web.UI.WebControls;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 using Orchard.Taxonomies.Drivers;
-using Orchard.Taxonomies.Fields;
 using Orchard.Taxonomies.Helpers;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using Orchard.Taxonomies.Settings;
 using Orchard.Taxonomies.ViewModels;
+using Orchard.UI.Admin;
 
 namespace Orchard.Taxonomies.Controllers {
     [OrchardFeature("Orchard.Taxonomies.LocalizationExtensions")]
@@ -22,27 +24,37 @@ namespace Orchard.Taxonomies.Controllers {
         private readonly ILocalizationService _localizationService;
         private readonly ITaxonomyService _taxonomyService;
         private readonly ITaxonomyExtensionsService _taxonomyExtensionsService;
+        private readonly RequestContext _requestContext;
 
         public LocalizedTaxonomyController(
-                IContentDefinitionManager contentDefinitionManager,
-                ILocalizationService localizationService,
-                ITaxonomyService taxonomyService,
-                ITaxonomyExtensionsService taxonomyExtensionsService) {
+            IContentDefinitionManager contentDefinitionManager,
+            ILocalizationService localizationService,
+            ITaxonomyService taxonomyService,
+            ITaxonomyExtensionsService taxonomyExtensionsService,
+            RequestContext requestContext) {
+
             _taxonomyService = taxonomyService;
             _taxonomyExtensionsService = taxonomyExtensionsService;
             _contentDefinitionManager = contentDefinitionManager;
             _localizationService = localizationService;
+            _requestContext = requestContext;
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
-        public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture) {
+        public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture, bool isAdmin = false) {
+
+            if (isAdmin) {
+                AdminFilter.Apply(_requestContext);
+            }
+
             var viewModel = new TaxonomyFieldViewModel();
             bool autocomplete = false;
             var contentDefinition = _contentDefinitionManager.GetTypeDefinition(contentTypeName);
             if (contentDefinition != null) {
                 var taxonomyField = contentDefinition.Parts.SelectMany(p => p.PartDefinition.Fields).Where(x => x.FieldDefinition.Name == "TaxonomyField" && x.Name == taxonomyFieldName).FirstOrDefault();
                 var contentTypePartDefinition = contentDefinition.Parts.Where(x => x.PartDefinition.Fields.Any(a => a.FieldDefinition.Name == "TaxonomyField" && a.Name == taxonomyFieldName)).FirstOrDefault();
-                ViewData.TemplateInfo.HtmlFieldPrefix = contentTypePartDefinition.PartDefinition.Name + "." + taxonomyField.Name;
+                var fieldPrefix = contentTypePartDefinition.PartDefinition.Name + "." + taxonomyField.Name;
+                ViewData.TemplateInfo.HtmlFieldPrefix = fieldPrefix;
                 if (taxonomyField != null) {
                     var taxonomySettings = taxonomyField.Settings.GetModel<TaxonomyFieldSettings>();
                     // Getting the translated taxonomy and its terms
@@ -86,16 +98,14 @@ namespace Orchard.Taxonomies.Controllers {
                         TaxonomyId = taxonomy != null ? taxonomy.Id : 0,
                         HasTerms = taxonomy != null && _taxonomyService.GetTermsCount(taxonomy.Id) > 0
                     };
-                    if (taxonomySettings.Autocomplete)
+                    if (taxonomySettings.Autocomplete) {
                         autocomplete = true;
+                    }
                 }
             }
             var templateName = autocomplete ? "../EditorTemplates/Fields/TaxonomyField.Autocomplete" : "../EditorTemplates/Fields/TaxonomyField";
             return View(templateName, viewModel);
         }
-        private IEnumerable<TermPart> GetAppliedTerms(ContentPart part, TaxonomyField field = null, VersionOptions versionOptions = null) {
-            string fieldName = field != null ? field.Name : string.Empty;
-            return _taxonomyService.GetTermsForContentItem(part.ContentItem.Id, fieldName, versionOptions ?? VersionOptions.Published).Distinct(new TermPartComparer());
-        }
+
     }
 }
