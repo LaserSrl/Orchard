@@ -41,7 +41,7 @@ namespace Orchard.Taxonomies.Controllers {
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
-        public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture, bool isAdmin = false) {
+        public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture, string selectedValues, bool isAdmin = false) {
 
             if (isAdmin) {
                 AdminFilter.Apply(_requestContext);
@@ -72,8 +72,21 @@ namespace Orchard.Taxonomies.Controllers {
                     List<TermPart> appliedTerms = new List<TermPart>();
                     int firstTermIdForCulture = 0;
                     if (contentId > 0) {
-                        appliedTerms = _taxonomyService.GetTermsForContentItem(contentId, taxonomyFieldName, VersionOptions.Published).Distinct(new TermPartComparer()).ToList();
-
+                        //if (string.IsNullOrWhiteSpace(selectedValues)) {
+                        //    appliedTerms = _taxonomyService.GetTermsForContentItem(contentId, taxonomyFieldName, VersionOptions.Published).Distinct(new TermPartComparer()).ToList();
+                        //} else {
+                        var selectedIds = selectedValues.Split(',');
+                        foreach (var id in selectedIds) {
+                            if (!string.IsNullOrWhiteSpace(id)) {
+                                var intId = 0;
+                                int.TryParse(id, out intId);
+                                var t = _localizationService.GetLocalizedContentItem(_taxonomyService.GetTerm(intId), culture);
+                                if (t != null) {
+                                    appliedTerms.Add(t.As<TermPart>());
+                                }
+                            }
+                        }
+                        //}
                         // It takes the first term localized with the culture in order to set correctly the TaxonomyFieldViewModel.SingleTermId
                         var firstTermForCulture = appliedTerms.FirstOrDefault(x => x.As<LocalizationPart>() != null && x.As<LocalizationPart>().Culture != null && x.As<LocalizationPart>().Culture.Culture == culture);
                         if (firstTermForCulture != null) {
