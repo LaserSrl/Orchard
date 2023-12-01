@@ -19,7 +19,7 @@
 
                 function @(functionName)(culture) {
                     // Read currently selected values
-                    var checkedTerms = $("input[checked='checked']", $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']"));
+                    var checkedTerms = $("input[type!='hidden']:checked", $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']"));
                     var selectedValues = "";
                     $(checkedTerms).each(function () {
                         var sel = $("input[type=hidden]", $(this).parent()).attr("value");

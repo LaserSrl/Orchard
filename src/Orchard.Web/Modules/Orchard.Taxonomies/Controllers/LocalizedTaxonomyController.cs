@@ -76,13 +76,22 @@ namespace Orchard.Taxonomies.Controllers {
                         //    appliedTerms = _taxonomyService.GetTermsForContentItem(contentId, taxonomyFieldName, VersionOptions.Published).Distinct(new TermPartComparer()).ToList();
                         //} else {
                         var selectedIds = selectedValues.Split(',');
+                        var destinationTaxonomyCulture = taxonomy.As<LocalizationPart>()?.Culture?.Culture;
                         foreach (var id in selectedIds) {
                             if (!string.IsNullOrWhiteSpace(id)) {
                                 var intId = 0;
                                 int.TryParse(id, out intId);
-                                var t = _localizationService.GetLocalizedContentItem(_taxonomyService.GetTerm(intId), culture);
+                                var originalTerm = _taxonomyService.GetTerm(intId);
+                                var t = _localizationService.GetLocalizedContentItem(originalTerm, culture);
                                 if (t != null) {
                                     appliedTerms.Add(t.As<TermPart>());
+                                } else {
+                                    // Add original term to selected only if its culture matches the culture of
+                                    // the displayed taxonomy
+                                    var otCulture = originalTerm.As<LocalizationPart>()?.Culture?.Culture;
+                                    if (string.Equals(destinationTaxonomyCulture, otCulture)) {
+                                        appliedTerms.Add(originalTerm);
+                                    }
                                 }
                             }
                         }
