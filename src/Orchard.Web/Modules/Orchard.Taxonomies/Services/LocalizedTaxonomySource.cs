@@ -36,19 +36,24 @@ namespace Orchard.Taxonomies.Services {
             if (taxonomyPart == null) {
                 return null;
             }
-            if (String.IsNullOrWhiteSpace(culture) || _localizationService.GetContentCulture(taxonomyPart.ContentItem) == culture)
-                return taxonomyPart;
-            else {
-                // correction for property MasterContentItem=null for contentitem master
-                var masterCorrection = taxonomyPart.ContentItem.As<LocalizationPart>().MasterContentItem;
-                if (masterCorrection == null)
-                    masterCorrection = taxonomyPart;
-                var localizedLocalizationPart = _localizationService.GetLocalizedContentItem(masterCorrection.ContentItem, culture);
-                if (localizedLocalizationPart == null)
-                    return taxonomyPart;
-                else
-                    return localizedLocalizationPart.ContentItem.As<TaxonomyPart>();
+
+            // If current content isn't localized, check for its MasterContentItem.
+            var localized = currentcontent.As<LocalizationPart>();
+            var c = localized?.Culture?.Culture;
+            if (string.IsNullOrWhiteSpace(c)) {
+                var master = localized.MasterContentItem;
+                if (master != null) {
+                    c = master.As<LocalizationPart>()?.Culture?.Culture;
+                }
             }
+
+            // If there is no MasterContentItem (or if it's not localized), return the original TaxonomyPart.
+            if (string.IsNullOrWhiteSpace(c)) {
+                return taxonomyPart;
+            }
+
+            // If previous checks have been passed, get the localized version of the TaxonomyPart.
+            return _localizationService.GetLocalizedContentItem(taxonomyPart.ContentItem, c).As<TaxonomyPart>() ?? taxonomyPart;
         }
     }
 }
