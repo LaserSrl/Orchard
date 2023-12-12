@@ -32,16 +32,18 @@ namespace Orchard.Taxonomies.Services {
                 .List()
                 .FirstOrDefault();
             // Null check on taxonomyPart
-            // It can be null in the case of a TaxonomyField with not taxonomy selected (misconfiguration).
+            // It can be null in the case of a TaxonomyField with no taxonomy selected (misconfiguration).
             if (taxonomyPart == null) {
                 return null;
             }
 
             // If current content isn't localized, check for its MasterContentItem.
             var localized = currentcontent.As<LocalizationPart>();
+            // LocalizationPart has a null Culture when the content has just been created.
+            // This happens, for instance, when cloning a content to add a new localization.
             var c = localized?.Culture?.Culture;
             if (string.IsNullOrWhiteSpace(c)) {
-                var master = localized.MasterContentItem;
+                var master = localized?.MasterContentItem;
                 if (master != null) {
                     c = master.As<LocalizationPart>()?.Culture?.Culture;
                 }
@@ -53,6 +55,7 @@ namespace Orchard.Taxonomies.Services {
             }
 
             // If previous checks have been passed, get the localized version of the TaxonomyPart.
+            // Code gets here if current content is localized or has a localized MasterContentItem.
             return _localizationService.GetLocalizedContentItem(taxonomyPart.ContentItem, c).As<TaxonomyPart>() ?? taxonomyPart;
         }
     }
