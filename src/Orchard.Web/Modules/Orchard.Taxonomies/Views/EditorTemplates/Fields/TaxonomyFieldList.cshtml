@@ -38,23 +38,13 @@
                             @if (isAdmin) { <text>isAdmin: @isAdmin.ToString().ToLowerInvariant() </text>}
                             },
                         success: function (html) {
-                            //alert("Stop");
                             var container = $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']");
 
                             // Take the terms previously checked
                             var checkedTerms = $("input[checked='checked']", container);
 
                             $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']").replaceWith(html);
-                            @*// Uncheck all terms
-                            $("input", ".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']").each(function () {
-                                $(this).removeAttr("checked");
-                            });
-                            // Update checked terms inside the new markup
-                            $(checkedTerms).each(function () {
-                                var id = $(this).attr("id");
-                                $("#" + id, $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']")).attr("checked", "checked");
-                            });*@
-
+                           
                             // try to init expando controls until we manage to
                             var interval = setInterval(InitExpando, 10);
                             function InitExpando() {
@@ -68,7 +58,6 @@
 
                                 var glyph = $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix'] legend .expando-glyph-container");
                                 if (glyph && glyph.length) {
-                                    console.log("clear retry");
                                     clearInterval(interval);
                                 }
                             }
