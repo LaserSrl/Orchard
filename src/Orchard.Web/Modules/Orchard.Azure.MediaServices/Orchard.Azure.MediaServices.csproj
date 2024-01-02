@@ -307,10 +307,12 @@
     <ProjectReference Include="..\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
       <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>
       <Name>Orchard.MediaLibrary</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.PublishLater\Orchard.PublishLater.csproj">
       <Project>{c889167c-e52c-4a65-a419-224b3d1b957d}</Project>
       <Name>Orchard.PublishLater</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
