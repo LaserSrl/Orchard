@@ -16,7 +16,17 @@
                         //<![CDATA[
             $(document).ready(function () {
                 var pageurl = '@Url.Action("GetTaxonomy", "LocalizedTaxonomy", new { area = "Orchard.Taxonomies" })';
+
                 function @(functionName)(culture) {
+                    // Read currently selected values
+                    var checkedTerms = $("input[type!='hidden']:checked", $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']"));
+                    var selectedValues = "";
+                    $(checkedTerms).each(function () {
+                        var sel = $("input[type=hidden]", $(this).parent()).attr("value");
+                        if (sel) {
+                            selectedValues = selectedValues + "," + sel;
+                        }
+                    });
                     $.ajax({
                         url: pageurl,
                         data: {
@@ -24,13 +34,17 @@
                             taxonomyFieldName: '@Model.FieldName',
                             contentId: @Model.Id,
                             culture: culture,
+                            selectedValues: selectedValues,
                             @if (isAdmin) { <text>isAdmin: @isAdmin.ToString().ToLowerInvariant() </text>}
                             },
                         success: function (html) {
                             var container = $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']");
 
-                            $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']").replaceWith(html);
+                            // Take the terms previously checked
+                            var checkedTerms = $("input[checked='checked']", container);
 
+                            $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix']").replaceWith(html);
+                           
                             // try to init expando controls until we manage to
                             var interval = setInterval(InitExpando, 10);
                             function InitExpando() {
@@ -44,7 +58,6 @@
 
                                 var glyph = $(".taxonomy-wrapper[data-id-prefix='@Taxonomyprefix'] legend .expando-glyph-container");
                                 if (glyph && glyph.length) {
-                                    console.log("clear retry");
                                     clearInterval(interval);
                                 }
                             }
