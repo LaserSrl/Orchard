@@ -223,14 +223,15 @@ namespace Orchard.CustomForms.Controllers {
             _workflowManager.TriggerEvent(FormSubmittedActivity.EventName, contentItem,
                     () => new Dictionary<string, object> { { "Content", contentItem} , { "CustomForm", customForm.ContentItem } });
 
-            if (customForm.Redirect) {
-                returnUrl = _tokenizer.Replace(customForm.RedirectUrl, new Dictionary<string, object> { { "Content", contentItem } });
-            }
-
             // save the submitted form
             if (customForm.SaveContentItem) {
                 conditionallyPublish(contentItem);
             }
+
+            if (customForm.Redirect) {
+                returnUrl = _tokenizer.Replace(customForm.RedirectUrl, new Dictionary<string, object> { { "Content", contentItem } });
+            }
+
 
             // writes a confirmation message
             if (customForm.CustomMessage) {
