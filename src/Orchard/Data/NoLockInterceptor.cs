@@ -244,7 +244,7 @@ namespace Orchard.Data {
                                         // There is no alias in the query, so we add "WITH(NOLOCK)" immediately after table name but before the "where" clause.
                                         parts.Insert(tableIndex + 1, "WITH(NOLOCK)");
                                     } else {
-                                        // We add "WITH(NOLOCK)" after the table alias
+                                        // We add "WITH(NOLOCK)" after the table alias.
                                         parts.Insert(tableIndex + 2, "WITH(NOLOCK)");
                                     }
                                 } else {
@@ -252,7 +252,7 @@ namespace Orchard.Data {
                                     // "WITH (NOLOCK) on"
                                     for (int i = tableIndex + 1; i < whereIndex; i++) {
                                         if (parts[i].Trim().Equals("WITH(NOLOCK)", StringComparison.OrdinalIgnoreCase)) {
-                                            // we processed this table anme already
+                                            // we processed this table name already.
                                             break;
                                         }
                                         if (parts[i].Trim().Equals("on", StringComparison.OrdinalIgnoreCase)) {
