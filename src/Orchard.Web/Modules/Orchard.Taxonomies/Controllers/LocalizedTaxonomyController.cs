@@ -1,20 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Routing;
 using System.Web.UI.WebControls;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Extensions;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
-using Orchard.Taxonomies.Drivers;
 using Orchard.Taxonomies.Helpers;
 using Orchard.Taxonomies.Models;
 using Orchard.Taxonomies.Services;
 using Orchard.Taxonomies.Settings;
 using Orchard.Taxonomies.ViewModels;
-using Orchard.UI.Admin;
 
 namespace Orchard.Taxonomies.Controllers {
     [OrchardFeature("Orchard.Taxonomies.LocalizationExtensions")]
@@ -24,29 +21,25 @@ namespace Orchard.Taxonomies.Controllers {
         private readonly ILocalizationService _localizationService;
         private readonly ITaxonomyService _taxonomyService;
         private readonly ITaxonomyExtensionsService _taxonomyExtensionsService;
-        private readonly RequestContext _requestContext;
 
         public LocalizedTaxonomyController(
             IContentDefinitionManager contentDefinitionManager,
             ILocalizationService localizationService,
             ITaxonomyService taxonomyService,
-            ITaxonomyExtensionsService taxonomyExtensionsService,
-            RequestContext requestContext) {
+            ITaxonomyExtensionsService taxonomyExtensionsService) {
 
             _taxonomyService = taxonomyService;
             _taxonomyExtensionsService = taxonomyExtensionsService;
             _contentDefinitionManager = contentDefinitionManager;
             _localizationService = localizationService;
-            _requestContext = requestContext;
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
-        public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture, string selectedValues, bool isAdmin = false) {
+        public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture, string selectedValues) {
+            return GetTaxonomyInternal(contentTypeName, taxonomyFieldName, contentId, culture, selectedValues);
+        }
 
-            if (isAdmin) {
-                AdminFilter.Apply(_requestContext);
-            }
-
+        protected ActionResult GetTaxonomyInternal (string contentTypeName, string taxonomyFieldName, int contentId, string culture, string selectedValues) {
             var viewModel = new TaxonomyFieldViewModel();
             bool autocomplete = false;
             var contentDefinition = _contentDefinitionManager.GetTypeDefinition(contentTypeName);
@@ -72,9 +65,6 @@ namespace Orchard.Taxonomies.Controllers {
                     List<TermPart> appliedTerms = new List<TermPart>();
                     int firstTermIdForCulture = 0;
                     if (contentId > 0) {
-                        //if (string.IsNullOrWhiteSpace(selectedValues)) {
-                        //    appliedTerms = _taxonomyService.GetTermsForContentItem(contentId, taxonomyFieldName, VersionOptions.Published).Distinct(new TermPartComparer()).ToList();
-                        //} else {
                         var selectedIds = selectedValues.Split(',');
                         var destinationTaxonomyCulture = taxonomy.As<LocalizationPart>()?.Culture?.Culture;
                         foreach (var id in selectedIds) {
@@ -82,20 +72,27 @@ namespace Orchard.Taxonomies.Controllers {
                                 var intId = 0;
                                 int.TryParse(id, out intId);
                                 var originalTerm = _taxonomyService.GetTerm(intId);
-                                var t = _localizationService.GetLocalizedContentItem(originalTerm, culture);
-                                if (t != null) {
-                                    appliedTerms.Add(t.As<TermPart>());
+
+                                // The original term has to be added to applied terms in the following scenarios:
+                                // When the original term has no LocalizationPart, which means that, when creating the taxonomy, terms have been set to be culture neutral.
+                                // When the culture of the original term matches the culture of the taxonomy.
+                                // In any other scenario, get the localized term and add it to the applied terms list.
+                                // If no localization is found, nothing is added to the list for the current id.
+                                var otCulture = originalTerm.As<LocalizationPart>()?.Culture?.Culture;
+                                if (!originalTerm.Has<LocalizationPart>() || string.Equals(destinationTaxonomyCulture, otCulture)) {
+                                    appliedTerms.Add(originalTerm);
                                 } else {
-                                    // Add original term to selected only if its culture matches the culture of
-                                    // the displayed taxonomy
-                                    var otCulture = originalTerm.As<LocalizationPart>()?.Culture?.Culture;
-                                    if (string.Equals(destinationTaxonomyCulture, otCulture)) {
-                                        appliedTerms.Add(originalTerm);
+                                    // Get the localized term. If no localized term is found, no term should be added to applied terms list.
+                                    var t = _localizationService.GetLocalizedContentItem(originalTerm, culture);
+                                    if (t != null) {
+                                        // Localized term has been found
+                                        appliedTerms.Add(t.As<TermPart>());
                                     }
                                 }
+
                             }
                         }
-                        //}
+
                         // It takes the first term localized with the culture in order to set correctly the TaxonomyFieldViewModel.SingleTermId
                         var firstTermForCulture = appliedTerms.FirstOrDefault(x => x.As<LocalizationPart>() != null && x.As<LocalizationPart>().Culture != null && x.As<LocalizationPart>().Culture.Culture == culture);
                         if (firstTermForCulture != null) {
@@ -128,6 +125,5 @@ namespace Orchard.Taxonomies.Controllers {
             var templateName = autocomplete ? "../EditorTemplates/Fields/TaxonomyField.Autocomplete" : "../EditorTemplates/Fields/TaxonomyField";
             return PartialView(templateName, viewModel);
         }
-
     }
 }
