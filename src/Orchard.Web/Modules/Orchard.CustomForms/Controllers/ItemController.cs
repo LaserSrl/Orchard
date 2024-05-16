@@ -219,7 +219,7 @@ namespace Orchard.CustomForms.Controllers {
             if (customForm.SaveContentItem) {
                 conditionallyPublish(contentItem);
                 // Refresh content item
-                contentItem = _contentManager.Get(contentItem.Id);
+                contentItem = _contentManager.Get(contentItem.Id, VersionOptions.Latest);
             }
 
             // triggers any event
