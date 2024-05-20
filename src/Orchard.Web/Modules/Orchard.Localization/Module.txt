@@ -9,7 +9,7 @@ Features:
     Orchard.Localization:
         Description: Enables localization of content items.
         Category: Content
-        Dependencies: Settings
+        Dependencies: Settings, Orchard.Autoroute
         Name: Content Localization
     Orchard.Localization.DateTimeFormat:
         Description: Enables PO-based translation of date/time formats and names of days and months.

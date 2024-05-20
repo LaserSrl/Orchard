@@ -89,6 +89,8 @@ namespace Orchard.Azure.Services.FileSystems {
             return newPath;
         }
 
+        private static string GetFolderName(string path) => path.Substring(path.LastIndexOf('/') + 1);
+
         public string Combine(string path1, string path2) {
             if (path1 == null) {
                 throw new ArgumentNullException("path1");
@@ -141,10 +143,10 @@ namespace Orchard.Azure.Services.FileSystems {
             }
 
             return BlobClient.ListBlobs(prefix)
-                        .OfType<CloudBlockBlob>()
-                        .Where(blobItem => !blobItem.Uri.AbsoluteUri.EndsWith(FolderEntry))
-                        .Select(blobItem => new AzureBlobFileStorage(blobItem, _absoluteRoot))
-                        .ToArray();
+                .OfType<CloudBlockBlob>()
+                .Where(blobItem => !blobItem.Uri.AbsoluteUri.EndsWith(FolderEntry))
+                .Select(blobItem => new AzureBlobFileStorage(blobItem, _absoluteRoot))
+                .ToArray();
         }
 
         public IEnumerable<IStorageFolder> ListFolders(string path) {
@@ -194,6 +196,11 @@ namespace Orchard.Azure.Services.FileSystems {
 
         public void CreateFolder(string path) {
             path = ConvertToRelativeUriPath(path);
+
+            if (FileSystemStorageProvider.FolderNameContainsInvalidCharacters(GetFolderName(path))) {
+                throw new InvalidNameCharacterException("The directory name contains invalid character(s)");
+            }
+
             Container.EnsureDirectoryDoesNotExist(String.Concat(_root, path));
 
             // Creating a virtually hidden file to make the directory an existing concept
@@ -224,6 +231,10 @@ namespace Orchard.Azure.Services.FileSystems {
         public void RenameFolder(string path, string newPath) {
             path = ConvertToRelativeUriPath(path);
             newPath = ConvertToRelativeUriPath(newPath);
+
+            if (FileSystemStorageProvider.FolderNameContainsInvalidCharacters(GetFolderName(newPath))) {
+                throw new InvalidNameCharacterException("The new directory name contains invalid character(s)");
+            }
 
             if (!path.EndsWith("/"))
                 path += "/";
@@ -260,6 +271,10 @@ namespace Orchard.Azure.Services.FileSystems {
             path = ConvertToRelativeUriPath(path);
             newPath = ConvertToRelativeUriPath(newPath);
 
+            if (FileSystemStorageProvider.FileNameContainsInvalidCharacters(Path.GetFileName(newPath))) {
+                throw new InvalidNameCharacterException("The new file name contains invalid character(s)");
+            }
+
             Container.EnsureBlobExists(String.Concat(_root, path));
             Container.EnsureBlobDoesNotExist(String.Concat(_root, newPath));
 
@@ -283,6 +298,10 @@ namespace Orchard.Azure.Services.FileSystems {
 
         public IStorageFile CreateFile(string path) {
             path = ConvertToRelativeUriPath(path);
+
+            if (FileSystemStorageProvider.FileNameContainsInvalidCharacters(Path.GetFileName(path))) {
+                throw new InvalidNameCharacterException("The file name contains invalid character(s)");
+            }
 
             if (Container.BlobExists(String.Concat(_root, path))) {
                 throw new ArgumentException("File " + path + " already exists");
@@ -371,10 +390,7 @@ namespace Orchard.Azure.Services.FileSystems {
                 _rootPath = rootPath;
             }
 
-            public string GetName() {
-                var path = GetPath();
-                return path.Substring(path.LastIndexOf('/') + 1);
-            }
+            public string GetName() => GetFolderName(GetPath());
 
             public string GetPath() {
                 return _blob.Uri.ToString().Substring(_rootPath.Length).Trim('/');
@@ -399,11 +415,12 @@ namespace Orchard.Azure.Services.FileSystems {
                 long size = 0;
 
                 foreach (var blobItem in directoryBlob.ListBlobs()) {
-                    if (blobItem is CloudBlockBlob)
-                        size += ((CloudBlockBlob)blobItem).Properties.Length;
-
-                    if (blobItem is CloudBlobDirectory)
-                        size += GetDirectorySize((CloudBlobDirectory)blobItem);
+                    if (blobItem is CloudBlockBlob blob) {
+                        size += blob.Properties.Length;
+                    }
+                    else if (blobItem is CloudBlobDirectory directory) {
+                        size += GetDirectorySize(directory);
+                    }
                 }
 
                 return size;

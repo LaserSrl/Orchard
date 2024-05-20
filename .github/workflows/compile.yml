@@ -9,25 +9,61 @@ on:
       - 1.10.x
 
 jobs:
-  compile:
-    name: Compile
+  compile-dotnet:
+    name: Compile .NET solution
     defaults:
       run:
         shell: pwsh
     runs-on: windows-latest
-
     steps:
       - name: Clone repository
-        uses: actions/checkout@v3.1.0
+        uses: actions/checkout@v4.1.1
 
       - name: Restore NuGet packages
         run: nuget restore src/Orchard.sln
 
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.3.1
+        uses: microsoft/setup-msbuild@v2
 
       - name: Compile
-        run: msbuild Orchard.proj /m /t:Compile /p:MvcBuildViews=true /p:TreatWarningsAsErrors=true -WarnAsError
+        run: msbuild Orchard.proj /m /v:minimal /t:Compile /p:MvcBuildViews=true /p:TreatWarningsAsErrors=true -WarnAsError
 
       - name: Test
-        run: msbuild Orchard.proj /m /t:Test
+        run: msbuild Orchard.proj /m /v:minimal /t:Test
+
+  compile-node:
+    name: Compile client-side assets
+    defaults:
+      run:
+        shell: pwsh
+    runs-on: windows-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4.1.1
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: '7'
+
+      - name: Setup NPM packages
+        working-directory: ./src
+        run: |
+          npm install --loglevel warn
+
+          # Install gulp globally to be able to run the rebuild task, using the same version as in the project.
+          $gulpVersion = (Get-Content Package.json -Raw | ConvertFrom-Json).devDependencies.gulp
+          Start-Process npm -NoNewWindow -Wait -ArgumentList "install gulp@$gulpVersion -g --loglevel warn"
+
+      - name: Rebuild client-side assets
+        working-directory: ./src
+        run: |
+          gulp rebuild
+
+          git add . # To make line ending changes "disappear".
+          $gitStatus = (git status --porcelain)
+          if ($gitStatus)
+          {
+            throw ("Client-side assets are not up-to-date. Please run 'gulp rebuild' and commit the changes.`n" +
+              [System.String]::Join([System.Environment]::NewLine, $gitStatus))
+          }
