@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
-using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Extensions;
@@ -15,13 +14,16 @@ namespace Orchard.Projections {
     public class Migrations : DataMigrationImpl {
         private readonly IRepository<MemberBindingRecord> _memberBindingRepository;
         private readonly IRepository<LayoutRecord> _layoutRepository;
-
+        private readonly IRepository<FilterRecord> _filterRepository;
 
         public Migrations(
             IRepository<MemberBindingRecord> memberBindingRepository,
-            IRepository<LayoutRecord> layoutRepository) {
+            IRepository<LayoutRecord> layoutRepository,
+            IRepository<FilterRecord> filterRepository) {
             _memberBindingRepository = memberBindingRepository;
             _layoutRepository = layoutRepository;
+            _filterRepository = filterRepository;
+
             T = NullLocalizer.Instance;
         }
 
@@ -359,15 +361,30 @@ namespace Orchard.Projections {
         }
 
         public int UpdateFrom5() {
-            SchemaBuilder.AlterTable("LayoutRecord", t => t.AddColumn<string>("GUIdentifier",
-                     column => column.WithLength(68)));
+            SchemaBuilder.AlterTable("LayoutRecord", t => t
+                .AddColumn<string>("GUIdentifier", column => column.WithLength(68)));
 
             var layoutRecords = _layoutRepository.Table.Where(l => l.GUIdentifier == null || l.GUIdentifier == "").ToList();
             foreach (var layout in layoutRecords) {
-               layout.GUIdentifier = Guid.NewGuid().ToString();
+                layout.GUIdentifier = Guid.NewGuid().ToString();
             }
 
             return 6;
+        }
+
+        public int UpdateFrom6() {
+            // This casts a somewhat wide net, but filters can't be queried by the form they are using and different
+            // types of filters can (and do) use StringFilterForm. However, the "Operator" parameter's value being
+            // "ContainsAnyIfProvided" is very specific.
+            var formStateToReplace = "<Operator>ContainsAnyIfProvided</Operator>";
+            var filterRecordsToUpdate = _filterRepository.Table.Where(f => f.State.Contains(formStateToReplace)).ToList();
+            foreach (var filter in filterRecordsToUpdate) {
+                filter.State = filter.State.Replace(
+                    formStateToReplace,
+                    "<Operator>ContainsAny</Operator><IgnoreFilterIfValueIsEmpty>true</IgnoreFilterIfValueIsEmpty>");
+            }
+
+            return 7;
         }
     }
 }

@@ -7,28 +7,16 @@ namespace Orchard.Fields.Fields {
         private const char Separator = ';';
 
         public string Value {
-            get { return Storage.Get<string>(); }
-            set { Storage.Set(value ?? String.Empty); }
+            get => Storage.Get<string>()?.Trim(Separator) ?? "";
+            set => Storage.Set(string.IsNullOrWhiteSpace(value)
+                ? string.Empty
+                // It is now the responsibility of this field to (re-)add the separators.
+                : Separator + value.Trim(Separator) + Separator);
         }
 
         public string[] SelectedValues {
-            get {
-                var value = Value;
-                if(string.IsNullOrWhiteSpace(value)) {
-                    return new string[0];
-                }
-
-                return value.Split(new [] { Separator }, StringSplitOptions.RemoveEmptyEntries);
-            }
-
-            set {
-                if (value == null || value.Length == 0) {
-                    Value = String.Empty;
-                }
-                else {
-                    Value = string.Join(Separator.ToString(), value);
-                }
-            }
+            get => Value?.Split(new[] { Separator }, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
+            set => Value = value?.Length > 0 ? string.Join(Separator.ToString(), value) : "";
         }
     }
 }

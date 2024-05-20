@@ -11,6 +11,7 @@
     <RootNamespace>Orchard</RootNamespace>
     <AssemblyName>Orchard.Framework</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>7.3</LangVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -41,12 +42,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>latest</LangVersion>
     <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <NoWarn>
-    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,7 +53,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>latest</LangVersion>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
     <NoWarn>0436</NoWarn>
@@ -180,6 +177,7 @@
     <Compile Include="Localization\FormatForScope.cs" />
     <Compile Include="Locking\ILockingProvider.cs" />
     <Compile Include="Locking\LockingProvider.cs" />
+    <Compile Include="FileSystems\Media\InvalidNameCharacterException.cs" />
     <Compile Include="Mvc\ModelBinders\BooleanBinderProvider.cs" />
     <Compile Include="Mvc\Updater.cs" />
     <Compile Include="Recipes\Models\ConfigurationContext.cs" />
@@ -722,6 +720,7 @@
     <Compile Include="Messaging\Services\IMessageManager.cs" />
     <Compile Include="Messaging\Services\IMessagingChannel.cs" />
     <Compile Include="IWorkContextAccessor.cs" />
+    <Compile Include="Utility\Extensions\NameValueCollectionExtensions.cs" />
     <Compile Include="Utility\Extensions\VirtualPathProviderExtensions.cs" />
     <Compile Include="Utility\NamedReaderWriterLock.cs" />
     <Compile Include="Utility\ReflectionHelper.cs" />
