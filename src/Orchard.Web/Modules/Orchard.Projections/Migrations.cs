@@ -384,6 +384,15 @@ namespace Orchard.Projections {
                     "<Operator>ContainsAny</Operator><IgnoreFilterIfValueIsEmpty>true</IgnoreFilterIfValueIsEmpty>");
             }
 
+            // Replacing "ContainsAllIfProvider" too, which is a specific StringFilterForm Operator in Laser environment
+            formStateToReplace = "<Operator>ContainsAllIfProvided</Operator>";
+            filterRecordsToUpdate = _filterRepository.Table.Where(f => f.State.Contains(formStateToReplace)).ToList();
+            foreach (var filter in filterRecordsToUpdate) {
+                filter.State = filter.State.Replace(
+                    formStateToReplace,
+                    "<Operator>ContainsAll</Operator><IgnoreFilterIfValueIsEmpty>true</IgnoreFilterIfValueIsEmpty>");
+            }
+
             return 7;
         }
     }
