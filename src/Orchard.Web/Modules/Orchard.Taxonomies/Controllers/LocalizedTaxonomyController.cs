@@ -35,8 +35,7 @@ namespace Orchard.Taxonomies.Controllers {
         }
 
         [OutputCache(NoStore = true, Duration = 0)]
-        public ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture, string selectedValues) {
-            ApplyPreRequest();
+        public virtual ActionResult GetTaxonomy(string contentTypeName, string taxonomyFieldName, int contentId, string culture, string selectedValues) {
             return GetTaxonomyInternal(contentTypeName, taxonomyFieldName, contentId, culture, selectedValues);
         }
 
@@ -125,10 +124,6 @@ namespace Orchard.Taxonomies.Controllers {
             }
             var templateName = autocomplete ? "../EditorTemplates/Fields/TaxonomyField.Autocomplete" : "../EditorTemplates/Fields/TaxonomyField";
             return PartialView(templateName, viewModel);
-        }
-
-        protected virtual void ApplyPreRequest() {
-            
         }
     }
 }
