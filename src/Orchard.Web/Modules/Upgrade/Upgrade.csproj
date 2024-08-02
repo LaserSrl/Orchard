@@ -121,6 +121,7 @@
     <Content Include="Styles\menu.upgrade-admin.css" />
     <Content Include="Web.config" />
     <Content Include="Styles\Web.config" />
+    <Compile Include="Controllers\EnumerationFieldsController.cs" />
     <Compile Include="Controllers\ProjectionsController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
@@ -201,6 +202,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="Views\EnumerationFields\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Taxonomy\Index110.cshtml" />
