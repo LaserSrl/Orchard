@@ -123,6 +123,7 @@
     <Content Include="Styles\Web.config" />
     <Compile Include="Controllers\EnumerationFieldsController.cs" />
     <Compile Include="Controllers\ProjectionsController.cs" />
+    <Compile Include="Handlers\EnumerationFieldsUpgradeScheduledTaskHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
@@ -146,6 +147,10 @@
       <Project>{05660f47-d649-48bd-9ded-df4e01e7cff9}</Project>
       <Name>Orchard.Email</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Fields\Orchard.Fields.csproj">
+      <Project>{3787DDE5-E5C8-4841-BDA7-DCB325388064}</Project>
+      <Name>Orchard.Fields</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.MediaLibrary\Orchard.MediaLibrary.csproj">
       <Project>{73a7688a-5bd3-4f7e-adfa-ce36c5a10e3b}</Project>

@@ -5,6 +5,9 @@
 @using (Html.BeginFormAntiForgeryPost()) {
 
     <fieldset>
+        <span class="hint">@T("The update procedure processes every content item which has a EnumerationFiled in the definition of any of its parts.")</span>
+        <span class="hint">@T("Every content item is saved / published again to ensure both infoset and string field index records are upgraded.")</span>
+        <span class="hint">@T("The operation is scheduled in a task and may take several minutes, depending on the number of content items involved.")</span>
         <button type="submit">@T("Upgrade values")</button>
     </fieldset>
 }
