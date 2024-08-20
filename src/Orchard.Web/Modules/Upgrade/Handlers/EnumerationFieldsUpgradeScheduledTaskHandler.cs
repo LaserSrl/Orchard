@@ -44,7 +44,9 @@ namespace Upgrade.Handlers {
                     .ToArray();
 
                 var query = _contentManager.Query()
-                    .ForType(contentTypes);
+                    .ForType(contentTypes)
+                    // Ensure to read the latest version of every content item
+                    .ForVersion(VersionOptions.Latest);
 
                 var sliceSize = 20;
                 var i = 0;
@@ -53,6 +55,14 @@ namespace Upgrade.Handlers {
                 while (contentItems.Any()) {
                     foreach (var ci in contentItems) {
                         UpdateItem(ci);
+
+                        // If current content item isn't published, check if there is a published version and update it too
+                        if (!ci.IsPublished()) {
+                            var pci = _contentManager.Get(ci.Id, VersionOptions.Published);
+                            if (pci != null) {
+                                UpdateItem(pci);
+                            }
+                        }
                     }
                     i++;
                     contentItems = query.Slice(i * sliceSize, sliceSize);
