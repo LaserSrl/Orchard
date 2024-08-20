@@ -7,6 +7,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Fields.Fields;
+using Orchard.Fields.Settings;
 using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
 
@@ -70,8 +71,16 @@ namespace Upgrade.Handlers {
                 .ToList();
 
             foreach(EnumerationField field in enumFields) {
-                var v = field.Value;
-                field.Value = v;
+                var v = field.Value ?? string.Empty;
+
+                if (string.IsNullOrWhiteSpace(v)) {
+                    // If value is empty, check for its default value and assign it instead.
+                    var settings = field.PartFieldDefinition.Settings.GetModel<EnumerationFieldSettings>();
+                    if (!(string.IsNullOrWhiteSpace(settings.DefaultValue))) {
+                        v = settings.DefaultValue;
+                    }
+                }
+                field.Value = v.ToString();
             }
             
             _contentHandlers.Invoke(handler => handler.Updated(updateContext), Logger);
