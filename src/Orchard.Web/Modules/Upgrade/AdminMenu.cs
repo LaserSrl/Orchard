@@ -24,6 +24,7 @@ namespace Upgrade {
                     .Add(T("Fields (1.5)"), "5", item => item.Action("Index", "Field", new { area = "Upgrade" }).LocalNav().Permission(StandardPermissions.SiteOwner))
                     .Add(T("Menu (1.5)"), "6", item => item.Action("Index", "Menu", new { area = "Upgrade" }).LocalNav().Permission(StandardPermissions.SiteOwner))
                     .Add(T("Routes (1.4)"), "7", item => item.Action("Index", "Route", new { area = "Upgrade" }).LocalNav().Permission(StandardPermissions.SiteOwner))
+                    .Add(T("Enumeration Field values"), "8", item => item.Action("Index", "EnumerationFields", new {area = "Upgrade"}).LocalNav().Permission(StandardPermissions.SiteOwner))
                 );
         }
     }

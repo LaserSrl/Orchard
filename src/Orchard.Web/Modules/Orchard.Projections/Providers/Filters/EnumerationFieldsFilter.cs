@@ -13,15 +13,16 @@ using Orchard.Projections.Services;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Projections.Providers.Filters {
-    public class ContentFieldsFilter : IFilterProvider {
+    public class EnumerationFieldsFilter : IFilterProvider {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
         private readonly IEnumerable<IFieldTypeEditor> _fieldTypeEditors;
 
-        public ContentFieldsFilter(
+        public EnumerationFieldsFilter(
             IContentDefinitionManager contentDefinitionManager,
             IEnumerable<IContentFieldDriver> contentFieldDrivers,
             IEnumerable<IFieldTypeEditor> fieldTypeEditors) {
+
             _contentDefinitionManager = contentDefinitionManager;
             _contentFieldDrivers = contentFieldDrivers;
             _fieldTypeEditors = fieldTypeEditors;
@@ -31,17 +32,12 @@ namespace Orchard.Projections.Providers.Filters {
         public Localizer T { get; set; }
 
         public void Describe(DescribeFilterContext describe) {
-            foreach(var part in _contentDefinitionManager.ListPartDefinitions()) {
-                if(!part.Fields.Any()) {
-                    continue;
-                }
-
-                // Exclude EnumerationFields, that use a specific IFilterProvider
-                var fields = part.Fields.Where(fd => !fd.FieldDefinition.Name.Equals("EnumerationField"));
+            foreach (var part in _contentDefinitionManager.ListPartDefinitions()) {
+                var enumerationFieldDefinitions = part.Fields.Where(fd => fd.FieldDefinition.Name.Equals("EnumerationField"));
 
                 var descriptor = describe.For(part.Name + "ContentFields", T("{0} Content Fields", part.Name.CamelFriendly()), T("Content Fields for {0}", part.Name.CamelFriendly()));
 
-                foreach(var field in fields) {
+                foreach (var field in enumerationFieldDefinitions) {
                     var localField = field;
                     var localPart = part;
                     var drivers = _contentFieldDrivers.Where(x => x.GetFieldInfo().Any(fi => fi.FieldTypeName == localField.FieldDefinition.Name)).ToList();
@@ -51,7 +47,7 @@ namespace Orchard.Projections.Providers.Filters {
                             // look for a compatible field type editor
                             IFieldTypeEditor fieldTypeEditor = _fieldTypeEditors.FirstOrDefault(x => x.CanHandle(storageType));
 
-                            if(fieldTypeEditor == null) {
+                            if (fieldTypeEditor == null) {
                                 return;
                             }
 
@@ -63,8 +59,9 @@ namespace Orchard.Projections.Providers.Filters {
                                 display: context => fieldTypeEditor.DisplayFilter(localPart.Name.CamelFriendly() + "." + localField.DisplayName, storageName, context.State),
                                 form: fieldTypeEditor.FormName);
                         });
-                    
-                    foreach(var driver in drivers) {
+
+
+                    foreach (var driver in drivers) {
                         driver.Describe(membersContext);
                     }
                 }
@@ -76,6 +73,31 @@ namespace Orchard.Projections.Providers.Filters {
 
             // use an alias with the join so that two filters on the same Field Type wont collide
             var relationship = fieldTypeEditor.GetFilterRelationship(propertyName.ToSafeName());
+
+            // Equals and NotEquals operators
+            // In both cases, to ensure compatibility with non-upgraded EnumerationFields, both original values (with no ';' character as a separator) and new values must be considered.
+            // For this reason, separator characters are added before and after the value.
+            if ((context.State.Operator.ToString().Equals("Equals", StringComparison.OrdinalIgnoreCase) ||
+                context.State.Operator.ToString().Equals("NotEquals", StringComparison.OrdinalIgnoreCase))) {
+
+                context.State.Value = ";" + context.State.Value.ToString().Trim(';') + ";";
+            }
+
+            // Starts and NotStarts operators
+            // The separator ';' character at the start of the value has to be forced
+            if ((context.State.Operator.ToString().Equals("Starts", StringComparison.OrdinalIgnoreCase) ||
+                context.State.Operator.ToString().Equals("NotStarts", StringComparison.OrdinalIgnoreCase))) {
+
+                context.State.Value = ";" + context.State.Value.ToString().TrimStart(';');
+            }
+
+            // Ends and NotEnds operators
+            // The separator ';' character at the end of the value has to be forced
+            if ((context.State.Operator.ToString().Equals("Ends", StringComparison.OrdinalIgnoreCase) ||
+                context.State.Operator.ToString().Equals("NotEnds", StringComparison.OrdinalIgnoreCase))) {
+
+                context.State.Value = context.State.Value.ToString().TrimEnd(';') + ";";
+            }
 
             // generate the predicate based on the editor which has been used
             dynamic fullState = context.State;
@@ -97,6 +119,4 @@ namespace Orchard.Projections.Providers.Filters {
             return T("Field {0} {1} \"{2}\"", fieldDefinition.Name, op, value);
         }
     }
-
-
 }
