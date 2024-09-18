@@ -86,10 +86,8 @@ namespace Orchard.MediaLibrary.Controllers {
 
                 // Vimeo doesn't consent anymore the scraping of web pages, so the direct api call has to be enforced.
                 // In this case, the downloaded string is already the expected xml, in the format that needs to be parsed.
-                // Legacy process is done either way.
-                // At the end of it, oembedSignature value will still be -1.
-                // So the downloaded string is parsed.
-                // Check if url is inside Vimeo domain.
+                // Legacy process is done for non-Vimeo content.
+                // First of all, url domain is checked.
                 var uri = new Uri(url);
                 var vimeo = uri.Host.Equals("vimeo.com", StringComparison.OrdinalIgnoreCase) ||
                     uri.Host.Equals("www.vimeo.com", StringComparison.OrdinalIgnoreCase);
