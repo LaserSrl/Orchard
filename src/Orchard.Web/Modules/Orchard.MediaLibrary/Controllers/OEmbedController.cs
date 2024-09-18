@@ -82,26 +82,44 @@ namespace Orchard.MediaLibrary.Controllers {
             try {
                 // <link rel="alternate" href="http://vimeo.com/api/oembed.xml?url=http%3A%2F%2Fvimeo.com%2F23608259" type="text/xml+oembed">
 
-                var source = webClient.DownloadString(url);
+                var source = "";
 
-                // seek type="text/xml+oembed" or application/xml+oembed
-                var oembedSignature = source.IndexOf("type=\"text/xml+oembed\"", StringComparison.OrdinalIgnoreCase);
-                if (oembedSignature == -1) {
-                    oembedSignature = source.IndexOf("type=\"application/xml+oembed\"", StringComparison.OrdinalIgnoreCase);
-                }
-                if (oembedSignature != -1) {
-                    var tagStart = source.Substring(0, oembedSignature).LastIndexOf('<');
-                    var tagEnd = source.IndexOf('>', oembedSignature);
-                    var tag = source.Substring(tagStart, tagEnd - tagStart);
-                    var matches = new Regex("href=\"([^\"]+)\"").Matches(tag);
-                    if (matches.Count > 0) {
-                        var href = matches[0].Groups[1].Value;
-                        try {
-                            var content = webClient.DownloadString(Server.HtmlDecode(href));
-                            viewModel.Content = XDocument.Parse(content);
-                        }
-                        catch {
-                            // bubble exception
+                // Vimeo doesn't consent anymore the scraping of web pages, so the direct api call has to be enforced.
+                // In this case, the downloaded string is already the expected xml, in the format that needs to be parsed.
+                // Legacy process is done either way.
+                // At the end of it, oembedSignature value will still be -1.
+                // So the downloaded string is parsed.
+                // Check if url is inside Vimeo domain.
+                var uri = new Uri(url);
+                var vimeo = uri.Host.Equals("vimeo.com", StringComparison.OrdinalIgnoreCase) ||
+                    uri.Host.Equals("www.vimeo.com", StringComparison.OrdinalIgnoreCase);
+                if (vimeo) {
+                    // Add api url to original url provided as a parameter
+                    url = "http://vimeo.com/api/oembed.xml?url=" + url;
+                    source = webClient.DownloadString(url);
+
+                    viewModel.Content = XDocument.Parse(source);
+                } else {
+                    source = webClient.DownloadString(url);
+
+                    // seek type="text/xml+oembed" or application/xml+oembed
+                    var oembedSignature = source.IndexOf("type=\"text/xml+oembed\"", StringComparison.OrdinalIgnoreCase);
+                    if (oembedSignature == -1) {
+                        oembedSignature = source.IndexOf("type=\"application/xml+oembed\"", StringComparison.OrdinalIgnoreCase);
+                    }
+                    if (oembedSignature != -1) {
+                        var tagStart = source.Substring(0, oembedSignature).LastIndexOf('<');
+                        var tagEnd = source.IndexOf('>', oembedSignature);
+                        var tag = source.Substring(tagStart, tagEnd - tagStart);
+                        var matches = new Regex("href=\"([^\"]+)\"").Matches(tag);
+                        if (matches.Count > 0) {
+                            var href = matches[0].Groups[1].Value;
+                            try {
+                                var content = webClient.DownloadString(Server.HtmlDecode(href));
+                                viewModel.Content = XDocument.Parse(content);
+                            } catch {
+                                // bubble exception
+                            }
                         }
                     }
                 }
