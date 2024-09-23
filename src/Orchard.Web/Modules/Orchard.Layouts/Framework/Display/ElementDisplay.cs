@@ -27,7 +27,10 @@ namespace Orchard.Layouts.Framework.Display {
             IUpdateModel updater = null) {
 
             var typeName = element.GetType().Name;
-            var category = element.Category.ToSafeName();
+            var category = element.Descriptor.Category?.ToSafeName();
+            if (string.IsNullOrEmpty(category)) {
+                category = element.Category.ToSafeName();
+            }
             var drivers = element.Descriptor.GetDrivers().ToList();
             var createShapeContext = new ElementCreatingDisplayShapeContext {
                 Element = element,
