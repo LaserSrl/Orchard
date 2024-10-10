@@ -91,9 +91,22 @@ namespace Orchard.MediaLibrary.Controllers {
                 var uri = new Uri(url);
                 var vimeo = uri.Host.Equals("vimeo.com", StringComparison.OrdinalIgnoreCase) ||
                     uri.Host.Equals("www.vimeo.com", StringComparison.OrdinalIgnoreCase);
+
+                // Youtube changed the markup of the page of its videos, so the direct api call has to be enforced
+                // Api url is built based on the requested video
+                var youtube = uri.Host.Equals("youtu.be", StringComparison.OrdinalIgnoreCase) ||
+                    uri.Host.Equals("youtube.com", StringComparison.OrdinalIgnoreCase) ||
+                    uri.Host.Equals("www.youtube.com", StringComparison.OrdinalIgnoreCase);
+
                 if (vimeo) {
                     // Add api url to original url provided as a parameter
                     url = "http://vimeo.com/api/oembed.xml?url=" + url;
+                    source = webClient.DownloadString(url);
+
+                    viewModel.Content = XDocument.Parse(source);
+                } else if (youtube) {
+                    // Add api url to original url provided as a parameter
+                    url = "https://www.youtube.com/oembed?format=xml&url=" + url;
                     source = webClient.DownloadString(url);
 
                     viewModel.Content = XDocument.Parse(source);
