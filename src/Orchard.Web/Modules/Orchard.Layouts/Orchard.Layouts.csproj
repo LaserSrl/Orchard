@@ -146,7 +146,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Scripts\LayoutEditor.js" />
-    <Content Include="Scripts\LayoutEditor.min.js" />
+    <Content Include="Scripts\LayoutEditor.min.js">
+      <DependentUpon>LayoutEditor.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\Models.js" />
     <Content Include="Scripts\Models.min.js" />
     <Content Include="Scripts\_references.js" />
