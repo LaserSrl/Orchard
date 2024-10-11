@@ -57,11 +57,30 @@ namespace Orchard.Fields.Drivers {
                 if (settings.Required && String.IsNullOrWhiteSpace(field.Value)) {
                     updater.AddModelError(GetPrefix(field, part), T("Url is required for {0}", T(field.DisplayName)));
                 }
-                else if (!String.IsNullOrWhiteSpace(field.Value) && !Uri.IsWellFormedUriString(field.Value, UriKind.RelativeOrAbsolute)) {
-                    updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid url.", field.Value));
-                }
                 else if (settings.LinkTextMode == LinkTextMode.Required && String.IsNullOrWhiteSpace(field.Text)) {
                     updater.AddModelError(GetPrefix(field, part), T("Text is required for {0}.", T(field.DisplayName)));
+                } else if (!String.IsNullOrWhiteSpace(field.Value)) {
+                    // Check if it's a valid uri, considering that there may be the link to an anchor only
+                    // e.g.: field.Value = "#divId"
+                    // Take everything before the first "#" character and check if it's a valid uri.
+                    // If there is no character before the first "#", consider the value as a valid one (because it is a reference to a div inside the same page)
+                    var index = field.Value.IndexOf('#');
+                    if (index >= 0) {
+                        var url = field.Value.Substring(0, index);
+                        if (!String.IsNullOrWhiteSpace(url) && !Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute)) {
+                            updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid url.", field.Value));
+                        } else {
+                            // The first part of the value is valid (or empty)
+                            // In the same way, check that the second part of the value (after the "#" character) is valid
+                            // For html 5, a tag id is valid as long as it doesn't contain white spaces
+                            var anchor = field.Value.Substring(index + 1);
+                            if (anchor.IndexOf(' ') >= 0) {
+                                updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid url.", field.Value));
+                            }
+                        }
+                    } else if (!Uri.IsWellFormedUriString(field.Value, UriKind.RelativeOrAbsolute)) {
+                        updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid url.", field.Value));
+                    }
                 }
             }
 
