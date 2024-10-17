@@ -103,11 +103,12 @@ namespace Orchard.MediaLibrary.Controllers {
 
                 var source = "";
 
+                var uri = GetRedirectUrl(url);
+
                 // Vimeo doesn't consent anymore the scraping of web pages, so the direct api call has to be enforced.
                 // In this case, the downloaded string is already the expected xml, in the format that needs to be parsed.
                 // Legacy process is done for non-Vimeo content.
                 // First of all, url domain is checked.
-                var uri = GetRedirectUrl(url);
                 var vimeo = uri.Host.Equals("vimeo.com", StringComparison.OrdinalIgnoreCase);
 
                 // Youtube changed the markup of the page of its videos, so the direct api call has to be enforced
