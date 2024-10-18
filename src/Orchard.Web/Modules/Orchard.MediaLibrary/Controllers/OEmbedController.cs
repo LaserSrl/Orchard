@@ -56,25 +56,6 @@ namespace Orchard.MediaLibrary.Controllers {
             return View(viewModel);
         }
 
-        private Uri GetRedirectUrl(string url) {
-            var redirectedUrl = url;
-
-            Uri myUri = new Uri(url);
-            // Create a 'HttpWebRequest' object for the specified url.
-            HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(myUri);
-            // Send the request and wait for response.
-            HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
-
-            if (!myUri.Equals(myHttpWebResponse.ResponseUri)) {
-                myUri = myHttpWebResponse.ResponseUri;
-            }
-
-            // Release resources of response object.
-            myHttpWebResponse.Close();
-
-            return myUri;
-        }
-
         [HttpPost]
         [ActionName("Index")]
         [ValidateInput(false)]
@@ -103,7 +84,8 @@ namespace Orchard.MediaLibrary.Controllers {
 
                 var source = "";
 
-                var uri = GetRedirectUrl(url);
+                // Get the proper uri the provider redirects to
+                var uri = GetRedirectUri(url);
 
                 // Vimeo doesn't consent anymore the scraping of web pages, so the direct api call has to be enforced.
                 // In this case, the downloaded string is already the expected xml, in the format that needs to be parsed.
@@ -280,6 +262,25 @@ namespace Orchard.MediaLibrary.Controllers {
             }
 
             return RedirectToAction("Index", new { folderPath = replaceMedia.FolderPath, replaceId = replaceMedia.Id });
+        }
+
+        private Uri GetRedirectUri(string url) {
+            var redirectedUrl = url;
+
+            Uri myUri = new Uri(url);
+            // Create a 'HttpWebRequest' object for the specified url.
+            HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(myUri);
+            // Send the request and wait for response.
+            HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
+
+            if (!myUri.Equals(myHttpWebResponse.ResponseUri)) {
+                myUri = myHttpWebResponse.ResponseUri;
+            }
+
+            // Release resources of response object.
+            myHttpWebResponse.Close();
+
+            return myUri;
         }
     }
 }
