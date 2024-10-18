@@ -265,8 +265,6 @@ namespace Orchard.MediaLibrary.Controllers {
         }
 
         private Uri GetRedirectUri(string url) {
-            var redirectedUrl = url;
-
             Uri myUri = new Uri(url);
             // Create a 'HttpWebRequest' object for the specified url.
             HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(myUri);
