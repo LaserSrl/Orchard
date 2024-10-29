@@ -6,6 +6,7 @@ using Orchard.Fields.Settings;
 using Orchard.Localization;
 using System;
 using System.Collections.Generic;
+using System.Security.Policy;
 
 namespace Orchard.Fields.Drivers {
     public class LinkFieldDriver : ContentFieldDriver<LinkField> {
@@ -64,22 +65,25 @@ namespace Orchard.Fields.Drivers {
                     // e.g.: field.Value = "#divId"
                     // Take everything before the first "#" character and check if it's a valid uri.
                     // If there is no character before the first "#", consider the value as a valid one (because it is a reference to a div inside the same page)
-                    var index = field.Value.IndexOf('#');
-                    if (index >= 0) {
-                        var url = field.Value.Substring(0, index);
-                        if (!String.IsNullOrWhiteSpace(url) && !Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute)) {
+                    if (field.Value.StartsWith("#")) {
+                        // The field value is a tag id reference
+                        // For html 5, a tag id is valid as long as it doesn't contain white spaces
+                        if (field.Value.IndexOf(' ') >= 0) {
                             updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid url.", field.Value));
-                        } else {
-                            // The first part of the value is valid (or empty)
-                            // In the same way, check that the second part of the value (after the "#" character) is valid
+                        }
+                    } else {
+                        var urlAndRef = field.Value.Split(new char[] { '#' }, 2);
+
+                        // Since field value is a proper url and not a tag id only, assume the first part of the array is the actual url to link to
+                        if (!String.IsNullOrWhiteSpace(urlAndRef[0]) && !Uri.IsWellFormedUriString(urlAndRef[0], UriKind.RelativeOrAbsolute)) {
+                            updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid url.", field.Value));
+                        } else if (urlAndRef.Length > 1) {
+                            // The second part of the url is the id reference
                             // For html 5, a tag id is valid as long as it doesn't contain white spaces
-                            var anchor = field.Value.Substring(index + 1);
-                            if (anchor.IndexOf(' ') >= 0) {
+                            if (urlAndRef[1].IndexOf(' ') >= 0) {
                                 updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid url.", field.Value));
                             }
                         }
-                    } else if (!Uri.IsWellFormedUriString(field.Value, UriKind.RelativeOrAbsolute)) {
-                        updater.AddModelError(GetPrefix(field, part), T("{0} is an invalid url.", field.Value));
                     }
                 }
             }
