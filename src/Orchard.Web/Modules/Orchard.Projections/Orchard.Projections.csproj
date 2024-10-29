@@ -187,6 +187,7 @@
     <Compile Include="Providers\Executors\MemberBindingsStep.cs" />
     <Compile Include="Providers\Filters\ContentPartRecordsForm.cs" />
     <Compile Include="Providers\Filters\EagerFetchFilter.cs" />
+    <Compile Include="Providers\Filters\EnumerationFieldsFilter.cs" />
     <Compile Include="Providers\Layouts\RawLayout.cs" />
     <Compile Include="Providers\Layouts\RawLayoutForms.cs" />
     <Compile Include="Providers\Layouts\RawShapes.cs" />
