@@ -16,29 +16,56 @@ jobs:
         shell: pwsh
     runs-on: windows-latest
     steps:
-      - name: Clone repository
+      - name: Clone Repository
         uses: actions/checkout@v4.1.1
 
-      - name: Restore NuGet packages
+      - name: Restore NuGet Packages
         run: nuget restore src/Orchard.sln
 
-      - name: Add msbuild to PATH
+      - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2
 
       - name: Compile
-        run: msbuild Orchard.proj /m /v:minimal /t:Compile /p:MvcBuildViews=true /p:TreatWarningsAsErrors=true -WarnAsError
+        run: msbuild Orchard.proj /m /v:minimal /t:Compile /p:TreatWarningsAsErrors=true -WarnAsError /p:MvcBuildViews=true
 
       - name: Test
         run: msbuild Orchard.proj /m /v:minimal /t:Test
 
+      - name: Test Setup with SpecFlow
+        run: |
+          $nunitConsole = (Get-ChildItem -Path 'src/packages' -Recurse -Filter 'nunit-console.exe' | Select-Object -Last 1).FullName
+          & $nunitConsole 'build/Compile/Orchard.Specs.dll' /xml='build/Orchard.Specs.xml' /run=Orchard.Specs.SetupFeature.RootAndSetupFolderShowsSetupScreenAndFormValuesAreValidated
+
+      - name: Run Orchard Setup with Orchard.exe
+        run: |
+          $commandFile = 'src/Orchard.Web/bin/setup-commands.txt'
+          New-Item -Path $commandFile -ItemType File -Force
+          Set-Content -Path $commandFile -Value 'setup /SiteName:Orchard /AdminUsername:admin /AdminPassword:Password1! /DatabaseProvider:SqlCe /Recipe:Default'
+          & 'src/Orchard.Web/bin/Orchard.exe' @$commandFile
+
+      - name: Run Code Generation
+        run: |
+          $commandFile = 'src/Orchard.Web/bin/codegen-commands.txt'
+          New-Item -Path $commandFile -ItemType File -Force
+          Set-Content -Path $commandFile -Value @'
+            feature enable Orchard.CodeGeneration
+            codegen module Orchard.CodeGeneration.TestModule
+            codegen theme Orchard.CodeGeneration.TestTheme /CreateProject:true
+            codegen moduletests Orchard.CodeGeneration.TestModule
+          '@
+          & 'src/Orchard.Web/bin/Orchard.exe' @$commandFile
+
+      - name: Compile Again with Generated Projects
+        run: msbuild Orchard.proj /m /v:minimal /t:Compile /p:TreatWarningsAsErrors=true -WarnAsError /NoWarn:CS2008
+
   compile-node:
-    name: Compile client-side assets
+    name: Compile Client-side Assets
     defaults:
       run:
         shell: pwsh
     runs-on: windows-latest
     steps:
-      - name: Clone repository
+      - name: Clone Repository
         uses: actions/checkout@v4.1.1
 
       - name: Setup NodeJS
@@ -46,7 +73,7 @@ jobs:
         with:
           node-version: '7'
 
-      - name: Setup NPM packages
+      - name: Setup NPM Packages
         working-directory: ./src
         run: |
           npm install --loglevel warn
@@ -55,7 +82,7 @@ jobs:
           $gulpVersion = (Get-Content Package.json -Raw | ConvertFrom-Json).devDependencies.gulp
           Start-Process npm -NoNewWindow -Wait -ArgumentList "install gulp@$gulpVersion -g --loglevel warn"
 
-      - name: Rebuild client-side assets
+      - name: Rebuild Client-side Assets
         working-directory: ./src
         run: |
           gulp rebuild
