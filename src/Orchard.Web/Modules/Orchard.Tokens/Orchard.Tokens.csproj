@@ -127,7 +127,9 @@
     <Compile Include="Providers\RssPartFeedItemBuilder.cs" />
     <Compile Include="Providers\RequestTokens.cs" />
     <Compile Include="Providers\DateTokens.cs" />
-    <Compile Include="Providers\ShapeTokens.cs" />
+    <Compile Include="Providers\ShapeTokens.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Providers\TextTokens.cs" />
     <Compile Include="Providers\UserTokens.cs" />
     <Compile Include="ReplaceOptions.cs" />
