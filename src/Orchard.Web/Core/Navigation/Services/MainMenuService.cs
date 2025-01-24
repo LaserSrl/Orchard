@@ -19,8 +19,8 @@ namespace Orchard.Core.Navigation.Services {
 
         public IEnumerable<MenuPart> GetMenuParts(int menuId) {
             return _contentManager
-                .Query<MenuPart, MenuPartRecord>()
-                .Where( x => x.MenuId == menuId)
+                .Query<MenuPart, MenuPartRecord>(VersionOptions.Latest)
+                .Where(x => x.MenuId == menuId)
                 .List();
         }
 

@@ -84,29 +84,28 @@ namespace Orchard.MediaLibrary.Controllers {
 
                 var source = "";
 
+                // Get the proper uri the provider redirects to
+                var uri = GetRedirectUri(url);
+
                 // Vimeo doesn't consent anymore the scraping of web pages, so the direct api call has to be enforced.
                 // In this case, the downloaded string is already the expected xml, in the format that needs to be parsed.
                 // Legacy process is done for non-Vimeo content.
                 // First of all, url domain is checked.
-                var uri = new Uri(url);
-                var vimeo = uri.Host.Equals("vimeo.com", StringComparison.OrdinalIgnoreCase) ||
-                    uri.Host.Equals("www.vimeo.com", StringComparison.OrdinalIgnoreCase);
+                var vimeo = uri.Host.Equals("vimeo.com", StringComparison.OrdinalIgnoreCase);
 
                 // Youtube changed the markup of the page of its videos, so the direct api call has to be enforced
                 // Api url is built based on the requested video
-                var youtube = uri.Host.Equals("youtu.be", StringComparison.OrdinalIgnoreCase) ||
-                    uri.Host.Equals("youtube.com", StringComparison.OrdinalIgnoreCase) ||
-                    uri.Host.Equals("www.youtube.com", StringComparison.OrdinalIgnoreCase);
+                var youtube = uri.Host.Equals("www.youtube.com", StringComparison.OrdinalIgnoreCase);
 
                 if (vimeo) {
                     // Add api url to original url provided as a parameter
-                    url = "http://vimeo.com/api/oembed.xml?url=" + url;
+                    url = "https://" + uri.Host + "/api/oembed.xml?url=" + url;
                     source = webClient.DownloadString(url);
 
                     viewModel.Content = XDocument.Parse(source);
                 } else if (youtube) {
                     // Add api url to original url provided as a parameter
-                    url = "https://www.youtube.com/oembed?format=xml&url=" + url;
+                    url = "https://" + uri.Host + "/oembed?format=xml&url=" + url;
                     source = webClient.DownloadString(url);
 
                     viewModel.Content = XDocument.Parse(source);
@@ -166,8 +165,7 @@ namespace Orchard.MediaLibrary.Controllers {
                     root.El("description", description);
                 }
                 Response.AddHeader("X-XSS-Protection", "0"); // Prevents Chrome from freaking out over embedded preview
-            }
-            catch {
+            } catch {
                 return View(viewModel);
             }
 
@@ -196,8 +194,7 @@ namespace Orchard.MediaLibrary.Controllers {
 
             if (oembed.Element("title") != null) {
                 part.Title = oembed.Element("title").Value;
-            }
-            else {
+            } else {
                 part.Title = oembed.Element("url").Value;
             }
             if (oembed.Element("description") != null) {
@@ -232,7 +229,7 @@ namespace Orchard.MediaLibrary.Controllers {
                 return HttpNotFound();
 
             // Check permission
-            if (!(_mediaLibraryService.CheckMediaFolderPermission(Permissions.EditMediaContent, replaceMedia.FolderPath) && _mediaLibraryService.CheckMediaFolderPermission(Permissions.ImportMediaContent, replaceMedia.FolderPath)) 
+            if (!(_mediaLibraryService.CheckMediaFolderPermission(Permissions.EditMediaContent, replaceMedia.FolderPath) && _mediaLibraryService.CheckMediaFolderPermission(Permissions.ImportMediaContent, replaceMedia.FolderPath))
                 && !_mediaLibraryService.CanManageMediaFolder(replaceMedia.FolderPath)) {
                 return new HttpUnauthorizedResult();
             }
@@ -242,8 +239,7 @@ namespace Orchard.MediaLibrary.Controllers {
 
             if (oembed.Element("title") != null) {
                 replaceMedia.Title = oembed.Element("title").Value;
-            }
-            else {
+            } else {
                 replaceMedia.Title = oembed.Element("url").Value;
             }
             if (oembed.Element("description") != null) {
@@ -266,6 +262,23 @@ namespace Orchard.MediaLibrary.Controllers {
             }
 
             return RedirectToAction("Index", new { folderPath = replaceMedia.FolderPath, replaceId = replaceMedia.Id });
+        }
+
+        private Uri GetRedirectUri(string url) {
+            Uri myUri = new Uri(url);
+            // Create a 'HttpWebRequest' object for the specified url.
+            HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(myUri);
+            // Send the request and wait for response.
+            HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
+
+            if (!myUri.Equals(myHttpWebResponse.ResponseUri)) {
+                myUri = myHttpWebResponse.ResponseUri;
+            }
+
+            // Release resources of response object.
+            myHttpWebResponse.Close();
+
+            return myUri;
         }
     }
 }
