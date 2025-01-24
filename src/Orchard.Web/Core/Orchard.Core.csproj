@@ -119,6 +119,7 @@
     <Compile Include="Common\ViewModels\DateTimeEditor.cs" />
     <Compile Include="Common\ViewModels\TextFieldDriverViewModel.cs" />
     <Compile Include="Common\ViewModels\TextFieldSettingsEventsViewModel.cs" />
+    <Compile Include="Containers\AdminMenu.cs" />
     <Compile Include="Containers\Controllers\ItemController.cs" />
     <Compile Include="Containers\Drivers\ContainablePartDriver.cs" />
     <Compile Include="Containers\Drivers\ContainerPartDriver.cs" />
@@ -318,6 +319,8 @@
     <Content Include="Common\Views\Parts.Common.Metadata.cshtml" />
     <Content Include="Common\Views\CommonMetadataLastModified.cshtml" />
     <Content Include="Containers\Module.txt" />
+    <Content Include="Containers\Styles\images\menu.container.png" />
+    <Content Include="Containers\Styles\menu.container-admin.css" />
     <Content Include="Shapes\Scripts\admin-localnavigation.js" />
     <Content Include="Contents\Styles\images\menu.content.png" />
     <Content Include="Contents\Styles\menu.content-admin.css" />
@@ -610,6 +613,9 @@
     <Content Include="Navigation\Views\Admin\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Containers\Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="packages.config" />
     <Content Include="Title\Views\DefinitionTemplates\TitlePartSettings.cshtml" />
   </ItemGroup>
