@@ -17,12 +17,16 @@ namespace Orchard.MediaLibrary.Controllers {
     [Admin, Themed(false)]
     public class OEmbedController : Controller {
         private readonly IMediaLibraryService _mediaLibraryService;
+        private readonly IOEmbedService _oEmbedService;
 
         public OEmbedController(
             IOrchardServices services,
-            IMediaLibraryService mediaManagerService) {
-            _mediaLibraryService = mediaManagerService;
+            IMediaLibraryService mediaManagerService,
+            IOEmbedService oEmbedService) {
+
             Services = services;
+            _mediaLibraryService = mediaManagerService;
+            _oEmbedService = oEmbedService;
             T = NullLocalizer.Instance;
         }
 
@@ -78,67 +82,9 @@ namespace Orchard.MediaLibrary.Controllers {
                 }
             }
 
-            var webClient = new WebClient { Encoding = Encoding.UTF8 };
             try {
-                // <link rel="alternate" href="http://vimeo.com/api/oembed.xml?url=http%3A%2F%2Fvimeo.com%2F23608259" type="text/xml+oembed">
+                viewModel.Content = _oEmbedService.DownloadMediaData(url);
 
-                var source = "";
-
-                // Get the proper uri the provider redirects to
-                var uri = GetRedirectUri(url);
-
-                // Vimeo doesn't consent anymore the scraping of web pages, so the direct api call has to be enforced.
-                // In this case, the downloaded string is already the expected xml, in the format that needs to be parsed.
-                // Legacy process is done for non-Vimeo content.
-                // First of all, url domain is checked.
-                var vimeo = uri.Host.Equals("vimeo.com", StringComparison.OrdinalIgnoreCase);
-
-                // Youtube changed the markup of the page of its videos, so the direct api call has to be enforced
-                // Api url is built based on the requested video
-                var youtube = uri.Host.Equals("www.youtube.com", StringComparison.OrdinalIgnoreCase);
-
-                if (vimeo) {
-                    // Add api url to original url provided as a parameter
-                    url = "https://" + uri.Host + "/api/oembed.xml?url=" + url;
-                    source = webClient.DownloadString(url);
-
-                    viewModel.Content = XDocument.Parse(source);
-                } else if (youtube) {
-                    // Add api url to original url provided as a parameter
-                    url = "https://" + uri.Host + "/oembed?format=xml&url=" + url;
-                    source = webClient.DownloadString(url);
-
-                    viewModel.Content = XDocument.Parse(source);
-                } else {
-                    source = webClient.DownloadString(url);
-
-                    // seek type="text/xml+oembed" or application/xml+oembed
-                    var oembedSignature = source.IndexOf("type=\"text/xml+oembed\"", StringComparison.OrdinalIgnoreCase);
-                    if (oembedSignature == -1) {
-                        oembedSignature = source.IndexOf("type=\"application/xml+oembed\"", StringComparison.OrdinalIgnoreCase);
-                    }
-                    if (oembedSignature != -1) {
-                        var tagStart = source.Substring(0, oembedSignature).LastIndexOf('<');
-                        var tagEnd = source.IndexOf('>', oembedSignature);
-                        var tag = source.Substring(tagStart, tagEnd - tagStart);
-                        var matches = new Regex("href=\"([^\"]+)\"").Matches(tag);
-                        if (matches.Count > 0) {
-                            var href = matches[0].Groups[1].Value;
-                            try {
-                                var content = webClient.DownloadString(Server.HtmlDecode(href));
-                                viewModel.Content = XDocument.Parse(content);
-                            } catch {
-                                // bubble exception
-                            }
-                        }
-                    }
-                }
-                if (viewModel.Content == null) {
-                    viewModel.Content = new XDocument(
-                        new XDeclaration("1.0", "utf-8", "yes"),
-                        new XElement("oembed")
-                        );
-                }
                 var root = viewModel.Content.Root;
                 if (!String.IsNullOrWhiteSpace(url)) {
                     root.El("url", url);
